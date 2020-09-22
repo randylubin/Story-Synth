@@ -30,7 +30,6 @@ Then set up a free Firebase project, which will give you an API key. You can fol
 
 Then, update the project with your Firebase credentials:
 
-/firebaserc should have your projectname
 /src/firebase.js should have your project name and api key
 
 ### Compiles and hot-reloads for development
@@ -55,6 +54,8 @@ If you're using Firebase hosting, you can push to their servers with:
 ```
 firebase deploy --only hosting
 ```
+
+In order to do this you'll have to follow more of the steps in the above mentioned [Firebase guide](https://firebase.google.com/docs/web/setup#create-firebase-project)
 
 ### Lints and fixes files
 ```
