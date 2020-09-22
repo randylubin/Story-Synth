@@ -1,0 +1,501 @@
+<template>
+  <div class="monster container" v-if="roomInfo">
+
+    <div class="btn-container" style>
+      <div class="row mb-4">
+        <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
+          <button class="btn btn-warning" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
+          <button class="btn btn-warning" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
+            <span v-if="roomInfo.currentCardIndex == 0">Start</span>
+            <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <h1 class="">{{roomInfo.roundTitle}}</h1>
+    <h3 class="mb-4">{{roomInfo.roundInfo}} <span class="">{{roomInfo.roundProgress}}</span></h3>
+
+
+    <div v-if="roomInfo.xCardIsActive" class="mb-4">
+      <transition name="fade">
+        <div class="card d-flex align-items-center shadow">
+          <div class="card-title">
+            <h1 class="mt-5">Pause</h1>
+          </div>
+          <div class="card-body align-items-center d-flex justify-content-center">
+            <h4>
+              Talk about the direction of story, or revise some content, or adjust the tone. Once everyone is on the same page, resume play.
+            </h4>
+          </div>
+
+          <button class="btn btn-outline-dark mb-3" style="width:100px;" type="button" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Continue</button>
+        </div>
+      </transition>
+    </div>
+
+
+    <div v-if="!roomInfo.xCardIsActive">
+      <div v-for="(row, index) in gSheet" v-bind:key="index">
+        <transition name="fade">
+          <div class="row mb-4" v-if="row.ordered == roomInfo.currentCardIndex">
+            <div class="col-sm">
+              <div class="card shadow" v-on:click="updateClickedCard(index)" style="cursor:pointer">
+                <div class="card-body ">
+
+                    <div class="card-title" style="white-space: pre-line" v-if="!row.subtitle">
+                      <p class="mt-4">{{row.archetype}}</p>
+                      <div class="text-left">
+                        {{row.characterDetail}}
+                      </div>
+
+                    </div>
+
+                    <h4 class="card-title" style="white-space: pre-line" v-if="row.subtitle">
+                      {{row.archetype}}
+                    </h4>
+                    <h5 class="card-subtitle mb-4 text-muted">{{row.subtitle}}</h5>
+
+                    <div class="card-text text-left" v-if="clickedCard == index || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered" style="white-space: pre-line">
+
+                      <h5>{{row.characterQuestion}}</h5>
+                      <p>
+                        {{row.characterDetail}}
+                      </p>
+                      <h5 class="mt-4">{{row.keyQuestion}}</h5>
+                      <p>
+                        {{row.keyDetails}}
+                      </p>
+                    </div>
+
+                    <div v-if="index==0">
+                      <div>
+                        <h1>Dawn of the Monster Invasion</h1>
+                        <h4 class="">A monster movie spoof told in 6 speeches</h4>
+                      </div>
+
+                      <svg width="100%" height="100%" viewBox="0 0 630 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+                        <g id="Layer2" transform="matrix(1,0,0,1,1,0)">
+                            <g transform="matrix(1.16945,0,0,1,-48.4462,0)">
+                                <rect x="237.245" y="400" width="42.755" height="20" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(0.943697,0,0,1,13.9933,0)">
+                                <rect x="266.298" y="100" width="116.89" height="214.279" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1.16945,0,0,1,83.5728,0.500753)">
+                                <rect x="237.245" y="400" width="42.755" height="20" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1.26238,0.30781,-0.236892,0.971536,10.4383,-73.2324)">
+                                <rect x="260" y="304.118" width="17.762" height="105.76" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(-1.26238,0.30781,0.236892,0.971536,630.467,-78.3835)">
+                                <rect x="260" y="304.118" width="17.762" height="105.76" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1,0,0,1,-1,0)">
+                                <rect x="310.323" y="80" width="19.677" height="30" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1,0,0,1,-1,0)">
+                                <rect x="258.838" y="130" width="18.924" height="170" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1,0,0,1,-1,0)">
+                                <rect x="250" y="146.279" width="10" height="127.806" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1.59277,0,0,1,-227.433,0)">
+                                <rect x="376.607" y="133.467" width="10.412" height="166.533" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1,0,0,1,-1,0)">
+                                <rect x="383.188" y="161.984" width="16.812" height="78.016" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1,0,0,1,-1,0)">
+                                <rect x="206.281" y="280" width="29.051" height="46.121" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1.23689,0,0,1.07677,-54.4651,-11.4945)">
+                                <rect x="210" y="224.278" width="15.699" height="55.722" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1.16699,0,0,1,-43.5824,0)">
+                                <rect x="225.699" y="210" width="29.301" height="30" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(-1,0,0,1,641,1)">
+                                <rect x="206.281" y="280" width="29.051" height="46.121" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(-1.23689,0,0,1.07677,694.465,-10.4945)">
+                                <rect x="210" y="224.278" width="15.699" height="55.722" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(-1.22576,0,0,1.0772,698.568,-15.2113)">
+                                <rect x="225.699" y="210" width="29.301" height="30" style="fill:rgb(115,209,123);"/>
+                            </g>
+                            <g transform="matrix(1.38773,0,0,1,-99.8721,0)">
+                                <rect x="244.203" y="180" width="10.797" height="40" style="fill:rgb(115,209,123);"/>
+                            </g>
+                        </g>
+                        <rect x="270" y="180" width="40" height="40" style="fill:white;"/>
+                        <g transform="matrix(1,0,0,1,63.8686,0)">
+                            <rect x="270" y="180" width="40" height="40" style="fill:white;"/>
+                        </g>
+                        <g transform="matrix(3.2751,0,0,4.58668,157.245,-4357.51)">
+                            <path d="M50,960.362C48.432,960.693 47.944,961.724 47.438,962.955C46.78,964.894 46.313,966.782 45.688,968.64C43.421,969.009 41.309,969.727 39.719,970.327C36.975,969.07 34.66,967.479 32.156,965.735C31.438,965.247 30.396,965.303 29.735,965.866C29.073,966.428 28.851,967.448 29.219,968.234C30.335,970.754 31.398,972.912 32.094,975.513C27.274,980.097 24.961,986.167 23.313,993.006C17.161,995.497 12,1001.31 12,1011.38C12,1014.48 12.224,1017.42 13.313,1019.9C14.401,1022.39 16.833,1024.37 20,1024.37C24.371,1023.85 26.954,1020.29 27,1016.37C27,1013.54 25.127,1011.66 23.75,1010.56C23.164,1010.12 22.575,1009.63 22.031,1009.16C22.086,1006.34 22.932,1005.11 24.094,1004.22C24.624,1003.81 25.29,1003.5 25.969,1003.22C26.03,1008.69 28.121,1013.95 29.844,1017.47C27.232,1023.78 26.138,1028.86 25.219,1035.05C23.965,1035.57 22.689,1036.09 21.656,1036.9C20.288,1037.96 19,1039.36 19,1041.36C19,1042.49 19.819,1043.17 20.281,1043.42C21.526,1044.02 23.036,1044.12 24.25,1044.21C26.23,1044.34 28.499,1044.36 30,1044.36C31.502,1044.36 33.532,1044.34 35.281,1044.21C36.647,1044.17 37.84,1043.85 38.906,1043.33C39.353,1043.03 40,1042.33 40,1041.36C40,1039.7 39.235,1038.29 38.281,1037.18C37.725,1036.53 36.99,1036.13 36.313,1035.65C37.774,1031.64 38.706,1027.5 39.5,1023.03C43.45,1024.33 47.504,1024.37 50,1024.37C52.488,1024.37 56.562,1024.35 60.5,1023.06C61.292,1027.52 62.231,1031.65 63.688,1035.65C63.018,1036.13 62.301,1036.54 61.75,1037.18C60.796,1038.29 60,1039.7 60,1041.36C60,1042.33 60.678,1043.03 61.125,1043.33C62.213,1044.03 63.607,1044.1 64.719,1044.21C66.468,1044.34 68.499,1044.36 70,1044.36C71.502,1044.36 73.77,1044.34 75.75,1044.21C77.188,1044.16 78.554,1043.88 79.719,1043.42C80.181,1043.17 81,1042.5 81,1041.36C81,1039.36 79.712,1037.96 78.344,1036.9C77.321,1036.1 76.052,1035.6 74.813,1035.08C73.892,1028.87 72.773,1023.79 70.156,1017.47C71.879,1013.95 73.97,1008.69 74.031,1003.22C74.719,1003.5 75.37,1003.81 75.906,1004.22C77.074,1005.12 77.921,1006.35 77.969,1009.19C77.431,1009.63 76.734,1010.18 76.25,1010.56C74.873,1011.66 73,1013.54 73,1016.37C73.256,1020.49 76.129,1024.29 80,1024.37C83.167,1024.37 85.63,1022.39 86.719,1019.9C87.808,1017.42 88,1014.48 88,1011.38C88,1001.33 82.855,995.537 76.719,993.038C75.067,986.18 72.741,980.107 67.906,975.513C68.527,972.944 69.635,970.66 70.813,968.266C71.218,967.487 71.03,966.446 70.378,965.858C69.726,965.27 68.671,965.19 67.938,965.673C65.004,967.381 62.34,969.182 59.313,970.327C58.012,969.807 56.386,969.069 54.344,968.672C53.668,966.763 53.164,964.779 52.563,962.955C52.122,961.594 51.157,960.386 50,960.362L50,960.362ZM50,968.265C50.153,968.776 50.318,969.326 50.469,969.765C50.648,970.453 50.981,971.005 51.313,971.514C51.513,971.765 51.852,972.286 52.875,972.358C54.623,972.48 56.109,973.466 58.344,974.263C59.443,974.655 59.867,974.35 60.375,974.201C61.938,973.684 63.474,972.869 64.813,972.139C64.29,973.297 64.014,974.51 63.844,975.638C63.82,976.193 63.751,977.029 64.688,977.856C69.257,981.89 71.387,987.563 73.063,994.818C73.209,995.489 73.725,996.066 74.375,996.287C79.743,998.075 84,1002.05 84,1011.38C84,1014.26 83.724,1016.8 83.063,1018.31C82.401,1019.82 81.834,1020.37 80,1020.37C78.006,1020.04 77.025,1018.18 77,1016.37C77,1015.21 77.627,1014.58 78.75,1013.69C79.312,1013.24 79.963,1012.81 80.594,1012.22C81.225,1011.63 82,1010.71 82,1009.38C82,1005.4 80.393,1002.61 78.344,1001.03C76.294,999.459 73.999,998.931 72.625,998.473C71.329,998.052 69.816,999.346 70.031,1000.69C70.883,1005.8 68.159,1012.59 66.219,1016.47C65.954,1016.98 65.931,1017.62 66.156,1018.15C69.084,1024.98 70.039,1029.7 71.031,1036.65C71.142,1037.37 71.682,1038.01 72.375,1038.24C73.666,1038.72 75.101,1039.43 76,1040.18C74.075,1040.37 71.926,1040.36 70,1040.36C68.157,1040.36 66.243,1040.33 64.594,1040.18C64.989,1039.28 66.1,1038.62 66.906,1038.15C67.795,1037.7 68.242,1036.54 67.875,1035.62C65.96,1030.83 64.963,1025.99 63.969,1020.03C63.747,1018.82 62.23,1018.05 61.125,1018.59C57.721,1020.29 53,1020.37 50,1020.37C47,1020.37 42.31,1020.29 38.906,1018.59C37.797,1018.03 36.247,1018.8 36.031,1020.03C35.037,1025.99 34.071,1030.83 32.156,1035.62C31.789,1036.54 32.236,1037.7 33.125,1038.15C34.156,1038.64 34.918,1039.42 35.438,1040.18C33.688,1040.38 31.694,1040.36 30,1040.36C27.932,1040.36 25.836,1040.32 24,1040.18C24.986,1039.37 26.497,1038.62 27.625,1038.24C28.33,1038.02 28.884,1037.38 29,1036.65C29.992,1029.7 30.916,1024.98 33.844,1018.15C34.069,1017.62 34.046,1016.98 33.781,1016.47C31.841,1012.59 29.117,1005.8 29.969,1000.69C30.185,999.345 28.671,998.051 27.375,998.473C26.001,998.93 23.706,999.459 21.656,1001.03C19.607,1002.61 18,1005.4 18,1009.38C18,1010.71 18.775,1011.63 19.406,1012.22C20.037,1012.81 20.688,1013.24 21.25,1013.69C22.373,1014.58 23,1015.21 23,1016.37C22.885,1018.52 21.821,1019.95 20,1020.37C18.167,1020.37 17.63,1019.82 16.969,1018.31C16.308,1016.8 16,1014.26 16,1011.37C16,1002.05 20.257,998.074 25.625,996.286C26.287,996.075 26.817,995.496 26.969,994.818C28.647,987.548 30.73,981.92 35.313,977.887C36.296,977.021 36.187,976.179 36.156,975.638C36.076,974.512 35.683,973.498 35.313,972.514C36.399,973.217 37.552,973.758 38.656,974.201C39.154,974.357 39.627,974.653 40.688,974.263C42.737,973.51 45.27,972.491 47.156,972.357C48.166,972.285 48.485,971.766 48.688,971.514C49.119,970.996 49.347,970.305 49.563,969.764C49.713,969.326 49.848,968.774 50,968.265L50,968.265ZM33.313,985.353C32.468,985.409 31.697,986.06 31.5,986.883C30.496,991.025 31.161,994.357 32.625,996.692C34.089,999.027 36.197,1000.32 37.906,1000.97C37.958,1001 38.01,1001.02 38.063,1001.03C40.477,1001.73 43.289,1001.35 45.469,999.566C47.648,997.783 49,994.719 49,990.569C49.011,989.672 48.341,988.812 47.469,988.601C42.757,987.682 38.001,986.081 33.313,985.353L33.313,985.353ZM66.438,985.353C61.827,986.389 57.157,987.515 52.531,988.601C51.659,988.812 50.989,989.672 51,990.569C51,994.719 52.352,997.783 54.531,999.566C56.711,1001.35 59.523,1001.73 61.938,1001.03C61.99,1001.01 62.043,1001 62.094,1000.97C63.803,1000.32 65.942,999.027 67.406,996.692C68.87,994.357 69.504,991.025 68.5,986.883C68.284,985.98 67.366,985.298 66.438,985.353ZM35.219,989.851L44.75,992.1C44.467,994.28 43.805,995.764 42.938,996.474C42.878,996.522 42.811,996.555 42.75,996.599C42.92,996.223 43,995.788 43,995.349C43,993.693 41.657,992.35 40,992.35C38.343,992.35 37,993.693 37,995.349C37,995.504 37.009,995.669 37.031,995.818C36.649,995.469 36.297,995.042 36,994.568C35.306,992.885 35.124,991.273 35.219,989.851ZM64.781,989.851C64.932,991.894 64.66,993.516 64,994.568C63.702,995.043 63.347,995.438 62.969,995.786C62.989,995.647 63,995.494 63,995.349C63,993.693 61.657,992.35 60,992.35C58.343,992.35 57,993.693 57,995.349C57,995.814 57.124,996.269 57.313,996.661C57.226,996.602 57.145,996.541 57.063,996.474C56.195,995.764 55.533,994.28 55.25,992.1L64.781,989.851ZM63.938,1003.35C63.571,1003.36 63.21,1003.48 62.906,1003.69C61.961,1004.32 59.266,1005.18 56.75,1005.66C54.234,1006.14 51.667,1006.35 51,1006.35C50.333,1006.35 47.766,1006.14 45.25,1005.66C42.734,1005.18 40.07,1004.32 39.125,1003.69C38.732,1003.43 38.247,1003.32 37.781,1003.38C36.682,1003.5 35.818,1004.67 36.031,1005.75C36.612,1008.65 38.124,1011.38 40.656,1013.31C43.188,1015.25 46.667,1016.34 51,1016.34C55.333,1016.34 58.812,1015.25 61.344,1013.31C63.876,1011.38 65.388,1008.65 65.969,1005.75C66.215,1004.57 65.145,1003.3 63.938,1003.35Z" style="fill:rgb(0,110,10);fill-rule:nonzero;"/>
+                        </g>
+                        <g id="Layer1">
+                            <path d="M282.12,327.48C281.315,326.861 280.601,326.276 280.038,325.763C276.827,322.838 276.276,319.615 276.287,318.345C276.308,315.931 277.166,314.352 278.001,313.255C279.735,310.978 282.214,309.619 285.701,310.08C286.411,310.173 288.506,311.158 289.822,311.807C292.782,311.766 295.729,311.581 298.626,311.102C304.119,310.195 307.716,311.729 312.981,312.763C320.799,314.297 331.331,313.078 339.085,312.111C341.764,311.777 344.483,312.036 347.17,311.719C349.125,311.489 350.987,311.403 352.969,311.403L356.096,311.403C358.662,311.403 359.91,311.434 360.216,311.46C362.888,311.694 364.127,312.841 364.495,313.127C364.709,313.293 364.909,313.463 365.093,313.638L366.41,313.302L367.886,312.93C368.507,312.71 371.3,311.734 372.654,311.512C374.018,311.288 375.203,311.346 376.087,311.505C378.078,311.864 379.533,312.785 380.589,313.841C381.785,315.038 383.824,317.662 382.63,321.907C382.254,323.245 379.012,328.567 378.469,329.67C376.531,333.613 373.481,336.341 369.819,338.573C370.103,339.293 370.331,340.099 370.477,340.992C371.001,344.206 370.259,350.284 369.909,352.407C368.967,358.108 368.306,367.09 370.179,372.71C372.039,378.29 371.583,386.617 371.583,392.647C371.583,393.213 371.667,393.812 371.794,394.333C372.306,395.264 373.216,396.948 373.339,397.314C374.119,399.644 373.686,401.372 373.414,402.259C373.082,403.346 372.611,404.255 372.019,405.004C374.784,406.777 377.202,408.982 379.676,411.416C381.427,411.917 384.367,412.828 385.32,413.531C387.85,415.398 388.868,417.834 388.911,420.386C388.961,423.325 387.82,426.214 384.225,427.996C383.265,428.471 381.579,429.001 379.384,429.042C376.127,429.103 370.184,428.109 369.415,427.918C364.935,426.807 359.537,428.032 354.965,428.032C339.308,428.032 322.33,430.947 306.666,428.348C297.844,426.884 287.251,426.274 278.839,428.778C274.607,430.037 270.149,427.624 268.889,423.392C267.63,419.16 270.043,414.702 274.275,413.442C275.259,413.149 276.267,412.887 277.295,412.655C277.569,411.263 278.329,409.747 279.898,408.205C281.527,406.603 284.095,405.262 287.317,404.538C287.226,400.489 287.127,391.9 287.817,389.094C289.775,381.127 289.176,368.83 287.264,361.18C286.632,358.654 285.021,352.671 284.64,348.178C284.341,344.648 284.895,341.665 285.79,339.844C286.13,339.153 286.67,338.33 287.47,337.555C284.164,336.574 281.75,333.51 281.75,329.887C281.75,329.049 281.879,328.24 282.12,327.48ZM355.589,392.054C355.453,392.277 355.311,392.486 355.166,392.683L355.585,392.712L355.583,392.647L355.589,392.054Z" style="fill:rgb(66,45,0);"/>
+                            <path d="M368.914,431.76C373.081,431.76 376.761,431.059 380.713,431.059C385.129,431.059 388.713,427.474 388.713,423.059C388.713,418.644 385.129,415.059 380.713,415.059C376.761,415.059 373.081,415.76 368.914,415.76C364.499,415.76 360.914,419.345 360.914,423.76C360.914,428.176 364.499,431.76 368.914,431.76Z" style="fill:rgb(66,45,0);"/>
+                            <path d="M307.864,268.57C307.726,268.171 307.625,267.765 307.563,267.357C307.276,265.477 307.465,262.856 310.201,260.166C312.892,257.52 316.528,256.536 319.619,256.796C322.265,257.019 324.504,258.149 325.94,259.576C328.376,261.997 329.418,265.313 327.49,269.237C325.393,273.502 322.871,275.57 320.237,277.017C319.042,277.673 317.808,278.163 316.554,278.693C315.7,279.054 314.793,279.407 313.962,280.252C310.984,283.282 307.824,285.486 304.863,287.797C302.744,289.45 300.725,291.143 299.223,293.689C297.4,296.779 293.412,297.808 290.322,295.986C287.232,294.163 286.203,290.175 288.025,287.085C290.42,283.025 293.488,280.184 296.865,277.548C299.399,275.571 302.142,273.732 304.692,271.139C305.736,270.076 306.795,269.248 307.864,268.57ZM312.419,265.783C312.415,265.866 312.413,265.949 312.413,266.032L312.419,265.783Z" style="fill:rgb(167,167,167);"/>
+                            <path d="M318.923,256.682C319.737,256.313 320.64,256.108 321.591,256.108C323.245,256.108 324.736,256.643 326.029,257.734C327.197,258.721 328.841,261.206 328.712,264.733C328.606,267.63 327.324,271.454 325.381,273.555C322.754,276.395 319.303,277.577 315.047,275.448C312.566,274.208 309.766,272.194 308.621,269.904C306.775,266.213 308.099,261.684 311.902,258.902C313.605,257.655 315.666,256.897 317.175,256.711C317.794,256.635 318.378,256.631 318.923,256.682ZM318.856,269.731C317.811,269.765 316.744,269.548 315.744,269.048C316.334,269.343 317.671,270.04 318.856,269.731ZM321.435,269.104L321.435,269.104L321.591,269.108L321.435,269.104ZM318.769,268.464C319.171,268.671 319.592,268.825 320.027,268.928L320.034,268.919C319.593,268.81 319.17,268.657 318.769,268.464Z" style="fill:rgb(100,100,100);"/>
+                        </g>
+                        <g transform="matrix(3.03491,0,0,3.03491,265.623,247.511)">
+                            <path d="M41.932,55.662C41.919,55.627 41.903,55.592 41.886,55.558C41.849,55.485 41.803,55.417 41.75,55.356C41.727,55.326 41.702,55.298 41.675,55.271C41.662,55.259 41.654,55.243 41.641,55.232L36,50.531L36,29.414L39.706,25.708C39.894,25.52 39.999,25.265 40,25L40,22C39.999,20.896 39.104,20.001 38,20L14,20L14,13.728L16.795,10.933C17.024,10.971 17.254,10.993 17.485,11C19.508,11 21.331,9.782 22.105,7.913C22.878,6.045 22.451,3.894 21.021,2.464C19.506,0.939 17.184,0.558 15.261,1.517C13.338,2.476 12.247,4.561 12.554,6.688L6.879,12.364C5.707,13.535 5.707,15.435 6.879,16.606C8.05,17.778 9.95,17.778 11.121,16.606L12,15.728L12,20L4,20C2.896,20.001 2.001,20.896 2,22L2,25C2.001,25.265 2.106,25.52 2.294,25.708L6,29.414L6,50.531L0.359,55.232C0.346,55.243 0.338,55.259 0.325,55.271C0.298,55.298 0.273,55.326 0.25,55.356C0.197,55.417 0.151,55.485 0.114,55.558C0.097,55.592 0.081,55.627 0.068,55.662C0.035,55.754 0.016,55.849 0.011,55.946C0.01,55.965 -0,55.981 -0,56L-0,60C-0,60.265 0.105,60.52 0.293,60.707C0.48,60.895 0.735,61 1,61L41,61C41.265,61 41.52,60.895 41.707,60.707C41.895,60.52 42,60.265 42,60L42,56C42,55.981 41.99,55.965 41.989,55.947C41.984,55.85 41.965,55.754 41.932,55.662ZM15.364,3.878C16.536,2.707 18.435,2.707 19.607,3.879C20.778,5.051 20.778,6.95 19.606,8.122C18.419,9.254 16.551,9.254 15.364,8.122C14.194,6.949 14.194,5.051 15.364,3.878ZM9.707,15.192C9.316,15.582 8.683,15.582 8.293,15.192C8.105,15.005 8,14.75 8,14.485C8,14.22 8.105,13.966 8.293,13.778L13.314,8.756C13.685,9.318 14.167,9.8 14.729,10.171L12.305,12.595L12.285,12.615L9.707,15.192ZM34.586,28L7.414,28L5.414,26L36.586,26L34.586,28ZM8,30L34,30L34,50L8,50L8,30ZM38,22L38,24L4,24L4,22L38,22ZM7.362,52L34.638,52L38.238,55L3.762,55L7.362,52ZM40,59L2,59L2,57L40,57L40,59Z" style="fill-rule:nonzero;"/>
+                            <path d="M10.29,31.29C9.902,31.681 9.904,32.313 10.294,32.702C10.684,33.092 11.316,33.092 11.706,32.702C12.096,32.313 12.098,31.681 11.71,31.29C11.309,30.92 10.691,30.92 10.29,31.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M13.29,33.29C12.902,33.681 12.904,34.313 13.294,34.702C13.684,35.092 14.316,35.092 14.706,34.702C15.096,34.313 15.098,33.681 14.71,33.29C14.309,32.92 13.691,32.92 13.29,33.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M13.29,37.29C12.902,37.681 12.904,38.313 13.294,38.702C13.684,39.092 14.316,39.092 14.706,38.702C15.096,38.313 15.098,37.681 14.71,37.29C14.309,36.92 13.691,36.92 13.29,37.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M13.29,41.29C12.902,41.681 12.904,42.313 13.294,42.702C13.684,43.092 14.316,43.092 14.706,42.702C15.096,42.313 15.098,41.681 14.71,41.29C14.309,40.92 13.691,40.92 13.29,41.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M13.29,45.29C12.902,45.681 12.904,46.313 13.294,46.702C13.684,47.092 14.316,47.092 14.706,46.702C15.096,46.313 15.098,45.681 14.71,45.29C14.309,44.92 13.691,44.92 13.29,45.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M10.29,35.29C9.902,35.681 9.904,36.313 10.294,36.702C10.684,37.092 11.316,37.092 11.706,36.702C12.096,36.313 12.098,35.681 11.71,35.29C11.309,34.92 10.691,34.92 10.29,35.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M10.29,39.29C9.902,39.681 9.904,40.313 10.294,40.702C10.684,41.092 11.316,41.092 11.706,40.702C12.096,40.313 12.098,39.681 11.71,39.29C11.309,38.92 10.691,38.92 10.29,39.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M10.29,43.29C9.902,43.681 9.904,44.313 10.294,44.702C10.684,45.092 11.316,45.092 11.706,44.702C12.096,44.313 12.098,43.681 11.71,43.29C11.309,42.92 10.691,42.92 10.29,43.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M10.29,47.29C9.902,47.681 9.904,48.313 10.294,48.702C10.684,49.092 11.316,49.092 11.706,48.702C12.096,48.313 12.098,47.681 11.71,47.29C11.309,46.92 10.691,46.92 10.29,47.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M31.92,31.62C31.898,31.556 31.868,31.496 31.83,31.44C31.79,31.39 31.75,31.34 31.71,31.29C31.468,31.058 31.129,30.958 30.8,31.02C30.737,31.031 30.677,31.051 30.62,31.08C30.556,31.102 30.495,31.132 30.439,31.17L30.29,31.29C30.25,31.34 30.21,31.39 30.17,31.44C30.132,31.495 30.102,31.556 30.08,31.62C30.051,31.676 30.031,31.737 30.019,31.8C30.008,31.866 30.002,31.933 30,32C30.004,32.265 30.107,32.518 30.29,32.71C30.337,32.753 30.387,32.793 30.439,32.83C30.495,32.868 30.556,32.898 30.62,32.92C30.677,32.949 30.737,32.969 30.8,32.98C30.866,32.992 30.933,32.998 31,33C31.266,33.003 31.522,32.898 31.71,32.71C31.898,32.522 32.003,32.266 32,32C31.999,31.933 31.992,31.866 31.979,31.8C31.969,31.737 31.949,31.676 31.92,31.62Z" style="fill-rule:nonzero;"/>
+                            <path d="M27.29,33.29C26.902,33.681 26.904,34.313 27.294,34.702C27.684,35.092 28.316,35.092 28.706,34.702C29.096,34.313 29.098,33.681 28.71,33.29C28.309,32.92 27.691,32.92 27.29,33.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M27.29,37.29C26.902,37.681 26.904,38.313 27.294,38.702C27.684,39.092 28.316,39.092 28.706,38.702C29.096,38.313 29.098,37.681 28.71,37.29C28.309,36.92 27.691,36.92 27.29,37.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M27.29,41.29C26.902,41.681 26.904,42.313 27.294,42.702C27.684,43.092 28.316,43.092 28.706,42.702C29.096,42.313 29.098,41.681 28.71,41.29C28.309,40.92 27.691,40.92 27.29,41.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M28.71,45.29C28.309,44.92 27.691,44.92 27.29,45.29C27.202,45.387 27.131,45.499 27.08,45.62C26.973,45.862 26.973,46.138 27.08,46.38C27.131,46.501 27.202,46.613 27.29,46.71C27.684,47.097 28.316,47.097 28.71,46.71C28.798,46.613 28.869,46.501 28.92,46.38C29.027,46.138 29.027,45.862 28.92,45.62C28.869,45.499 28.798,45.387 28.71,45.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M31.71,35.29C31.47,35.055 31.129,34.954 30.8,35.02C30.737,35.031 30.677,35.051 30.62,35.08C30.556,35.102 30.495,35.132 30.439,35.17L30.29,35.29C30.202,35.387 30.131,35.499 30.08,35.62C30.024,35.738 29.996,35.869 30,36C30.002,36.067 30.008,36.134 30.02,36.2C30.031,36.262 30.051,36.323 30.08,36.38C30.1,36.441 30.13,36.499 30.17,36.55C30.21,36.61 30.25,36.66 30.29,36.71C30.34,36.75 30.39,36.79 30.439,36.83C30.495,36.868 30.556,36.898 30.62,36.92C30.677,36.949 30.737,36.969 30.8,36.98C30.866,36.991 30.933,36.998 31,37C31.265,36.996 31.518,36.892 31.71,36.71C31.75,36.66 31.79,36.61 31.83,36.55C31.87,36.499 31.9,36.441 31.92,36.38C31.949,36.323 31.969,36.263 31.98,36.2C31.992,36.134 31.999,36.067 32,36C32.003,35.869 31.976,35.738 31.92,35.62C31.869,35.499 31.798,35.387 31.71,35.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M30.8,39.02C30.737,39.031 30.677,39.051 30.62,39.08C30.556,39.102 30.495,39.132 30.439,39.17L30.29,39.29C30.107,39.482 30.003,39.735 30,40C30.002,40.067 30.008,40.134 30.02,40.2C30.031,40.262 30.051,40.323 30.08,40.38C30.102,40.444 30.132,40.504 30.17,40.56C30.21,40.61 30.25,40.66 30.29,40.71C30.337,40.753 30.387,40.793 30.439,40.83C30.495,40.868 30.556,40.898 30.62,40.92C30.677,40.949 30.737,40.969 30.8,40.98C30.866,40.991 30.933,40.998 31,41C31.265,40.996 31.518,40.892 31.71,40.71C31.75,40.66 31.79,40.61 31.83,40.56C31.868,40.504 31.898,40.444 31.92,40.38C31.949,40.323 31.969,40.263 31.98,40.2C31.992,40.134 31.999,40.067 32,40C31.996,39.735 31.893,39.482 31.71,39.29C31.471,39.054 31.129,38.953 30.8,39.02Z" style="fill-rule:nonzero;"/>
+                            <path d="M31.71,43.29C31.47,43.055 31.129,42.954 30.8,43.02C30.737,43.031 30.677,43.051 30.62,43.08C30.556,43.102 30.495,43.132 30.439,43.17L30.29,43.29C30.202,43.387 30.131,43.499 30.08,43.62C30.024,43.738 29.996,43.869 30,44C30.004,44.265 30.107,44.518 30.29,44.71C30.34,44.75 30.39,44.79 30.439,44.83C30.495,44.868 30.556,44.898 30.62,44.92C30.677,44.949 30.737,44.969 30.8,44.98C30.866,44.992 30.933,44.998 31,45C31.266,45.003 31.522,44.898 31.71,44.71C31.898,44.522 32.003,44.266 32,44C32.003,43.869 31.976,43.738 31.92,43.62C31.869,43.499 31.798,43.387 31.71,43.29Z" style="fill-rule:nonzero;"/>
+                            <path d="M30.8,47.02C30.737,47.031 30.677,47.051 30.62,47.08C30.556,47.102 30.495,47.132 30.439,47.17C30.387,47.207 30.337,47.247 30.29,47.29C30.107,47.482 30.003,47.735 30,48C30.002,48.067 30.008,48.134 30.02,48.2C30.031,48.262 30.051,48.323 30.08,48.38C30.102,48.444 30.132,48.504 30.17,48.56C30.21,48.61 30.25,48.66 30.29,48.71C30.337,48.753 30.387,48.793 30.439,48.83C30.495,48.868 30.556,48.898 30.62,48.92C30.677,48.949 30.737,48.969 30.8,48.98C30.866,48.991 30.933,48.998 31,49C31.265,48.996 31.518,48.892 31.71,48.71C31.75,48.66 31.79,48.61 31.83,48.56C31.868,48.504 31.898,48.444 31.92,48.38C31.949,48.323 31.969,48.263 31.98,48.2C31.992,48.134 31.999,48.067 32,48C31.996,47.735 31.893,47.482 31.71,47.29C31.468,47.058 31.129,46.958 30.8,47.02Z" style="fill-rule:nonzero;"/>
+                        </g>
+                      </svg>
+
+
+
+                    </div>
+
+                    <svg v-if="clickedCard !== index && row.characterQuestion" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
+    </div>
+
+    <div class="btn-group col-sm" role="group" aria-label="Advice Buttons">
+      <b-button v-b-modal.speaker-tips variant="warning">Speaker Tips</b-button>
+
+      <b-modal id="speaker-tips" title="Advice for giving a speech" hide-footer>
+        <div class="d-block text-left">
+          <h4>Creating a character</h4>
+          <p>Take a minute to read through the suggested answers. For each question, pick one or two answers that resonate with you or make up your own; consider what embellishments you might add. Think about what type of personality your character might have and how that might be expressed through manner of speech and gestures.</p>
+
+          <h4>Opening remarks</h4>
+          <p>When you're ready to start the meeting, you can say "May I have your attention please." Introduce yourself, in character, including any of the key details about your background. Then, make sure you cover the key information relating to the second question on the character card.</p>
+          <p>Feel free to ham it up and make your character ridiculous! When you're done with your speech, open it up to the audience with "Any questions?"</p>
+
+          <h4>Answering questions</h4>
+          <p>Here are some go-to tactics when answering questions:</p>
+          <ul>
+            <li>Make up an answer</li>
+            <li>Change the subject</li>
+            <li>Be overly defensive</li>
+            <li>Show contrition</li>
+            <li>Attack whomever asked the question</li>
+            <li>Claim ignorance</li>
+            <li>Cut off whomever is asking the questions</li>
+          </ul>
+          <p>You end the round at any time by saying "That will be all!"</p>
+        </div>
+      </b-modal>
+
+      <b-button v-b-modal.audience-tips variant="warning">Audience Tips</b-button>
+
+      <b-modal id="audience-tips" title="Advice for asking questions" hide-footer>
+        <div class="d-block text-left">
+          <h4>Being a character</h4>
+          <p>You don't need to ask questions in character but it can help! Consider who you might be and why you're at the this speech. For instance you could be a collegue, a rival, a skeptic, a fan, or a concerned citizen.</p>
+
+          <h4>Asking questions</h4>
+          <p>Try keep the focus on the speaker; don't hog the spotlight. Try the following types of questions:</p>
+          <ul>
+            <li>Ask for an elaboration on something the speaker mentioned</li>
+            <li>Ask about potential consequences of something in the story</li>
+            <li>Cast doubt on the speaker: "That's not what I heard..."</li>
+            <li>Introduce new info: “What do you think of rumors that...”</li>
+            <li>Share a controverisal opinion: “More of a statement than a question...”</li>
+          </ul>
+
+        </div>
+      </b-modal>
+
+      <button class="btn btn-warning" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
+
+    </div>
+  </div>
+</template>
+
+<script>
+import { roomsCollection } from '../firebase';
+import axios from 'axios'
+
+export default {
+  name: 'app-monster',
+  props: {
+    roomID: String,
+    gSheetID: String
+  },
+  data: function(){
+    return {
+      roomInfo: {
+        currentCardIndex: 0,
+        xCardIsActive: false,
+        cardSequence: [0,1,2],
+        roundInfo: "",
+        roundProgress: "",
+        roundTitle: ""
+      },
+      dataReady: false,
+      gSheet: [{text:"loading"}],
+      orderedCards: [],
+      unorderedCards: [],
+      clickedCard: 0,
+      instructionCardCount: 15,
+      gameRoundCount: 6
+    }
+  },
+  mounted(){
+    this.fetchAndCleanSheetData(this.gSheetID);
+
+    this.$bind('roomInfo', roomsCollection.doc(this.roomID))
+      .then(() => {
+        this.dataReady = true
+      })
+      .then(() => {
+        if (!this.roomInfo){
+          console.log("new room!")
+
+          roomsCollection.doc(this.roomID).set({currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
+        }
+      })
+      .catch((error) => {
+        console.log('error in loading: ', error)
+      })
+  },
+  methods: {
+    previousCard(){
+      roomsCollection.doc(this.roomID).update({
+        currentCardIndex: this.roomInfo.currentCardIndex -= 1
+      })
+      this.updateRoundInfo();
+    },
+    nextCard(){
+      roomsCollection.doc(this.roomID).update({
+        currentCardIndex: this.roomInfo.currentCardIndex += 1
+      })
+      this.updateRoundInfo();
+    },
+    updateRoundInfo(){
+      var newRoundInfo = ""
+      var newRoundProgress =""
+
+      if (this.roomInfo.currentCardIndex == 0 || this.roomInfo.currentCardIndex == (this.instructionCardCount + this.gameRoundCount + 1)){
+        newRoundInfo = ""
+      } else if (this.roomInfo.currentCardIndex <= this.instructionCardCount){
+        newRoundInfo = "Instructions";
+        newRoundProgress = (this.roomInfo.currentCardIndex) + " of " + this.instructionCardCount
+      } else if (this.roomInfo.currentCardIndex > this.instructionCardCount) {
+        newRoundInfo = "Round";
+        newRoundProgress = (this.roomInfo.currentCardIndex - this.instructionCardCount) + " of " + this.gameRoundCount
+      } else {
+        newRoundInfo = ""
+      }
+
+      var newRoundTitle = ""
+
+      if (this.roomInfo.currentCardIndex > this.instructionCardCount) {
+        switch (this.roomInfo.currentCardIndex - this.instructionCardCount){
+          case 1:
+            newRoundTitle = "A Glimpse of Trouble"
+            break;
+          case 2:
+            newRoundTitle = "A Clueless Public"
+            break;
+          case 3:
+            newRoundTitle = "It's Here!"
+            break;
+          case 4:
+            newRoundTitle = "Not Helping..."
+            break;
+          case 5:
+            newRoundTitle = "Down to the Wire"
+            break;
+          case 6:
+            newRoundTitle = "It's All Over"
+            break;
+        }
+      } else {
+        newRoundTitle = ""
+      }
+
+
+      roomsCollection.doc(this.roomID).update({
+        roundInfo: newRoundInfo,
+        roundProgress: newRoundProgress,
+        roundTitle: newRoundTitle
+      })
+    },
+    xCard(){
+      roomsCollection.doc(this.roomID).update({
+        xCardIsActive: !this.roomInfo.xCardIsActive
+      })
+    },
+    updateClickedCard(index){
+      if(this.clickedCard == index){this.clickedCard=0}else{this.clickedCard=index}
+    },
+    fetchAndCleanSheetData(sheetID){
+      if (!sheetID || sheetID == 'demo') {
+        sheetID = '1i7AM5PkRPD2h5fO9H6abe26WyaCkk4OzjpZ4WU2nRKQ'
+      }
+
+      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM'
+
+      axios.get(getURL)
+      .then(response => {
+
+        var cleanData = []
+        var gRows = response.data.sheets[0].data[0].rowData
+
+        // Transform Sheets API response into cleanData
+        gRows.forEach((item, i) => {
+          if (i !== 0 && item.values[0] && item.values[0].formattedValue){
+
+            var rowInfo = {
+              ordered: item.values[0].formattedValue,
+              archetype: item.values[1].formattedValue,
+              subtitle: item.values[2].formattedValue,
+              characterQuestion: item.values[3].formattedValue,
+              characterDetail: item.values[4].formattedValue,
+              keyQuestion: item.values[5].formattedValue,
+              keyDetails: item.values[6].formattedValue
+            }
+
+            cleanData.push(rowInfo)
+          }
+        });
+
+        this.gSheet = cleanData
+
+        // Sort cleanData into ordered and unordered decks
+        cleanData.forEach((item) => {
+          //if (item.ordered == "1") {
+            this.orderedCards.push(item)
+          /*} else if (item.ordered == "0") {
+            this.unorderedCards.push(item)
+          }*/
+        });
+
+      }).catch(error => {
+        this.gSheet = [{text:'Error loading Google Sheet'}]
+        console.log(error)
+      })      
+    }
+
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this.roomInfo component only -->
+<style>
+  html {
+    height: 100%;
+  }
+
+
+
+  .message{
+    font-size: 2.5em;
+    margin-top: 1em;
+  }
+
+  .monster{
+
+    margin:auto;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+
+  body {
+    background: #3131bb;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top, #3131bb, #97a5ff);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, #3131bb, #97a5ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    max-width: 600px;
+    height: 100%;
+    margin: auto;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Arvo', serif;
+  }
+
+
+
+</style>
+
+<style scoped>
+
+  body {
+    background: #50a958;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top, #50a958, #b1f1b7);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, #50a958, #b1f1b7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    max-width: 600px;
+    height: 100%;
+    margin: auto;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  h1 {
+    font-family: 'Creepster', cursive;
+  }
+
+  .fade-enter-active {
+    transition: opacity .5s;
+  }
+  .fade-enter /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+
+  .fade-leave-active {
+    transition: opacity 0s;
+  }
+  .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+
+  li {
+    list-style-type: disc;
+    display: list-item;
+    margin-left: 20px;
+  }
+
+  .card-body{
+    min-height: 11em;
+  }
+
+  .btn-warning {
+    color: #212529;
+    background-color: #c5a55f;
+    border-color: #422d00;
+  }
+
+  .btn-warning:focus,
+  .btn-warning.focus {
+    box-shadow: 0 0 0 .2rem rgba(86, 68, 29, 0.5)
+  }
+
+  .btn-warning:hover {
+    background-color: #c39736;
+    border-color: #422d00;
+  }
+
+</style>

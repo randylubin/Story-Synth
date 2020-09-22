@@ -1,0 +1,239 @@
+<template>
+  <div class="dftq container" v-if="roomInfo">
+
+    <div class="btn-container" style>
+      <div class="row mb-4">
+        <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
+          <button class="btn btn-secondary" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Shuffle</button>
+          <button class="btn btn-danger" v-on:click="xCard()">X-card</button>
+          <button class="btn btn-secondary" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Ending</button>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
+      <transition name="fade">
+        <div class="card d-flex shadow">
+
+          <div class="card-body align-items-center d-flex justify-content-center" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
+            {{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].text }}
+          </div>
+
+          <div class="card-body align-items-center d-flex justify-content-center" v-if="roomInfo.xCardIsActive">
+            X-Card
+          </div>
+
+        </div>
+      </transition>
+    </div>
+
+    <div v-if="roomInfo.xCardIsActive" class="mb-4">
+
+    </div>
+
+
+
+    <div class="row mb-4">
+      <transition name="fade">
+        <div class="btn-group col-sm" role="group" aria-label="Card Controls">
+
+          <button class="btn btn-secondary" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
+          <button class="btn btn-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1">Next Card</button>
+        </div>
+      </transition>
+    </div>
+
+  </div>
+</template>
+
+<script>
+import { roomsCollection } from '../firebase';
+import axios from 'axios'
+
+export default {
+  name: 'app-DFTQ',
+  props: {
+    roomID: String,
+    gSheetID: String
+  },
+  data: function(){
+    return {
+      roomInfo: {
+        currentCardIndex: 0,
+        xCardIsActive: false,
+        cardSequence: [0,1,2]
+      },
+      dataReady: false,
+      gSheet: [{text:"loading"}],
+      orderedCards: [],
+      unorderedCards: []
+    }
+  },
+  mounted(){
+    this.fetchAndCleanSheetData(this.gSheetID);
+
+    this.$bind('roomInfo', roomsCollection.doc(this.roomID))
+      .then(() => {
+        this.dataReady = true
+      })
+      .then(() => {
+        if (!this.roomInfo){
+          console.log("new room!")
+
+          roomsCollection.doc(this.roomID).set({currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
+
+          this.shuffle();
+        }
+      })
+      .catch((error) => {
+        console.log('error in loading: ', error)
+      })
+  },
+  methods: {
+    previousCard(){
+      roomsCollection.doc(this.roomID).update({
+        currentCardIndex: this.roomInfo.currentCardIndex -= 1
+      })
+    },
+    nextCard(){
+      if (this.roomInfo.cardSequence.length == 1){
+        this.shuffle();
+      }
+      roomsCollection.doc(this.roomID).update({
+        currentCardIndex: this.roomInfo.currentCardIndex += 1
+      })
+    },
+    lastCard(){
+      roomsCollection.doc(this.roomID).update({
+        currentCardIndex: this.gSheet.length -1
+      })
+    },
+    xCard(){
+      roomsCollection.doc(this.roomID).update({
+        xCardIsActive: !this.roomInfo.xCardIsActive
+      })
+    },
+    shuffle(){
+      // reset card count
+      roomsCollection.doc(this.roomID).update({
+        currentCardIndex: 0
+      })
+
+      // Create a ordered array
+      var newCardSequence = []
+      var shuffledCards = []
+
+      for (var i = 0; i < this.orderedCards.length; i++) {
+        newCardSequence.push(i)
+      }
+
+      for (i = 0; i < this.unorderedCards.length; i++) {
+        shuffledCards.push(i+this.orderedCards.length)
+      }
+
+      // Shuffle array
+      for (i = shuffledCards.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [shuffledCards[i], shuffledCards[j]] = [shuffledCards[j], shuffledCards[i]];
+      }
+
+      shuffledCards.push(this.gSheet.length-1)
+
+      // sync the shuffled array
+      roomsCollection.doc(this.roomID).update({
+        cardSequence: newCardSequence.concat(shuffledCards)
+      })
+
+    },
+    fetchAndCleanSheetData(sheetID){
+      if (!sheetID || sheetID == 'demo') {
+        sheetID = '1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w'
+      }
+
+      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM'
+
+      axios.get(getURL)
+      .then(response => {
+
+        var cleanData = []
+        var gRows = response.data.sheets[0].data[0].rowData
+
+        // Transform Sheets API response into cleanData
+        gRows.forEach((item, i) => {
+          if (i !== 0 && item.values[0].formattedValue){
+            console.log("New Row:" + item.values[1].formattedValue)
+
+            var rowInfo = {
+              ordered: item.values[0].formattedValue,
+              text: item.values[1].formattedValue
+            }
+
+            cleanData.push(rowInfo)
+          }
+        });
+
+        this.gSheet = cleanData
+
+        // Sort cleanData into ordered and unordered decks
+        cleanData.forEach((item) => {
+          if (item.ordered == "1") {
+            this.orderedCards.push(item)
+          } else if (item.ordered == "0") {
+            this.unorderedCards.push(item)
+          }
+        });
+
+      }).catch(error => {
+        this.gSheet = [{text:'Error loading Google Sheet'}]
+        console.log(error)
+      })      
+    }
+
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this.roomInfo component only -->
+<style>
+  html {
+    height: 100%;
+  }
+
+
+
+  .message{
+    font-size: 2.5em;
+    margin-top: 1em;
+  }
+
+  .dftq{
+
+    margin:auto;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+
+
+
+</style>
+
+<style scoped>
+  body {
+    background: #74ebd5;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top, #ACB6E5, #74ebd5);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, #ACB6E5, #74ebd5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    max-width: 600px;
+    margin:auto;
+  }
+  .card-body{
+    font-size: 2em;
+    min-height: 11em;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+</style>
