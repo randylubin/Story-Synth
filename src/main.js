@@ -1,4 +1,7 @@
-import './firebase'
+//import './firebase'
+import 'firebase/app'
+import 'firebase/firestore'
+
 
 import Vue from 'vue'
 
