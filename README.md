@@ -19,6 +19,14 @@ The app uses Vue.js as it's main framework, with Bootstrap as a visual framework
 
 The app is designed to be serverless, so you can use Firebase Hosting or Github Pages to run it for free.
 
+A quick overview of the most relevant libraries in use:
+- [Vue.js](https://vuejs.org/) – the framework that runs the app, including routing and views
+- [Firebase](https://firebase.google.com/) – the real time database that keeps data in sync among different users looking at the same page
+- [VueFire](https://vuefire.vuejs.org/) – the binding between Vue and Firebase; it keeps the Firebase data in sync with the app data
+- [Bootstrap](https://getbootstrap.com/) – the css framework that makes it easy to make the app look decent
+- [BootstrapVue](https://bootstrap-vue.org/) – easy access to Bootstrap's js components such as modals and tooltips
+- [Axios](https://www.npmjs.com/package/axios) – the http libary used to pull data from Google Sheets
+
 ## Project setup
 Make sure you have [Node.js and npm](https://www.npmjs.com/get-npm) installed locally, then clone or download this project repo, navigate to the folder, and run:
 
