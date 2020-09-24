@@ -15,8 +15,9 @@
       <transition name="fade">
         <div class="card d-flex shadow">
 
-          <div class="card-body align-items-center d-flex justify-content-center" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
-            {{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].text }}
+          <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
+            <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
+            <p class="mt-4 mb-4">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText }}</p>
           </div>
 
           <div class="card-body align-items-center d-flex justify-content-center" v-if="roomInfo.xCardIsActive">
@@ -161,11 +162,11 @@ export default {
         // Transform Sheets API response into cleanData
         gRows.forEach((item, i) => {
           if (i !== 0 && item.values[0].formattedValue){
-            console.log("New Row:" + item.values[1].formattedValue)
 
             var rowInfo = {
               ordered: item.values[0].formattedValue,
-              text: item.values[1].formattedValue
+              headerText: item.values[1].formattedValue,
+              bodyText: item.values[2].formattedValue
             }
 
             cleanData.push(rowInfo)
