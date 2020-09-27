@@ -3,26 +3,29 @@
     <!-- <router-view></router-view>-->
     <app-roomPicker :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-roomPicker>
 
-    <app-clock :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='FFF' && $route.params.roomID"></app-clock>
+    <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
     <app-DFTQ :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='DFTQ' && $route.params.roomID"></app-DFTQ>
     <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
+    <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
   </div>
 </template>
 
 <script>
-  import Clock from './components/Clock.vue'
+  import Timed from './components/Timed.vue'
   import DFTQ from './components/DFTQ.vue'
   import Monster from './components/Monster.vue'
   import RoomPicker from './components/RoomPicker.vue'
+  import SecretCards from './components/SecretCards.vue'
 
 
   export default {
     name: 'app',
     components: {
-      'app-clock': Clock,
+      'app-timed': Timed,
       'app-roomPicker': RoomPicker,
       'app-DFTQ': DFTQ,
       'app-monster': Monster,
+      'app-secretCards': SecretCards
     },
     data () {
       return {

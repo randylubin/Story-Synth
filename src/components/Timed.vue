@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="clock mb-4">
+    <div class="timed mb-4">
       <span class="time">{{ time }}</span>
 
       <div class="btn-container px-1">
@@ -64,7 +64,7 @@ import { roomsCollection } from '../firebase';
 import axios from 'axios'
 
 export default {
-  name: 'app-clock',
+  name: 'app-timed',
   props: {
     roomID: String,
     gSheetID: String
@@ -242,7 +242,7 @@ export default {
     margin-top: 1em;
   }
 
-  .clock{
+  .timed{
     background-color: #f1f1f1;
     margin-top: 1em;
     padding-bottom: 1em;

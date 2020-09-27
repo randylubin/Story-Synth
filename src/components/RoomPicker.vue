@@ -65,6 +65,7 @@
                 <option>Descended from the Queen</option>
                 <option>Timed</option>
                 <option>Monster</option>
+                <option>Secret Cards</option>
               </select>
             </div>
           </div>
@@ -119,10 +120,12 @@ export default {
     } else {
       if (this.routeGameType == "DFTQ"){
         this.gameType = "Descended from the Queen"
-      } else if (this.routeGameType == "FFF") {
+      } else if (this.routeGameType == "Timed") {
         this.gameType = "Timed"
-      } else {
+      } else if (this.routeGameType == "Monster") {
         this.gameType = "Monster"
+      } else {
+        this.gameType = "SecretCards"
       }
     }
   },
@@ -132,11 +135,13 @@ export default {
   methods : {
     formatToURL(){
       if (this.gameType == "Timed"){
-        return ("FFF")
+        return ("Timed")
       } else if (this.gameType=="Descended from the Queen") {
         return ("DFTQ")
-      } else {
+      } else if (this.gameType == "Monster") {
         return ("Monster")
+      } else {
+        return ("SecretCards")
       }
     },
     updateUrl(){

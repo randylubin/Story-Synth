@@ -10,5 +10,4 @@ const app = initializeApp({
 });
 
 export const db = app.firestore();
-export const todosCollection = db.collection('todos');
 export const roomsCollection = db.collection('rooms');
