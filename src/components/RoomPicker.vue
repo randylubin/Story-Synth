@@ -39,8 +39,11 @@
 
           <div class="row">
             <div class="col-sm form-group">
-              <label for="roomInput">Room code</label>
+              <label for="roomInput">Room Code</label>
 
+              <svg v-b-tooltip.hover title="The shareable room code – use this random one or write in a custom one" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle-fill m-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033a.237.237 0 0 1-.24-.247C5.35 4.091 6.737 3.5 8.005 3.5c1.396 0 2.672.73 2.672 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.105a.25.25 0 0 1-.25.25h-.81a.25.25 0 0 1-.25-.246l-.004-.217c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.803 0-1.253.478-1.342 1.134-.018.137-.128.25-.266.25h-.825zm2.325 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/>
+              </svg>
 
               <div class="input-group">
                 <input v-model="roomID" class="form-control" placeholder="Room Code">
@@ -57,9 +60,11 @@
             </div>
           </div>
 
+          <!-- If you are creating a single-game app, comment out the format selection and gSheetID field. Make sure to hard code the gSheetID in the game's .vue file and to hard code the format route in the router-link, in place of the formatToURL function. -->
+
           <div class="row mb-4">
             <div class="col-sm">
-              Format:
+              Game Format
               <select v-model="gameType" class="custom-select">
                 <option disabled value="">Please select one</option>
                 <option>Descended from the Queen</option>
@@ -72,13 +77,21 @@
 
           <div class="row mb-4">
             <div class="col-sm">
-              Sheet: <input v-model="gSheetID" class="form-control" placeholder="Google Sheet ID (optional)">
+              Sheet (optional) 
+              <svg v-b-tooltip.hover title="Paste in the ID of a publicly shared Google Sheet that contains the game data. The ID is the section in between '/d/' and '/?edit' (no / included)."  width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle-fill m-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033a.237.237 0 0 1-.24-.247C5.35 4.091 6.737 3.5 8.005 3.5c1.396 0 2.672.73 2.672 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.105a.25.25 0 0 1-.25.25h-.81a.25.25 0 0 1-.25-.246l-.004-.217c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.803 0-1.253.478-1.342 1.134-.018.137-.128.25-.266.25h-.825zm2.325 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z"/>
+              </svg>
+              
+              <input v-model="gSheetID" class="form-control" placeholder="Google Sheet ID (optional)">
+
+              
+
             </div>
           </div>
 
           <div class="row mb-4">
             <div class="col-sm">
-              <router-link :to="{path: '/' + formatToURL(gameType) + '/' + gSheetID + '/' + roomID }">
+              <router-link :to="{path: '/' + formatToURL(gameType, gSheet, roomID)}">
                 <button :disabled="!roomID" type="button" class="btn btn-primary">Enter Room</button>
               </router-link>
             </div>
@@ -109,7 +122,7 @@ export default {
   mounted(){
     this.assignRandomRoomName();
     
-    if(!this.routeGSheetID){
+    if(!this.routeGSheetID || this.routeGSheetID == ""){
       this.gSheetID = 'demo'
     } else {
       this.gSheetID = this.routeGSheetID
@@ -133,16 +146,30 @@ export default {
     this.updateUrl();
   },
   methods : {
-    formatToURL(){
-      if (this.gameType == "Timed"){
-        return ("Timed")
-      } else if (this.gameType=="Descended from the Queen") {
-        return ("DFTQ")
-      } else if (this.gameType == "Monster") {
-        return ("Monster")
+    formatToURL(gameType, gSheetID, roomID){
+      var newPath = ""
+
+      if (gameType == "Timed"){
+        newPath += "Timed"
+      } else if (gameType=="Descended from the Queen") {
+        newPath += "DFTQ"
+      } else if (gameType == "Monster") {
+        newPath += "Monster"
       } else {
-        return ("SecretCards")
+        newPath += ("SecretCards")
       }
+
+      newPath += "/"
+
+      if(!gSheetID || gSheetID == ""){
+        newPath += 'demo'
+      } else {
+        newPath += gSheetID
+      }
+
+      newPath += "/" + roomID
+
+      return newPath
     },
     updateUrl(){
       this.currentUrl = location.hostname.toString() + "/#" + this.$route.fullPath;
