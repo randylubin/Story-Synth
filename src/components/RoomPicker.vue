@@ -91,7 +91,7 @@
 
           <div class="row mb-4">
             <div class="col-sm">
-              <router-link :to="{path: '/' + formatToURL(gameType, gSheet, roomID)}">
+              <router-link :to="{path: '/' + formatToURL(gameType, gSheetID, roomID)}">
                 <button :disabled="!roomID" type="button" class="btn btn-primary">Enter Room</button>
               </router-link>
             </div>
@@ -161,7 +161,7 @@ export default {
 
       newPath += "/"
 
-      if(!gSheetID || gSheetID == ""){
+      if(!gSheetID || gSheetID === ""){
         newPath += 'demo'
       } else {
         newPath += gSheetID
