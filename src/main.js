@@ -1,6 +1,7 @@
 //import './firebase'
 import 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/database'
 
 
 import Vue from 'vue'
@@ -39,8 +40,11 @@ router.beforeEach((to, from, next) => {
 })
 
 import { firestorePlugin } from 'vuefire'
+import { rtdbPlugin } from 'vuefire'
+
 
 Vue.use(firestorePlugin)
+Vue.use (rtdbPlugin)
 
 new Vue({
   el: '#app',

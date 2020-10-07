@@ -3,6 +3,7 @@
     <div class="row mb-4" v-if="$route.params.roomID">
       <div class="col-sm">
         <p>Room link: <a :href="'/#'+$route.path">{{currentUrl}}</a></p>
+        <p v-if="roomInfo">current viewers {{ Object.keys(roomInfo).length }} 👀</p>
       </div>
     </div>
 
@@ -105,23 +106,36 @@
 
 
 <script>
+import { rtdb } from '../firebase'
+var rooms = rtdb.ref('rooms')
+var amOnline = rtdb.ref('.info/connected');
+
 export default {
   name: 'app-roomPicker',
   props: {
     routeGameType: String,
-    routeGSheetID: String
+    routeGSheetID: String,
+    routeRoomID: String,
   },
   data () {
     return {
         roomID: null,
         gameType: null,
         gSheetID: null,
-        currentUrl: location.hostname.toString() + "/#" + this.$route.fullPath
+        currentUrl: location.hostname.toString() + "/#" + this.$route.fullPath,
+        roomInfo: {
+          
+        }
     }
   },
+  firebase: {
+    roomInfo: rtdb.ref('documents')
+  },
   mounted(){
-    this.assignRandomRoomName();
-    
+    if (!this.roomID) {
+      this.assignRandomRoomName();
+    }
+
     if(!this.routeGSheetID || this.routeGSheetID == ""){
       this.gSheetID = 'demo'
     } else {
@@ -141,7 +155,47 @@ export default {
         this.gameType = "SecretCards"
       }
     }
+
+    if (this.routeRoomID){
+      var tempUserRef = "rooms/" + this.routeRoomID + "/" + Math.trunc(Math.random()*1000).toString()
+
+      var userRef = rtdb.ref(tempUserRef);
+
+      amOnline.on('value', function(snapshot) {
+        if (snapshot.val()) {
+          userRef.onDisconnect().remove();
+          userRef.set(true);
+        }
+      });
+
+      this.$rtdbBind('roomInfo', rooms.child(this.routeRoomID))
+        .then(() => {
+
+        })
+    }
   },
+  watch:{
+    $route (){
+      if (this.routeRoomID){
+        var tempUserRef = "rooms/" + this.routeRoomID + "/" + Math.trunc(Math.random()*1000).toString()
+
+        var userRef = rtdb.ref(tempUserRef);
+
+        amOnline.on('value', function(snapshot) {
+          if (snapshot.val()) {
+            userRef.onDisconnect().remove();
+            userRef.set(true);
+          }
+        });
+
+        this.$rtdbBind('roomInfo', rooms.child(this.routeRoomID))
+          .then(() => {
+
+          })
+      }
+        
+    }
+  }, 
   updated(){
     this.updateUrl();
   },
@@ -164,7 +218,6 @@ export default {
       if(!gSheetID || gSheetID == 'demo' || gSheetID === ""){
         newPath += 'demo'
       } else if (gSheetID.includes("spreadsheet")){
-        //https://docs.google.com/spreadsheets/d/1xnQJNbKpDafpUziNtCmQy_RR6PY4A0nlC77Tx2QDutg/edit?usp=sharing
         newPath += gSheetID.substring(gSheetID.indexOf("/d/")+3, gSheetID.indexOf("/edit?"))
       } else {
         newPath += gSheetID;
