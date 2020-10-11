@@ -302,53 +302,15 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this.roomInfo component only -->
-<style>
-  html {
-    height: 100%;
-  }
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 
-
-
-  .message{
-    font-size: 2.5em;
-    margin-top: 1em;
-  }
+<style scoped>
 
   .secretCards{
 
     margin:auto;
     padding-top: 1em;
     padding-bottom: 1em;
-  }
-
-  body {
-    background: #3131bb;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to top, #3131bb, #97a5ff);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to top, #3131bb, #97a5ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    max-width: 600px;
-    height: 100%;
-    margin: auto;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    font-family: 'Arvo', serif;
-  }
-
-
-
-</style>
-
-<style scoped>
-
-  body {
-    background: #50a958;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to top, #50a958, #b1f1b7);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to top, #50a958, #b1f1b7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    max-width: 600px;
-    height: 100%;
-    margin: auto;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
   }
 
   h1 {

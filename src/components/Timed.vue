@@ -231,8 +231,8 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this.roomInfo component only -->
-<style>
 
+<style scoped>
   .time {
     font-size: 4em;
   }
@@ -253,9 +253,6 @@ export default {
     margin-right: .3em;
   }
 
-</style>
-
-<style scoped>
   body {
     background: #74ebd5;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to top, #ACB6E5, #74ebd5);  /* Chrome 10-25, Safari 5.1-6 */

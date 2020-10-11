@@ -1,38 +1,5 @@
 <template>
-  <div class="dftq container" v-if="roomInfo">
-
-    <div class="btn-container" style>
-      <div class="row mb-4">
-        <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-secondary" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Shuffle</button>
-          <button class="btn btn-danger" v-on:click="xCard()">X-card</button>
-          <button class="btn btn-secondary" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Ending</button>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
-      <transition name="fade">
-        <div class="card d-flex shadow">
-
-          <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
-            <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
-            <p class="mt-4 mb-4">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText }}</p>
-          </div>
-
-          <div class="card-body align-items-center d-flex justify-content-center" v-if="roomInfo.xCardIsActive">
-            X-Card
-          </div>
-
-        </div>
-      </transition>
-    </div>
-
-    <div v-if="roomInfo.xCardIsActive" class="mb-4">
-
-    </div>
-
-
+  <div class="shuffled container" v-if="roomInfo">
 
     <div class="row mb-4">
       <transition name="fade">
@@ -44,6 +11,39 @@
       </transition>
     </div>
 
+    <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
+      <transition name="fade">
+        <div class="card d-flex shadow">
+
+          <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
+            <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
+            <p class="mt-4 mb-4">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText }}</p>
+          </div>
+
+          <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
+            <div class="mt-5 pt-5 mb-5">
+              <h1>X-Card</h1>
+            </div>
+            <button class="btn btn-dark mt-5" v-on:click="xCard()">Continue</button>
+            <div class="">
+              <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
+            </div>
+          </div>
+
+        </div>
+      </transition>
+    </div>
+
+    <div class="btn-container" style>
+      <div class="row mb-4">
+        <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
+          <button class="btn btn-secondary" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
+          <button class="btn btn-danger" v-on:click="xCard()">X-Card</button>
+          <button class="btn btn-secondary" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Last card</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -52,7 +52,7 @@ import { roomsCollection } from '../firebase';
 import axios from 'axios'
 
 export default {
-  name: 'app-DFTQ',
+  name: 'app-shuffled',
   props: {
     roomID: String,
     gSheetID: String
@@ -105,6 +105,10 @@ export default {
       })
     },
     lastCard(){
+      if (this.roomInfo.cardSequence.length == 1){
+        this.shuffle();
+      }
+
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: this.gSheet.length -1
       })
@@ -138,6 +142,7 @@ export default {
         [shuffledCards[i], shuffledCards[j]] = [shuffledCards[j], shuffledCards[i]];
       }
 
+      // Add the final card
       shuffledCards.push(this.gSheet.length-1)
 
       // sync the shuffled array
@@ -177,9 +182,9 @@ export default {
 
         // Sort cleanData into ordered and unordered decks
         cleanData.forEach((item) => {
-          if (item.ordered == "1") {
+          if (item.ordered == "0") {
             this.orderedCards.push(item)
-          } else if (item.ordered == "0") {
+          } else if (item.ordered == "1") {
             this.unorderedCards.push(item)
           }
         });
@@ -194,29 +199,8 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this.roomInfo component only -->
-<style>
-  html {
-    height: 100%;
-  }
+<!-- Add "scoped" attribute to limit CSS to this component only -->
 
-
-
-  .message{
-    font-size: 2.5em;
-    margin-top: 1em;
-  }
-
-  .dftq{
-
-    margin:auto;
-    padding-top: 1em;
-    padding-bottom: 1em;
-  }
-
-
-
-</style>
 
 <style scoped>
   body {
@@ -226,6 +210,14 @@ export default {
     max-width: 600px;
     margin:auto;
   }
+
+  .shuffled{
+
+    margin:auto;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+
   .card-body{
     font-size: 2em;
     min-height: 11em;
@@ -236,5 +228,9 @@ export default {
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
+  }
+  .x-card-text {
+    font-size: .5em;
+    text-decoration: underline;
   }
 </style>
