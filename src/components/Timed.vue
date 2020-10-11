@@ -39,8 +39,8 @@
             <div class="col-sm">
               <div class="card shadow">
                 <div class="card-body">
-                  <div class="card-text">
-                    {{row.text}}
+                  <div class="card-text" style="white-space: pre-line" v-html="row.text">
+                    
                   </div>
                 </div>
               </div>

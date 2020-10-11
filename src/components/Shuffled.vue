@@ -17,7 +17,7 @@
 
           <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
             <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
-            <p class="mt-4 mb-4">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText }}</p>
+            <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
           </div>
 
           <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
@@ -225,7 +225,7 @@ export default {
   }
 
   .card-body{
-    font-size: 2em;
+    font-size: 1.5em;
     min-height: 11em;
   }
 

@@ -57,12 +57,13 @@
           <div class="row mb-4" v-if="row.order == roomInfo.currentCardIndex">
             <div class="col-sm">
               <div class="card shadow" v-on:click="updateClickedCard(index)" style="cursor:pointer">
-                <div class="card-body ">
-                  Public text: {{row.publicText}}
+                <div class="card-body">
+                  <h5>Public: </h5>
+                  <span style="white-space: pre-line" v-html="row.publicText"></span>
                   <br><br>
-                  Secret Info:
-                  <br>
-                  {{row[playerSelected]}}
+                  
+                  <h5>Secret:</h5>
+                  <span style="white-space: pre-line" v-html="row[playerSelected]"></span>
 
                 </div>
               </div>

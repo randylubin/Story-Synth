@@ -50,7 +50,7 @@
   }
 
   .message{
-    font-size: 2.5em;
+    font-size: 2em;
     margin-top: 1em;
   }
 

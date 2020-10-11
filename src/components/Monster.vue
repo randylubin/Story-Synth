@@ -51,9 +51,9 @@
                       </div>
 
                       <div v-if="index !== 0">
-                        <p class="mt-4">{{row.archetype}}</p>
-                        <div class="text-left">
-                          {{row.characterDetail}}
+                        <p class="mt-4" style="white-space: pre-line" v-html="row.archetype"></p>
+                        <div class="text-left" style="white-space: pre-line" v-html="row.characterDetail">
+                          
                         </div>
                       </div>
 
@@ -265,7 +265,7 @@ export default {
     updateClickedCard(index){
       if(this.clickedCard == index){
         this.clickedCard=-1
-      } else if (index !== 0) {
+      } else if (index !== 0 && index > this.instructionCardCount) {
         this.clickedCard=index
       }
     },
