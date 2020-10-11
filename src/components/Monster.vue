@@ -1,12 +1,12 @@
 <template>
-  <div class="monster container" v-if="roomInfo">
+  <div class="monster game-room container" v-if="roomInfo">
 
     <div class="btn-container" style>
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-warning" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-warning" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
-          <button class="btn btn-warning" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
+          <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
+          <button class="btn btn-outline-dark" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
+          <button class="btn btn-outline-dark" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
             <span v-if="roomInfo.currentCardIndex == 0">Start</span>
             <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
           </button>
@@ -223,6 +223,7 @@ export default {
       }
 
       var newRoundTitle = ""
+      /* For the published version, this section adds round titles
 
       if (this.roomInfo.currentCardIndex > this.instructionCardCount) {
         switch (this.roomInfo.currentCardIndex - this.instructionCardCount){
@@ -248,7 +249,7 @@ export default {
       } else {
         newRoundTitle = ""
       }
-
+      */
 
       roomsCollection.doc(this.roomID).update({
         roundInfo: newRoundInfo,

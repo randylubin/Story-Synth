@@ -1,12 +1,12 @@
 <template>
-  <div class="shuffled container" v-if="roomInfo">
+  <div class="shuffled game-room container" v-if="roomInfo">
 
     <div class="row mb-4">
       <transition name="fade">
         <div class="btn-group col-sm" role="group" aria-label="Card Controls">
 
-          <button class="btn btn-secondary" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1">Next Card</button>
+          <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous Card</button>
+          <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1">Next Card</button>
         </div>
       </transition>
     </div>
@@ -24,7 +24,7 @@
             <div class="mt-5 pt-5 mb-5">
               <h1>X-Card</h1>
             </div>
-            <button class="btn btn-dark mt-5" v-on:click="xCard()">Continue</button>
+            <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
             <div class="">
               <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
             </div>
@@ -37,9 +37,9 @@
     <div class="btn-container" style>
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-secondary" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
-          <button class="btn btn-danger" v-on:click="xCard()">X-Card</button>
-          <button class="btn btn-secondary" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Last card</button>
+          <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
+          <button class="btn btn-outline-dark" v-on:click="xCard()">X-Card</button>
+          <button class="btn btn-outline-dark" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Last Card</button>
         </div>
       </div>
     </div>

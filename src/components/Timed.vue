@@ -1,30 +1,32 @@
 <template>
   <div class="container">
-    <div class="timed mb-4">
-      <span class="time">{{ time }}</span>
-
-      <div class="btn-container px-1">
         <div v-if="timerSynced">
-          <div v-if="playerSelected" class="row mb-4">
-            <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
-              <button type="button" class="btn btn-primary" :disabled="roomInfo.running" v-on:click="start()">Start</button>
-              <button type="button" class="btn btn-primary" :disabled="!roomInfo.running" v-on:click="stop()">Pause</button>  
-              <button type="button" class="btn btn-primary" :disabled="!roomInfo.timeBegan" v-on:click="reset()">Reset</button>
+          <div v-if="!playerSelected" class="row my-4">
+            <div class="btn-group col-sm" role="group" aria-label="Role Controls">
+              <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>              
             </div>
           </div>
-
-          <div v-if="!playerSelected" class="row mb-4">
-            <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
-              <button type="button" class="btn btn-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>              
-            </div>
-          </div>
-
-          <div class="player-label row mb-4" v-if="playerSelected">
+          <div class="player-label text-center row my-4" v-if="playerSelected">
             <div class="col-sm">
               Role: {{playerSelected}}
-            <button class="btn btn-sm btn-secondary" v-on:click="selectPlayer(null)">Reselect role</button>
+            <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
             </div>  
           </div>
+
+    <div class="timer-box game-room mb-4 shadow">
+      <div class="btn-container px-1">
+
+
+          <span class="time">{{ time }}</span>
+
+          <div v-if="playerSelected" class="row mb-4">
+            <div class="btn-group col-sm-6 offset-sm-3" role="group" aria-label="Timer Controls">
+              <button type="button" class="btn btn-outline-dark" :disabled="roomInfo.running" v-on:click="start()">Start</button>
+              <button type="button" class="btn btn-outline-dark" :disabled="!roomInfo.running" v-on:click="stop()">Pause</button>  
+              <button type="button" class="btn btn-outline-danger" :disabled="!roomInfo.timeBegan" v-on:click="reset()">Reset</button>
+            </div>
+          </div>
+
 
         </div>
       </div>
@@ -35,7 +37,7 @@
         <transition name="fade">
           <div class="row mb-4" v-if="row.time <= secondsElapsed && row[playerSelected]">
             <div class="col-sm">
-              <div class="card">
+              <div class="card shadow">
                 <div class="card-body">
                   <div class="card-text">
                     {{row.text}}
@@ -50,11 +52,7 @@
 
 
   </div>
-    <!--
-    <div class="text">
-      <a href="https://codepen.io/raphael_octau" target="_blank">@raphael_octau</a>
-    </div>
-    -->
+    <!-- Timer code remixed from https://codepen.io/raphael_octau by raphael_octau -->
 
 
 </template>
@@ -242,8 +240,8 @@ export default {
     margin-top: 1em;
   }
 
-  .timed{
-    background-color: #f1f1f1;
+  .timer-box{
+    background-color: white;
     margin-top: 1em;
     padding-bottom: 1em;
   }

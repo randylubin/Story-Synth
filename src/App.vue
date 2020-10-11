@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <!-- <router-view></router-view>-->
-    <app-about v-if="$route.path == '/about'"></app-about>
     <div v-if="$route.path !== '/about'">
       <app-roomPicker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-roomPicker>
 
@@ -22,7 +21,6 @@
   import Monster from './components/Monster.vue'
   import RoomPicker from './components/RoomPicker.vue'
   import SecretCards from './components/SecretCards.vue'
-  import About from './components/About.vue'
 
 
   export default {
@@ -33,7 +31,6 @@
       'app-shuffled': Shuffled,
       'app-monster': Monster,
       'app-secretCards': SecretCards,
-      'app-about': About,
     },
     data () {
       return {
@@ -68,21 +65,24 @@
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #000d1b;
   padding-top: 20px;
 }
 
+.game-room {
+  text-align: center;
+}
+
 body {
-    background: #3131bb;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to top, #3131bb, #97a5ff);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to top, #3131bb, #97a5ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: beige;
+    // background: #3131bb;  /* fallback for old browsers */
+    // background: -webkit-linear-gradient(to top, #3131bb, #97a5ff);  /* Chrome 10-25, Safari 5.1-6 */
+    // background: linear-gradient(to top, #3131bb, #97a5ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     max-width: 600px;
     height: 100%;
     margin: auto;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    font-family: 'Arvo', serif;
   }
 
 h1, h2 {
@@ -99,7 +99,4 @@ li {
   margin: 0 10px;
 }
 
-a {
-  color: #3c3c3c;
-}
 </style>

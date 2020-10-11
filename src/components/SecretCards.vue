@@ -1,11 +1,30 @@
 <template>
-  <div class="secretCards container" v-if="roomInfo">
+  <div class="secretCards game-room container" v-if="roomInfo">
+    <div>
+      <div v-if="!playerSelected" class="mb-4">
+        <div class="row text-center">
+          Pick a player role:
+        </div>
+        <div class="row">
+          <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
+            <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>              
+          </div>
+        </div>
+      </div>
 
-    <div class="btn-container" style>
+      <div class="player-label row mb-4" v-if="playerSelected">
+        <div class="col-sm">
+          Role: {{playerSelected}}
+          <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
+        </div>  
+      </div>
+    </div>
+
+    <div class="btn-container" v-if="playerSelected">
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-warning" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-warning" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
+          <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
+          <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length-2">
             <span v-if="roomInfo.currentCardIndex == 0">Start</span>
             <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
           </button>
@@ -13,20 +32,6 @@
       </div>
     </div>
 
-    <div>
-      <div v-if="!playerSelected" class="row mb-4">
-        <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
-          <button type="button" class="btn btn-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>              
-        </div>
-      </div>
-
-      <div class="player-label row mb-4" v-if="playerSelected">
-        <div class="col-sm">
-          Role: {{playerSelected}}
-        <button class="btn btn-sm btn-secondary" v-on:click="selectPlayer(null)">Reselect role</button>
-        </div>  
-      </div>
-    </div>
 
     <div v-if="roomInfo.xCardIsActive" class="mb-4">
       <transition name="fade">
@@ -48,7 +53,7 @@
 
     <div v-if="!roomInfo.xCardIsActive && playerSelected">
       <div v-for="(row, index) in gSheet" v-bind:key="index">
-        <transition name="fade">
+        <transition name="fade" mode="out-in">
           <div class="row mb-4" v-if="row.order == roomInfo.currentCardIndex">
             <div class="col-sm">
               <div class="card shadow" v-on:click="updateClickedCard(index)" style="cursor:pointer">
@@ -327,9 +332,7 @@ export default {
   .fade-leave-active {
     transition: opacity 0s;
   }
-  .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
+  
 
   li {
     list-style-type: disc;
