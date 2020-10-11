@@ -5,6 +5,7 @@
     <div v-if="$route.path !== '/about'">
       <app-roomPicker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-roomPicker>
 
+      <!-- Remove for published version any components you aren't using -->
       <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
       <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
       <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
@@ -14,6 +15,8 @@
 </template>
 
 <script>
+
+  // Remove for published version any components you aren't using
   import Timed from './components/Timed.vue'
   import Shuffled from './components/Shuffled.vue'
   import Monster from './components/Monster.vue'
@@ -24,7 +27,7 @@
 
   export default {
     name: 'app',
-    components: {
+    components: { // Remove from published version any you aren't using
       'app-timed': Timed,
       'app-roomPicker': RoomPicker,
       'app-shuffled': Shuffled,

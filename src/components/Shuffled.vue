@@ -152,12 +152,17 @@ export default {
 
     },
     fetchAndCleanSheetData(sheetID){
+
+      // Remove for published version
       if (!sheetID || sheetID == 'demo') {
         sheetID = '1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w'
       }
 
+      // For published version, set getURL equal to the url of your spreadsheet
       var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM'
 
+
+      // For the published version - remove if you're hardcoding the data instead of using Google Sheets
       axios.get(getURL)
       .then(response => {
 
@@ -178,6 +183,7 @@ export default {
           }
         });
 
+        // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData
 
         // Sort cleanData into ordered and unordered decks

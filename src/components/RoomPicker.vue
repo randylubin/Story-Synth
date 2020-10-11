@@ -20,6 +20,7 @@
     <div v-if="!$route.params.roomID" class="card shadow mb-4">
       <div class="card-body">
 
+        <!-- Remove for published version and replace with your own header and about section -->
         <div class="row mb-4">
           <div class="col-sm">
             <h1>Story Synth</h1>
@@ -39,6 +40,7 @@
             </ul>
           </div>
         </div>
+        <!-- end of header and about section -->
 
         <div class="row mb-4">
           <div class="col-sm">
@@ -71,7 +73,7 @@
             </div>
           </div>
 
-          <!-- If you are creating a single-game app, comment out the format selection and gSheetID field. Make sure to hard code the gSheetID in the game's .vue file and to hard code the format route in the router-link, in place of the formatToURL function. -->
+          <!-- Remove for published version. Comment out the format selection and gSheetID field. Make sure to hard code the gSheetID in the game's .vue file. -->
 
           <div class="row mb-4">
             <div class="col-sm">
@@ -94,12 +96,12 @@
               </svg>
               
               <input v-model="gSheetID" class="form-control" placeholder="Google Sheet ID (optional)">
-
-              
-
             </div>
           </div>
+          <!-- end of format and sheet fields -->
 
+
+          <!-- For the published version, replace gameType with the specific game type in quotes. Example "Shuffled"  -->
           <div class="row mb-4">
             <div class="col-sm">
               <router-link :to="{path: '/' + formatToURL(gameType, gSheetID, roomID)}">
