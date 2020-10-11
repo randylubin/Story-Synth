@@ -35,8 +35,6 @@
           </transition>
         </div>
       </div>
-      <div class="">
-      </div>
 
       <div v-if="!$route.params.roomID" class="card shadow mb-4" style="margin-top: 76px">
         <div class="card-body">
