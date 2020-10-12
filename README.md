@@ -1,4 +1,4 @@
-![Version 1.0.0](https://img.shields.io/badge/version-1.0.0-blue)
+![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-blue)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
 
 # Story Synth
@@ -10,11 +10,11 @@ This app is geared for designers of simple storytelling games who want to playte
 2. Create a room in the app that links to that content
 3. Share that link with players so that they can play in realtime without screen sharing
 
-There are two styles of game available. The first is inspired by 'For the Queen' by Alex Roberts: players first read through several instructions and then answer randomly shuffled prompts. The other is timer based, inspired by Jason Morningstar's game 'Find / Fix / Finish': players received new information or prompts based on what role they are and how much time has elapsed.
-
-[Demo of the app in action](https://story-synth.diegeticgames.com)
+[See the app live at storysynth.org](https://storysynth.org)
 
 You can use the app as a starting point for more complex or polished games. Here's the final version of a game using the "monster" template: [Dawn of the Monster Invasion](https://monster.diegeticgames.com/#/)
+
+Read more about the app at [About Story Synth](https://storysynth.org/about)
 
 # Getting the app working locally
 
@@ -41,32 +41,34 @@ Then set up a free Firebase project, which will give you an API key. You can fol
 
 Then, update the project with your Firebase credentials:
 
-/src/firebase.js should have your project name and api key
+Add your your project name, database, and api key to `/src/firebase.js` (fill in between the "" on the lines with TODO)
 
-### Compiles and hot-reloads for development
+### Run your app locally
 When you're testing the app on your machine, use:
 
 ```
 npm run serve
 ```
 
-and then go to localhost:8080 in your browser
+and then go to [localhost:8080](localhost:8080) in your browser
 
-### Compiles and minifies for production
+### Compiles and minifies for production hosting
 When you're ready to save the app and share it online, run:
 
 ```
 npm run build
 ```
 
+This will efficently compile the app into the `/dist` folder.
+
 ### Firebase Hosting
-If you're using Firebase hosting, you can push to their servers with:
+If you're using Firebase's free hosting, you can push to their servers with:
 
 ```
 firebase deploy --only hosting
 ```
 
-In order to do this you'll have to follow more of the steps in the above mentioned [Firebase guide](https://firebase.google.com/docs/web/setup#create-firebase-project)
+If you run into any issues, you may need to follow more of the steps in the above mentioned [Firebase guide](https://firebase.google.com/docs/web/setup#create-firebase-project).
 
 ### Lints and fixes files
 ```
