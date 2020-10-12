@@ -9,6 +9,7 @@
       <b-collapse id="navbarSupportedContent" is-nav>
         <b-navbar-nav>
             <b-nav-item href="/about">About</b-nav-item>
+            <b-nav-item href="/about/templates.html">Templates</b-nav-item>
             <b-nav-item href="/about/playtest.html">Playtest</b-nav-item>
             <b-nav-item href="/about/publish.html">Publish</b-nav-item>
             <b-nav-item href="/about/extend.html">Extend</b-nav-item>
@@ -49,7 +50,7 @@
 
           <div class="row mb-3">
             <div class="col-sm text-left">
-              <p>This app allows game designers to playtest simple storytelling games by putting their game content in a Google Spreadsheet. For information on how to use and remix this app, see the <a href="/about">About Page</a>.</p>
+              <p>This app allows game designers to playtest simple storytelling games by putting their game content in a Google Spreadsheet. For information on how to use and remix this app, see the <a href="/about">About Page</a> or the <a href="/about/formats.html">Formats Page</a>.</p>
               
               <p>To see Story Synth work with placeholder content, try any of the formats below with "demo" in the sheet field.</p>
               
