@@ -12,6 +12,8 @@ This app is geared for designers of simple storytelling games who want to playte
 
 [See the app live at storysynth.org](https://storysynth.org)
 
+[Video tour of Story Synth in action](https://www.loom.com/share/93ccd693401b42f4a8ddfa4a209b2f48)
+
 You can use the app as a starting point for more complex or polished games. Here's the final version of a game using the "monster" template: [Dawn of the Monster Invasion](https://monster.diegeticgames.com/#/)
 
 Read more about the app at [About Story Synth](https://storysynth.org/about)

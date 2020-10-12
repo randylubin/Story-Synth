@@ -196,8 +196,16 @@ export default {
         });
 
       }).catch(error => {
-        this.gSheet = [{text:'Error loading Google Sheet'}]
-        console.log(error)
+        this.gSheet = [
+          {
+            ordered: 0,
+            headerText: "Error",
+            bodyText:'Error loading the Google Sheet. Please check to make sure is publicly viewable'
+          }
+        ]
+
+        this.orderedCards = this.gSheet
+        console.log(error.message)
       })      
     }
 

@@ -9,7 +9,7 @@
       <b-collapse id="navbarSupportedContent" is-nav>
         <b-navbar-nav>
             <b-nav-item href="/about">About</b-nav-item>
-            <b-nav-item href="/about/templates.html">Templates</b-nav-item>
+            <b-nav-item href="/about/formats.html">Formats</b-nav-item>
             <b-nav-item href="/about/playtest.html">Playtest</b-nav-item>
             <b-nav-item href="/about/publish.html">Publish</b-nav-item>
             <b-nav-item href="/about/extend.html">Extend</b-nav-item>
@@ -52,7 +52,7 @@
             <div class="col-sm text-left">
               <p>This app allows game designers to playtest simple storytelling games by putting their game content in a Google Spreadsheet. For information on how to use and remix this app, see the <a href="/about">About Page</a> or the <a href="/about/formats.html">Formats Page</a>.</p>
               
-              <p>To see Story Synth work with placeholder content, try any of the formats below with "demo" in the sheet field.</p>
+              <p>To see Story Synth work with placeholder content, try any of the formats below with "demo" in the sheet field or watch this <a href="https://www.loom.com/share/93ccd693401b42f4a8ddfa4a209b2f48">Video Tour</a>.</p>
               
               <p>For an example of a published app built on Story Synth, check out <a href="https://monster.diegeticgames.com">Dawn of the Monster Invasion</a>.</p>
             </div>
@@ -254,7 +254,7 @@ export default {
       if(!gSheetID || gSheetID == 'demo' || gSheetID === ""){
         newPath += 'demo'
       } else if (gSheetID.includes("spreadsheet")){
-        newPath += gSheetID.substring(gSheetID.indexOf("/d/")+3, gSheetID.indexOf("/edit?"))
+        newPath += gSheetID.substring(gSheetID.indexOf("/d/")+3, gSheetID.indexOf("/edit"))
       } else {
         newPath += gSheetID;
       }
