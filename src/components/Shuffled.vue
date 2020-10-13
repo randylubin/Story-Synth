@@ -200,7 +200,7 @@ export default {
           {
             ordered: 0,
             headerText: "Error",
-            bodyText:'Error loading the Google Sheet. Please check to make sure is publicly viewable'
+            bodyText:'Error loading the Google Sheet. Please make sure that the link is correct and that it is publicly viewable'
           }
         ]
 

@@ -52,7 +52,7 @@
             <div class="col-sm text-left">
               <p>This app allows game designers to playtest simple storytelling games by putting their game content in a Google Spreadsheet. For information on how to use and remix this app, see the <a href="/about">About Page</a> or the <a href="/about/formats.html">Formats Page</a>.</p>
               
-              <p>To see Story Synth work with placeholder content, try any of the formats below with "demo" in the sheet field or watch this <a href="https://www.loom.com/share/93ccd693401b42f4a8ddfa4a209b2f48">Video Tour</a>.</p>
+              <p>To see Story Synth work with placeholder content, try any of the formats below with "demo" in the sheet field or watch this <a href="https://youtu.be/TLQk3zyVyVI">Video Tour</a>.</p>
               
               <p>For an example of a published app built on Story Synth, check out <a href="https://monster.diegeticgames.com">Dawn of the Monster Invasion</a>.</p>
             </div>
