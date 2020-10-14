@@ -37,7 +37,7 @@
     <div class="btn-container" style>
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
+          <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffleAndResetGame()" color="rgb(187, 138, 200)">Re-shuffle</button>
           <button class="btn btn-outline-dark" v-on:click="xCard()">X-Card</button>
           <button class="btn btn-outline-dark" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Last Card</button>
         </div>
@@ -65,9 +65,12 @@ export default {
         cardSequence: [0,1,2]
       },
       dataReady: false,
+      firebaseReady: false,
       gSheet: [{text:"loading"}],
       orderedCards: [],
-      unorderedCards: []
+      currentDeck: 0,
+      totalDecks: 0,
+      unorderedDecks: {}
     }
   },
   mounted(){
@@ -75,7 +78,7 @@ export default {
 
     this.$bind('roomInfo', roomsCollection.doc(this.roomID))
       .then(() => {
-        this.dataReady = true
+        this.firebaseReady = true
       })
       .then(() => {
         if (!this.roomInfo){
@@ -83,7 +86,7 @@ export default {
 
           roomsCollection.doc(this.roomID).set({currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
 
-          this.shuffle();
+          if(this.dataReady){this.shuffleAndResetGame();}
         }
       })
       .catch((error) => {
@@ -98,7 +101,7 @@ export default {
     },
     nextCard(){
       if (this.roomInfo.cardSequence.length == 1){
-        this.shuffle();
+        this.shuffleAndResetGame();
       }
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: this.roomInfo.currentCardIndex += 1
@@ -106,7 +109,7 @@ export default {
     },
     lastCard(){
       if (this.roomInfo.cardSequence.length == 1){
-        this.shuffle();
+        this.shuffleAndResetGame();
       }
 
       roomsCollection.doc(this.roomID).update({
@@ -118,7 +121,9 @@ export default {
         xCardIsActive: !this.roomInfo.xCardIsActive
       })
     },
-    shuffle(){
+    shuffleAndResetGame(){
+      console.log('shuffling')
+      
       // reset card count
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: 0
@@ -126,28 +131,29 @@ export default {
 
       // Create a ordered array
       var newCardSequence = []
-      var shuffledCards = []
 
+      // Add the ordered cards first
       for (var i = 0; i < this.orderedCards.length; i++) {
         newCardSequence.push(i)
       }
 
-      for (i = 0; i < this.unorderedCards.length; i++) {
-        shuffledCards.push(i+this.orderedCards.length)
+      // Shuffle deck function
+      var shuffleDeck = function (deck){
+        for (var n = deck.length - 1; n > 0; n--) {
+          let j = Math.floor(Math.random() * (n + 1));
+          [deck[n], deck[j]] = [deck[j], deck[n]];
+        }
+        return deck
       }
 
-      // Shuffle array
-      for (i = shuffledCards.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [shuffledCards[i], shuffledCards[j]] = [shuffledCards[j], shuffledCards[i]];
+      // Shuffle each deck (except the first) and add it to the sequence
+      for (var k = 1; k < this.totalDecks; k++){
+        newCardSequence = newCardSequence.concat(shuffleDeck(this.unorderedDecks[k]))
       }
-
-      // Add the final card
-      shuffledCards.push(this.gSheet.length-1)
 
       // sync the shuffled array
       roomsCollection.doc(this.roomID).update({
-        cardSequence: newCardSequence.concat(shuffledCards)
+        cardSequence: newCardSequence
       })
 
     },
@@ -180,20 +186,35 @@ export default {
             }
 
             cleanData.push(rowInfo)
+
+            if (rowInfo.ordered >= this.totalDecks) {
+              this.totalDecks = parseInt(rowInfo.ordered) + 1;
+            }
+
           }
         });
+
+        this.unorderedDecks = [];
+        for (var d = 0; d < this.totalDecks; d++){
+          this.unorderedDecks.push([])
+        }
 
         // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData
 
         // Sort cleanData into ordered and unordered decks
-        cleanData.forEach((item) => {
+        cleanData.forEach((item, index) => {
           if (item.ordered == "0") {
             this.orderedCards.push(item)
-          } else if (item.ordered == "1") {
-            this.unorderedCards.push(item)
+          } else {
+            this.unorderedDecks[item.ordered].push(index)
           }
         });
+
+        console.log('done fetching and cleaning data')
+        this.dataReady = true;
+
+        if(this.firebaseReady){this.shuffleAndResetGame();}
 
       }).catch(error => {
         this.gSheet = [
@@ -205,7 +226,7 @@ export default {
         ]
 
         this.orderedCards = this.gSheet
-        console.log(error.message)
+        console.log(error.message, error)
       })      
     }
 
