@@ -9,6 +9,7 @@
       <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
       <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
       <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
+      <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SlotMachine' && $route.params.roomID"></app-slotMachine>
     </div>
   </div>
 </template>
@@ -21,6 +22,7 @@
   import Monster from './components/Monster.vue'
   import RoomPicker from './components/RoomPicker.vue'
   import SecretCards from './components/SecretCards.vue'
+  import SlotMachine from './components/SlotMachine.vue'
 
 
   export default {
@@ -31,6 +33,7 @@
       'app-shuffled': Shuffled,
       'app-monster': Monster,
       'app-secretCards': SecretCards,
+      'app-slotMachine': SlotMachine,
     },
     data () {
       return {
