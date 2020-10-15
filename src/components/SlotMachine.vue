@@ -11,14 +11,25 @@
       </transition>
     </div>
 
-    <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
+    <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
       <transition name="fade">
         <div class="card d-flex shadow">
 
           <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
-            <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
-            <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+            
+            <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
+              <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
+              <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+            </div>
+
+            <div v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
+              <div v-for="(index) in numberOfWheels" v-bind:key="index" v-html="wheels[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
+                
+              </div>
+            </div>
+            
           </div>
+          
 
           <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
             <div class="mt-5 pt-5 mb-5">
@@ -65,6 +76,7 @@ export default {
         cardSequence: [0,1,2]
       },
       dataReady: false,
+      firebaseReady: false,
       gSheet: [{text:"loading"}],
       numberOfWheels: 0,
       wheels: [],
@@ -77,7 +89,7 @@ export default {
 
     this.$bind('roomInfo', roomsCollection.doc(this.roomID))
       .then(() => {
-        this.dataReady = true
+        this.firebaseReady = true
       })
       .then(() => {
         if (!this.roomInfo){
@@ -85,7 +97,7 @@ export default {
 
           roomsCollection.doc(this.roomID).set({currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
 
-          this.shuffle();
+          if(this.dataReady){this.shuffle();}
         }
       })
       .catch((error) => {
@@ -121,6 +133,7 @@ export default {
       })
     },
     shuffle(){
+
       // reset card count
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: 0
@@ -130,22 +143,42 @@ export default {
       var newCardSequence = []
       var shuffledCards = []
 
-      for (var i = 0; i < this.orderedCards.length; i++) {
-        newCardSequence.push(i)
+      // add in the ordered cards
+      for (var i = 0; i < this.gSheet.length; i++) {
+        if (this.gSheet[i].ordered == 0){
+          newCardSequence.push(i)
+        }
       }
 
-      for (i = 0; i < this.unorderedCards.length; i++) {
-        shuffledCards.push(i+this.orderedCards.length)
+      // Shuffle deck function
+      var shuffleDeck = function (deck){
+        for (var n = deck.length - 1; n > 0; n--) {
+          let j = Math.floor(Math.random() * (n + 1));
+          [deck[n], deck[j]] = [deck[j], deck[n]];
+        }
+        return deck
       }
 
-      // Shuffle array
-      for (i = shuffledCards.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [shuffledCards[i], shuffledCards[j]] = [shuffledCards[j], shuffledCards[i]];
+      // create an array of the wheel length
+      var wheelsIndexArray = []
+      
+      for (var j = 0; j < this.wheels.length; j++) {
+        wheelsIndexArray.push([])
+        for (i = 0; i < this.wheels[0].length; i++){
+          wheelsIndexArray[j].push(i);
+        }
+        wheelsIndexArray[j] = shuffleDeck(wheelsIndexArray[j])
       }
 
-      // Add the final card
-      shuffledCards.push(this.gSheet.length-1)
+      var newEmptyCard
+      for (i = 0; i < this.wheels[0].length; i++) {
+        newEmptyCard = {};
+        for (j = 0; j < this.numberOfWheels; j++){
+          newEmptyCard[j] = wheelsIndexArray[j][i]
+        }
+
+        shuffledCards.push(newEmptyCard)
+      }
 
       // sync the shuffled array
       roomsCollection.doc(this.roomID).update({
@@ -181,8 +214,9 @@ export default {
         gRows.forEach((item, i) => {
           if (i !== 0 && item.values[0].formattedValue){
 
-            if (item.values[0]==0){
-              var rowInfo = {
+            var rowInfo = {}
+            if (item.values[0].formattedValue >= 0){
+              rowInfo = {
                 ordered: item.values[0].formattedValue,
                 headerText: item.values[1].formattedValue,
                 bodyText: item.values[2].formattedValue
@@ -190,9 +224,9 @@ export default {
               cleanData.push(rowInfo)
             }
 
-            if (item.values[0] != 0){
+            if (item.values[0].formattedValue != 0){
               for (var j = 3; j < item.values.length; j++) {
-                this.wheels[j-3].push(item.values[j])
+                this.wheels[j-3].push(item.values[j].formattedValue)
               }
             }
           }
@@ -200,6 +234,11 @@ export default {
 
         // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData
+
+        console.log('done fetching and cleaning data')
+        this.dataReady = true;
+
+        if(this.firebaseReady){this.shuffle();}
 
       }).catch(error => {
         this.gSheet = [
@@ -211,7 +250,7 @@ export default {
         ]
 
         this.orderedCards = this.gSheet
-        console.log(error.message)
+        console.log(error.message, error)
       })      
     }
 
