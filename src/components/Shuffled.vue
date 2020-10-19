@@ -6,7 +6,7 @@
         <div class="btn-group col-sm" role="group" aria-label="Card Controls">
 
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous Card</button>
-          <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1">Next Card</button>
+          <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex >= roomInfo.locationOfLastCard">Next Card</button>
         </div>
       </transition>
     </div>
@@ -36,10 +36,17 @@
 
     <div class="btn-container" style>
       <div class="row mb-4">
-        <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffleAndResetGame()" color="rgb(187, 138, 200)">Re-shuffle</button>
-          <button class="btn btn-outline-dark" v-on:click="xCard()">X-Card</button>
-          <button class="btn btn-outline-dark" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Last Card</button>
+        <div class="col-sm">
+          <b-button-group aria-role="Deck control" class="d-flex w-100">
+            <b-button variant="outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffleAndResetGame()" color="rgb(187, 138, 200)">Re-shuffle</b-button>
+            <b-button variant="outline-dark" v-on:click="xCard()">X-Card</b-button>
+            <!--<b-button variant="outline-dark" v-on:click="nextDeck()">Next Deck</b-button>-->
+            <b-dropdown variant="outline-dark" id="dropdown-1" text="Last Card" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.currentCardIndex == roomInfo.locationOfLastCard" right>
+              <b-dropdown-item v-on:click="lastCard()">Go to last card</b-dropdown-item>
+              <b-dropdown-item v-on:click="shuffleLastCard('center')">Shuffle near center</b-dropdown-item>
+              <b-dropdown-item v-on:click="shuffleLastCard('end')">Shuffle near end</b-dropdown-item>
+            </b-dropdown>
+          </b-button-group>
         </div>
       </div>
     </div>
@@ -62,7 +69,8 @@ export default {
       roomInfo: {
         currentCardIndex: 0,
         xCardIsActive: false,
-        cardSequence: [0,1,2]
+        cardSequence: [0,1,2],
+        locationOfLastCard: 0,
       },
       dataReady: false,
       firebaseReady: false,
@@ -113,7 +121,7 @@ export default {
       }
 
       roomsCollection.doc(this.roomID).update({
-        currentCardIndex: this.gSheet.length -1
+        currentCardIndex: this.roomInfo.locationOfLastCard
       })
     },
     xCard(){
@@ -121,12 +129,39 @@ export default {
         xCardIsActive: !this.roomInfo.xCardIsActive
       })
     },
+    nextDeck(){
+      //TODO
+    },
+    shuffleLastCard(location){
+      
+      var tempLastCardIndex = this.roomInfo.cardSequence.splice(this.roomInfo.locationOfLastCard,1)
+      var tempNewLastCardLocation = 0
+      
+      switch(location){
+        case "center":
+          tempNewLastCardLocation = Math.floor((this.roomInfo.cardSequence.length - this.orderedCards.length)/2) + this.orderedCards.length + Math.floor((Math.random()*4)-2)
+          break;
+        case "end":
+          tempNewLastCardLocation = this.roomInfo.cardSequence.length - Math.floor(Math.random()*4)
+          break;
+      }
+      
+      this.roomInfo.cardSequence.splice(tempNewLastCardLocation,0,tempLastCardIndex[0])
+      console.log(this.roomInfo.cardSequence)
+      
+      roomsCollection.doc(this.roomID).update({
+        cardSequence: this.roomInfo.cardSequence,
+        locationOfLastCard: tempNewLastCardLocation,
+      })
+
+    },
     shuffleAndResetGame(){
       console.log('shuffling')
       
       // reset card count
       roomsCollection.doc(this.roomID).update({
-        currentCardIndex: 0
+        currentCardIndex: 0,
+        locationOfLastCard:0
       })
 
       // Create a ordered array
@@ -153,7 +188,8 @@ export default {
 
       // sync the shuffled array
       roomsCollection.doc(this.roomID).update({
-        cardSequence: newCardSequence
+        cardSequence: newCardSequence,
+        locationOfLastCard: newCardSequence.length - 1,
       })
 
     },
