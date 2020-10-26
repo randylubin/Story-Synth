@@ -1,12 +1,12 @@
 <template>
-  <div class="slot-machine game-room container" v-if="roomInfo">
+  <div class="phases game-room container" v-if="roomInfo">
 
     <div class="row mb-4">
       <transition name="fade">
         <div class="btn-group col-sm" role="group" aria-label="Card Controls">
 
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous Card</button>
-          <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1">Next Card</button>
+          <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)">Next Card</button>
         </div>
       </transition>
     </div>
@@ -19,13 +19,14 @@
             
             <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
               <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
-              <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+              <p class="mt-4 mb-4 text-left" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
             </div>
 
             <div v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
-              <div v-for="(index) in numberOfWheels" v-bind:key="index" v-html="wheels[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
-                
-              </div>
+              <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
+              </div>-->
+              <h2>{{phaseNames[roomInfo.currentPhase]}}</h2>
+              <div v-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]"></div>
             </div>
             
           </div>
@@ -63,7 +64,7 @@ import { roomsCollection } from '../firebase';
 import axios from 'axios'
 
 export default {
-  name: 'app-slotMachine',
+  name: 'app-phases',
   props: {
     roomID: String,
     gSheetID: String
@@ -72,14 +73,16 @@ export default {
     return {
       roomInfo: {
         currentCardIndex: 0,
+        currentPhase: 0,
         xCardIsActive: false,
         cardSequence: [0,1,2]
       },
       dataReady: false,
       firebaseReady: false,
       gSheet: [{text:"loading"}],
-      numberOfWheels: 0,
-      wheels: [],
+      numberOfPhases: 0,
+      phaseNames: [],
+      phaseData: [],
       orderedCards: [],
       unorderedCards: []
     }
@@ -95,7 +98,7 @@ export default {
         if (!this.roomInfo){
           console.log("new room!")
 
-          roomsCollection.doc(this.roomID).set({currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
+          roomsCollection.doc(this.roomID).set({currentCardIndex:0, xCardIsActive: false, cardSequence:[0,1,2], currentPhase: 0})
 
           if(this.dataReady){this.shuffle();}
         }
@@ -106,16 +109,44 @@ export default {
   },
   methods: {
     previousCard(){
+      if (Number.isInteger(this.roomInfo.cardSequence[this.roomInfo.currentCardIndex])){
+        if (this.roomInfo.cardSequence[this.roomInfo.currentCardIndex] >= this.phaseData[0].length){
+          this.roomInfo.currentCardIndex -= 1
+          this.roomInfo.currentPhase = this.numberOfPhases - 1
+        } else {
+          this.roomInfo.currentCardIndex -= 1
+          this.roomInfo.currentPhase = 0
+        }
+      } else if (this.roomInfo.currentPhase == 0){      
+        this.roomInfo.currentPhase = this.numberOfPhases - 1
+        this.roomInfo.currentCardIndex -= 1
+      } else {
+        this.roomInfo.currentPhase -= 1
+      }
+      
       roomsCollection.doc(this.roomID).update({
-        currentCardIndex: this.roomInfo.currentCardIndex -= 1
+        currentCardIndex: this.roomInfo.currentCardIndex,
+        currentPhase: this.roomInfo.currentPhase
       })
     },
     nextCard(){
       if (this.roomInfo.cardSequence.length == 1){
         this.shuffle();
       }
+
+      if (Number.isInteger(this.roomInfo.cardSequence[this.roomInfo.currentCardIndex])){
+        this.roomInfo.currentCardIndex += 1
+        this.roomInfo.currentPhase = 0
+      } else if (this.roomInfo.currentPhase < this.numberOfPhases - 1){
+        this.roomInfo.currentPhase += 1
+      } else {
+        this.roomInfo.currentPhase = 0;
+        this.roomInfo.currentCardIndex += 1
+      }
+
       roomsCollection.doc(this.roomID).update({
-        currentCardIndex: this.roomInfo.currentCardIndex += 1
+        currentCardIndex: this.roomInfo.currentCardIndex,
+        currentPhase: this.roomInfo.currentPhase
       })
     },
     lastCard(){
@@ -136,17 +167,21 @@ export default {
 
       // reset card count
       roomsCollection.doc(this.roomID).update({
-        currentCardIndex: 0
+        currentCardIndex: 0,
+        currentPhase: 0
       })
 
       // Create a ordered array
-      var newCardSequence = []
+      var initialCardSequence = []
+      var finalCardSequence = []
       var shuffledCards = []
 
       // add in the ordered cards
       for (var i = 0; i < this.gSheet.length; i++) {
         if (this.gSheet[i].ordered == 0){
-          newCardSequence.push(i)
+          initialCardSequence.push(i)
+        } else if (this.gSheet[i].ordered == 2) {
+          finalCardSequence.push(i)
         }
       }
 
@@ -159,30 +194,32 @@ export default {
         return deck
       }
 
-      // create an array of the wheel length
-      var wheelsIndexArray = []
+      // create an array of the number of rounds
+      var numberOfRounds = []
       
-      for (var j = 0; j < this.wheels.length; j++) {
-        wheelsIndexArray.push([])
-        for (i = 0; i < this.wheels[0].length; i++){
-          wheelsIndexArray[j].push(i);
+      for (var j = 0; j < this.phaseData.length; j++) {
+        numberOfRounds.push([])
+        for (i = 0; i < this.phaseData[0].length; i++){
+          numberOfRounds[j].push(i);
         }
-        wheelsIndexArray[j] = shuffleDeck(wheelsIndexArray[j])
+        numberOfRounds[j] = shuffleDeck(numberOfRounds[j])
       }
 
       var newEmptyCard
-      for (i = 0; i < this.wheels[0].length; i++) {
+      for (i = 0; i < this.phaseData[0].length; i++) {
         newEmptyCard = {};
-        for (j = 0; j < this.numberOfWheels; j++){
-          newEmptyCard[j] = wheelsIndexArray[j][i]
+        for (j = 0; j < this.numberOfPhases; j++){
+          newEmptyCard[j] = numberOfRounds[j][i]
         }
 
         shuffledCards.push(newEmptyCard)
       }
 
+
+
       // sync the shuffled array
       roomsCollection.doc(this.roomID).update({
-        cardSequence: newCardSequence.concat(shuffledCards)
+        cardSequence: initialCardSequence.concat(shuffledCards).concat(finalCardSequence)
       })
 
     },
@@ -190,7 +227,7 @@ export default {
 
       // Remove for published version
       if (!sheetID || sheetID == 'demo') {
-        sheetID = '1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU'
+        sheetID = '1HataDfV2lrA4hfzmLgDjXH09dEMLQV6OT10tVH9G52A'
       }
 
       // For published version, set getURL equal to the url of your spreadsheet
@@ -204,10 +241,11 @@ export default {
         var cleanData = []
         var gRows = response.data.sheets[0].data[0].rowData
 
-        this.numberOfWheels = gRows[0].values.length - 3
+        this.numberOfPhases = gRows[0].values.length - 3
         
-        for (var w = 0; w < this.numberOfWheels; w++) {
-          this.wheels.push([])
+        for (var w = 0; w < this.numberOfPhases; w++) {
+          this.phaseData.push([])
+          this.phaseNames.push(gRows[0].values[w+3].formattedValue)
         }
 
         // Transform Sheets API response into cleanData
@@ -224,9 +262,9 @@ export default {
               cleanData.push(rowInfo)
             }
 
-            if (item.values[0].formattedValue != 0){
+            if (item.values[0].formattedValue == 1){
               for (var j = 3; j < item.values.length; j++) {
-                this.wheels[j-3].push(item.values[j].formattedValue)
+                this.phaseData[j-3].push(item.values[j].formattedValue)
               }
             }
           }
@@ -237,7 +275,7 @@ export default {
 
         console.log('done fetching and cleaning data')
         this.dataReady = true;
-
+        
         if(this.firebaseReady && this.roomInfo.cardSequence.length < 4){this.shuffle();}
 
       }).catch(error => {
@@ -270,7 +308,7 @@ export default {
     margin:auto;
   }
 
-  .slot-machine{
+  .phases{
 
     margin:auto;
     padding-top: 1em;

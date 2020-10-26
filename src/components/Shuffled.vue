@@ -250,7 +250,7 @@ export default {
         console.log('done fetching and cleaning data')
         this.dataReady = true;
 
-        if(this.firebaseReady){this.shuffleAndResetGame();}
+        if(this.firebaseReady  && this.roomInfo.cardSequence.length < 4){this.shuffleAndResetGame();}
 
       }).catch(error => {
         this.gSheet = [

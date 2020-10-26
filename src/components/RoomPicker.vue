@@ -59,6 +59,12 @@
           </div>
           <!-- end of header and about section -->
 
+          <div class="row mb-4" v-if="$route.query.gameTitle">
+            <div class="col-sm text-center">
+              <h1>{{$route.query.gameTitle}}</h1>
+            </div>
+          </div>
+
           <div class="row mb-4">
             <div class="col-sm text-center">
               <h2>Create a room</h2>
@@ -102,6 +108,7 @@
                     <option>Monster</option>
                     <option>Secret Cards</option>
                     <option>Slot Machine</option>
+                    <option>Phases</option>
                   </select>
                 </div>
               </div>
@@ -120,7 +127,7 @@
 
             <div v-if="routeGSheetID">
               <div class="row mb-4">
-                <div class="col-sm">This room will be pre-populated with the {{routeGameType}} template and <a v-bind:href="'https://docs.google.com/spreadsheets/d/'+routeGSheetID+'/edit?usp=sharing'" target="_blank">this Google Sheet</a>. You can <a href="/">clear these defaults</a>, if you'd like.</div>
+                <div class="col-sm">This room will use the {{routeGameType}} template and <a v-bind:href="'https://docs.google.com/spreadsheets/d/'+routeGSheetID+'/edit?usp=sharing'" target="_blank">this Google Sheet</a>. You can <a href="/">clear these defaults</a>, if you'd like.</div>
               </div>
             </div>
             <!-- end of format and sheet fields -->
@@ -190,6 +197,8 @@ export default {
         this.gameType = "Monster"
       } else if (this.routeGameType == "SlotMachine"){
         this.gameType = "Slot Machine"
+      } else if (this.routeGameType == "Phases"){
+        this.gameType = "Phases"
       } else {
         this.gameType = "SecretCards"
       }
@@ -250,6 +259,8 @@ export default {
         newPath += "Monster"
       } else if (gameType == "Secret Cards"){
         newPath += "SecretCards"
+      } else if (gameType == "Phases") {
+        newPath += "Phases"
       } else {
         newPath += "SlotMachine"
       }
