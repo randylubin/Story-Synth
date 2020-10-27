@@ -2,15 +2,19 @@
   <div id="app">
     <!-- <router-view></router-view>-->
     <div v-if="$route.path !== '/about'">
-      <app-roomPicker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-roomPicker>
+      <div class="non-footer-content">
+        <app-roomPicker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-roomPicker>
 
-      <!-- Remove for published version any components you aren't using -->
-      <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
-      <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
-      <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
-      <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
-      <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SlotMachine' && $route.params.roomID"></app-slotMachine>
-      <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
+        <!-- Remove for published version any components you aren't using -->
+        <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
+        <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
+        <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
+        <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
+        <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SlotMachine' && $route.params.roomID"></app-slotMachine>
+        <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
+      </div>
+      
+      <app-footer v-if="$route.params.roomID"></app-footer>
     </div>
   </div>
 </template>
@@ -25,6 +29,7 @@
   import SecretCards from './components/SecretCards.vue'
   import SlotMachine from './components/SlotMachine.vue'
   import Phases from './components/Phases.vue'
+  import Footer from './components/Footer.vue'
 
 
   export default {
@@ -37,6 +42,7 @@
       'app-secretCards': SecretCards,
       'app-slotMachine': SlotMachine,
       'app-phases': Phases,
+      'app-footer': Footer,
     },
     data () {
       return {
@@ -73,6 +79,9 @@
   -moz-osx-font-smoothing: grayscale;
   color: #000d1b;
   padding-top: 20px;
+  
+  position: relative;
+  min-height: 100vh;
 }
 
 .game-room {
@@ -103,6 +112,10 @@ ul {
 li {
   display: inline-block;
   margin: 0 10px;
+}
+
+.non-footer-content {
+  padding-bottom: 3rem;
 }
 
 </style>
