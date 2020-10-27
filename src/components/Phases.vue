@@ -51,7 +51,8 @@
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
           <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
           <button class="btn btn-outline-dark" v-on:click="xCard()">X-Card</button>
-          <button class="btn btn-outline-dark" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Last Card</button>
+          <button class="btn btn-outline-dark" v-on:click="skipInstructions()" v-if="roomInfo.currentCardIndex < firstNonInstruction">Skip Instructions</button>
+          <button class="btn btn-outline-dark" v-if="roomInfo.currentCardIndex >= firstNonInstruction" :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive" v-on:click="ending()">Ending</button>
         </div>
       </div>
     </div>
@@ -84,7 +85,9 @@ export default {
       phaseNames: [],
       phaseData: [],
       orderedCards: [],
-      unorderedCards: []
+      unorderedCards: [],
+      firstNonInstruction: 0,
+      endingIndex: 0
     }
   },
   mounted(){
@@ -149,13 +152,19 @@ export default {
         currentPhase: this.roomInfo.currentPhase
       })
     },
-    lastCard(){
+    skipInstructions(){
+      roomsCollection.doc(this.roomID).update({
+        currentCardIndex: this.firstNonInstruction,
+        currentPhase: 0
+      })
+    },
+    ending(){
       if (this.roomInfo.cardSequence.length == 1){
         this.shuffle();
       }
 
       roomsCollection.doc(this.roomID).update({
-        currentCardIndex: this.gSheet.length -1
+        currentCardIndex: this.endingIndex
       })
     },
     xCard(){
@@ -251,6 +260,16 @@ export default {
         // Transform Sheets API response into cleanData
         gRows.forEach((item, i) => {
           if (i !== 0 && item.values[0].formattedValue){
+            
+            // Get count of instruction cards
+            if (item.values[0].formattedValue == 0){
+              this.firstNonInstruction += 1
+            }
+
+            // Get ending index
+            if (item.values[0].formattedValue == 2 && this.endingIndex == 0){
+              this.endingIndex = i-1;
+            }
 
             var rowInfo = {}
             if (item.values[0].formattedValue >= 0){
