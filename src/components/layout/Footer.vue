@@ -5,7 +5,8 @@
 </template>
 
 <script>
-module.exports = {
+export default {
+  name: 'app-footer',
   data: function() {
     return {
     };

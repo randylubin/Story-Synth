@@ -1,36 +1,21 @@
 <template>
-  <div class="secretCards game-room container" v-if="roomInfo">
-    <div>
-      <div v-if="!playerSelected" class="mb-4">
-        <div class="row text-center">
-          Pick a player role:
-        </div>
-        <div class="row">
-          <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
-            <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>              
-          </div>
-        </div>
-      </div>
+  <div class="monster game-room container" v-if="roomInfo">
 
-      <div class="player-label row mb-4" v-if="playerSelected">
-        <div class="col-sm">
-          Role: {{playerSelected}}
-          <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
-        </div>  
-      </div>
-    </div>
-
-    <div class="btn-container" v-if="playerSelected">
+    <div class="btn-container" style>
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length-2">
+          <button class="btn btn-outline-dark" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
+          <button class="btn btn-outline-dark" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
             <span v-if="roomInfo.currentCardIndex == 0">Start</span>
             <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
           </button>
         </div>
       </div>
     </div>
+
+    <!--<h1 class="">{{roomInfo.roundTitle}}</h1>-->
+    <h3 class="mb-4">{{roomInfo.roundInfo}} <span class="">{{roomInfo.roundProgress}}</span></h3>
 
 
     <div v-if="roomInfo.xCardIsActive" class="mb-4">
@@ -45,25 +30,57 @@
             </h4>
           </div>
 
-          <button class="btn btn-outline-dark mb-3" style="width:100px;" type="button" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Continue</button>
+          <button class="btn btn-outline-dark mb-5" style="width:100px;" type="button" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Continue</button>
         </div>
       </transition>
     </div>
 
 
-    <div v-if="!roomInfo.xCardIsActive && playerSelected">
+    <div v-if="!roomInfo.xCardIsActive">
       <div v-for="(row, index) in gSheet" v-bind:key="index">
-        <transition name="fade" mode="out-in">
-          <div class="row mb-4" v-if="row.order == roomInfo.currentCardIndex">
+        <transition name="fade">
+          <div class="row mb-4" v-if="row.ordered == roomInfo.currentCardIndex">
             <div class="col-sm">
               <div class="card shadow" v-on:click="updateClickedCard(index)" style="cursor:pointer">
-                <div class="card-body">
-                  <h5>Public: </h5>
-                  <span style="white-space: pre-line" v-html="row.publicText"></span>
-                  <br><br>
-                  
-                  <h5>Secret:</h5>
-                  <span style="white-space: pre-line" v-html="row[playerSelected]"></span>
+                <div class="card-body ">
+
+                    <div class="card-title" style="white-space: pre-line" v-if="!row.subtitle">
+                      <div v-if="index == 0">
+                        <h1 class="mt-4">{{row.archetype}}</h1>
+                        <h2>{{row.characterDetail}}</h2>
+                      </div>
+
+                      <div v-if="index !== 0">
+                        <p class="mt-4" style="white-space: pre-line" v-html="row.archetype"></p>
+                        <div class="text-left" style="white-space: pre-line" v-html="row.characterDetail">
+                          
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <h4 class="card-title" style="white-space: pre-line" v-if="row.subtitle">
+                      {{row.archetype}}
+                    </h4>
+                    <h5 class="card-subtitle mb-4 text-muted">{{row.subtitle}}</h5>
+
+                    <div class="card-text text-left" v-if="clickedCard == index || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered" style="white-space: pre-line">
+
+                      <h5>{{row.characterQuestion}}</h5>
+                      <p>
+                        {{row.characterDetail}}
+                      </p>
+                      <h5 class="mt-4">{{row.keyQuestion}}</h5>
+                      <p>
+                        {{row.keyDetails}}
+                      </p>
+                    </div>
+
+                    <svg v-if="clickedCard !== index && row.characterQuestion" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+
 
                 </div>
               </div>
@@ -73,7 +90,8 @@
       </div>
     </div>
 
-    <!--
+    <!-- these are advice and pause buttons, feel free to add them back. The current advice is geared toward Dawn of the Monster Invasion.
+    
     <div class="btn-group col-sm" role="group" aria-label="Advice Buttons">
       <b-button v-b-modal.speaker-tips variant="warning">Speaker Tips</b-button>
 
@@ -124,15 +142,16 @@
       <button class="btn btn-warning" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
     </div>
     -->
+
   </div>
 </template>
 
 <script>
-import { roomsCollection } from '../firebase';
+import { roomsCollection } from '../../firebase';
 import axios from 'axios'
 
 export default {
-  name: 'app-secretCards',
+  name: 'app-monster',
   props: {
     roomID: String,
     gSheetID: String
@@ -148,12 +167,10 @@ export default {
         roundTitle: ""
       },
       dataReady: false,
-      playerSelected: null,
-      playerArray: [],
       gSheet: [{text:"loading"}],
       orderedCards: [],
       unorderedCards: [],
-      clickedCard: 0,
+      clickedCard: -1,
       instructionCardCount: 15,
       gameRoundCount: 6
     }
@@ -198,14 +215,15 @@ export default {
       } else if (this.roomInfo.currentCardIndex <= this.instructionCardCount){
         newRoundInfo = "Instructions";
         newRoundProgress = (this.roomInfo.currentCardIndex) + " of " + this.instructionCardCount
-      } else if (this.roomInfo.currentCardIndex > this.instructionCardCount) {
-        newRoundInfo = "Round";
-        newRoundProgress = (this.roomInfo.currentCardIndex - this.instructionCardCount) + " of " + this.gameRoundCount
+      //} else if (this.roomInfo.currentCardIndex > this.instructionCardCount) {
+        //newRoundInfo = "Round";
+        //newRoundProgress = (this.roomInfo.currentCardIndex - this.instructionCardCount) + " of " + this.gameRoundCount
       } else {
         newRoundInfo = ""
       }
 
       var newRoundTitle = ""
+      /* For the published version, this section adds round titles
 
       if (this.roomInfo.currentCardIndex > this.instructionCardCount) {
         switch (this.roomInfo.currentCardIndex - this.instructionCardCount){
@@ -231,7 +249,7 @@ export default {
       } else {
         newRoundTitle = ""
       }
-
+      */
 
       roomsCollection.doc(this.roomID).update({
         roundInfo: newRoundInfo,
@@ -245,14 +263,15 @@ export default {
       })
     },
     updateClickedCard(index){
-      if(this.clickedCard == index){this.clickedCard=0}else{this.clickedCard=index}
-    },
-    selectPlayer(player){
-      this.playerSelected = player
+      if(this.clickedCard == index){
+        this.clickedCard=-1
+      } else if (index !== 0 && index > this.instructionCardCount) {
+        this.clickedCard=index
+      }
     },
     fetchAndCleanSheetData(sheetID){
       if (!sheetID || sheetID == 'demo') {
-        sheetID = '1JwMF02DSxNKtjHp6u-wyznSs-iEG_3DpOobgc17I16o'
+        sheetID = '1NgNHy7Qe1R8KhGR2cOmJwL2aOl2tocBemW2HIAKjrvI'
       }
 
       var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM'
@@ -263,40 +282,34 @@ export default {
         var cleanData = []
         var gRows = response.data.sheets[0].data[0].rowData
 
-        var headers = gRows[0].values
+        // Transform Sheets API response into cleanData
+        gRows.forEach((item, i) => {
+          if (i !== 0 && item.values[0] && item.values[0].formattedValue){
 
-        var playerArray = []
+            var rowInfo = {
+              ordered: item.values[0].formattedValue,
+              archetype: item.values[1].formattedValue,
+              subtitle: item.values[2].formattedValue,
+              characterQuestion: item.values[3].formattedValue,
+              characterDetail: item.values[4].formattedValue,
+              keyQuestion: item.values[5].formattedValue,
+              keyDetails: item.values[6].formattedValue
+            }
 
-        headers.forEach((item, i) => {
-          if (i>=2) {
-            playerArray.push(item.formattedValue)
+            cleanData.push(rowInfo)
           }
         });
 
+        this.gSheet = cleanData
 
-        gRows.forEach((item) => {
-          console.log(item.values[0].formattedValue)
-
-          var rowInfo = {
-            order: item.values[0].formattedValue,
-            publicText: item.values[1].formattedValue
-          }
-
-          for (var i = 0; i < playerArray.length; i++) {
-            rowInfo[playerArray[i]] = item.values[i+2].formattedValue
-          }
-
-          /*
-          playerArray.forEach((player, i)=>{
-            rowInfo[player] = parseInt(item.values[i+2].formattedValue);
-          });
-          */
-
-          cleanData.push(rowInfo)
+        // Sort cleanData into ordered and unordered decks
+        cleanData.forEach((item) => {
+          //if (item.ordered == "1") {
+            this.orderedCards.push(item)
+          /*} else if (item.ordered == "0") {
+            this.unorderedCards.push(item)
+          }*/
         });
-
-        this.gSheet = cleanData.slice().reverse();
-        this.playerArray = playerArray
 
       }).catch(error => {
         this.gSheet = [{text:'Error loading Google Sheet'}]
@@ -312,15 +325,16 @@ export default {
 
 <style scoped>
 
-  .secretCards{
-
-    margin:auto;
-    padding-top: 1em;
-    padding-bottom: 1em;
-  }
-
-  h1 {
-    font-family: 'Creepster', cursive;
+  body {
+    background: #50a958;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top, #50a958, #b1f1b7);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, #50a958, #b1f1b7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    max-width: 600px;
+    height: 100%;
+    margin: auto;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Arvo', serif;
   }
 
   .fade-enter-active {
@@ -333,7 +347,9 @@ export default {
   .fade-leave-active {
     transition: opacity 0s;
   }
-  
+  .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
 
   li {
     list-style-type: disc;
@@ -359,6 +375,13 @@ export default {
   .btn-warning:hover {
     background-color: #c39736;
     border-color: #422d00;
+  }
+
+  .monster{
+
+    margin:auto;
+    padding-top: 1em;
+    padding-bottom: 1em;
   }
 
 </style>

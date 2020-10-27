@@ -3,6 +3,7 @@
     <!-- <router-view></router-view>-->
     <div v-if="$route.path !== '/about'">
       <div class="non-footer-content">
+        <app-header :routeRoomID="$route.params.roomID"></app-header>
         <app-roomPicker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-roomPicker>
 
         <!-- Remove for published version any components you aren't using -->
@@ -22,14 +23,15 @@
 <script>
 
   // Remove for published version any components you aren't using
-  import Timed from './components/Timed.vue'
-  import Shuffled from './components/Shuffled.vue'
-  import Monster from './components/Monster.vue'
+  import Timed from './components/formats/Timed.vue'
+  import Shuffled from './components/formats/Shuffled.vue'
+  import Monster from './components/formats/Monster.vue'
   import RoomPicker from './components/RoomPicker.vue'
-  import SecretCards from './components/SecretCards.vue'
-  import SlotMachine from './components/SlotMachine.vue'
-  import Phases from './components/Phases.vue'
-  import Footer from './components/Footer.vue'
+  import SecretCards from './components/formats/SecretCards.vue'
+  import SlotMachine from './components/formats/SlotMachine.vue'
+  import Phases from './components/formats/Phases.vue'
+  import Header from './components/layout/Header.vue'
+  import Footer from './components/layout/Footer.vue'
 
 
   export default {
@@ -42,6 +44,7 @@
       'app-secretCards': SecretCards,
       'app-slotMachine': SlotMachine,
       'app-phases': Phases,
+      'app-header': Header,
       'app-footer': Footer,
     },
     data () {

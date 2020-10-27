@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { roomsCollection } from '../firebase';
+import { roomsCollection } from '../../firebase';
 import axios from 'axios'
 
 export default {

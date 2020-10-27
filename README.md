@@ -70,6 +70,12 @@ If you're using Firebase's free hosting, you can push to their servers with:
 firebase deploy --only hosting
 ```
 
+You can build and deploy at the same time with:
+
+```
+npm run build && firebase deploy --only hosting
+```
+
 If you run into any issues, you may need to follow more of the steps in the above mentioned [Firebase guide](https://firebase.google.com/docs/web/setup#create-firebase-project).
 
 ### Lints and fixes files
