@@ -1,5 +1,20 @@
 <template>
   <div class="phases game-room container" v-if="roomInfo">
+    <div v-html="customOptions.style"></div>
+
+    <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
+      <div class="row text-center" v-if="customOptions.gameTitle">
+        <div class="col-sm">
+          <h1>{{customOptions.gameTitle}}</h1>
+        </div>
+      </div>
+
+      <div class="row text-center" v-if="customOptions.byline">
+        <div class="col-sm">
+          <h4>{{customOptions.byline}}</h4>
+        </div>
+      </div>
+    </div>
 
     <div class="row mb-4">
       <transition name="fade">
@@ -78,6 +93,7 @@ export default {
         xCardIsActive: false,
         cardSequence: [0,1,2]
       },
+      customOptions: {},
       dataReady: false,
       firebaseReady: false,
       gSheet: [{text:"loading"}],
@@ -257,18 +273,25 @@ export default {
           this.phaseNames.push(gRows[0].values[w+3].formattedValue)
         }
 
+        var newEndingIndex = 0
+
         // Transform Sheets API response into cleanData
         gRows.forEach((item, i) => {
           if (i !== 0 && item.values[0].formattedValue){
             
+            // Handle options
+            if (item.values[0].formattedValue == "option"){
+              this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+            }
+
             // Get count of instruction cards
             if (item.values[0].formattedValue == 0){
               this.firstNonInstruction += 1
             }
 
             // Get ending index
-            if (item.values[0].formattedValue == 2 && this.endingIndex == 0){
-              this.endingIndex = i-1;
+            if ((item.values[0].formattedValue == 0 || item.values[0].formattedValue == 1) && this.endingIndex == 0){
+              newEndingIndex += 1
             }
 
             var rowInfo = {}
@@ -288,6 +311,8 @@ export default {
             }
           }
         });
+
+        this.endingIndex = newEndingIndex;
 
         // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData

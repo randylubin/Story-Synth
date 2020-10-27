@@ -8,39 +8,55 @@
         <div class="card-body">
 
           <!-- Remove for published version and replace with your own header and about section -->
-          <div class="row mb-4">
-            <div class="col-sm text-center">
-              <h1>Story Synth</h1>
-              <h3>Playtest with your friends online!</h3>
+          <div id="homepage-intro-text" v-if="!$route.params.gSheetID">
+            <div class="row mb-4">
+              <div class="col-sm text-center">
+                <h1>Story Synth</h1>
+                <h3>Playtest with your friends online!</h3>
+              </div>
             </div>
-          </div>
 
-          <div class="row mb-3">
-            <div class="col-sm text-left">
-              <p>This app allows game designers to playtest simple storytelling games by putting their game content in a Google Spreadsheet. For information on how to use and remix this app, see the <a href="/about">About Page</a> or the <a href="/about/formats.html">Formats Page</a>.</p>
-              
-              <p>To see Story Synth work with placeholder content, try any of the formats below with "demo" in the sheet field or watch this <a href="https://youtu.be/TLQk3zyVyVI">Video Tour</a>.</p>
-              
-              <p>For an example of a published app built on Story Synth, check out <a href="https://monster.diegeticgames.com">Dawn of the Monster Invasion</a>.</p>
+            <div class="row mb-3">
+              <div class="col-sm text-left">
+                <p>This app allows game designers to playtest simple storytelling games by putting their game content in a Google Spreadsheet. For information on how to use and remix this app, see the <a href="/about">About Page</a> or the <a href="/about/formats.html">Formats Page</a>.</p>
+                
+                <p>To see Story Synth work with placeholder content, try any of the formats below with "demo" in the sheet field or watch this <a href="https://youtu.be/TLQk3zyVyVI">Video Tour</a>.</p>
+                
+                <p>For an example of a published app built on Story Synth, check out <a href="https://monster.diegeticgames.com">Dawn of the Monster Invasion</a>.</p>
+              </div>
             </div>
           </div>
           <!-- end of header and about section -->
 
-          <!-- Take in game title and blurb from query params -->
-          <div class="row mb-3" v-if="$route.query.gameTitle">
+          <!-- Take in game title, byline, and blurb from query params -->
+          <div class="row mt-4" v-if="$route.query.gameTitle">
             <div class="col-sm text-center">
               <h1>{{$route.query.gameTitle}}</h1>
             </div>
           </div>
 
-          <div v-if="$route.query.gameBlurb" class="row mb-4">
+
+          <div class="row mb-2" v-if="$route.query.byline">
+            <div class="col-sm text-center">
+              <em>{{$route.query.byline}}</em>
+            </div>
+          </div>
+
+          <div v-if="$route.query.gameBlurb" class="row">
             <div class="col-sm text-center">
               <p>{{$route.query.gameBlurb}}</p>
             </div>
           </div>
+
+          <div class="row mt-4" v-if="$route.params.gSheetID && !$route.query.gameTitle">
+            <div class="col-sm text-center">
+              <h1>Playtest with Story Synth</h1>
+              <div class="col-sm">This room will use the {{routeGameType}} template and <a v-bind:href="'https://docs.google.com/spreadsheets/d/'+routeGSheetID+'/edit?usp=sharing'" target="_blank">this Google Sheet</a>. You can <a href="/">clear these defaults</a>, if you'd like.</div>
+            </div>
+          </div>
           <!-- End query param section -->
 
-          <div class="row mb-4">
+          <div class="row my-4">
             <div class="col-sm text-center">
               <h2>Create a room</h2>
             </div>
@@ -99,12 +115,6 @@
                 </div>
               </div>
             </div>
-
-            <div v-if="routeGSheetID">
-              <div class="row mb-4">
-                <div class="col-sm">This room will use the {{routeGameType}} template and <a v-bind:href="'https://docs.google.com/spreadsheets/d/'+routeGSheetID+'/edit?usp=sharing'" target="_blank">this Google Sheet</a>. You can <a href="/">clear these defaults</a>, if you'd like.</div>
-              </div>
-            </div>
             <!-- end of format and sheet fields -->
 
             <!-- For the published version, replace gameType with the specific game type in quotes. Example "Shuffled"  -->
@@ -113,6 +123,12 @@
                 <router-link :to="{path: '/' + formatToURL(gameType, gSheetID, roomID)}">
                   <button :disabled="!roomID" type="button" class="btn btn-dark">Enter Room</button>
                 </router-link>
+              </div>
+            </div>
+
+            <div class="row my-5" v-if="$route.params.gSheetID">
+              <div class="col-sm">
+                This game is powered by <a href="https://storysynth.org">Story Synth</a>, a storytelling game platform that lets you design games in a Google Spreadsheet and play them online with friends by sharing a link – no coding needed!
               </div>
             </div>
 
