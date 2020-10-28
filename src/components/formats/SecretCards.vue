@@ -1,6 +1,13 @@
 <template>
   <div class="secretCards game-room container" v-if="roomInfo">
     <div>
+      <div class="card shadow" v-if="(!dataReady || !firebaseReady) && !error">
+        <div class="card-body text-center">
+          <h1 class="m-5">Loading</h1>
+          <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+        </div>
+      </div>
+
       <div v-if="!playerSelected" class="mb-4">
         <div class="row text-center">
           Pick a player role:
@@ -148,6 +155,8 @@ export default {
         roundTitle: ""
       },
       dataReady: false,
+      firebaseReady: false,
+      error: false,
       playerSelected: null,
       playerArray: [],
       gSheet: [{text:"loading"}],
@@ -163,7 +172,7 @@ export default {
 
     this.$bind('roomInfo', roomsCollection.doc(this.roomID))
       .then(() => {
-        this.dataReady = true
+        this.firebaseReady = true
       })
       .then(() => {
         if (!this.roomInfo){
@@ -297,10 +306,11 @@ export default {
 
         this.gSheet = cleanData.slice().reverse();
         this.playerArray = playerArray
-
+        this.dataReady = true;
       }).catch(error => {
         this.gSheet = [{text:'Error loading Google Sheet'}]
         console.log(error)
+        this.error = error
       })      
     }
 
@@ -317,10 +327,6 @@ export default {
     margin:auto;
     padding-top: 1em;
     padding-bottom: 1em;
-  }
-
-  h1 {
-    font-family: 'Creepster', cursive;
   }
 
   .fade-enter-active {

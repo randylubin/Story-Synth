@@ -1,5 +1,20 @@
 <template>
   <div class="shuffled game-room container" v-if="roomInfo">
+    <div v-html="customOptions.style"></div>
+
+    <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
+      <div class="row text-center" v-if="customOptions.gameTitle">
+        <div class="col-sm">
+          <h1>{{customOptions.gameTitle}}</h1>
+        </div>
+      </div>
+
+      <div class="row text-center" v-if="customOptions.byline">
+        <div class="col-sm">
+          <h4>{{customOptions.byline}}</h4>
+        </div>
+      </div>
+    </div>
 
     <div class="row mb-4">
       <transition name="fade">
@@ -14,6 +29,10 @@
     <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
       <transition name="fade">
         <div class="card d-flex shadow">
+          <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
+            <h1 class="m-5">Loading</h1>
+            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+          </div>
 
           <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
             <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
@@ -78,7 +97,9 @@ export default {
       orderedCards: [],
       currentDeck: 0,
       totalDecks: 0,
-      unorderedDecks: {}
+      unorderedDecks: {},
+      customOptions: {},
+      error: false,
     }
   },
   mounted(){
@@ -262,6 +283,7 @@ export default {
         ]
 
         this.orderedCards = this.gSheet
+        this.error = error
         console.log(error.message, error)
       })      
     }

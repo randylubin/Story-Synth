@@ -1,5 +1,21 @@
 <template>
   <div class="monster game-room container" v-if="roomInfo">
+    <div v-html="customOptions.style"></div>
+
+    <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
+      <div class="row text-center" v-if="customOptions.gameTitle">
+        <div class="col-sm">
+          <h1>{{customOptions.gameTitle}}</h1>
+        </div>
+      </div>
+
+      <div class="row text-center" v-if="customOptions.byline">
+        <div class="col-sm">
+          <h4>{{customOptions.byline}}</h4>
+        </div>
+      </div>
+    </div>
+
 
     <div class="btn-container" style>
       <div class="row mb-4">
@@ -37,13 +53,19 @@
 
 
     <div v-if="!roomInfo.xCardIsActive">
+      <div class="card shadow" v-if="(!dataReady || !firebaseReady) && !error">
+        <div class="card-body text-center">
+          <h1 class="m-5">Loading</h1>
+          <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+        </div>
+      </div>
+      
       <div v-for="(row, index) in gSheet" v-bind:key="index">
         <transition name="fade">
           <div class="row mb-4" v-if="row.ordered == roomInfo.currentCardIndex">
             <div class="col-sm">
               <div class="card shadow" v-on:click="updateClickedCard(index)" style="cursor:pointer">
-                <div class="card-body ">
-
+                <div class="card-body">
                     <div class="card-title" style="white-space: pre-line" v-if="!row.subtitle">
                       <div v-if="index == 0">
                         <h1 class="mt-4">{{row.archetype}}</h1>
@@ -167,12 +189,15 @@ export default {
         roundTitle: ""
       },
       dataReady: false,
+      firebaseReady: false,
       gSheet: [{text:"loading"}],
       orderedCards: [],
       unorderedCards: [],
       clickedCard: -1,
       instructionCardCount: 15,
-      gameRoundCount: 6
+      gameRoundCount: 6,
+      customOptions: {},
+      error: false,
     }
   },
   mounted(){
@@ -180,7 +205,7 @@ export default {
 
     this.$bind('roomInfo', roomsCollection.doc(this.roomID))
       .then(() => {
-        this.dataReady = true
+        this.firebaseReady = true
       })
       .then(() => {
         if (!this.roomInfo){
@@ -311,8 +336,11 @@ export default {
           }*/
         });
 
+        this.dataReady = true
+
       }).catch(error => {
         this.gSheet = [{text:'Error loading Google Sheet'}]
+        this.error = error
         console.log(error)
       })      
     }

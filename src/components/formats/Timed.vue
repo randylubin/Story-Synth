@@ -1,17 +1,40 @@
 <template>
   <div class="container">
-        <div v-if="timerSynced">
-          <div v-if="!playerSelected" class="row my-4">
-            <div class="btn-group col-sm" role="group" aria-label="Role Controls">
-              <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>              
-            </div>
-          </div>
-          <div class="player-label text-center row my-4" v-if="playerSelected">
-            <div class="col-sm">
-              Role: {{playerSelected}}
-            <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
-            </div>  
-          </div>
+    <div v-html="customOptions.style"></div>
+
+    <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
+      <div class="row text-center" v-if="customOptions.gameTitle">
+        <div class="col-sm">
+          <h1>{{customOptions.gameTitle}}</h1>
+        </div>
+      </div>
+
+      <div class="row text-center" v-if="customOptions.byline">
+        <div class="col-sm">
+          <h4>{{customOptions.byline}}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow" v-if="(!dataReady || !firebaseReady) && !error">
+      <div class="card-body text-center">
+        <h1 class="m-5">Loading</h1>
+        <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+      </div>
+    </div>
+
+    <div v-if="timerSynced">
+      <div v-if="!playerSelected" class="row my-4">
+        <div class="btn-group col-sm" role="group" aria-label="Role Controls">
+          <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>              
+        </div>
+      </div>
+      <div class="player-label text-center row my-4" v-if="playerSelected">
+        <div class="col-sm">
+          Role: {{playerSelected}}
+        <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
+        </div>  
+      </div>
 
     <div class="timer-box game-room mb-4 shadow">
       <div class="btn-container px-1">
@@ -82,13 +105,18 @@ export default {
       },
       playerSelected: null,
       playerArray: [],
-      gSheet: []
+      gSheet: [],
+      customOptions: {},
+      dataReady: false,
+      firebaseReady: false,
+      error: false,
     }
   },
   mounted(){
     roomsCollection.doc(this.roomID).set(this.roomInfo);
     this.fetchAndCleanSheetData(this.gSheetID);
     this.sync();
+    this.firebaseReady = true;
   },
   firestore() {
     return {
@@ -217,9 +245,11 @@ export default {
 
         this.gSheet = cleanData.slice().reverse();
         this.playerArray = playerArray
+        this.dataReady = true
 
       }).catch(error => {
         this.gSheet = [{text:'Error loading Google Sheet'}]
+        this.error = error;
         console.log(error)
       })      
     }

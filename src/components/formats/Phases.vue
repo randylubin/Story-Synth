@@ -19,7 +19,6 @@
     <div class="row mb-4">
       <transition name="fade">
         <div class="btn-group col-sm" role="group" aria-label="Card Controls">
-
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous Card</button>
           <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)">Next Card</button>
         </div>
@@ -29,6 +28,11 @@
     <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
       <transition name="fade">
         <div class="card d-flex shadow">
+
+          <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
+            <h1 class="m-5">Loading</h1>
+            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+          </div>
 
           <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
             
@@ -103,7 +107,8 @@ export default {
       orderedCards: [],
       unorderedCards: [],
       firstNonInstruction: 0,
-      endingIndex: 0
+      endingIndex: 0,
+      error: false,
     }
   },
   mounted(){
@@ -332,6 +337,7 @@ export default {
         ]
 
         this.orderedCards = this.gSheet
+        this.error = error
         console.log(error.message, error)
       })      
     }
