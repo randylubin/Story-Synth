@@ -1,81 +1,84 @@
 <template>
-  <div class="phases game-room container" v-if="roomInfo">
+  <div class="phases">
+    <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+    <div class="game-room container" v-if="roomInfo">
+      <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
+        <div class="row text-center" v-if="customOptions.gameTitle">
+          <div class="col-sm">
+            <h1>{{customOptions.gameTitle}}</h1>
+          </div>
+        </div>
 
-    <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
-      <div class="row text-center" v-if="customOptions.gameTitle">
-        <div class="col-sm">
-          <h1>{{customOptions.gameTitle}}</h1>
+        <div class="row text-center" v-if="customOptions.byline">
+          <div class="col-sm">
+            <h4>{{customOptions.byline}}</h4>
+          </div>
         </div>
       </div>
 
-      <div class="row text-center" v-if="customOptions.byline">
-        <div class="col-sm">
-          <h4>{{customOptions.byline}}</h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="row mb-4">
-      <transition name="fade">
+      <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Card Controls">
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous Card</button>
           <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)">Next Card</button>
         </div>
-      </transition>
-    </div>
+      </div>
 
-    <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
-      <transition name="fade">
-        <div class="card d-flex shadow">
+      <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
+        <transition name="fade">
+          <div class="card d-flex shadow">
 
-          <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
-            <h1 class="m-5">Loading</h1>
-            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
-          </div>
+            <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
+              <h1 class="m-5">Loading</h1>
+              <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+            </div>
 
-          <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
+            <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive && dataReady && firebaseReady">
+              
+              <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
+                <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
+                
+                <p v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText" v-bind:class="{ 'text-left': gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText.length > 60 }" class="my-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+              </div>
+
+              <div v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
+                <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
+                </div>-->
+                <h2>{{phaseNames[roomInfo.currentPhase]}}</h2>
+                <div v-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]"></div>
+                <div v-if="Array.isArray(customOptions.phaseHelpText)" class="my-4">
+                  <i>{{customOptions.phaseHelpText[roomInfo.currentPhase]}}</i>
+                </div>
+              </div>
+              
+            </div>
             
-            <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
-              <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
-              <p class="mt-4 mb-4 text-left" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+
+            <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
+              <div class="mt-5 pt-5 mb-5">
+                <h1>X-Card</h1>
+              </div>
+              <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
+              <div class="">
+                <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
+              </div>
             </div>
 
-            <div v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
-              <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
-              </div>-->
-              <h2>{{phaseNames[roomInfo.currentPhase]}}</h2>
-              <div v-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]"></div>
-            </div>
-            
           </div>
-          
+        </transition>
+      </div>
 
-          <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
-            <div class="mt-5 pt-5 mb-5">
-              <h1>X-Card</h1>
-            </div>
-            <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
-            <div class="">
-              <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
-            </div>
+      <div class="btn-container" style>
+        <div class="row mb-4">
+          <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
+            <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
+            <button class="btn btn-outline-dark" v-on:click="xCard()">X-Card</button>
+            <button class="btn btn-outline-dark" v-on:click="skipInstructions()" v-if="roomInfo.currentCardIndex < firstNonInstruction">Skip Instructions</button>
+            <button class="btn btn-outline-dark" v-if="roomInfo.currentCardIndex >= firstNonInstruction" :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive" v-on:click="ending()">Ending</button>
           </div>
-
-        </div>
-      </transition>
-    </div>
-
-    <div class="btn-container" style>
-      <div class="row mb-4">
-        <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
-          <button class="btn btn-outline-dark" v-on:click="xCard()">X-Card</button>
-          <button class="btn btn-outline-dark" v-on:click="skipInstructions()" v-if="roomInfo.currentCardIndex < firstNonInstruction">Skip Instructions</button>
-          <button class="btn btn-outline-dark" v-if="roomInfo.currentCardIndex >= firstNonInstruction" :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive" v-on:click="ending()">Ending</button>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -287,6 +290,9 @@ export default {
             // Handle options
             if (item.values[0].formattedValue == "option"){
               this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+              if (item.values[1].formattedValue == "phaseHelpText"){
+                this.customOptions.phaseHelpText = this.customOptions.phaseHelpText.split('|')
+              }
             }
 
             // Get count of instruction cards
@@ -350,19 +356,21 @@ export default {
 
 
 <style scoped>
-  body {
-    background: #74ebd5;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to top, #ACB6E5, #74ebd5);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to top, #ACB6E5, #74ebd5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    max-width: 600px;
-    margin:auto;
-  }
 
   .phases{
-
     margin:auto;
     padding-top: 1em;
     padding-bottom: 1em;
+  }
+
+  .full-page-background {
+    position: absolute;
+    height: 100%;
+    width: 100vw;
+    top: 0;
+    right: 0;
+    margin: 0;
+    z-index: -1; 
   }
 
   .card-body{

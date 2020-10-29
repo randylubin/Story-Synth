@@ -69,56 +69,53 @@
     margin-top: 1em;
   }
 
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
 
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #000d1b;
-  padding-top: 20px;
-  
-  position: relative;
-  min-height: 100vh;
-}
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #000d1b;
+    padding-top: 20px;
+    
+    position: relative;
+    min-height: 100vh;
+  }
 
-.game-room {
-  text-align: center;
-}
+  .game-room {
+    text-align: center;
+    max-width:600px;
+  }
 
-body {
+  body {
     background: beige;
-    // background: #3131bb;  /* fallback for old browsers */
-    // background: -webkit-linear-gradient(to top, #3131bb, #97a5ff);  /* Chrome 10-25, Safari 5.1-6 */
-    // background: linear-gradient(to top, #3131bb, #97a5ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    max-width: 600px;
     height: 100%;
     margin: auto;
     background-repeat: no-repeat;
     background-attachment: fixed;
   }
 
-h1, h2 {
-  font-weight: normal;
-}
+  h1, h2 {
+    font-weight: normal;
+  }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
 
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
+  li {
+    display: inline-block;
+    margin: 0 10px;
+  }
 
-.non-footer-content {
-  padding-bottom: 3rem;
-}
+  .non-footer-content {
+    padding-bottom: 3rem;
+  }
 
 </style>

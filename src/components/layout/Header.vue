@@ -17,7 +17,7 @@
           </b-collapse>
         </b-navbar>
 
-        <div class="container" v-if="$route.params.roomID">
+        <div class="container game-room" v-if="$route.params.roomID">
           <div class="row mb-4">
             <div class="col">
               <div class="input-group">

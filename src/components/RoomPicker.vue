@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="room-picker">
 
     <div class="container">
       
@@ -237,5 +237,8 @@ export default {
 </script>
 
 <style scoped>
-  
+  .room-picker {
+    max-width:600px;
+    margin: auto;
+  }
 </style>

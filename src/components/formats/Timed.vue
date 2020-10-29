@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container game-room">
     <div v-html="customOptions.style"></div>
 
     <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
@@ -279,14 +279,6 @@ export default {
   .player-button {
     margin-left: .3em;
     margin-right: .3em;
-  }
-
-  body {
-    background: #74ebd5;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to top, #ACB6E5, #74ebd5);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to top, #ACB6E5, #74ebd5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    max-width: 600px;
-    margin:auto;
   }
 
   .fade-enter-active, .fade-leave-active {
