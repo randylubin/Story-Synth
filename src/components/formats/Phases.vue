@@ -47,7 +47,9 @@
                 <h2>{{phaseNames[roomInfo.currentPhase]}}</h2>
                 <div v-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]"></div>
                 <div v-if="Array.isArray(customOptions.phaseHelpText)" class="my-4">
-                  <i>{{customOptions.phaseHelpText[roomInfo.currentPhase]}}</i>
+                  <p class="phase-help-text">
+                    <i class="">{{customOptions.phaseHelpText[roomInfo.currentPhase]}}</i>
+                  </p>
                 </div>
               </div>
               
@@ -78,6 +80,44 @@
           </div>
         </div>
       </div>
+
+      <div v-if="Array.isArray(customOptions.showPastPrompts)">
+        <div class="row mt-5">
+          <div class="col-sm">
+            <h2>Itinerary</h2>
+          </div>
+        </div>
+
+        <div class="itinerary mb-5 card d-flex shadow"> <!-- style="display: flex; flex-direction: column-reverse;-->
+          <div class="card-body justify-content-center">
+            <div class="row">
+              <div class="col-sm">
+                Home
+                <br>
+                |
+              </div>
+            </div>
+            <div v-for="(round, roundIndex) in roomInfo.cardSequence" v-bind:key="roundIndex">
+              <div v-if="Object.prototype.toString.call(round) === '[object Object]' && phaseData.length>0 && roundIndex <= roomInfo.currentCardIndex">
+                <div class="row" v-for="(phase, phaseIndex) in numberOfPhases" v-bind:key="phaseIndex">
+                  <div class="col-sm" v-if="roundIndex < roomInfo.currentCardIndex || (roundIndex==roomInfo.currentCardIndex && phaseIndex < roomInfo.currentPhase)">
+                    <div v-if="customOptions.showPastPrompts[phaseIndex]==1" style="font-size: .8em;">
+                      {{phaseData[phaseIndex][round[phaseIndex]]}}
+                      <br>|
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" v-if="roomInfo.currentCardIndex >= endingIndex">
+              <div class="col-sm">
+                Home
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
     </div>
   </div>
 </template>
@@ -292,6 +332,8 @@ export default {
               this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
               if (item.values[1].formattedValue == "phaseHelpText"){
                 this.customOptions.phaseHelpText = this.customOptions.phaseHelpText.split('|')
+              } else if (item.values[1].formattedValue == "showPastPrompts") {
+                this.customOptions.showPastPrompts = this.customOptions.showPastPrompts.split(',')
               }
             }
 
@@ -383,6 +425,10 @@ export default {
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
+  }
+  .phase-help-text {
+    font-size: 1rem;
+    line-height: 1.5;    
   }
   .x-card-text {
     font-size: .5em;

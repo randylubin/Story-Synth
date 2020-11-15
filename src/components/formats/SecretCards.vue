@@ -1,5 +1,21 @@
 <template>
   <div class="secretCards game-room container" v-if="roomInfo">
+    <div class="full-page-background"></div>
+    <div v-html="customOptions.style"></div>
+    <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
+      <div class="row text-center" v-if="customOptions.gameTitle">
+        <div class="col-sm">
+          <h1>{{customOptions.gameTitle}}</h1>
+        </div>
+      </div>
+
+      <div class="row text-center" v-if="customOptions.byline">
+        <div class="col-sm">
+          <h4>{{customOptions.byline}}</h4>
+        </div>
+      </div>
+    </div>
+
     <div>
       <div class="card shadow" v-if="(!dataReady || !firebaseReady) && !error">
         <div class="card-body text-center">
@@ -10,11 +26,11 @@
 
       <div v-if="!playerSelected" class="mb-4">
         <div class="row text-center">
-          Pick a player role:
+          <div class="col-sm">Pick a player role:</div>
         </div>
         <div class="row">
           <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
-            <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>              
+            <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>
           </div>
         </div>
       </div>
@@ -23,7 +39,7 @@
         <div class="col-sm">
           Role: {{playerSelected}}
           <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
-        </div>  
+        </div>
       </div>
     </div>
 
@@ -68,7 +84,7 @@
                   <h5>Public: </h5>
                   <span style="white-space: pre-line" v-html="row.publicText"></span>
                   <br><br>
-                  
+
                   <h5>Secret:</h5>
                   <span style="white-space: pre-line" v-html="row[playerSelected]"></span>
 
@@ -164,7 +180,8 @@ export default {
       unorderedCards: [],
       clickedCard: 0,
       instructionCardCount: 15,
-      gameRoundCount: 6
+      gameRoundCount: 6,
+      customOptions: {}
     }
   },
   mounted(){
@@ -286,22 +303,31 @@ export default {
         gRows.forEach((item) => {
           console.log(item.values[0].formattedValue)
 
-          var rowInfo = {
-            order: item.values[0].formattedValue,
-            publicText: item.values[1].formattedValue
+          // Handle options
+          if (item.values[0].formattedValue == "option"){
+            this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+            console.log(item.values[2].formattedValue)
           }
 
-          for (var i = 0; i < playerArray.length; i++) {
-            rowInfo[playerArray[i]] = item.values[i+2].formattedValue
+          if (item.values[0].formattedValue !== "option"){
+
+            var rowInfo = {
+              order: item.values[0].formattedValue,
+              publicText: item.values[1].formattedValue
+            }
+
+            for (var i = 0; i < playerArray.length; i++) {
+              rowInfo[playerArray[i]] = item.values[i+2].formattedValue
+            }
+
+            /*
+            playerArray.forEach((player, i)=>{
+              rowInfo[player] = parseInt(item.values[i+2].formattedValue);
+            });
+            */
+
+            cleanData.push(rowInfo)
           }
-
-          /*
-          playerArray.forEach((player, i)=>{
-            rowInfo[player] = parseInt(item.values[i+2].formattedValue);
-          });
-          */
-
-          cleanData.push(rowInfo)
         });
 
         this.gSheet = cleanData.slice().reverse();
@@ -311,7 +337,7 @@ export default {
         this.gSheet = [{text:'Error loading Google Sheet'}]
         console.log(error)
         this.error = error
-      })      
+      })
     }
 
   }
@@ -339,7 +365,7 @@ export default {
   .fade-leave-active {
     transition: opacity 0s;
   }
-  
+
 
   li {
     list-style-type: disc;
@@ -365,6 +391,16 @@ export default {
   .btn-warning:hover {
     background-color: #c39736;
     border-color: #422d00;
+  }
+
+  .full-page-background {
+    position: absolute;
+    height: 100%;
+    width: 100vw;
+    top: 0;
+    right: 0;
+    margin: 0;
+    z-index: -1;
   }
 
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div class="slot-machine game-room container" v-if="roomInfo">
+    <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
 
     <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
@@ -235,21 +236,32 @@ export default {
         gRows.forEach((item, i) => {
           if (i !== 0 && item.values[0].formattedValue){
 
-            var rowInfo = {}
-            if (item.values[0].formattedValue >= 0){
-              rowInfo = {
-                ordered: item.values[0].formattedValue,
-                headerText: item.values[1].formattedValue,
-                bodyText: item.values[2].formattedValue
-              }
-              cleanData.push(rowInfo)
+            // Handle options
+            if (item.values[0].formattedValue == "option"){
+              this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+              console.log(item.values[2].formattedValue)
             }
 
-            if (item.values[0].formattedValue != 0){
-              for (var j = 3; j < item.values.length; j++) {
-                this.wheels[j-3].push(item.values[j].formattedValue)
+            if (item.values[0].formattedValue !== "option"){
+
+              var rowInfo = {}
+              if (item.values[0].formattedValue >= 0){
+                rowInfo = {
+                  ordered: item.values[0].formattedValue,
+                  headerText: item.values[1].formattedValue,
+                  bodyText: item.values[2].formattedValue
+                }
+                cleanData.push(rowInfo)
+
+                if (item.values[0].formattedValue != 0){
+                  for (var j = 3; j < item.values.length; j++) {
+                    this.wheels[j-3].push(item.values[j].formattedValue)
+                  }
+                }
               }
             }
+
+            
           }
         });
 
@@ -306,5 +318,15 @@ export default {
   .x-card-text {
     font-size: .5em;
     text-decoration: underline;
+  }
+
+  .full-page-background {
+    position: absolute;
+    height: 100%;
+    width: 100vw;
+    top: 0;
+    right: 0;
+    margin: 0;
+    z-index: -1; 
   }
 </style>

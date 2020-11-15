@@ -1,75 +1,76 @@
 <template>
   <div class="shuffled game-room container" v-if="roomInfo">
+    <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+    <div class="game-room container" v-if="roomInfo">
+      <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
+        <div class="row text-center" v-if="customOptions.gameTitle">
+          <div class="col-sm">
+            <h1>{{customOptions.gameTitle}}</h1>
+          </div>
+        </div>
 
-    <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
-      <div class="row text-center" v-if="customOptions.gameTitle">
-        <div class="col-sm">
-          <h1>{{customOptions.gameTitle}}</h1>
+        <div class="row text-center" v-if="customOptions.byline">
+          <div class="col-sm">
+            <h4>{{customOptions.byline}}</h4>
+          </div>
         </div>
       </div>
 
-      <div class="row text-center" v-if="customOptions.byline">
-        <div class="col-sm">
-          <h4>{{customOptions.byline}}</h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="row mb-4">
-      <transition name="fade">
-        <div class="btn-group col-sm" role="group" aria-label="Card Controls">
-
-          <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous Card</button>
-          <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex >= roomInfo.locationOfLastCard">Next Card</button>
-        </div>
-      </transition>
-    </div>
-
-    <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
-      <transition name="fade">
-        <div class="card d-flex shadow">
-          <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
-            <h1 class="m-5">Loading</h1>
-            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
-          </div>
-
-          <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
-            <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
-            <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
-          </div>
-
-          <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
-            <div class="mt-5 pt-5 mb-5">
-              <h1>X-Card</h1>
-            </div>
-            <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
-            <div class="">
-              <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
-            </div>
-          </div>
-
-        </div>
-      </transition>
-    </div>
-
-    <div class="btn-container" style>
       <div class="row mb-4">
-        <div class="col-sm">
-          <b-button-group aria-role="Deck control" class="d-flex w-100">
-            <b-button variant="outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffleAndResetGame()" color="rgb(187, 138, 200)">Re-shuffle</b-button>
-            <b-button variant="outline-dark" v-on:click="xCard()">X-Card</b-button>
-            <!--<b-button variant="outline-dark" v-on:click="nextDeck()">Next Deck</b-button>-->
-            <b-dropdown variant="outline-dark" id="dropdown-1" text="Last Card" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.currentCardIndex == roomInfo.locationOfLastCard" right>
-              <b-dropdown-item v-on:click="lastCard()">Go to last card</b-dropdown-item>
-              <b-dropdown-item v-on:click="shuffleLastCard('center')">Shuffle near center</b-dropdown-item>
-              <b-dropdown-item v-on:click="shuffleLastCard('end')">Shuffle near end</b-dropdown-item>
-            </b-dropdown>
-          </b-button-group>
+        <transition name="fade">
+          <div class="btn-group col-sm" role="group" aria-label="Card Controls">
+
+            <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous Card</button>
+            <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex >= roomInfo.locationOfLastCard">Next Card</button>
+          </div>
+        </transition>
+      </div>
+
+      <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
+        <transition name="fade">
+          <div class="card d-flex shadow">
+            <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
+              <h1 class="m-5">Loading</h1>
+              <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+            </div>
+
+            <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
+              <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
+              <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+            </div>
+
+            <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
+              <div class="mt-5 pt-5 mb-5">
+                <h1>X-Card</h1>
+              </div>
+              <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
+              <div class="">
+                <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
+              </div>
+            </div>
+
+          </div>
+        </transition>
+      </div>
+
+      <div class="btn-container" style>
+        <div class="row mb-4">
+          <div class="col-sm">
+            <b-button-group aria-role="Deck control" class="d-flex w-100">
+              <b-button variant="outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffleAndResetGame()" color="rgb(187, 138, 200)">Re-shuffle</b-button>
+              <b-button variant="outline-dark" v-on:click="xCard()">X-Card</b-button>
+              <!--<b-button variant="outline-dark" v-on:click="nextDeck()">Next Deck</b-button>-->
+              <b-dropdown variant="outline-dark" id="dropdown-1" text="Last Card" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.currentCardIndex == roomInfo.locationOfLastCard" right>
+                <b-dropdown-item v-on:click="lastCard()">Go to last card</b-dropdown-item>
+                <b-dropdown-item v-on:click="shuffleLastCard('center')">Shuffle near center</b-dropdown-item>
+                <b-dropdown-item v-on:click="shuffleLastCard('end')">Shuffle near end</b-dropdown-item>
+              </b-dropdown>
+            </b-button-group>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -236,18 +237,28 @@ export default {
         gRows.forEach((item, i) => {
           if (i !== 0 && item.values[0].formattedValue){
 
-            var rowInfo = {
-              ordered: item.values[0].formattedValue,
-              headerText: item.values[1].formattedValue,
-              bodyText: item.values[2].formattedValue
+            // Handle options
+            if (item.values[0].formattedValue == "option"){
+              this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+              console.log(item.values[2].formattedValue)
             }
 
-            cleanData.push(rowInfo)
+            if (item.values[0].formattedValue !== "option"){
 
-            if (rowInfo.ordered >= this.totalDecks) {
-              this.totalDecks = parseInt(rowInfo.ordered) + 1;
+              var rowInfo = {
+                ordered: item.values[0].formattedValue,
+                headerText: item.values[1].formattedValue,
+                bodyText: item.values[2].formattedValue
+              }
+
+              cleanData.push(rowInfo)
+
+
+              if (rowInfo.ordered >= this.totalDecks) {
+                this.totalDecks = parseInt(rowInfo.ordered) + 1;
+              }
+
             }
-
           }
         });
 
@@ -263,7 +274,7 @@ export default {
         cleanData.forEach((item, index) => {
           if (item.ordered == "0") {
             this.orderedCards.push(item)
-          } else {
+          } else if (item.ordered !== "option") {
             this.unorderedDecks[item.ordered].push(index)
           }
         });
@@ -317,5 +328,15 @@ export default {
   .x-card-text {
     font-size: .5em;
     text-decoration: underline;
+  }
+
+  .full-page-background {
+    position: absolute;
+    height: 100%;
+    width: 100vw;
+    top: 0;
+    right: 0;
+    margin: 0;
+    z-index: -1; 
   }
 </style>

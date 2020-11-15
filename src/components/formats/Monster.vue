@@ -1,5 +1,6 @@
 <template>
   <div class="monster game-room container" v-if="roomInfo">
+    <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
 
     <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
@@ -59,7 +60,7 @@
           <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
         </div>
       </div>
-      
+
       <div v-for="(row, index) in gSheet" v-bind:key="index">
         <transition name="fade">
           <div class="row mb-4" v-if="row.ordered == roomInfo.currentCardIndex">
@@ -75,7 +76,7 @@
                       <div v-if="index !== 0">
                         <p class="mt-4" style="white-space: pre-line" v-html="row.archetype"></p>
                         <div class="text-left" style="white-space: pre-line" v-html="row.characterDetail">
-                          
+
                         </div>
                       </div>
 
@@ -113,7 +114,7 @@
     </div>
 
     <!-- these are advice and pause buttons, feel free to add them back. The current advice is geared toward Dawn of the Monster Invasion.
-    
+
     <div class="btn-group col-sm" role="group" aria-label="Advice Buttons">
       <b-button v-b-modal.speaker-tips variant="warning">Speaker Tips</b-button>
 
@@ -234,7 +235,7 @@ export default {
     updateRoundInfo(){
       var newRoundInfo = ""
       var newRoundProgress =""
-
+/* For the published version, this section adds instruction headers
       if (this.roomInfo.currentCardIndex == 0 || this.roomInfo.currentCardIndex == (this.instructionCardCount + this.gameRoundCount + 1)){
         newRoundInfo = ""
       } else if (this.roomInfo.currentCardIndex <= this.instructionCardCount){
@@ -246,7 +247,7 @@ export default {
       } else {
         newRoundInfo = ""
       }
-
+*/
       var newRoundTitle = ""
       /* For the published version, this section adds round titles
 
@@ -288,10 +289,12 @@ export default {
       })
     },
     updateClickedCard(index){
-      if(this.clickedCard == index){
-        this.clickedCard=-1
-      } else if (index !== 0 && index > this.instructionCardCount) {
-        this.clickedCard=index
+      if(this.gSheet[index].subtitle !== undefined){
+        if(this.clickedCard == index){
+          this.clickedCard=-1
+        } else if (index !== 0 && index > this.instructionCardCount) {
+          this.clickedCard=index
+        }
       }
     },
     fetchAndCleanSheetData(sheetID){
@@ -310,18 +313,26 @@ export default {
         // Transform Sheets API response into cleanData
         gRows.forEach((item, i) => {
           if (i !== 0 && item.values[0] && item.values[0].formattedValue){
-
-            var rowInfo = {
-              ordered: item.values[0].formattedValue,
-              archetype: item.values[1].formattedValue,
-              subtitle: item.values[2].formattedValue,
-              characterQuestion: item.values[3].formattedValue,
-              characterDetail: item.values[4].formattedValue,
-              keyQuestion: item.values[5].formattedValue,
-              keyDetails: item.values[6].formattedValue
+            // Handle options
+            if (item.values[0].formattedValue == "option"){
+              this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+              console.log(item.values[2].formattedValue)
             }
 
-            cleanData.push(rowInfo)
+            if (item.values[0].formattedValue !== "option"){
+
+              var rowInfo = {
+                ordered: item.values[0].formattedValue,
+                archetype: item.values[1].formattedValue,
+                subtitle: item.values[2].formattedValue,
+                characterQuestion: item.values[3].formattedValue,
+                characterDetail: item.values[4].formattedValue,
+                keyQuestion: item.values[5].formattedValue,
+                keyDetails: item.values[6].formattedValue
+              }
+
+              cleanData.push(rowInfo)
+            }
           }
         });
 
@@ -342,7 +353,7 @@ export default {
         this.gSheet = [{text:'Error loading Google Sheet'}]
         this.error = error
         console.log(error)
-      })      
+      })
     }
 
   }
@@ -412,4 +423,13 @@ export default {
     padding-bottom: 1em;
   }
 
+  .full-page-background {
+    position: absolute;
+    height: 100%;
+    width: 100vw;
+    top: 0;
+    right: 0;
+    margin: 0;
+    z-index: -1;
+  }
 </style>

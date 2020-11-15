@@ -1,5 +1,6 @@
 <template>
   <div class="container game-room">
+    <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
 
     <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
@@ -26,14 +27,14 @@
     <div v-if="timerSynced">
       <div v-if="!playerSelected" class="row my-4">
         <div class="btn-group col-sm" role="group" aria-label="Role Controls">
-          <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>              
+          <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>
         </div>
       </div>
       <div class="player-label text-center row my-4" v-if="playerSelected">
         <div class="col-sm">
           Role: {{playerSelected}}
         <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
-        </div>  
+        </div>
       </div>
 
     <div class="timer-box game-room mb-4 shadow">
@@ -45,7 +46,7 @@
           <div v-if="playerSelected" class="row mb-4">
             <div class="btn-group col-sm-6 offset-sm-3" role="group" aria-label="Timer Controls">
               <button type="button" class="btn btn-outline-dark" :disabled="roomInfo.running" v-on:click="start()">Start</button>
-              <button type="button" class="btn btn-outline-dark" :disabled="!roomInfo.running" v-on:click="stop()">Pause</button>  
+              <button type="button" class="btn btn-outline-dark" :disabled="!roomInfo.running" v-on:click="stop()">Pause</button>
               <button type="button" class="btn btn-outline-danger" :disabled="!roomInfo.timeBegan" v-on:click="reset()">Reset</button>
             </div>
           </div>
@@ -63,7 +64,7 @@
               <div class="card shadow">
                 <div class="card-body">
                   <div class="card-text" style="white-space: pre-line" v-html="row.text">
-                    
+
                   </div>
                 </div>
               </div>
@@ -231,16 +232,24 @@ export default {
         gRows.forEach((item) => {
           console.log(item.values[0].formattedValue)
 
-          var rowInfo = {
-            time: item.values[0].formattedValue,
-            text: item.values[1].formattedValue
+          if (item.values[0].formattedValue == "option"){
+            this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+            console.log(item.values[2].formattedValue)
           }
 
-          playerArray.forEach((player, i)=>{
-            rowInfo[player] = parseInt(item.values[i+2].formattedValue);
-          });
+          if (item.values[0].formattedValue !== "option"){
 
-          cleanData.push(rowInfo)
+            var rowInfo = {
+              time: item.values[0].formattedValue,
+              text: item.values[1].formattedValue
+            }
+
+            playerArray.forEach((player, i)=>{
+              rowInfo[player] = parseInt(item.values[i+2].formattedValue);
+            });
+
+            cleanData.push(rowInfo)
+          }
         });
 
         this.gSheet = cleanData.slice().reverse();
@@ -251,7 +260,7 @@ export default {
         this.gSheet = [{text:'Error loading Google Sheet'}]
         this.error = error;
         console.log(error)
-      })      
+      })
     }
 
   }
@@ -286,5 +295,15 @@ export default {
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
+  }
+
+  .full-page-background {
+    position: absolute;
+    height: 100%;
+    width: 100vw;
+    top: 0;
+    right: 0;
+    margin: 0;
+    z-index: -1;
   }
 </style>
