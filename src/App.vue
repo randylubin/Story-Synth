@@ -4,15 +4,22 @@
     <div v-if="$route.path !== '/about'">
       <div class="non-footer-content">
         <app-header :routeRoomID="$route.params.roomID"></app-header>
-        <app-roomPicker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-roomPicker>
+        <div v-if="!$route.params.roomID && $route.params.gSheetID">
+          <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameLauncher>
+        </div>
+        
 
-        <!-- Remove for published version any components you aren't using -->
-        <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
-        <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
-        <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
-        <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
-        <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SlotMachine' && $route.params.roomID"></app-slotMachine>
-        <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
+        <div>
+          <app-roomPicker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-roomPicker>
+          
+          <!--For published version, remove any components you aren't using -->
+          <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
+          <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
+          <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
+          <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
+          <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SlotMachine' && $route.params.roomID"></app-slotMachine>
+          <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
+        </div>
       </div>
       
       <app-footer v-if="$route.params.roomID"></app-footer>
@@ -23,10 +30,11 @@
 <script>
 
   // Remove for published version any components you aren't using
+  import RoomPicker from './components/RoomPicker.vue'
+  import GameLauncher from './components/GameLauncher.vue'
   import Timed from './components/formats/Timed.vue'
   import Shuffled from './components/formats/Shuffled.vue'
   import Monster from './components/formats/Monster.vue'
-  import RoomPicker from './components/RoomPicker.vue'
   import SecretCards from './components/formats/SecretCards.vue'
   import SlotMachine from './components/formats/SlotMachine.vue'
   import Phases from './components/formats/Phases.vue'
@@ -37,8 +45,10 @@
   export default {
     name: 'app',
     components: { // Remove from published version any you aren't using
-      'app-timed': Timed,
       'app-roomPicker': RoomPicker,
+      'app-gameLauncher': GameLauncher,
+      //'app-lobbyMaker' : LobbyMaker,
+      'app-timed': Timed,
       'app-shuffled': Shuffled,
       'app-monster': Monster,
       'app-secretCards': SecretCards,

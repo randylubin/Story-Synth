@@ -43,12 +43,12 @@
           </div>
 
           <div v-if="$route.query.gameBlurb" class="row">
-            <div class="col-sm text-center">
+            <div class="col-sm text-center" style="white-space: pre-wrap;">
               <p>{{$route.query.gameBlurb}}</p>
             </div>
           </div>
 
-          <div class="row mt-4" v-if="$route.params.gSheetID && !$route.query.gameTitle">
+          <div class="row mt-4" v-if="$route.params.gSheetID && (!$route.query.gameTitle && !$route.query.byline && !$route.query.gameBlurb)">
             <div class="col-sm text-center">
               <h1>Playtest with Story Synth</h1>
               <div class="col-sm">This room will use the {{routeGameType}} template and <a v-bind:href="'https://docs.google.com/spreadsheets/d/'+routeGSheetID+'/edit?usp=sharing'" target="_blank">this Google Sheet</a>. You can <a href="/">clear these defaults</a>, if you'd like.</div>
