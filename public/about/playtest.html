@@ -106,16 +106,17 @@
             If you are using a template that has columns for different players, you can edit those column headers (row 1) to match the player or character names. You can add or delete columns to match the number of players for your game.
             </p>
 
-            <h2>Customize the style, title, and byline</h2>
+            <h2>Customize the style, title, and byline, and blurb</h2>
             <p>You can use 'option' rows in the sheet to further customize the game. All formats support the following options:</p>
 
             <ul>
               <li>gameTitle – this will display your game's title at the top of the page</li>
               <li>byline – this will show a subtitle or byline underneath the title</li>
-              <li>style – use this space to alter the CSS styles on the page. All CSS must be inside &lt;style&gt;&lt;/style&gt; tags</li>
+              <li>gameBlurb – this will show up on the game launcher page where players can create new sessions</li>
+              <li>style – use this space to alter the CSS styles on the page (both in a session and in the game launcher). All CSS must be inside &lt;style&gt;&lt;/style&gt; tags</li>
             </ul>
 
-            <p>To use an option row, put 'option' in the first column, the option type in the second column, and the details in the third column. See the demo templates for examples.</p>
+            <p>To use an option row, put 'option' in the first column, the option type in the second column, and the details in the third column. See the demo templates for examples. All options are optional – you can always leave them out.</p>
 
             <p>If you're using the style option, here are some classes you may want to style:</p>
 
@@ -136,57 +137,35 @@
             <p>
             Now you can click “Copy link” which gives you the shareable URL. It should look something like: https://docs.google.com/spreadsheets/d/1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w/edit?usp=sharing
             </p>
-            <h2>Create a Room in Story Synth</h2>
-            
-            
-            <p>
-            You’re now ready to create a playtest room in Story Synth:
-            </p>
-            <ol>
-            
-            <li>Go to storysynth.org
-            
-            <li>Optional: enter a custom room name, though it’s okay to use the randomly generated name
-            
-            <li>Select the template you’re using from “Game Format” dropdown list
-            
-            <li>Paste in your game spreadsheet’s URL in the “Sheet” field
-            
-            <li>Click “Enter Room” to start your playtest
-            </li>
-            </ol>
-            <p>
-            You can share this new room URL with your playtesters – click the link button at the top of the page or copy the URL manually. The URLs look like: storysynth.org/#/DFTQ/demo/quota-lemon-pager
-            </p>
-            <p>
-            You can then share this link with a group of players and run your game. Everyone at the same URL is part of the same session, so don’t share the same link with multiple groups of playtesters.
-            </p>
-            <h2>Create a Room creation link</h2>
-            
-            
-            <p>
-            If you’re running your game with multiple groups or just sharing your game for feedback, you won’t want to share the same room link – (different groups would see each other playing / browsing).
-            </p>
-            <p>
-            While you could create a custom room URL for each group, instead you can create one URL that let’s players create their own unique rooms. To do so, take the URL for a random room and delete the room ID from the end.
-            </p>
-            <p>
-            For example: storysynth.org/Shuffled/ASDF1234/apple-orange-banana would become storysynth.org/Shuffled/ASDF1234/
-            </p>
-            <p>
-            Note that instead of ASDF1234, you’ll likely have a long string of letters and numbers.
-            </p>
-            <p>
-            Whenever you send someone to that new link, Story Synth will automatically fill in the Format and Sheet info so all they need to do is hit “Enter Room” and start playing.
-            </p>
-            <p>You can also add query params to the end of the URL to add info which will show up on the page. The accepted params are:</p>
-            <ul>
-              <li>gameTitle – the title of your game</li>
-              <li>byline - a short line underneath the title</li>
-              <li>gameBlurb – a description of the game that goes underneath the byline</li>
-            </ul>
-            <p>So an example with query params might be: storysynth.org/Shuffled/ASDF1234/?gameTitle=Example%20Title&byline=By%20Example%20Person</p>
 
+            <h2>Create a game page for your game</h2>
+            
+            
+            <p>
+            You’re now ready to connect your game to Story Synth:
+            </p>
+
+            <ol>
+              <li>Go to storysynth.org
+              <li>Select the template you’re using from “Game Format” dropdown list
+              <li>Paste in your game spreadsheet’s URL in the “Sheet” field
+              <li>Click “Create Game” to go to a page that can launch new sessions of your game
+              </li>
+            </ol>
+
+            <p>
+              You can share this URL with anyone who wants to check out your game but it won't be searchable on the site or the internet – people won't accidently stumble across it. This page will display the game's Title, Byline, and Blurb if you have the relevant options in the spreadsheet; it will also use the style option if present.
+            </p>
+
+            <h2>Create a game session</h2>
+
+            <p>
+              From your game page, click the "Join Session" button to create and join a session where you can play your game. You can share the session URL with your players – click the link button at the top of the page or copy the URL manually.
+            </p>
+            <p>
+              Everyone at the same URL is part of the same session, so don’t share the same link with multiple groups of players.
+            </p>
+            
             <h2>Updating the spreadsheet content</h2>
             
             

@@ -111,28 +111,29 @@
             
             
             <p>
-            Remove any unused components. You’ll likely use only one of the game types and can remove the others from the template at the top, the import, and the components list.
+            Remove any unused components. You’ll likely use only one of the game types and can remove the others from the template at the top, the import, and the components list. Depending on your interest, either update or remove the header and footer.
             </p>
-            <h3>In RoomPicker.vue</h3>
-            
-            
+
             <p>
-            Remove and replace the headers and about section of the app. Then, remove the format and sheet fields from the form.
+            Remove the GameMaker component from the App template, as we'll use GameLauncher on the home page. Change the v-if part of the GameLauncher component to <code>v-if="$route.fullPath == '/'"</code>
             </p>
+
             <h3>The documentation</h3>
             
             
             <p>
             Delete the /public/about folder which contains the Story Synth documentation (which you’re reading right now).
             </p>
-            <h2>Step three: hardcode the game type and Google Sheet link</h2>
+
+
             
-            
+          <h2>Step three: hardcode the game type and Google Sheet link</h2>
+          
             <p>
             Next, we need to set some extra defaults so that Story Synth always uses your game template and spreadsheet.
             </p>
             <p>
-            Hardcode the template type into the router-link in RoomPicker.vue. For example it might look like <code>&lt;router-link :to="{path: '/' + formatToURL(“Shuffled”, gSheetID, roomID)}"></code>
+            Hardcode the template type into the router-link in GameLauncher.vue. For example it might look like <code>&lt;router-link :to="{path: '/' + formatToURL(“Shuffled”, gSheetID, roomID)}"></code>
             </p>
             <p>
             Hardcode your Google Sheet URL into your game’s .vue file. In the function fetchAndCleanSheetData, set the variable getURL equal to your Google Spreadsheet link.

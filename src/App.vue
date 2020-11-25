@@ -4,14 +4,17 @@
     <div v-if="$route.path !== '/about'">
       <div class="non-footer-content">
         <app-header :routeRoomID="$route.params.roomID"></app-header>
+        
+        <div v-if="$route.fullPath == '/'">
+          <app-gameMaker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameMaker>
+        </div>
+        
         <div v-if="!$route.params.roomID && $route.params.gSheetID">
           <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameLauncher>
         </div>
         
 
         <div>
-          <app-roomPicker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-roomPicker>
-          
           <!--For published version, remove any components you aren't using -->
           <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
           <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
@@ -30,8 +33,8 @@
 <script>
 
   // Remove for published version any components you aren't using
-  import RoomPicker from './components/RoomPicker.vue'
-  import GameLauncher from './components/GameLauncher.vue'
+  import GameMaker from './components/launchers/GameMaker.vue'
+  import GameLauncher from './components/launchers/GameLauncher.vue'
   import Timed from './components/formats/Timed.vue'
   import Shuffled from './components/formats/Shuffled.vue'
   import Monster from './components/formats/Monster.vue'
@@ -44,10 +47,9 @@
 
   export default {
     name: 'app',
-    components: { // Remove from published version any you aren't using
-      'app-roomPicker': RoomPicker,
+    components: { // Remove unused components from the published version
+      'app-gameMaker': GameMaker,
       'app-gameLauncher': GameLauncher,
-      //'app-lobbyMaker' : LobbyMaker,
       'app-timed': Timed,
       'app-shuffled': Shuffled,
       'app-monster': Monster,
