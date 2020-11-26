@@ -3,20 +3,21 @@
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
 
-    <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
-      <div class="row text-center" v-if="customOptions.gameTitle">
-        <div class="col-sm">
-          <h1>{{customOptions.gameTitle}}</h1>
+    <div class="game-meta">
+      <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
+        <div class="row text-center" v-if="customOptions.gameTitle">
+          <div class="col-sm">
+            <h1>{{customOptions.gameTitle}}</h1>
+          </div>
         </div>
-      </div>
 
-      <div class="row text-center" v-if="customOptions.byline">
-        <div class="col-sm">
-          <h4>{{customOptions.byline}}</h4>
+        <div class="row text-center" v-if="customOptions.byline">
+          <div class="col-sm">
+            <h4>{{customOptions.byline}}</h4>
+          </div>
         </div>
       </div>
     </div>
-
 
     <div class="btn-container" style>
       <div class="row mb-4">

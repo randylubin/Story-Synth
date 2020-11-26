@@ -76,6 +76,10 @@
     height: 100%;
   }
 
+  .btn-outline-dark:not(:hover), .btn-outline-primary:not(:hover) {
+    background-color:white;
+  }
+
   .message{
     font-size: 2em;
     margin-top: 1em;

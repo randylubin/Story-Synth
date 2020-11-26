@@ -3,7 +3,7 @@
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
 
-    <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
+    <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
         <div class="col-sm">
           <h1>{{customOptions.gameTitle}}</h1>

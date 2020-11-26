@@ -1,4 +1,4 @@
-![Version 1.0.1](https://img.shields.io/badge/version-1.0.1-blue)
+![Version 1.0.2](https://img.shields.io/badge/version-1.0.2-blue)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
 
 # Story Synth

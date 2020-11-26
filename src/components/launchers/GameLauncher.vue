@@ -34,22 +34,24 @@
             </div>
           </div>
 
-          <div class="row mt-4" v-if="customOptions.gameTitle">
-            <div class="col-sm text-center">
-              <h1>{{customOptions.gameTitle}}</h1>
+          <div class="game-meta">
+            <div class="row mt-4" v-if="customOptions.gameTitle">
+              <div class="col-sm text-center">
+                <h1>{{customOptions.gameTitle}}</h1>
+              </div>
             </div>
-          </div>
 
 
-          <div class="row mb-2" v-if="customOptions.byline">
-            <div class="col-sm text-center">
-              <em>{{customOptions.byline}}</em>
+            <div class="row mb-2" v-if="customOptions.byline">
+              <div class="col-sm text-center">
+                <em>{{customOptions.byline}}</em>
+              </div>
             </div>
-          </div>
 
-          <div v-if="customOptions.gameBlurb" class="row">
-            <div class="col-sm text-center" style="white-space: pre-wrap;">
-              <p v-html="customOptions.gameBlurb"></p>
+            <div v-if="customOptions.gameBlurb" class="row">
+              <div class="col-sm text-center" style="white-space: pre-wrap;">
+                <p v-html="customOptions.gameBlurb"></p>
+              </div>
             </div>
           </div>
 
