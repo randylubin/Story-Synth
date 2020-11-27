@@ -17,6 +17,10 @@
         </div>
       </div>
 
+      <div v-if="dataReady && firebaseReady && roomInfo && roomInfo.toolkitData">
+        <app-toolkit @sync-toolkit="syncToolkit()" :customOptions="roomInfo.toolkitData"></app-toolkit>
+      </div>
+
       <div class="row mb-4">
         <transition name="fade">
           <div class="btn-group col-sm" role="group" aria-label="Card Controls">
@@ -77,9 +81,13 @@
 <script>
 import { roomsCollection } from '../../firebase';
 import axios from 'axios'
+import Toolkit from '../toolkit/Toolkit.vue'
 
 export default {
   name: 'app-shuffled',
+  components: {
+    'app-toolkit': Toolkit,
+  },
   props: {
     roomID: String,
     gSheetID: String
@@ -92,6 +100,7 @@ export default {
         cardSequence: [0,1,2],
         locationOfLastCard: 0,
       },
+      tempToolkitData: {test:null},
       dataReady: false,
       firebaseReady: false,
       gSheet: [{text:"loading"}],
@@ -114,7 +123,7 @@ export default {
         if (!this.roomInfo){
           console.log("new room!")
 
-          roomsCollection.doc(this.roomID).set({currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
+          roomsCollection.doc(this.roomID).set({toolkitData: this.tempToolkitData, currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
 
           if(this.dataReady){this.shuffleAndResetGame();}
         }
@@ -215,6 +224,11 @@ export default {
       })
 
     },
+    syncToolkit(){
+      roomsCollection.doc(this.roomID).update({
+        toolkitData: this.roomInfo.toolkitData
+      })
+    },
     fetchAndCleanSheetData(sheetID){
 
       // Remove for published version
@@ -242,8 +256,19 @@ export default {
               this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
               console.log(item.values[2].formattedValue)
             }
+            
+            // Handle toolkit
+            if (item.values[0].formattedValue == "toolkit"){
+              if(this.firebaseReady && this.roomInfo){
+                this.$set(this.roomInfo.toolkitData, item.values[1].formattedValue, item.values[2].formattedValue)
+              } else {
+                this.tempToolkitData[item.values[1].formattedValue] = item.values[2].formattedValue
+              }
+              console.log('toolkit -', item.values[1].formattedValue, item.values[2].formattedValue)
+            }
 
-            if (item.values[0].formattedValue !== "option"){
+            // Handle cards
+            if (item.values[0].formattedValue !== "option" && item.values[0].formattedValue !== "toolkit"){
 
               var rowInfo = {
                 ordered: item.values[0].formattedValue,

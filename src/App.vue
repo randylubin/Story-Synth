@@ -22,6 +22,8 @@
           <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
           <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SlotMachine' && $route.params.roomID"></app-slotMachine>
           <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
+          
+          <app-sandbox :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox' && $route.params.roomID"></app-sandbox>
         </div>
       </div>
       
@@ -33,21 +35,25 @@
 <script>
 
   // Remove for published version any components you aren't using
+  import Header from './components/layout/Header.vue'
+  import Footer from './components/layout/Footer.vue'
+
   import GameMaker from './components/launchers/GameMaker.vue'
   import GameLauncher from './components/launchers/GameLauncher.vue'
+
   import Timed from './components/formats/Timed.vue'
   import Shuffled from './components/formats/Shuffled.vue'
   import Monster from './components/formats/Monster.vue'
   import SecretCards from './components/formats/SecretCards.vue'
   import SlotMachine from './components/formats/SlotMachine.vue'
   import Phases from './components/formats/Phases.vue'
-  import Header from './components/layout/Header.vue'
-  import Footer from './components/layout/Footer.vue'
-
+  import Sandbox from './components/formats/Sandbox.vue'
 
   export default {
     name: 'app',
     components: { // Remove unused components from the published version
+      'app-header': Header,
+      'app-footer': Footer,
       'app-gameMaker': GameMaker,
       'app-gameLauncher': GameLauncher,
       'app-timed': Timed,
@@ -56,8 +62,8 @@
       'app-secretCards': SecretCards,
       'app-slotMachine': SlotMachine,
       'app-phases': Phases,
-      'app-header': Header,
-      'app-footer': Footer,
+      'app-sandbox': Sandbox,
+      
     },
     data () {
       return {
