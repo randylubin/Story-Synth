@@ -32,6 +32,13 @@
       </div>
     </div>
 
+    <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex <= customOptions.instructionsProgressBar && roomInfo.currentCardIndex != 0">
+      <div class="col-sm">
+        <h2>Instructions</h2>
+        <b-progress :value="roomInfo.currentCardIndex" :max="customOptions.instructionsProgressBar" variant="dark"></b-progress>
+      </div>
+    </div>
+
     <!--<h1 class="">{{roomInfo.roundTitle}}</h1>-->
     <h3 class="mb-4">{{roomInfo.roundInfo}} <span class="">{{roomInfo.roundProgress}}</span></h3>
 

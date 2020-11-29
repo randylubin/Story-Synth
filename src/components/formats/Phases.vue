@@ -24,6 +24,14 @@
         </div>
       </div>
 
+      <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < 16 && roomInfo.currentCardIndex != 0">
+        <div class="col-sm">
+          <h2>Instructions</h2>
+          <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction -1" variant="dark"></b-progress>
+        </div>
+      </div>
+
+
       <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
         <transition name="fade">
           <div class="card d-flex shadow">
@@ -58,10 +66,11 @@
 
             <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
               <div class="mt-5 pt-5 mb-5">
-                <h1>X-Card</h1>
+                <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
+                <div class="safety-card-tet" v-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
               </div>
               <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
-              <div class="">
+              <div class="" v-if="!customOptions.safetyCardText">
                 <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
               </div>
             </div>
@@ -74,7 +83,7 @@
         <div class="row mb-4">
           <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
             <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
-            <button class="btn btn-outline-dark" v-on:click="xCard()">X-Card</button>
+            <b-button variant="outline-dark" v-on:click="xCard()" v-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'">X-Card</b-button>
             <button class="btn btn-outline-dark" v-on:click="skipInstructions()" v-if="roomInfo.currentCardIndex < firstNonInstruction">Skip Instructions</button>
             <button class="btn btn-outline-dark" v-if="roomInfo.currentCardIndex >= firstNonInstruction" :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive" v-on:click="ending()">Ending</button>
           </div>
@@ -84,23 +93,20 @@
       <div v-if="Array.isArray(customOptions.showPastPrompts)">
         <div class="row mt-5">
           <div class="col-sm">
-            <h2>Itinerary</h2>
+            <h2 v-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'"></h2>
           </div>
         </div>
 
         <div class="itinerary mb-5 card d-flex shadow"> <!-- style="display: flex; flex-direction: column-reverse;-->
           <div class="card-body justify-content-center">
-            <div class="row">
-              <div class="col-sm">
-                Home
-                <br>
-                |
+            <div class="row game-meta">
+              <div class="col-sm" v-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null">
               </div>
             </div>
             <div v-for="(round, roundIndex) in roomInfo.cardSequence" v-bind:key="roundIndex">
               <div v-if="Object.prototype.toString.call(round) === '[object Object]' && phaseData.length>0 && roundIndex <= roomInfo.currentCardIndex">
                 <div class="row" v-for="(phase, phaseIndex) in numberOfPhases" v-bind:key="phaseIndex">
-                  <div class="col-sm" v-if="roundIndex < roomInfo.currentCardIndex || (roundIndex==roomInfo.currentCardIndex && phaseIndex < roomInfo.currentPhase)">
+                  <div class="col-sm" v-if="roundIndex < roomInfo.lastSeenRound || (roundIndex==roomInfo.lastSeenRound && phaseIndex < roomInfo.lastSeenPhase)">
                     <div v-if="customOptions.showPastPrompts[phaseIndex]==1" style="font-size: .8em;">
                       {{phaseData[phaseIndex][round[phaseIndex]]}}
                       <br>|
@@ -110,8 +116,7 @@
               </div>
             </div>
             <div class="row" v-if="roomInfo.currentCardIndex >= endingIndex">
-              <div class="col-sm">
-                Home
+              <div class="col-sm" v-html="customOptions.pastPromptCoda ? customOptions.pastPromptCoda : null">
               </div>
             </div>
           </div>
@@ -138,7 +143,10 @@ export default {
         currentCardIndex: 0,
         currentPhase: 0,
         xCardIsActive: false,
-        cardSequence: [0,1,2]
+        cardSequence: [0,1,2],
+        skipToEnding: false,
+        lastSeenRound: 0,
+        lastSeenPhase: 0, 
       },
       customOptions: {},
       dataReady: false,
@@ -165,7 +173,7 @@ export default {
         if (!this.roomInfo){
           console.log("new room!")
 
-          roomsCollection.doc(this.roomID).set({currentCardIndex:0, xCardIsActive: false, cardSequence:[0,1,2], currentPhase: 0})
+          roomsCollection.doc(this.roomID).set({currentCardIndex:0, xCardIsActive: false, cardSequence:[0,1,2], currentPhase: 0, skipToEnding: false, lastSeenRound: 0, lastSeenPhase: 0})
 
           if(this.dataReady){this.shuffle();}
         }
@@ -193,7 +201,9 @@ export default {
       
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: this.roomInfo.currentCardIndex,
-        currentPhase: this.roomInfo.currentPhase
+        lastSeenRound: this.roomInfo.currentCardIndex,
+        currentPhase: this.roomInfo.currentPhase,
+        lastSeenPhase: this.roomInfo.currentPhase,
       })
     },
     nextCard(){
@@ -213,13 +223,17 @@ export default {
 
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: this.roomInfo.currentCardIndex,
-        currentPhase: this.roomInfo.currentPhase
+        lastSeenRound: this.roomInfo.currentCardIndex,
+        currentPhase: this.roomInfo.currentPhase,
+        lastSeenPhase: this.roomInfo.currentPhase
       })
     },
     skipInstructions(){
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: this.firstNonInstruction,
-        currentPhase: 0
+        lastSeenRound: this.firstNonInstruction,
+        currentPhase: 0,
+        lastSeenPhase: 0
       })
     },
     ending(){
@@ -228,7 +242,10 @@ export default {
       }
 
       roomsCollection.doc(this.roomID).update({
-        currentCardIndex: this.endingIndex
+        lastSeenRound: this.roomInfo.currentCardIndex,
+        lastSeenPhase: this.roomInfo.currentPhase,
+        currentCardIndex: this.endingIndex,
+        skipToEnding: true
       })
     },
     xCard(){

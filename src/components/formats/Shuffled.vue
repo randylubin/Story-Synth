@@ -17,8 +17,8 @@
         </div>
       </div>
 
-      <div v-if="dataReady && firebaseReady && roomInfo && roomInfo.toolkitData">
-        <app-toolkit @sync-toolkit="syncToolkit()" :customOptions="roomInfo.toolkitData"></app-toolkit>
+      <div v-if="dataReady && firebaseReady && roomInfo && roomInfo.extensionData">
+        <app-extensionManager @sync-extension="syncExtension()" :extensionData="roomInfo.extensionData" :extensionList="tempExtensionData"></app-extensionManager>
       </div>
 
       <div class="row mb-4">
@@ -29,6 +29,13 @@
             <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex >= roomInfo.locationOfLastCard">Next Card</button>
           </div>
         </transition>
+      </div>
+
+      <div class="row mb-4 game-meta" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
+        <div class="col-sm">
+          <h2>Instructions</h2>
+          <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction - 1" variant="dark"></b-progress>
+        </div>
       </div>
 
       <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
@@ -46,10 +53,11 @@
 
             <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
               <div class="mt-5 pt-5 mb-5">
-                <h1>X-Card</h1>
+                <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
+                <div class="safety-card-tet" v-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
               </div>
               <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
-              <div class="">
+              <div class="" v-if="!customOptions.safetyCardText">
                 <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
               </div>
             </div>
@@ -63,7 +71,7 @@
           <div class="col-sm">
             <b-button-group aria-role="Deck control" class="d-flex w-100">
               <b-button variant="outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffleAndResetGame()" color="rgb(187, 138, 200)">Re-shuffle</b-button>
-              <b-button variant="outline-dark" v-on:click="xCard()">X-Card</b-button>
+              <b-button variant="outline-dark" v-on:click="xCard()" v-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'">X-Card</b-button>
               <!--<b-button variant="outline-dark" v-on:click="nextDeck()">Next Deck</b-button>-->
               <b-dropdown variant="outline-dark" id="dropdown-1" text="Last Card" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.currentCardIndex == roomInfo.locationOfLastCard" right>
                 <b-dropdown-item v-on:click="lastCard()">Go to last card</b-dropdown-item>
@@ -81,12 +89,12 @@
 <script>
 import { roomsCollection } from '../../firebase';
 import axios from 'axios'
-import Toolkit from '../toolkit/Toolkit.vue'
+import ExtensionManager from '../extensions/ExtensionManager.vue'
 
 export default {
   name: 'app-shuffled',
   components: {
-    'app-toolkit': Toolkit,
+    'app-extensionManager': ExtensionManager,
   },
   props: {
     roomID: String,
@@ -100,7 +108,8 @@ export default {
         cardSequence: [0,1,2],
         locationOfLastCard: 0,
       },
-      tempToolkitData: {test:null},
+      firstNonInstruction: 0,
+      tempExtensionData: {test:null},
       dataReady: false,
       firebaseReady: false,
       gSheet: [{text:"loading"}],
@@ -123,7 +132,7 @@ export default {
         if (!this.roomInfo){
           console.log("new room!")
 
-          roomsCollection.doc(this.roomID).set({toolkitData: this.tempToolkitData, currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
+          roomsCollection.doc(this.roomID).set({extensionData: this.tempExtensionData, currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
 
           if(this.dataReady){this.shuffleAndResetGame();}
         }
@@ -224,9 +233,9 @@ export default {
       })
 
     },
-    syncToolkit(){
+    syncExtension(){
       roomsCollection.doc(this.roomID).update({
-        toolkitData: this.roomInfo.toolkitData
+        extensionData: this.roomInfo.extensionData
       })
     },
     fetchAndCleanSheetData(sheetID){
@@ -257,18 +266,18 @@ export default {
               console.log(item.values[2].formattedValue)
             }
             
-            // Handle toolkit
-            if (item.values[0].formattedValue == "toolkit"){
+            // Handle extensions
+            if (item.values[0].formattedValue == "extension"){
               if(this.firebaseReady && this.roomInfo){
-                this.$set(this.roomInfo.toolkitData, item.values[1].formattedValue, item.values[2].formattedValue)
+                this.$set(this.roomInfo.extensionData, item.values[1].formattedValue, item.values[2].formattedValue)
               } else {
-                this.tempToolkitData[item.values[1].formattedValue] = item.values[2].formattedValue
+                this.tempExtensionData[item.values[1].formattedValue] = item.values[2].formattedValue
               }
-              console.log('toolkit -', item.values[1].formattedValue, item.values[2].formattedValue)
+              console.log('extension -', item.values[1].formattedValue, item.values[2].formattedValue)
             }
 
             // Handle cards
-            if (item.values[0].formattedValue !== "option" && item.values[0].formattedValue !== "toolkit"){
+            if (item.values[0].formattedValue !== "option" && item.values[0].formattedValue !== "extension"){
 
               var rowInfo = {
                 ordered: item.values[0].formattedValue,
@@ -299,6 +308,7 @@ export default {
         cleanData.forEach((item, index) => {
           if (item.ordered == "0") {
             this.orderedCards.push(item)
+            this.firstNonInstruction += 1
           } else if (item.ordered !== "option") {
             this.unorderedDecks[item.ordered].push(index)
           }

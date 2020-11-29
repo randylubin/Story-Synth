@@ -29,6 +29,13 @@
       </transition>
     </div>
 
+    <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
+      <div class="col-sm">
+        <h2>Instructions</h2>
+        <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction - 1" variant="dark"></b-progress>
+      </div>
+    </div>
+
     <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
       <transition name="fade">
         <div class="card d-flex shadow">
@@ -52,13 +59,13 @@
             
           </div>
           
-
           <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
             <div class="mt-5 pt-5 mb-5">
-              <h1>X-Card</h1>
+              <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
+              <div class="safety-card-tet" v-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
             </div>
             <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
-            <div class="">
+            <div class="" v-if="!customOptions.safetyCardText">
               <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
             </div>
           </div>
@@ -71,7 +78,7 @@
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
           <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
-          <button class="btn btn-outline-dark" v-on:click="xCard()">X-Card</button>
+          <b-button variant="outline-dark" v-on:click="xCard()" v-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'">X-Card</b-button>
           <button class="btn btn-outline-dark" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Last Card</button>
         </div>
       </div>
@@ -97,6 +104,7 @@ export default {
         xCardIsActive: false,
         cardSequence: [0,1,2]
       },
+      firstNonInstruction: 0,
       dataReady: false,
       firebaseReady: false,
       gSheet: [{text:"loading"}],
@@ -254,6 +262,10 @@ export default {
                   bodyText: item.values[2].formattedValue
                 }
                 cleanData.push(rowInfo)
+
+                if (item.values[0].formattedValue == 0){
+                  this.firstNonInstruction += 1
+                }
 
                 if (item.values[0].formattedValue != 0){
                   for (var j = 3; j < item.values.length; j++) {
