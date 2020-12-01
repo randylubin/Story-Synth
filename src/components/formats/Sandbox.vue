@@ -4,7 +4,7 @@
         <div class="col-sm">
           <h1>Sandbox</h1>
           <div v-if="dataReady && firebaseReady && roomInfo && roomInfo.extensionData">
-            <app-extensionManager @sync-extension="syncExtension()" :extensionData="roomInfo.extensionData" :extensionList="tempExtensionData"></app-extensionManager>
+            <app-extensionManager @sync-extension="syncExtension()" :extensionData="roomInfo.extensionData" :extensionList="tempExtensionData" :roomInfo="roomInfo"></app-extensionManager>
           </div>
         </div>
       </div>
@@ -92,6 +92,7 @@ export default {
             // Handle extensions
             if (item.values[0].formattedValue == "extension"){
               if(this.firebaseReady && this.roomInfo){
+                this.tempExtensionData[item.values[1].formattedValue] = item.values[2].formattedValue
                 this.$set(this.roomInfo.extensionData, item.values[1].formattedValue, item.values[2].formattedValue)
               } else {
                 this.tempExtensionData[item.values[1].formattedValue] = item.values[2].formattedValue

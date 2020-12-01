@@ -18,6 +18,12 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import App from './App.vue'
 
+import VueGtag from "vue-gtag";
+Vue.use(VueGtag, {
+  config: { id: "G-B8L2T2PSP7" }
+});
+
+
 import VueRouter from 'vue-router'
 Vue.use(VueRouter);
 

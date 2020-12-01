@@ -85,6 +85,8 @@ export default {
         .then(() => {
 
         })
+      
+      this.$gtag.event('reachedGameSession', { sheetID: this.$route.gSheetID, gameSessionURL: this.currentUrl})
     }
   },
   watch:{
@@ -105,6 +107,8 @@ export default {
           .then(() => {
 
           })
+
+        this.$gtag.event('reachedGameSession', { sheetID: this.$route.gSheetID, gameSessionURL: this.currentUrl})
       }
         
     }

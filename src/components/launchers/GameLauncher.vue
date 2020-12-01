@@ -49,7 +49,7 @@
             </div>
 
             <div v-if="customOptions.gameBlurb" class="row">
-              <div class="col-sm text-center" style="white-space: pre-wrap;">
+              <div class="col-sm text-center game-burb" style="white-space: pre-wrap;">
                 <p v-html="customOptions.gameBlurb"></p>
               </div>
             </div>
@@ -145,6 +145,8 @@ export default {
     if (!this.roomID) {
       this.assignRandomRoomName();
     }
+
+    this.$gtag.event('reachedGameLauncher', { sheetID: this.routeGSheetID, gameTitle: this.customOptions.gameTitle, gameLauncherURL: this.currentUrl})
 
   },
   methods : {

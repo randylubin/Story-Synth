@@ -47,7 +47,6 @@ export default {
   },
   methods: {
     rollDice(diceInput){
-      console.log('Rolling:', diceInput)
       var results = []
 
       // parse input into integers
@@ -70,7 +69,6 @@ export default {
         results.push(Math.floor(Math.random()*die) + 1)
       });
 
-      console.log('results:', results)
       this.$emit('process-extension-update', ['diceRoller',results.toString()])
     }
   }
