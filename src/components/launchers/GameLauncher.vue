@@ -34,18 +34,22 @@
             </div>
           </div>
 
-          <div class="game-meta">
-            <div class="row mt-4" v-if="customOptions.gameTitle">
+          <div class="">
+            <div class="row mt-4" v-if="customOptions.gameTitle && !customOptions.coverImage">
               <div class="col-sm text-center">
                 <h1>{{customOptions.gameTitle}}</h1>
               </div>
             </div>
 
 
-            <div class="row mb-2" v-if="customOptions.byline">
+            <div class="row mb-2" v-if="customOptions.byline && !customOptions.coverImage">
               <div class="col-sm text-center">
                 <em>{{customOptions.byline}}</em>
               </div>
+            </div>
+
+            <div class="mb-3" style="margin: -1.25rem" v-if="customOptions.coverImage">
+              <img style="max-width: 100%; max-heigh:auto" v-bind:src="customOptions.coverImage" v-bind:alt="customOptions.gameTitle + ' cover'">
             </div>
 
             <div v-if="customOptions.gameBlurb" class="row">
@@ -55,7 +59,7 @@
             </div>
           </div>
 
-          <div class="row mt-4" v-if="routeGSheetID && (!customOptions.gameTitle && !customOptions.byline && !customOptions.gameBlurb)">
+          <div class="row mt-4" v-if="routeGSheetID && (!customOptions.gameTitle || !customOptions.byline || !customOptions.gameBlurb)">
             <div class="col-sm text-center">
               <h1>Playtest with Story Synth</h1>
               <div class="col-sm">This session will use the {{routeGameType}} template and <a v-bind:href="'https://docs.google.com/spreadsheets/d/'+routeGSheetID+'/edit?usp=sharing'" target="_blank">this Google Sheet</a> for game content. You can <a href="/">clear these defaults</a>, if you'd like.</div>

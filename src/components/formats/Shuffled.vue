@@ -40,15 +40,22 @@
 
       <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
         <transition name="fade">
-          <div class="card d-flex shadow">
+          <div class="card d-flex shadow img-fluid" v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
+            <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
             <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
               <h1 class="m-5">Loading</h1>
               <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
             </div>
 
-            <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
-              <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
-              <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+            <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%" v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">  
+
+            <div v-if="(!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
+              <div class="card-body justify-content-center d-flex align-items-center mt-4" style="white-space: pre-line" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }" v-if="!roomInfo.xCardIsActive">
+                <div>
+                  <h1 class="">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
+                  <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+                </div>
+              </div>
             </div>
 
             <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
