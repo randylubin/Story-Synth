@@ -78,7 +78,7 @@
                     <div class="card-title" style="white-space: pre-line" v-if="!row.subtitle">
                       <div v-if="index == 0">
                         <h1 class="mt-4">{{row.archetype}}</h1>
-                        <h2>{{row.characterDetail}}</h2>
+                        <div v-html="row.characterDetail"></div>
                       </div>
 
                       <div v-if="index !== 0">
@@ -121,58 +121,23 @@
       </div>
     </div>
 
-    <!-- these are advice and pause buttons, feel free to add them back. The current advice is geared toward Dawn of the Monster Invasion.
+    <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+      <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
 
-    <div class="btn-group col-sm" role="group" aria-label="Advice Buttons">
-      <b-button v-b-modal.speaker-tips variant="warning">Speaker Tips</b-button>
-
-      <b-modal id="speaker-tips" title="Advice for giving a speech" hide-footer>
-        <div class="d-block text-left">
-          <h4>Creating a character</h4>
-          <p>Take a minute to read through the suggested answers. For each question, pick one or two answers that resonate with you or make up your own; consider what embellishments you might add. Think about what type of personality your character might have and how that might be expressed through manner of speech and gestures.</p>
-
-          <h4>Opening remarks</h4>
-          <p>When you're ready to start the meeting, you can say "May I have your attention please." Introduce yourself, in character, including any of the key details about your background. Then, make sure you cover the key information relating to the second question on the character card.</p>
-          <p>Feel free to ham it up and make your character ridiculous! When you're done with your speech, open it up to the audience with "Any questions?"</p>
-
-          <h4>Answering questions</h4>
-          <p>Here are some go-to tactics when answering questions:</p>
-          <ul>
-            <li>Make up an answer</li>
-            <li>Change the subject</li>
-            <li>Be overly defensive</li>
-            <li>Show contrition</li>
-            <li>Attack whomever asked the question</li>
-            <li>Claim ignorance</li>
-            <li>Cut off whomever is asking the questions</li>
-          </ul>
-          <p>You end the round at any time by saying "That will be all!"</p>
+      <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
+        <div class="d-block text-left" v-html="customOptions.modalOneText">
+          
         </div>
       </b-modal>
 
-      <b-button v-b-modal.audience-tips variant="warning">Audience Tips</b-button>
+      <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button>
 
-      <b-modal id="audience-tips" title="Advice for asking questions" hide-footer>
-        <div class="d-block text-left">
-          <h4>Being a character</h4>
-          <p>You don't need to ask questions in character but it can help! Consider who you might be and why you're at the this speech. For instance you could be a collegue, a rival, a skeptic, a fan, or a concerned citizen.</p>
-
-          <h4>Asking questions</h4>
-          <p>Try keep the focus on the speaker; don't hog the spotlight. Try the following types of questions:</p>
-          <ul>
-            <li>Ask for an elaboration on something the speaker mentioned</li>
-            <li>Ask about potential consequences of something in the story</li>
-            <li>Cast doubt on the speaker: "That's not what I heard..."</li>
-            <li>Introduce new info: “What do you think of rumors that...”</li>
-            <li>Share a controverisal opinion: “More of a statement than a question...”</li>
-          </ul>
-
+      <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
+        <div class="d-block text-left" v-html="customOptions.modalTwoText">
         </div>
       </b-modal>
 
-      <button class="btn btn-warning" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
     </div>
-    -->
 
   </div>
 </template>
