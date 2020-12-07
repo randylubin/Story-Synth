@@ -18,7 +18,7 @@
 
             <div class="row mb-3">
               <div class="col-sm text-left">
-                <p>This app allows game designers to make, play, and share simple storytelling games by putting their game content in a Google Spreadsheet. For information on how to use and remix this app, see the <a href="/about">About Page</a> or the <a href="/about/formats.html">Formats Page</a>.</p>
+                <p>This app allows game designers to make, play, and share simple storytelling games by putting their game content in a Google Spreadsheet. For information on how to use and remix this app, see the <a href="https://docs.storysynth.org/guide">About Page</a> or the <a href="https://docs.storysynth.org/guide/formats.html">Formats Page</a>.</p>
                 
                 <p>To see Story Synth in actions, watch this <a href="https://youtu.be/TLQk3zyVyVI">Video Tour</a> or try any of the following format demos:</p>
                 

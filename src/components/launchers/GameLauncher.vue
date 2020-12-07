@@ -59,7 +59,7 @@
             </div>
           </div>
 
-          <div class="row mt-4" v-if="routeGSheetID && (!customOptions.gameTitle || !customOptions.byline || !customOptions.gameBlurb)">
+          <div class="row mt-4" v-if="routeGSheetID && (!customOptions.gameTitle && !customOptions.byline && !customOptions.gameBlurb && !customOptions.gameCover)">
             <div class="col-sm text-center">
               <h1>Playtest with Story Synth</h1>
               <div class="col-sm">This session will use the {{routeGameType}} template and <a v-bind:href="'https://docs.google.com/spreadsheets/d/'+routeGSheetID+'/edit?usp=sharing'" target="_blank">this Google Sheet</a> for game content. You can <a href="/">clear these defaults</a>, if you'd like.</div>
@@ -154,11 +154,65 @@ export default {
         error: null,
         passwordInput: null,
         customOptions: {
-          gameTitle: null,
-          byline: null,
-          gameBlurb: null,
-          password: null
+          gameTitle: undefined,
+          byline: undefined,
+          gameBlurb: undefined,
+          password: undefined,
+          monetization: undefined,
+          revShare: 0.2,
         },
+    }
+  },
+  metaInfo () {
+    return {
+      title: this.customOptions.gameTitle,
+      meta: [
+        {
+          property: 'description',
+          content: this.customOptions.gameBlurb,
+          vmid: 'description'
+        },
+        {
+          property: 'og:title',
+          content: this.customOptions.gameTitle,
+          vmid: 'og:title'
+        },
+        {
+          property: 'og:description',
+          content: this.customOptions.gameBlurb,
+          vmid: 'og:description'
+        },
+        {
+          property: 'og:image',
+          content: this.customOptions.ogImageSquare,
+          vmid: 'og:image'
+        },
+        {
+          property: 'og:url',
+          content: location.hostname.toString() + "/#" + this.$route.fullPath,
+          vmid: 'og:url'
+        },
+        {
+          property: 'twitter:card',
+          content: 'summary',
+          vmid: 'twitter:card'
+        },
+        {
+          property: 'og:site_name',
+          content: 'Story Synth',
+          vmid: 'og:site_name'
+        },
+        {
+          property: 'twitter:image:alt',
+          content: this.customOptions.gameTitle + " logo",
+          vmid: 'twitter:image:alt'
+        },
+        {
+          name: 'monetization',
+          content: this.customOptions.wallet,
+          vmid: 'monetization'
+        },
+      ]
     }
   },
   mounted(){
@@ -207,8 +261,12 @@ export default {
             if (item.values[0].formattedValue == "option"){
               this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
             }
+          }
 
-
+          if (this.customOptions.wallet) {
+            if (Math.random() <= this.customOptions.revShare){
+              this.customOptions.wallet = '$ilp.uphold.com/WMbkRBiZFgbx';
+            }
           }
         });
 

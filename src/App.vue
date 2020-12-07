@@ -69,6 +69,59 @@
       return {
       }
     },
+    metaInfo () {
+    return {
+      title: "Story Synth",
+      meta: [
+        {
+          property: 'description',
+          content: 'A platform for designing and playing storytelling games online. Free to use, open source, no coding knowledge needed.',
+          vmid: 'description'
+        },
+        {
+          property: 'og:title',
+          content: 'Story Synth',
+          vmid: 'og:title'
+        },
+        {
+          property: 'og:description',
+          content: 'A platform for designing and playing storytelling games online.',
+          vmid: 'og:description'
+        },
+        {
+          property: 'og:image',
+          content: 'https://storysynth.org/img/story-synth-square-logo.gif',
+          vmid: 'og:image'
+        },
+        {
+          property: 'og:url',
+          content: 'https://storysynth.org/',
+          vmid: 'og:url'
+        },
+        {
+          property: 'twitter:card',
+          content: 'summary',
+          vmid: 'twitter:card'
+        },
+        {
+          property: 'og:site_name',
+          content: 'Story Synth',
+          vmid: 'og:site_name'
+        },
+        {
+          property: 'twitter:image:alt',
+          content: 'The Story Synth Logo',
+          vmid: 'twitter:image:alt'
+        },
+        {
+          name: 'monetization',
+          content: '$ilp.uphold.com/WMbkRBiZFgbx',
+          vmid: 'monetization'
+        },
+        
+      ]
+    }
+  },
     mounted () {
 
     },

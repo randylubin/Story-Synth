@@ -73,8 +73,10 @@
         <transition name="fade">
           <div class="row mb-4" v-if="row.ordered == roomInfo.currentCardIndex">
             <div class="col-sm">
-              <div class="card shadow" v-on:click="updateClickedCard(index)" style="cursor:pointer">
-                <div class="card-body">
+              <div class="card shadow img-fluid" v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}" v-on:click="updateClickedCard(index)" style="cursor:pointer">
+                <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%" v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
+                <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
+                <div class="card-body" v-if="!customOptions.coverImage || index != 0" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
                     <div class="card-title" style="white-space: pre-line" v-if="!row.subtitle">
                       <div v-if="index == 0">
                         <h1 class="mt-4">{{row.archetype}}</h1>

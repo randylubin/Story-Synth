@@ -8,11 +8,11 @@
         
           <b-collapse id="navbarSupportedContent" is-nav>
             <b-navbar-nav>
-                <b-nav-item href="/about">About</b-nav-item>
-                <b-nav-item href="/about/formats.html">Formats</b-nav-item>
-                <b-nav-item href="/about/playtest.html">Playtest</b-nav-item>
-                <b-nav-item href="/about/publish.html">Publish</b-nav-item>
-                <b-nav-item href="/about/extend.html">Extend</b-nav-item>
+                <b-nav-item href="https://docs.storysynth.org/guide">About</b-nav-item>
+                <b-nav-item href="https://docs.storysynth.org/guide/formats.html">Formats</b-nav-item>
+                <b-nav-item href="https://docs.storysynth.org/guide/design.html">Design</b-nav-item>
+                <b-nav-item href="https://docs.storysynth.org/guide/publish.html">Publish</b-nav-item>
+                <b-nav-item href="https://docs.storysynth.org/guide/extend.html">Extend</b-nav-item>
             </b-navbar-nav>
           </b-collapse>
         </b-navbar>

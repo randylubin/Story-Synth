@@ -19,6 +19,7 @@
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",
     "vue-gtag": "^1.10.0",
+    "vue-meta": "^2.4.0",
     "vue-router": "^3.4.3",
     "vuefire": "^2.2.4"
   },

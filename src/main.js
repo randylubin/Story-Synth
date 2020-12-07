@@ -6,6 +6,9 @@ import 'firebase/database'
 
 import Vue from 'vue'
 
+import VueMeta from 'vue-meta'
+Vue.use(VueMeta);
+
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 // Install BootstrapVue

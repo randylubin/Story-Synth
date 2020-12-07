@@ -38,13 +38,15 @@
 
     <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
       <transition name="fade">
-        <div class="card d-flex shadow">
+        <div class="card d-flex shadow img-fluid" v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
+          <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%" v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
+          <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
           <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
             <h1 class="m-5">Loading</h1>
             <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
           </div>
 
-          <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive">
+          <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
             
             <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
               <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
@@ -59,7 +61,7 @@
             
           </div>
           
-          <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
+          <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
             <div class="mt-5 pt-5 mb-5">
               <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
               <div class="safety-card-tet" v-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
@@ -83,6 +85,25 @@
         </div>
       </div>
     </div>
+
+    <div class="row">
+        <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+          <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
+
+          <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
+            <div class="d-block text-left" v-html="customOptions.modalOneText">
+              
+            </div>
+          </b-modal>
+
+          <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button>
+
+          <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
+            <div class="d-block text-left" v-html="customOptions.modalTwoText">
+            </div>
+          </b-modal>
+        </div>
+      </div> 
 
   </div>
 </template>

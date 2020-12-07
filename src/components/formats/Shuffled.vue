@@ -2,7 +2,7 @@
   <div class="shuffled game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
-    <div class="game-room container" v-if="roomInfo">
+    <div class="" v-if="roomInfo">
       <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
         <div class="row text-center" v-if="customOptions.gameTitle">
           <div class="col-sm">
@@ -41,7 +41,7 @@
       <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
         <transition name="fade">
           <div class="card d-flex shadow img-fluid" v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
-            <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
+            <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
             <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
               <h1 class="m-5">Loading</h1>
               <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
@@ -89,6 +89,25 @@
           </div>
         </div>
       </div>
+
+      <div class="row">
+        <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+          <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
+
+          <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
+            <div class="d-block text-left" v-html="customOptions.modalOneText">
+              
+            </div>
+          </b-modal>
+
+          <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button>
+
+          <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
+            <div class="d-block text-left" v-html="customOptions.modalTwoText">
+            </div>
+          </b-modal>
+        </div>
+      </div>  
     </div>
   </div>
 </template>
@@ -126,6 +145,58 @@ export default {
       unorderedDecks: {},
       customOptions: {},
       error: false,
+    }
+  },
+  metaInfo () {
+    return {
+      title: this.customOptions.gameTitle,
+      meta: [
+        {
+          property: 'description',
+          content: this.customOptions.gameBlurb,
+          vmid: 'description'
+        },
+        {
+          property: 'og:title',
+          content: this.customOptions.gameTitle,
+          vmid: 'og:title'
+        },
+        {
+          property: 'og:description',
+          content: this.customOptions.gameBlurb,
+          vmid: 'og:description'
+        },
+        {
+          property: 'og:image',
+          content: this.customOptions.ogImageSquare,
+          vmid: 'og:image'
+        },
+        {
+          property: 'og:url',
+          content: location.hostname.toString() + "/#" + this.$route.fullPath,
+          vmid: 'og:url'
+        },
+        {
+          property: 'twitter:card',
+          content: 'summary',
+          vmid: 'twitter:card'
+        },
+        {
+          property: 'og:site_name',
+          content: 'Story Synth',
+          vmid: 'og:site_name'
+        },
+        {
+          property: 'twitter:image:alt',
+          content: this.customOptions.gameTitle + " logo",
+          vmid: 'twitter:image:alt'
+        },
+        {
+          name: 'monetization',
+          content: this.customOptions.wallet,
+          vmid: 'monetization'
+        },
+      ]
     }
   },
   mounted(){
@@ -303,6 +374,12 @@ export default {
             }
           }
         });
+
+        if (this.customOptions.wallet) {
+          if (Math.random() <= this.customOptions.revShare){
+            this.customOptions.wallet = '$ilp.uphold.com/WMbkRBiZFgbx';
+          }
+        }
 
         this.unorderedDecks = [];
         for (var d = 0; d < this.totalDecks; d++){
