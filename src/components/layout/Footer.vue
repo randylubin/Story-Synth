@@ -2,7 +2,7 @@
     <footer class="container text-center">
         <div class="row">
           <div class="col-sm-4 offset-sm-4 game-meta">
-            <p class="my-1">Powered by <a href="https://storysynth.org">Story Synth</a></p>
+            <p class="my-1 game-meta">Powered by <a href="https://storysynth.org">Story Synth</a></p>
 
           </div>
         </div>

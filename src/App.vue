@@ -180,11 +180,24 @@
   }
 
   ul {
-    list-style-type: none;
     padding: 0;
   }
 
+
+
   li {
+
+    list-style-type: disc;
+    display: list-item;
+    margin-left: 1.2rem
+    
+  }
+
+  ul.navbar-nav {
+    list-style-type: none;
+  }
+
+  li.nav-item {
     display: inline-block;
     margin: 0 10px;
   }

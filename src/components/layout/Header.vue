@@ -34,7 +34,7 @@
             </div>
             <div class="col-3">
               <transition name="bounce" mode="out-in">
-                <p v-if="roomInfo" :key="Object.keys(roomInfo).length" class="pt-2">{{ Object.keys(roomInfo).length }} 👀</p>
+                <p v-if="roomInfo" :key="Object.keys(roomInfo).length" class="pt-2 game-meta">{{ Object.keys(roomInfo).length }} 👀</p>
               </transition>
             </div>
           </div>

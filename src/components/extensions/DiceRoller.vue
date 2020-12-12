@@ -9,18 +9,19 @@
 
               <div class="row">
                 <div class="col-sm">
-                  <input v-model="diceInput" type="text">
-                  <button class="btn btn-outline-dark m-2" v-on:click="rollDice(diceInput)" :disabled="!diceInput">Roll</button>
+                  <span v-for="(die, index) in diceResults" v-bind:key="index" class="font-weight-bold mx-2" style="font-size: 150%">
+                    {{die}}
+                  </span>
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-sm">
-                  <span v-for="(die, index) in diceResults" v-bind:key="index">
-                    {{die}}
-                  </span>
+                  <input v-model="diceInput" type="text">
+                  <button class="btn btn-outline-dark m-2" v-on:click="rollDice(diceInput)" :disabled="!diceInput">Roll</button>
                 </div>
               </div>
+
 
             </div>
           </div>

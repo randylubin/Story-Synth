@@ -8,15 +8,20 @@
               
               <div v-if="playerTurnOrder.players">
                 <div v-for="(player, index) in playerTurnOrder.players" v-bind:key="index">
-                  <span v-on:click="makeActivePlayer(index)">
-                    <span v-if="index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length">Active: </span>{{player}}
-                  </span>
-                  <button class="btn btn-outline-dark" v-on:click="deletePlayer(index)">X</button>
+                  <div class="justify-content-between d-flex">
+                    <span></span>
+                    <span v-bind:class="{'font-weight-bold': (index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length)}" style="cursor:pointer" v-on:click="makeActivePlayer(index)">
+                      <span v-if="index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length"> –</span>
+                      {{player}}
+                      <span v-if="index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length">– </span>
+                    </span>
+                    <button class="btn btn-sm btn-outline-dark m-1" v-on:click="deletePlayer(index)">X</button>
+                  </div>
                 </div>
               </div>
 
               <input type="text" v-model="newPlayer">
-              <button class="btn btn-outline-dark" v-on:click="addPlayer(newPlayer)">Add</button>
+              <button class="btn btn-outline-dark m-2" v-on:click="addPlayer(newPlayer)">Add Player</button>
               
             </div>
           </div>

@@ -1,8 +1,11 @@
 <template>
-  <div class="container game-room">
+  <div class="container game-room sandbox">
+      <div class="full-page-background"></div>
+      <div v-html="customOptions.style"></div>
+
       <div class="row">
         <div class="col-sm">
-          <h1>Sandbox</h1>
+          <h1 class="game-meta">Sandbox</h1>
           <div v-if="dataReady && firebaseReady && roomInfo && roomInfo.extensionData">
             <app-extensionManager @sync-extension="syncExtension()" :extensionData="roomInfo.extensionData" :extensionList="tempExtensionData" :roomInfo="roomInfo"></app-extensionManager>
           </div>
@@ -171,6 +174,19 @@ export default {
 </script>
 
 <style scoped>
-
+  .sandbox{
+    margin:auto;
+    padding-top: 1em;
+    padding-bottom: 1em; 
+  }
+  .full-page-background {
+    position: absolute;
+    height: 100%;
+    width: 100vw;
+    top: 0;
+    right: 0;
+    margin: 0;
+    z-index: -1; 
+  }
 
 </style>

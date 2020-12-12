@@ -10,7 +10,7 @@
               <h3 v-if="standardDeck.drawnCards">{{standardDeck.drawnCards[standardDeck.drawnCards.length-1]}}</h3>
 
               <div v-if="standardDeck.drawnCards.length > 1">
-                Prior:
+                Past draws:
                 <span v-for="(card, index) in standardDeck.drawnCards" v-bind:key="index">
                   <span v-if="index != standardDeck.drawnCards.length-1">{{card}} </span>
                 </span>

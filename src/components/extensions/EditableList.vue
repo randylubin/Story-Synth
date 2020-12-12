@@ -11,7 +11,7 @@
                 <div v-for="(item, index) in editableList" v-bind:key="index" class="">
                   <div class="row" v-if="item">
                     <div class="col-sm">{{item}}</div>
-                    <button class="btn btn-outline-dark" v-on:click="deleteItem(index)">x</button>
+                    <button class="btn btn-sm btn-outline-dark m-1" v-on:click="deleteItem(index)">x</button>
                   </div>
                 </div>
               </div>

@@ -9,13 +9,13 @@
 
               <div v-for="(variable, index) in plusMinus" v-bind:key="index" class="row">
                 <div class="col-sm-12 justify-content-between d-flex my-1">
-                  <button class="btn btn-outline-dark" v-on:click="changeVariable(index, (variable.value - 1))">-</button>
+                  <button class="btn btn-sm btn-outline-dark" v-on:click="changeVariable(index, (variable.value - 1))">-</button>
                 
                 
                   <div>{{variable.name}}: {{variable.value}}</div>
                 
                 
-                  <button class="btn btn-outline-dark" v-on:click="changeVariable(index, (variable.value + 1))">+</button>
+                  <button class="btn btn-sm btn-outline-dark" v-on:click="changeVariable(index, (variable.value + 1))">+</button>
                 </div>
               </div>
             </div>
