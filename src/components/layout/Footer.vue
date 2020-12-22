@@ -1,8 +1,8 @@
 <template>
     <footer class="container text-center">
         <div class="row">
-          <div class="col-sm-4 offset-sm-4 game-meta">
-            <p class="my-1 game-meta">Powered by <a href="https://storysynth.org">Story Synth</a></p>
+          <div class="col-sm d-flex justify-content-center">
+            <p class="py-1 game-meta footer-text">Powered by <a href="https://storysynth.org">Story Synth</a></p>
 
           </div>
         </div>
@@ -28,7 +28,10 @@ footer {
     height: 3rem;  
     left: 0;
     right: 0;
-    
+}
+
+.footer-text {
+  backdrop-filter: blur(1px);
 }
 
 </style>

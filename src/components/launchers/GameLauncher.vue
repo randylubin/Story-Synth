@@ -48,8 +48,8 @@
               </div>
             </div>
 
-            <div class="mb-3" style="margin: -1.25rem" v-if="customOptions.coverImage">
-              <img style="max-width: 100%; max-heigh:auto" v-bind:src="customOptions.coverImage" v-bind:alt="customOptions.gameTitle + ' cover'">
+            <div class="pb-5" style="margin: -1.25rem" v-if="customOptions.coverImage">
+              <img style="max-width: 100%; max-height:auto" v-bind:src="customOptions.coverImage" v-bind:alt="customOptions.gameTitle + ' cover'">
             </div>
 
             <div v-if="customOptions.gameBlurb" class="row">
@@ -72,7 +72,7 @@
 
           <div class="row my-4">
             <div class="col-sm text-center">
-              <h2>Create a Session</h2>
+              <h2>Create A Session</h2>
             </div>
           </div>
 
@@ -112,7 +112,7 @@
 
           <div class="row mb-5" v-if="!customOptions.password || (passwordInput == customOptions.password)">
             <div class="col-sm text-center">
-              <router-link :to="{path: $route.fullPath + '/' + roomID}">
+              <router-link :to="{path: constructURL($route.fullPath, roomID)}">
                 <button :disabled="!roomID" type="button" class="btn btn-dark">Join Session</button>
               </router-link>
             </div>
@@ -242,6 +242,13 @@ export default {
   methods : {
     updateUrl(){
       this.currentUrl = location.hostname.toString() + "/#" + this.$route.fullPath;
+    },
+    constructURL(routeFullPath, roomID){
+      if (routeFullPath.slice(-1) =='/'){
+        routeFullPath = routeFullPath.slice(0, -1)
+      }
+
+      return (routeFullPath + '/' + roomID)
     },
     recreateSheetURL(sheetID){
       return "https://docs.google.com/spreadsheets/d/" + sheetID

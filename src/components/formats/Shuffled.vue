@@ -41,16 +41,18 @@
       <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]" class="mb-4">
         <transition name="fade">
           <div class="card d-flex shadow img-fluid" v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
-            <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
+            
+            <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%" v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">  
+            <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0) && (!customOptions.cardBackgroundImageAlign)">
+            <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" top v-if="customOptions.cardBackgroundImageAlign == 'top' && roomInfo.currentCardIndex != 0"></b-card-img>
+
             <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
               <h1 class="m-5">Loading</h1>
               <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
             </div>
 
-            <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%" v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">  
-
             <div v-if="(!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
-              <div class="card-body justify-content-center d-flex align-items-center mt-4" style="white-space: pre-line" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }" v-if="!roomInfo.xCardIsActive">
+              <div class="card-body justify-content-center d-flex align-items-center mt-4" style="white-space: pre-line" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': (customOptions.cardBackgroundImage && (!customOptions.cardBackgroundImageAlign))}" v-if="!roomInfo.xCardIsActive">
                 <div>
                   <h1 class="">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
                   <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
@@ -58,7 +60,7 @@
               </div>
             </div>
 
-            <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive">
+            <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage && !customOptions.cardBackgroundImageAlign }">
               <div class="mt-5 pt-5 mb-5">
                 <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
                 <div class="safety-card-tet" v-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
@@ -69,6 +71,7 @@
               </div>
             </div>
 
+            <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" bottom v-if="customOptions.cardBackgroundImageAlign == 'bottom' && roomInfo.currentCardIndex != 0"></b-card-img>
           </div>
         </transition>
       </div>

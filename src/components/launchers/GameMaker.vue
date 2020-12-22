@@ -40,7 +40,7 @@
                   </div>
                 </div>
                 
-                <p>For an example of a standalone game site built with Story Synth, check out <a href="https://monster.diegeticgames.com">Dawn of the Monster Invasion</a>.</p>
+                <p>For an example of a polished game built with Story Synth, check out <a href="https://storysynth.org/#/Phases/10dXt64oWecErQ0ooCXa1D9dZXfP4WPO7ujwoFsAUN6k">Around the Realm</a>.</p>
               </div>
             </div>
           </div>

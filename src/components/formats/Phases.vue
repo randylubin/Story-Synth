@@ -33,20 +33,23 @@
 
 
       <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
-        <transition name="fade">
+        
           <div class="card d-flex shadow img-fluid" v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
+            
             <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%" v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
-            <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
+            <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0) && (!customOptions.cardBackgroundImageAlign)">
+            <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" top v-if="customOptions.cardBackgroundImageAlign == 'top' && roomInfo.currentCardIndex != 0"></b-card-img>
 
             <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
               <h1 class="m-5">Loading</h1>
               <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
             </div>
 
-            <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive && dataReady && firebaseReady && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
+
+            <div class="card-body justify-content-center mt-4 mx-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive && dataReady && firebaseReady && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': (customOptions.cardBackgroundImage && (!customOptions.cardBackgroundImageAlign))}">
               
               <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
-                <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
+                <h2 class="card-header-text">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h2>
                 
                 <p v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText" v-bind:class="{ 'text-left': gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText.length > 60 }" class="my-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
               </div>
@@ -54,7 +57,7 @@
               <div v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
                 <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
                 </div>-->
-                <h2>{{phaseNames[roomInfo.currentPhase]}}</h2>
+                <h2 class="card-header-text">{{phaseNames[roomInfo.currentPhase]}}</h2>
                 <div v-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]"></div>
                 <div v-if="Array.isArray(customOptions.phaseHelpText)" class="my-4">
                   <p class="phase-help-text">
@@ -66,7 +69,7 @@
             </div>
             
 
-            <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
+            <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage && !customOptions.cardBackgroundImageAlign }">
               <div class="mt-5 pt-5 mb-5">
                 <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
                 <div class="safety-card-tet" v-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
@@ -77,8 +80,10 @@
               </div>
             </div>
 
+            <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" bottom v-if="customOptions.cardBackgroundImageAlign == 'bottom' && roomInfo.currentCardIndex != 0"></b-card-img>
+
           </div>
-        </transition>
+        
       </div>
 
       <div class="btn-container" style>
@@ -111,16 +116,16 @@
         </div>
       </div> 
 
-      <div v-if="Array.isArray(customOptions.showPastPrompts)">
+      <div v-if="Array.isArray(customOptions.showPastPrompts) && roomInfo.currentCardIndex >= firstNonInstruction">
         <div class="row mt-5">
-          <div class="col-sm">
+          <div class="col-sm game-meta">
             <h2 v-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'"></h2>
           </div>
         </div>
 
         <div class="itinerary mb-5 card d-flex shadow"> <!-- style="display: flex; flex-direction: column-reverse;-->
           <div class="card-body justify-content-center">
-            <div class="row game-meta">
+            <div class="row">
               <div class="col-sm" v-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null">
               </div>
             </div>
@@ -219,12 +224,15 @@ export default {
       } else {
         this.roomInfo.currentPhase -= 1
       }
+
+      let lastSeenRound = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenRound : this.roomInfo.currentCardIndex
+      let lastSeenPhase = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenPhase : this.roomInfo.currentPhase
       
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: this.roomInfo.currentCardIndex,
-        lastSeenRound: this.roomInfo.currentCardIndex,
+        lastSeenRound: lastSeenRound,
         currentPhase: this.roomInfo.currentPhase,
-        lastSeenPhase: this.roomInfo.currentPhase,
+        lastSeenPhase: lastSeenPhase,
       })
     },
     nextCard(){
@@ -242,11 +250,14 @@ export default {
         this.roomInfo.currentCardIndex += 1
       }
 
+      let lastSeenRound = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenRound : this.roomInfo.currentCardIndex
+      let lastSeenPhase = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenPhase : this.roomInfo.currentPhase
+
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: this.roomInfo.currentCardIndex,
-        lastSeenRound: this.roomInfo.currentCardIndex,
+        lastSeenRound: lastSeenRound,
         currentPhase: this.roomInfo.currentPhase,
-        lastSeenPhase: this.roomInfo.currentPhase
+        lastSeenPhase: lastSeenPhase,
       })
     },
     skipInstructions(){
