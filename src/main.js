@@ -32,6 +32,7 @@ Vue.use(VueRouter);
 
 const routes = [
   { path: '/', component: App },
+  //{ path: '/Games/Around-The-Realm/', component: App },
   { path: '/:gameType/:gSheetID/', component: App},
   { path: '/:gameType/:gSheetID/:roomID', component: App}
 ]

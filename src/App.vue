@@ -7,15 +7,14 @@
         
         <div v-if="$route.fullPath == '/'">
           <app-gameMaker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameMaker>
-        </div>
+        </div>        
         
-        <div v-if="!$route.params.roomID && $route.params.gSheetID">
-          <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameLauncher>
-        </div>
-        
-
-        <div>
+        <div v-if="$route.params.gameType != 'Games'">
           <!--For published version, remove any components you aren't using -->
+          <div v-if="!$route.params.roomID && $route.params.gSheetID">
+            <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameLauncher>
+          </div>
+
           <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
           <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
           <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
@@ -24,6 +23,12 @@
           <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
           
           <app-sandbox :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox' && $route.params.roomID"></app-sandbox>
+        </div>
+        <div v-else>
+          <div v-if="!$route.params.roomID && $route.params.gSheetID">
+            <app-customGameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-customGameLauncher>
+          </div>
+          <app-customGameSessionManager :routeGSheetID="$route.params.gSheetID" v-if="$route.params.roomID"></app-customGameSessionManager>
         </div>
       </div>
       
@@ -40,6 +45,7 @@
 
   import GameMaker from './components/launchers/GameMaker.vue'
   import GameLauncher from './components/launchers/GameLauncher.vue'
+  import CustomGameLauncher from './components/games/CustomGameLauncher.vue'
 
   import Timed from './components/formats/Timed.vue'
   import Shuffled from './components/formats/Shuffled.vue'
@@ -48,6 +54,7 @@
   import SlotMachine from './components/formats/SlotMachine.vue'
   import Phases from './components/formats/Phases.vue'
   import Sandbox from './components/formats/Sandbox.vue'
+  import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
 
   export default {
     name: 'app',
@@ -63,6 +70,8 @@
       'app-slotMachine': SlotMachine,
       'app-phases': Phases,
       'app-sandbox': Sandbox,
+      'app-customGameLauncher': CustomGameLauncher,
+      'app-customGameSessionManager': CustomGameSessionManager,
       
     },
     data () {

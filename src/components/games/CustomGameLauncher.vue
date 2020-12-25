@@ -175,30 +175,37 @@ export default {
           wallet: undefined,
           revShare: 0.2,
         },
+        gameMetaData: {
+          'Around-The-Realm': {
+            'gameTitle': 'Around The Realm',
+            'gameBlurb': 'Tell the story of two close companions racing their way around a fantasy world. Nella and Bly wagered that they could travel completely around the realm and return before the summer solstice. However, the lands are full of magic, danger, and adventure – will they make it back in time?',
+            'ogImage': 'https://diegeticgames.com/uploads/around-the-realm-square-unfurl.png', 
+          }
+        }
     }
   },
   metaInfo () {
     return {
-      title: this.customOptions.gameTitle,
+      title: this.gameMetaData[this.routeGSheetID].gameTitle,
       meta: [
         {
           property: 'description',
-          content: this.customOptions.gameBlurb,
+          content: this.gameMetaData[this.routeGSheetID].gameBlurb,
           vmid: 'description'
         },
         {
           property: 'og:title',
-          content: this.customOptions.gameTitle,
+          content: this.gameMetaData[this.routeGSheetID].gameTitle,
           vmid: 'og:title'
         },
         {
           property: 'og:description',
-          content: this.customOptions.gameBlurb,
+          content: this.gameMetaData[this.routeGSheetID].gameBlurb,
           vmid: 'og:description'
         },
         {
           property: 'og:image',
-          content: this.customOptions.ogImageSquare,
+          content: this.gameMetaData[this.routeGSheetID].ogImage,
           vmid: 'og:image'
         },
         {
@@ -218,7 +225,7 @@ export default {
         },
         {
           property: 'twitter:image:alt',
-          content: this.customOptions.gameTitle + " logo",
+          content: this.gameMetaData[this.routeGSheetID].gameTitle + " logo",
           vmid: 'twitter:image:alt'
         },
         {
@@ -230,7 +237,27 @@ export default {
     }
   },
   mounted(){
-    this.fetchAndCleanSheetData(this.routeGSheetID);
+    //let correctGSheetID = ""
+
+    switch (this.routeGSheetID) {
+      case "Around-The-Realm":
+      //  correctGSheetID = "10dXt64oWecErQ0ooCXa1D9dZXfP4WPO7ujwoFsAUN6k"
+        this.customOptions = {
+          gameTitle: "Around the Realm",
+          byline: "By Randy Lubin",
+          gameBlurb: "<div class=\"text-left\" style=\"white-space:normal\">\n<h2>Pitch</h2>\nTell the story of two close companions racing their way around a fantasy world.\n<br><br>\nNella and Bly wagered that they could race completely around the realm and return before the summer solstice. However, the lands are full of magic, danger, and adventure – will they make it back in time?\n<br><br>\n<h2>Info</h2>\n<ul>\n  <li>2+ players</li>\n  <li>All ages</li>\n  <li>30 minutes - 2 hours</li>\n  <li>Genre: Fantasy</li>\n  <li>Tone: exciting adventure</li>\n  <li>Activities: light narration, quick worldbuilding</li>\n</ul>\n</div>",
+          coverImage: "https://diegeticgames.com/uploads/around-the-realm-cover-narrow.png",
+          style: "<link href=\"https://fonts.googleapis.com/css?family=IM+Fell+English|Montserrat\" rel=\"stylesheet\">\n\n<style>\n\n#app {Font-Family: 'IM Fell English', Serif;}\n\n.card-header-text {\n  font-size: 2.5rem;\n  Font-Family: 'IM Fell English', Serif;\n}\n\n.card {\n  background-image: url(https://diegeticgames.com/uploads/groovepaper.png);\n}\n\n.card-img-bottom {\n  filter: saturate(0.7);\n  object-fit: cover;\n  object-position: top;\n  height: 60px;\n}\n\n.full-page-background {\n  background: rgb(255,255,255);\n  background: linear-gradient(180deg, rgba(30,150,255,1) 0%, rgba(255,255,255,1) 300px, rgba(255,255,255,1) 100%);\n  background-image: url(\"https://diegeticgames.com/uploads/around-the-realm-background.png\");\n  filter: sepia(1) grayscale(0.4) brightness(1);\n}\n\n</style>",
+        }
+        this.dataReady = true;
+
+        break;
+    
+      default:
+        break;
+    }
+
+    //this.fetchAndCleanSheetData(correctGSheetID);
 
     if (!this.roomID) {
       this.assignRandomRoomName();
