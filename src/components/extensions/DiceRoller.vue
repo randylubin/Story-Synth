@@ -51,7 +51,7 @@ export default {
       var results = []
 
       // parse input into integers
-      var rawDiceArray = diceInput.split(',')
+      var rawDiceArray = diceInput.split(/[\s,]+/)
       var cleanDiceArray = []
 
       rawDiceArray.forEach(die => {
