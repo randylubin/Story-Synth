@@ -20,7 +20,7 @@
                 </div>
               </div>
 
-              <input type="text" v-model="newPlayer">
+              <input type="text" v-model="newPlayer" maxlength="50">
               <button class="btn btn-outline-dark m-2" v-on:click="addPlayer(newPlayer)">Add Player</button>
               
             </div>
@@ -64,6 +64,10 @@ export default {
       this.$emit('process-extension-update', ['playerTurnOrder',JSON.stringify(this.playerTurnOrder)])
     },
     makeActivePlayer(index){
+      console.log('index',index)
+      console.log('players', this.playerTurnOrder.players.length)
+      console.log('cci', this.currentCardIndex)
+      console.log('offest', this.currentCardIndex % this.playerTurnOrder.players.length)
       this.playerTurnOrder.activePlayerOffset = index - (this.currentCardIndex % this.playerTurnOrder.players.length)
       this.$emit('process-extension-update', ['playerTurnOrder',JSON.stringify(this.playerTurnOrder)])
     },

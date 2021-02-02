@@ -10,13 +10,16 @@
               <div v-if="editableList != []">
                 <div v-for="(item, index) in editableList" v-bind:key="index" class="">
                   <div class="row" v-if="item">
-                    <div class="col-sm">{{item}}</div>
-                    <button class="btn btn-sm btn-outline-dark m-1" v-on:click="deleteItem(index)">x</button>
+                    <div class="col-sm justify-content-between d-flex my-1">
+                      <span style="min-width:1em"></span>
+                      <div>{{item}}</div>
+                      <button class="btn btn-sm btn-outline-dark m-1" v-on:click="deleteItem(index)">x</button>
+                    </div>
                   </div>
                 </div>
               </div>
               <form>
-                <input v-model="newItem" type="text" >
+                <input v-model="newItem" type="text" maxlength="50">
                 <button :disabled="!newItem" class="btn btn-outline-dark m-3" v-on:click="addItem(newItem)">Add</button>
               </form>
             </div>
