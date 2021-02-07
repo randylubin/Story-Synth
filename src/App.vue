@@ -3,7 +3,8 @@
     <!-- <router-view></router-view>-->
     <div v-if="$route.path !== '/about'">
       <div class="non-footer-content">
-        <app-header :routeRoomID="$route.params.roomID"></app-header>
+        <app-header class="d-none d-sm-block"></app-header>
+        <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
         
         <div v-if="$route.fullPath == '/'">
           <app-gameMaker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameMaker>
@@ -41,6 +42,7 @@
 
   // Remove for published version any components you aren't using
   import Header from './components/layout/Header.vue'
+  import RoomLink from './components/layout/RoomLink.vue'
   import Footer from './components/layout/Footer.vue'
 
   import GameMaker from './components/launchers/GameMaker.vue'
@@ -60,6 +62,7 @@
     name: 'app',
     components: { // Remove unused components from the published version
       'app-header': Header,
+      'app-roomLink': RoomLink,
       'app-footer': Footer,
       'app-gameMaker': GameMaker,
       'app-gameLauncher': GameLauncher,
@@ -192,7 +195,9 @@
     padding: 0;
   }
 
-
+  ul.dropdown-menu > li{
+    list-style-type: none;
+  }
 
   li {
 

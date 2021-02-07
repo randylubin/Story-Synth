@@ -3,7 +3,7 @@
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
     <div class="" v-if="roomInfo">
-      <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
+      <div class="mb-4 game-meta d-none d-sm-block" v-if="!customOptions.hideTitleInSession && (customOptions.gameTitle || customOptions.byline)">
         <div class="row text-center" v-if="customOptions.gameTitle">
           <div class="col-sm">
             <h1>{{customOptions.gameTitle}}</h1>
@@ -82,8 +82,15 @@
             <b-button-group aria-role="Deck control" class="d-flex w-100">
               <b-button variant="outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffleAndResetGame()" color="rgb(187, 138, 200)">Re-shuffle</b-button>
               <b-button variant="outline-dark" v-on:click="xCard()" v-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'">X-Card</b-button>
-              <!--<b-button variant="outline-dark" v-on:click="nextDeck()">Next Deck</b-button>-->
-              <b-dropdown variant="outline-dark" id="dropdown-1" text="Last Card" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.currentCardIndex == roomInfo.locationOfLastCard" right>
+              <b-button
+                variant="outline-dark"
+                v-on:click="nextDeck()"
+                v-if="this.customOptions.showNextDeckButton"
+                :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex >= roomInfo.locationOfLastCard"
+                v-html="customOptions.showNextDeckButton ? customOptions.showNextDeckButton : 'Next Deck'">
+                  Next Deck
+              </b-button>
+              <b-dropdown variant="outline-dark" id="dropdown-1" text="Last Card" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.currentCardIndex == roomInfo.locationOfLastCard"  v-if="!this.customOptions.showNextDeckButton" right>
                 <b-dropdown-item v-on:click="lastCard()">Go to last card</b-dropdown-item>
                 <b-dropdown-item v-on:click="shuffleLastCard('center')">Shuffle near center</b-dropdown-item>
                 <b-dropdown-item v-on:click="shuffleLastCard('end')">Shuffle near end</b-dropdown-item>
@@ -251,7 +258,26 @@ export default {
       })
     },
     nextDeck(){
-      //TODO
+      let newCardIndex = this.roomInfo.currentCardIndex
+      let chapterIndexTracker = this.orderedCards.length
+      console.log('current:', newCardIndex)
+      if (this.roomInfo.currentCardIndex < chapterIndexTracker){
+        newCardIndex = this.orderedCards.length
+      } else {
+        for (var i = 0; i < this.unorderedDecks.length; i++) {
+          chapterIndexTracker += this.unorderedDecks[i].length;
+          console.log('new index:', chapterIndexTracker)
+          if (this.roomInfo.currentCardIndex < chapterIndexTracker) {
+            newCardIndex = chapterIndexTracker;
+            break;
+          }
+        }
+      }
+
+      roomsCollection.doc(this.roomID).update({
+        currentCardIndex: newCardIndex
+      })
+
     },
     shuffleLastCard(location){
       
@@ -437,9 +463,22 @@ export default {
     padding-bottom: 1em;
   }
 
-  .card-body{
-    font-size: 1.5em;
-    min-height: 11em;
+  @media (max-width: 576px) {
+    h1, h2 {
+      font-size: 1.7em;
+    }
+    
+    .card-body{
+      font-size: 1.2em;
+      min-height: 11em;
+    }
+  }
+
+  @media (min-width: 576px) {
+    .card-body{
+      font-size: 1.5em;
+      min-height: 11em;
+    }
   }
 
   .fade-enter-active, .fade-leave-active {
