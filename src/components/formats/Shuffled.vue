@@ -183,7 +183,7 @@ export default {
         },
         {
           property: 'og:url',
-          content: location.hostname.toString() + "/#" + this.$route.fullPath,
+          content: "https://storysynth.org/#" + this.$route.fullPath,
           vmid: 'og:url'
         },
         {

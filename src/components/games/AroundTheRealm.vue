@@ -206,6 +206,53 @@ export default {
         console.log('error in loading: ', error)
       })
   },
+  metaInfo () {
+    return {
+      title: this.customOptions.gameTitle,
+      meta: [
+        {
+          property: 'description',
+          content: this.customOptions.gameBlurb,
+          vmid: 'description'
+        },
+        {
+          property: 'og:title',
+          content: this.customOptions.gameTitle,
+          vmid: 'og:title'
+        },
+        {
+          property: 'og:description',
+          content: this.customOptions.gameBlurb,
+          vmid: 'og:description'
+        },
+        {
+          property: 'og:image',
+          content: this.customOptions.ogImageSquare,
+          vmid: 'og:image'
+        },
+        {
+          property: 'og:url',
+          content: 'https://storysynth.org/' + this.$route.fullPath,
+          vmid: 'og:url'
+        },
+        {
+          property: 'twitter:card',
+          content: 'summary',
+          vmid: 'twitter:card'
+        },
+        {
+          property: 'og:site_name',
+          content: 'Story Synth',
+          vmid: 'og:site_name'
+        },
+        {
+          property: 'twitter:image:alt',
+          content: this.customOptions.gameTitle + " logo",
+          vmid: 'twitter:image:alt'
+        },
+      ]
+    }
+  },
   methods: {
     previousCard(){
       if (Number.isInteger(this.roomInfo.cardSequence[this.roomInfo.currentCardIndex])){
@@ -354,6 +401,7 @@ export default {
             ["option","coverImage","https://diegeticgames.com/uploads/around-the-realm-cover-narrow.png","","","","","",""  ],
             ["option","cardBackgroundImage","https://diegeticgames.com/uploads/card-bottom-wave2.png","","","","","",""  ],
             ["option","cardBackgroundImageAlign","bottom","","","","","",""  ],
+            ["option","ogImageSquare","https://diegeticgames.com/uploads/around-the-realm-square-unfurl.png"],
             ["option","style","<link href=\"https://fonts.googleapis.com/css?family=IM+Fell+English|Montserrat\" rel=\"stylesheet\">\n\n<style>\n\n#app {Font-Family: 'IM Fell English', Serif;}\n\n.card-header-text {\n  font-size: 2.5rem;\n  Font-Family: 'IM Fell English', Serif;\n}\n\n.card {\n  background-image: url(https://diegeticgames.com/uploads/groovepaper.png);\n}\n\n.card-img-bottom {\n  filter: saturate(0.7);\n  object-fit: cover;\n  object-position: top;\n  height: 60px;\n}\n\n.full-page-background {\n  background: rgb(255,255,255);\n  background: linear-gradient(180deg, rgba(30,150,255,1) 0%, rgba(255,255,255,1) 300px, rgba(255,255,255,1) 100%);\n  background-image: url(\"https://diegeticgames.com/uploads/around-the-realm-background.png\");\n  filter: sepia(1) grayscale(0.4) brightness(1);\n}\n\n</style>"," ","-","-","-","-","-"  ],
             ["option","showPastPrompts","1,0,0,1,0,0","-","-","-","-","-","-"  ],
             ["option","pastPromptHeader","Itinerary","","","","","",""  ],

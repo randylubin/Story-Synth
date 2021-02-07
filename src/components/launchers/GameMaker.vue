@@ -40,7 +40,7 @@
                   </div>
                 </div>
                 
-                <p>For an example of a polished game built with Story Synth, check out <a href="https://storysynth.org/#/Games/Around-The-Realm">Around the Realm</a>.</p>
+                <p>For an example of a polished game built with Story Synth, check out <a href="https://storysynth.org/Games/Around-The-Realm">Around the Realm</a>.</p>
               </div>
             </div>
           </div>
@@ -148,7 +148,7 @@ export default {
     }
   },
   mounted(){
-
+    document.dispatchEvent(new Event('x-app-rendered'))
     if(!this.routeGameType){
       this.gameType = "Shuffled"
     } else {

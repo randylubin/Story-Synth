@@ -214,7 +214,7 @@ export default {
         },
         {
           property: 'og:url',
-          content: location.hostname.toString() + "/#" + this.$route.fullPath,
+          content: location.hostname.toString() + "/" + this.$route.fullPath,
           vmid: 'og:url'
         },
         {
@@ -284,7 +284,7 @@ export default {
   },
   methods : {
     updateUrl(){
-      this.currentUrl = location.hostname.toString() + "/#" + this.$route.fullPath;
+      this.currentUrl = location.hostname.toString() + "/" + this.$route.fullPath;
     },
     constructURL(routeFullPath, roomID){
       if (routeFullPath.slice(-1) =='/'){
@@ -337,6 +337,7 @@ export default {
           }
         });
 
+        document.dispatchEvent(new Event('x-app-rendered'))
         console.log('done fetching and cleaning data')
         this.dataReady = true;
 

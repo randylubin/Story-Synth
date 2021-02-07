@@ -294,6 +294,7 @@ export default {
           }
         });
 
+        document.dispatchEvent(new Event('x-app-rendered'))
         console.log('done fetching and cleaning data')
         this.dataReady = true;
 

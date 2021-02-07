@@ -39,10 +39,16 @@ const routes = [
 
 
 const router = new VueRouter({
+  mode: 'history',
   routes // short for `routes: routes`
 })
 
 router.beforeEach((to, from, next) => {
+   if (to.fullPath.substr(0,2) === "/#") {
+    const path = to.fullPath.substr(2);
+    next(path);
+    return;
+  }
   if (to.path == '/_=_') {
     return next(false);
   }
@@ -60,6 +66,7 @@ new Vue({
   el: '#app',
   router,
   render: h => h(App),
+  mounted: () => document.dispatchEvent(new Event("x-app-rendered")),
   data () {
     return {
       gSheet: null
