@@ -148,7 +148,7 @@ export default {
     }
   },
   mounted(){
-    document.dispatchEvent(new Event('x-app-rendered'))
+    document.dispatchEvent(new Event("x-app-rendered"))
     if(!this.routeGameType){
       this.gameType = "Shuffled"
     } else {

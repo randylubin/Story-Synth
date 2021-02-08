@@ -1,18 +1,21 @@
 <template>
   <div class="">
     <app-aroundTheRealm :roomID="$route.params.roomID" v-if="routeGSheetID == 'Around-The-Realm'"></app-aroundTheRealm>
+    <app-clashAtIkara :roomID="$route.params.roomID" v-if="routeGSheetID == 'Clash-At-Ikara'"></app-clashAtIkara> 
     <app-postWorkParadise :roomID="$route.params.roomID" v-if="routeGSheetID == 'Post-Work-Paradise'"></app-postWorkParadise>
   </div>
 </template>
 
 <script>
 import AroundTheRealm from './AroundTheRealm.vue'
+import ClashAtIkara from './ClashAtIkara.vue'
 import PostWorkParadise from './PostWorkParadise.vue';
 
 export default {
   name: 'app-customGameSession',
   components: {
     'app-aroundTheRealm': AroundTheRealm,
+    'app-clashAtIkara': ClashAtIkara,
     'app-postWorkParadise': PostWorkParadise,
   },
   props: {
@@ -25,6 +28,11 @@ export default {
           'gameTitle': 'Around The Realm',
           'gameBlurb': 'Tell the story of two close companions racing their way around a fantasy world. Nella and Bly wagered that they could travel completely around the realm and return before the summer solstice. However, the lands are full of magic, danger, and adventure – will they make it back in time?',
           'ogImage': 'https://diegeticgames.com/uploads/around-the-realm-square-unfurl.png', 
+        },
+        'Clash-At-Ikara': {
+          'gameTitle': 'Clash at Ikara',
+          'gameBlurb': 'Tell the story of a group of heroes who have agreed to protect the defenseless community of Ikara from an immenent bandit raid.',
+          'ogImage': 'https://diegeticgames.com/uploads/clash-at-ikara-square.png'
         },
         'Post-Work-Paradise': {
           'gameTitle': 'Post-Work Paradise',
@@ -81,7 +89,7 @@ export default {
     }
   },
   mounted(){
-
+    document.dispatchEvent(new Event("x-app-rendered"))
   },
   methods: {
 

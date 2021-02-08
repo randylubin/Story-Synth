@@ -183,7 +183,7 @@ export default {
       meta: [
         {
           property: 'description',
-          content: this.customOptions.gameBlurb,
+          content: this.customOptions.metaDescription ?? this.customOptions.gameBlurb,
           vmid: 'description'
         },
         {
@@ -193,7 +193,7 @@ export default {
         },
         {
           property: 'og:description',
-          content: this.customOptions.gameBlurb,
+          content: this.customOptions.metaDescription ?? this.customOptions.gameBlurb,
           vmid: 'og:description'
         },
         {
@@ -294,7 +294,7 @@ export default {
           }
         });
 
-        document.dispatchEvent(new Event('x-app-rendered'))
+        document.dispatchEvent(new Event("x-app-rendered"))
         console.log('done fetching and cleaning data')
         this.dataReady = true;
 

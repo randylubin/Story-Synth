@@ -32,7 +32,6 @@ Vue.use(VueRouter);
 
 const routes = [
   { path: '/', component: App },
-  //{ path: '/Games/Around-The-Realm/', component: App },
   { path: '/:gameType/:gSheetID/', component: App},
   { path: '/:gameType/:gSheetID/:roomID', component: App}
 ]
@@ -66,7 +65,7 @@ new Vue({
   el: '#app',
   router,
   render: h => h(App),
-  mounted: () => document.dispatchEvent(new Event("x-app-rendered")),
+  //mounted: () => document.dispatchEvent(new Event("x-app-rendered")),
   data () {
     return {
       gSheet: null

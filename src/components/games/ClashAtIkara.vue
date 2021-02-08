@@ -54,7 +54,7 @@
             <div v-if="(!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
               <div class="card-body justify-content-center d-flex align-items-center mt-4" style="white-space: pre-line" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': (customOptions.cardBackgroundImage && (!customOptions.cardBackgroundImageAlign))}" v-if="!roomInfo.xCardIsActive">
                 <div>
-                  <h1 v-if="!customOptions.hideHeadersOnCards">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
+                  <h1 class="">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
                   <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
                 </div>
               </div>
@@ -353,7 +353,7 @@ export default {
       }
 
       // For published version, set getURL equal to the url of your spreadsheet
-      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM'
+      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/1FIWw_lyefEPF9dc-4C-cBwr9gg3D1QH5vkW89WxGu68/?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM'
 
 
       // For the published version - remove if you're hardcoding the data instead of using Google Sheets
