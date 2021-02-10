@@ -3,14 +3,18 @@
     <!-- <router-view></router-view>-->
     <div v-if="$route.path !== '/about'">
       <div class="non-footer-content">
-        <app-header class="d-none d-sm-block"></app-header>
+        <app-header class=""></app-header>
         <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
         
         <div v-if="$route.fullPath == '/'">
           <app-gameMaker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameMaker>
-        </div>        
+        </div>
+
+        <div v-if="$route.fullPath == '/Gallery/'">
+          <app-gallery></app-gallery>
+        </div>
         
-        <div v-if="$route.params.gameType != 'Games'">
+        <div v-if="!['Games', 'Gallery'].includes($route.params.gameType)">
           <!--For published version, remove any components you aren't using -->
           <div v-if="!$route.params.roomID && $route.params.gSheetID">
             <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameLauncher>
@@ -25,7 +29,7 @@
           
           <app-sandbox :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox' && $route.params.roomID"></app-sandbox>
         </div>
-        <div v-else>
+        <div v-else-if="$route.params.gameType == 'Games'">
           <div v-if="!$route.params.roomID && $route.params.gSheetID">
             <app-customGameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-customGameLauncher>
           </div>
@@ -49,6 +53,8 @@
   import GameLauncher from './components/launchers/GameLauncher.vue'
   import CustomGameLauncher from './components/games/CustomGameLauncher.vue'
 
+  import Gallery from './components/launchers/Gallery.vue'
+
   import Timed from './components/formats/Timed.vue'
   import Shuffled from './components/formats/Shuffled.vue'
   import Monster from './components/formats/Monster.vue'
@@ -66,6 +72,7 @@
       'app-footer': Footer,
       'app-gameMaker': GameMaker,
       'app-gameLauncher': GameLauncher,
+      'app-gallery': Gallery,
       'app-timed': Timed,
       'app-shuffled': Shuffled,
       'app-monster': Monster,
@@ -185,6 +192,7 @@
     margin: auto;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    touch-action: manipulation;
   }
 
   h1, h2 {
