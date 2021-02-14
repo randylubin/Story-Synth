@@ -191,6 +191,11 @@ export default {
             'gameBlurb': 'Tell the story of a group of heroes who have agreed to protect the defenseless community of Ikara from an immenent bandit raid.',
             'ogImage': 'https://diegeticgames.com/uploads/clash-at-ikara-square.png'
           },
+          'Raised-By-Mechs': {
+            'gameTitle': 'Raised By Mechs',
+            'gameBlurb': 'Tell the story of children being raised by a mech on a new planet. Inspired by Raised by Wolves and For the Queen.',
+            'ogImage': 'https://iili.io/f1zdtn.png'
+          },
           'gameRoute': {
             'gameTitle': 'TK',
             'gameBlurb': 'TK',
@@ -291,6 +296,19 @@ export default {
         this.dataReady = true;
 
         break;
+
+      case "Raised-By-Mechs":
+        this.customOptions = {
+          gameTitle: "Raised By Mechs",
+          byline: "Raph D'Amico",
+          gameBlurb: "A storygame inspired by Raised By Wolves & <a target='_blank' href='https://forthequeengame.com/'>For The Queen</a> </br><span class='m-subtitle'>By <a target='_blank' href='http://laughingkaiju.com'>Raph D'Amico</a><span> <hr>",
+          coverImage:	'https://iili.io/f1F7F1.png',
+          style: "<style> #app { font-family: 'Questrial', sans-serif !important; color: #20193c; } .full-page-background { /* background: #ffc107; */ background: rgb(252,255,206); background: radial-gradient(circle, rgba(252,255,206,1) 0%, rgba(88,131,154,1) 37%, rgba(27,0,45,1) 100%); } @media (min-width: 576px) { .card-body p { font-size: 1.8rem !important; padding: 0px 36px 8px !important; } } @media (max-width: 576px) { .card-body { padding: 0px 12px !important; } .card-body p { font-size: 1.6rem !important; padding: 4px 12px 8px !important; } } .game-meta { color: #F4AD62; } .game-meta h1 { font-weight: 400; text-transform: uppercase; letter-spacing: 0.3em; } .card-body { margin-top: 0px !important; } .m-subtitle { font-size: 0.7em !important; line-height: 1.5em !important; margin-top: 12px; } .m-mother { font-family: 'VT323', monospace; background: #ffdfbe; border-radius: 40px; letter-spacing: 0.1em; padding: 1px 12px 1px 16px; color: #db7a13; margin-left: 3px; margin-right: 3px; } /* latin */ @font-face { font-family: 'VT323'; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/vt323/v12/pxiKyp0ihIEF2isfFJXUdVNF.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; } /* latin */ @font-face { font-family: 'Alata'; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/alata/v2/PbytFmztEwbIoce9zqYzQ1OW.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; } /* latin */ @font-face { font-family: 'Questrial'; font-style: normal; font-weight: 400; font-display: swap; src: url(https://fonts.gstatic.com/s/questrial/v12/QdVUSTchPBm7nuUeVf70viFluW44JQ.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; } </style>"
+        }
+
+        this.dataReady = true;
+
+        break;
     
       default:
         break;
@@ -360,6 +378,13 @@ export default {
             }
           }
         });
+
+        if (location.hostname.toString() !== 'localhost'){
+          this.$mixpanel.track('Visit Game Launcher', {
+            game_name: this.customOptions.gameTitle ?? 'untitled',
+            launcher_url: location.hostname.toString() + this.$route.fullPath,
+          });
+        }
 
         document.dispatchEvent(new Event('x-app-rendered'))
         console.log('done fetching and cleaning data')

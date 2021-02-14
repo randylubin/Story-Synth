@@ -102,7 +102,7 @@ export default {
   },
   methods: {
     updateUrl(){
-      this.currentUrl = location.hostname.toString() + "/#" + this.$route.fullPath;
+      this.currentUrl = location.hostname.toString() + this.$route.fullPath;
     },
     copyTextToClipboard(){
       var copyText = document.getElementById("urlForCopying")

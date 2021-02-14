@@ -26,6 +26,11 @@ Vue.use(VueGtag, {
   config: { id: "G-B8L2T2PSP7" }
 });
 
+import VueMixpanel from 'vue-mixpanel'
+Vue.use(VueMixpanel, {
+  token: 'e5df6aab318089da6c499bc6bf3123f9'
+})
+
 
 import VueRouter from 'vue-router'
 Vue.use(VueRouter);

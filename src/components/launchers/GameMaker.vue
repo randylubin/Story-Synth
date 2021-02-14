@@ -166,6 +166,9 @@ export default {
         this.gameType = "SecretCards"
       }
     }
+    if (location.hostname.toString() !== 'localhost'){
+      this.$mixpanel.track('Visit Homepage');
+    }
   },
   updated(){
     this.updateUrl();

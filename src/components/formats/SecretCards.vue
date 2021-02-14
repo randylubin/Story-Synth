@@ -333,6 +333,15 @@ export default {
         this.gSheet = cleanData.slice().reverse();
         this.playerArray = playerArray
         this.dataReady = true;
+
+        if (location.hostname.toString() !== 'localhost'){
+          this.$mixpanel.track('Visit Game Session', {
+            game_name: this.customOptions.gameTitle ?? 'untitled',
+            session_url: location.hostname.toString() + this.$route.fullPath,
+            format: 'Secret Cards'
+          });
+        }
+
       }).catch(error => {
         this.gSheet = [{text:'Error loading Google Sheet'}]
         console.log(error)

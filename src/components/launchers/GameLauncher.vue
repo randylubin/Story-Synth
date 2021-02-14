@@ -294,6 +294,12 @@ export default {
           }
         });
 
+        if (location.hostname.toString() !== 'localhost'){
+          this.$mixpanel.track('Visit Game Launcher', {
+            game_name: this.customOptions.gameTitle ?? 'untitled',
+            launcher_url: location.hostname.toString() + this.$route.fullPath,
+          });
+        }
         document.dispatchEvent(new Event("x-app-rendered"))
         console.log('done fetching and cleaning data')
         this.dataReady = true;

@@ -4,10 +4,11 @@ module.exports = {
       registry: undefined,
       renderRoutes: [
         '/',
+        '/Gallery/',
         '/Games/Around-The-Realm/',
         '/Games/Clash-At-Ikara/',
         '/Games/Post-Work-Paradise/',
-        '/Gallery/',
+        '/Games/Raised-By-Mechs/',
         '/Shuffled/1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w/',
         '/Shuffled/1N2N8URSswhmxLalPOkzi5d4kdeFiGrsobEmM_ojk0ow/',
         '/Timed/1yq2AKwaYL1uZrCnEfwgSpC0SPkQAZqnCdjNxH_pm018/',
