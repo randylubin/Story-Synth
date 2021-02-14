@@ -165,6 +165,7 @@
                 </div>
               </div>
             </div>
+            <b-alert show class="mx-3" v-html="customOptions.lastCardReminderText" variant="info" v-if="customOptions.lastCardReminderText && customOptions.lastCardReminderFrequency && roomInfo.currentCardIndex > firstNonInstruction && ((roomInfo.currentCardIndex - firstNonInstruction) % customOptions.lastCardReminderFrequency == customOptions.lastCardReminderFrequency - 1)"></b-alert>
 
             <div
               class="card-body align-items-center justify-content-center"
@@ -207,6 +208,8 @@
         </transition>
       </div>
 
+
+
       <div class="btn-container" style>
         <div class="row mb-4">
           <div class="col-sm">
@@ -247,7 +250,7 @@
               <b-dropdown
                 variant="outline-dark"
                 id="dropdown-1"
-                text="Last Card"
+                v-bind:text="customOptions.lastCardLabel"
                 :disabled="
                   roomInfo.xCardIsActive ||
                     roomInfo.currentCardIndex == gSheet.length - 1 ||
@@ -257,10 +260,10 @@
                 right
               >
                 <b-dropdown-item v-on:click="lastCard()"
-                  >Go to last card</b-dropdown-item
+                  >Go to {{customOptions.lastCardLabel}}</b-dropdown-item
                 >
                 <b-dropdown-item v-on:click="shuffleLastCard('center')"
-                  >Shuffle near center</b-dropdown-item
+                  >Shuffle near middle</b-dropdown-item
                 >
                 <b-dropdown-item v-on:click="shuffleLastCard('end')"
                   >Shuffle near end</b-dropdown-item
@@ -270,6 +273,7 @@
           </div>
         </div>
       </div>
+      
 
       <div class="row">
         <div
@@ -350,7 +354,9 @@ export default {
       currentDeck: 0,
       totalDecks: 0,
       unorderedDecks: {},
-      customOptions: {},
+      customOptions: {
+        lastCardLabel: "Last Card"
+      },
       error: false,
     };
   },
