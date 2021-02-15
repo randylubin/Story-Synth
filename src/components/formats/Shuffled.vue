@@ -2,6 +2,7 @@
   <div class="shuffled game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+    <b-alert show class="" variant="danger" v-if="firebaseCacheError">Warning: the length of the deck has changed since this room was first created. Click Re-shuffle to resync card data.</b-alert>
     <div class="" v-if="roomInfo">
       <div
         class="mb-4 game-meta d-none d-sm-block"
@@ -349,6 +350,7 @@ export default {
       tempExtensionData: { test: null },
       dataReady: false,
       firebaseReady: false,
+      firebaseCacheError: false,
       gSheet: [{ text: "loading" }],
       orderedCards: [],
       currentDeck: 0,
@@ -435,6 +437,10 @@ export default {
           if (this.dataReady) {
             this.shuffleAndResetGame();
           }
+        } else if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.dataReady){
+          this.firebaseCacheError = true;
+        } else if (this.dataReady){
+          this.firebaseCacheError = false;
         }
       })
       .catch((error) => {
@@ -526,6 +532,7 @@ export default {
     },
     shuffleAndResetGame() {
       console.log("shuffling");
+      this.firebaseCacheError = false;
 
       // reset card count
       roomsCollection.doc(this.roomID).update({
@@ -675,6 +682,12 @@ export default {
 
           if (this.firebaseReady && this.roomInfo.cardSequence.length < 4) {
             this.shuffleAndResetGame();
+          }
+
+          else if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.firebaseReady){
+            this.firebaseCacheError = true;
+          } else if (this.firebaseReady){
+            this.firebaseCacheError = false;
           }
         })
         .catch((error) => {
