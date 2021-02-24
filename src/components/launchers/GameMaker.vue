@@ -40,7 +40,7 @@
                   </div>
                 </div>
                 
-                <p>For an example of a polished game built with Story Synth, check out <a href="https://storysynth.org/Games/Around-The-Realm">Around the Realm</a>.</p>
+                <p>Check out the <a href="https://storysynth.org/Gallery/">Gallery</a> to find Story Synth games you can play right now.</p>
               </div>
             </div>
           </div>

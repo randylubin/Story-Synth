@@ -60,26 +60,10 @@ export default {
             "https://img.itch.zone/aW1nLzQ4MzI3NjAucG5n/315x250%23cb/Kb6Vr8.png",
         },
         {
-          title: "Clash at Ikara",
-          credits: "By Randy Lubin",
-          blurb:
-            "Tell the story of a group of heroes trying to protect a village from a bandit attack.",
-          link: "https://storysynth.org/Games/Clash-At-Ikara",
-          image: "https://img.itch.zone/aW1nLzUxOTM4NzMucG5n/original/Pbl0xw.png",
-        },
-        {
-          title: "Dawn of the Monster Invasion",
-          credits: "By Randy Lubin",
-          blurb: "Create a monster movie spoof through six speeches.",
-          link: "https://monster.diegeticgames.com",
-          image:
-            "https://img.itch.zone/aW1nLzQyNTgyNDYucG5n/315x250%23c/Gqv8x9.png",
-        },
-        {
           title: "Raised By Mechs",
           credits: "By Raph D'Amico",
           blurb: "Tell the story of a group of children raised by their mech mother.",
-          link: "https://storysynth.org/Shuffled/1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc/",
+          link: "https://storysynth.org/Games/Raised-By-Mechs/",
           image:
             "https://iili.io/f1F7F1.png",
         },
@@ -89,16 +73,32 @@ export default {
           blurb: "Tell the story of a group coming back together after a long time apart.",
           link: "https://storysynth.org/Shuffled/1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc/",
           image:
-            "https://iili.io/f0DqMb.md.png",
+            "https://iili.io/fjX1ZQ.md.png",
         },
         {
           title: "Working For The Corp",
           credits: "By Ken Davidson, with contributions from Jess Meir",
-          blurb: 'Play as cyberpunk megacorp who are tasked with defending sensitive information from runners.  Will you defend The Corp?',
+          blurb: 'Play as workers at a cyberpunk megacorp who are tasked with defending key info from runners.  Will you defend The Corp?',
           link: "https://storysynth.org/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA",
           image:
             "https://iili.io/f1Kl07.md.png",
         },
+        {
+          title: "Dawn of the Monster Invasion",
+          credits: "By Randy Lubin",
+          blurb: "Create a monster movie spoof through six speeches.",
+          link: "https://monster.diegeticgames.com",
+          image:
+            "https://diegeticgames.com/uploads/monster-game-cover-v2.png",
+        },
+        /*{
+          title: "Clash at Ikara",
+          credits: "By Randy Lubin",
+          blurb:
+            "Tell the story of a group of heroes trying to protect a village from a bandit attack.",
+          link: "https://storysynth.org/Games/Clash-At-Ikara",
+          image: "https://img.itch.zone/aW1nLzUxOTM4NzMucG5n/original/Pbl0xw.png",
+        },*/
         /*{
           title: 'TK',
           credits: 'TK',
@@ -123,54 +123,59 @@ export default {
       ],
     };
   },
-  meta: [
-        {
-          property: "description",
-          content: "Check out the top games you can play with Story Synth",
-          vmid: "description",
-        },
-        {
-          property: "og:title",
-          content: "Story Synth Gallery",
-          vmid: "og:title",
-        },
-        {
-          property: "og:description",
-          content: "Check out the top games you can play with Story Synth",
-          vmid: "og:description",
-        },
-        /*
-          property: "og:image",
-          content: this.customOptions.ogImageSquare,
-          vmid: "og:image",
-        },
-        {
-          property: "og:url",
-          content: "https://storysynth.org/#" + this.$route.fullPath,
-          vmid: "og:url",
-        },
-        {
-          property: "twitter:card",
-          content: "summary",
-          vmid: "twitter:card",
-        },
-        {
-          property: "og:site_name",
-          content: "Story Synth",
-          vmid: "og:site_name",
-        },
-        {
-          property: "twitter:image:alt",
-          content: this.customOptions.gameTitle + " logo",
-          vmid: "twitter:image:alt",
-        },*/
-      ],
-      mounted(){
-        document.dispatchEvent(new Event("x-app-rendered"));
-        if (location.hostname.toString() !== 'localhost'){
-            this.$mixpanel.track('Visited Gallery');
-          }
-      },
+  metaInfo () {
+    return {
+      title: "Gallery of Story Synth Games",
+      meta: [
+            {
+              property: "description",
+              content: "Check out the top games you can play with Story Synth",
+              vmid: "description",
+            },
+            {
+              property: "og:title",
+              content: "Story Synth Gallery",
+              vmid: "og:title",
+            },
+            {
+              property: "og:description",
+              content: "Check out the top games you can play with Story Synth",
+              vmid: "og:description",
+            },
+            /*
+              property: "og:image",
+              content: this.customOptions.ogImageSquare,
+              vmid: "og:image",
+            },
+            {
+              property: "og:url",
+              content: "https://storysynth.org/#" + this.$route.fullPath,
+              vmid: "og:url",
+            },
+            {
+              property: "twitter:card",
+              content: "summary",
+              vmid: "twitter:card",
+            },
+            {
+              property: "og:site_name",
+              content: "Story Synth",
+              vmid: "og:site_name",
+            },
+            {
+              property: "twitter:image:alt",
+              content: this.customOptions.gameTitle + " logo",
+              vmid: "twitter:image:alt",
+            },*/
+          ],
+      }
+    },
+    mounted(){
+      document.dispatchEvent(new Event("x-app-rendered"));
+      if (location.hostname.toString() !== 'localhost'){
+          this.$mixpanel.track('Visited Gallery');
+        }
+    },
 };
 </script>
 

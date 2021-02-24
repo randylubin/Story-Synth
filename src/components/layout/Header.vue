@@ -9,10 +9,8 @@
           <b-collapse id="navbarSupportedContent" is-nav>
             <b-navbar-nav>
                 <b-nav-item href="https://docs.storysynth.org/guide">About</b-nav-item>
-                <b-nav-item href="https://docs.storysynth.org/guide/formats.html">Formats</b-nav-item>
-                <b-nav-item href="https://docs.storysynth.org/guide/design.html">Design</b-nav-item>
-                <b-nav-item href="https://docs.storysynth.org/guide/publish.html">Publish</b-nav-item>
-                <b-nav-item href="https://docs.storysynth.org/guide/extend.html">Extend</b-nav-item>
+                <b-nav-item href="/Gallery/">Gallery</b-nav-item>
+                <b-nav-item href="https://docs.storysynth.org/guide/design.html">Guide</b-nav-item>
             </b-navbar-nav>
           </b-collapse>
         </b-navbar>

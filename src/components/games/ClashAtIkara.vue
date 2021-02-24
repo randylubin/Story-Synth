@@ -23,22 +23,6 @@
         </div>
       </div>
 
-      <div
-        v-if="
-          dataReady &&
-            firebaseReady &&
-            roomInfo &&
-            Object.keys(roomInfo.extensionData).length > 1
-        "
-      >
-        <app-extensionManager
-          @sync-extension="syncExtension()"
-          :extensionData="roomInfo.extensionData"
-          :extensionList="tempExtensionData"
-          :roomInfo="roomInfo"
-        ></app-extensionManager>
-      </div>
-
       <div class="row mb-4">
         <transition name="fade">
           <div class="btn-group col-sm" role="group" aria-label="Card Controls">
@@ -89,7 +73,7 @@
       >
         <transition name="fade">
           <div
-            class="card d-flex shadow img-fluid"
+            class="card main-card d-flex shadow img-fluid"
             v-bind:class="{
               'bg-transparent':
                 customOptions.coverImage && roomInfo.currentCardIndex == 0,
@@ -229,8 +213,9 @@
                 >X-Card</b-button
               >
               <b-button
+                v-b-modal.modalNextDeckConfirm
                 variant="outline-dark"
-                v-on:click="nextDeck()"
+                
                 v-if="this.customOptions.showNextDeckButton"
                 :disabled="
                   roomInfo.xCardIsActive ||
@@ -269,6 +254,22 @@
             </b-button-group>
           </div>
         </div>
+      </div>
+
+      <div
+        v-if="
+          dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+        ></app-extensionManager>
       </div>
 
       <div class="row">
@@ -315,6 +316,28 @@
           </b-modal>
         </div>
       </div>
+
+      
+
+      <b-modal
+        id="modalNextDeckConfirm"
+        title="Advance?"
+        hide-footer
+      >
+        <p></p>
+        <div
+          class="text-center mb-3"
+        >
+          <b-button
+            variant="dark"
+            v-on:click="nextDeck()"
+            >Advance to {{customOptions.showNextDeckButton
+                        ? customOptions.showNextDeckButton
+                        : 'Next Deck'}}</b-button
+          >
+        </div>
+      </b-modal>
+
     </div>
   </div>
 </template>
@@ -464,6 +487,7 @@ export default {
       });
     },
     nextDeck() {
+      this.$bvModal.hide("modalNextDeckConfirm")	
       let newCardIndex = this.roomInfo.currentCardIndex;
       let chapterIndexTracker = this.orderedCards.length;
       console.log("current:", newCardIndex);

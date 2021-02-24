@@ -24,21 +24,7 @@
         </div>
       </div>
 
-      <div
-        v-if="
-          dataReady &&
-            firebaseReady &&
-            roomInfo &&
-            Object.keys(roomInfo.extensionData).length > 1
-        "
-      >
-        <app-extensionManager
-          @sync-extension="syncExtension()"
-          :extensionData="roomInfo.extensionData"
-          :extensionList="tempExtensionData"
-          :roomInfo="roomInfo"
-        ></app-extensionManager>
-      </div>
+      
 
       <div class="row mb-4">
         <transition name="fade">
@@ -90,7 +76,7 @@
       >
         <transition name="fade">
           <div
-            class="card d-flex shadow img-fluid"
+            class="card main-card d-flex shadow img-fluid"
             v-bind:class="{
               'bg-transparent':
                 customOptions.coverImage && roomInfo.currentCardIndex == 0,
@@ -275,6 +261,21 @@
         </div>
       </div>
       
+      <div
+        v-if="
+          dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+        ></app-extensionManager>
+      </div>
 
       <div class="row">
         <div

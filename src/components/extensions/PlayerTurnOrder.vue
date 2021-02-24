@@ -1,10 +1,11 @@
 <template>
-  <div class="mb-4 player-turn-order">
+  <div class="mb-4 player-turn-order" v-if="playerTurnOrderFirstVisible && (playerTurnOrderFirstVisible <= currentCardIndex)">
       <div class="row">
         <div class="col-sm">
           <div class="card d-flex shadow">
             <div class="card-body">
-              <h2>Player Turn Order</h2>
+              <h2 v-html="playerTurnOrderHeader" v-if="playerTurnOrderHeader != undefined"></h2>
+              <h2 v-else>Player Turn Order</h2>
               
               <div v-if="playerTurnOrder.players">
                 <div v-for="(player, index) in playerTurnOrder.players" v-bind:key="index">
@@ -21,7 +22,8 @@
               </div>
 
               <input type="text" v-model="newPlayer" maxlength="50">
-              <button class="btn btn-outline-dark m-2" v-on:click="addPlayer(newPlayer)">Add Player</button>
+              <button :disabled="!newPlayer" class="btn btn-outline-dark m-2" v-on:click="addPlayer(newPlayer)" v-html="playerTurnOrderButtonLabel" v-if="playerTurnOrderButtonLabel != undefined">Add Player</button>
+              <button v-else :disabled="!newPlayer" class="btn btn-outline-dark m-2" v-on:click="addPlayer(newPlayer)">Add Player</button>
               
             </div>
           </div>
@@ -35,6 +37,9 @@ export default {
   name: 'app-playerTurnOrder',
   props: {
     playerTurnOrder: Object,
+    playerTurnOrderHeader: String,
+    playerTurnOrderButtonLabel: String,
+    playerTurnOrderFirstVisible: Number,
     currentCardIndex: Number,
   },
   data: function() {

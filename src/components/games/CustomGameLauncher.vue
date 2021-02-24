@@ -188,7 +188,7 @@ export default {
           },
           'Clash-At-Ikara': {
             'gameTitle': 'Clash at Ikara',
-            'gameBlurb': 'Tell the story of a group of heroes who have agreed to protect the defenseless community of Ikara from an immenent bandit raid.',
+            'gameBlurb': 'Tell the story of a group of heroes who have agreed to protect the defenseless community of Ikara from an imminent bandit raid.',
             'ogImage': 'https://diegeticgames.com/uploads/clash-at-ikara-square.png'
           },
           'Raised-By-Mechs': {
@@ -289,8 +289,9 @@ export default {
         this.customOptions = {
           gameTitle: "Clash At Ikara",
           byline: "By Randy Lubin",
-          gameBlurb: 'Tell the story of a group of heroes who have agreed to protect the defenseless community of Ikara from an immenent bandit raid.',
-          style: '<link rel="preconnect" href="https://fonts.gstatic.com"><link href="https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap" rel="stylesheet"><style> h1 { font-family: "Kelly Slab", sans-serif; } .full-page-background {background: #23074d;  /* fallback for old browsers */background: -webkit-linear-gradient(to top, #cc5333, #23074d);  /* Chrome 10-25, Safari 5.1-6 */background: linear-gradient(to top, #cc5333, #23074d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */} .game-meta { color: white; } .card { background: url(https://www.toptal.com/designers/subtlepatterns/patterns/handmadepaper.png); } } </style>'
+          gameBlurb: '<i>By Randy Lubin</i><br><br><div class="text-left" style="white-space:normal"> <h2>Pitch</h2> Play as a group of heroes who have agreed to protect the defenseless community of Ikara from an imminent bandit raid. First meet the heroes, then discover Ikara and its inhabitants, and finally see how they fare in a battle against the bandits. <br><br> Inspired by Seven Samurai and For the Queen <br><br> <h2>Info</h2> <ul> <li>2+ players</li> <li>30-60 minutes</li> <li>Genre: Flexible (fantasy or science fiction work well)</li> <li>Tone: tense preparation, heroic sacrifice</li> <li>Activities: tell quick vignettes that build the characters and the world</li> </ul> </div>',
+          coverImage: 'https://diegeticgames.com/uploads/clash-at-ikara-cover.png',
+          style: '<link rel="preconnect" href="https://fonts.gstatic.com"><link href="https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap" rel="stylesheet"><style> h1, h2 { font-family: "Kelly Slab", sans-serif; } .card {border:0px;} .full-page-background {background: #23074d;  /* fallback for old browsers */background: -webkit-linear-gradient(to top, #cc5333, #23074d);  /* Chrome 10-25, Safari 5.1-6 */background: linear-gradient(to top, #cc5333, #23074d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */} .game-meta { color: white; } .card { background: url(https://www.toptal.com/designers/subtlepatterns/patterns/handmadepaper.png); } } </style>'
         }
 
         this.dataReady = true;
@@ -316,6 +317,13 @@ export default {
     
     document.dispatchEvent(new Event('x-app-rendered'))
     //this.fetchAndCleanSheetData(correctGSheetID);
+
+    if (location.hostname.toString() !== 'localhost'){
+      this.$mixpanel.track('Visit Game Launcher', {
+        game_name: this.customOptions.gameTitle ?? 'untitled',
+        launcher_url: location.hostname.toString() + this.$route.fullPath,
+      });
+    }
 
     if (!this.roomID) {
       this.assignRandomRoomName();

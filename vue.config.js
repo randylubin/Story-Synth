@@ -16,7 +16,9 @@ module.exports = {
         '/SlotMachine/1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU/',
         '/Phases/1HataDfV2lrA4hfzmLgDjXH09dEMLQV6OT10tVH9G52A/',
         '/SecretCards/1JwMF02DSxNKtjHp6u-wyznSs-iEG_3DpOobgc17I16o/',
-        '/Shuffled/1q5LuB6H5F9hxJEZovAS4LJZc6YS8mYs0tOFIcCUp4lA/', //Raised by Mechs
+        '/Shuffled/1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc/', // Reunion
+        '/Shuffled/1q5LuB6H5F9hxJEZovAS4LJZc6YS8mYs0tOFIcCUp4lA/', //Raised by Mechs,
+        '/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA/', // working for the corp
       ],
       useRenderEvent: true,
       headless: true,
