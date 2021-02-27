@@ -202,12 +202,11 @@
           <div class="col-sm">
             <b-button-group aria-role="Deck control" class="d-flex w-100">
               <b-button
-                v-b-modal.reshuffleConfirm
                 variant="outline-dark"
                 :disabled="roomInfo.xCardIsActive"
-                
+                v-on:click="shuffleAndResetGame()"
                 color="rgb(187, 138, 200)"
-                >Restart</b-button
+                >Re-shuffle</b-button
               >
               <b-button
                 variant="outline-dark"
@@ -220,9 +219,8 @@
                 >X-Card</b-button
               >
               <b-button
-                v-b-modal.modalNextDeckConfirm
                 variant="outline-dark"
-                
+                v-on:click="nextDeck()"
                 v-if="this.customOptions.showNextDeckButton"
                 :disabled="
                   roomInfo.xCardIsActive ||
@@ -323,42 +321,6 @@
           </b-modal>
         </div>
       </div>
-
-      <b-modal
-        id="modalNextDeckConfirm"
-        title="Advance?"
-        hide-footer
-      >
-        <p></p>
-        <div
-          class="text-center mb-3"
-        >
-          <b-button
-            variant="dark"
-            v-on:click="nextDeck()"
-            >Advance to {{customOptions.showNextDeckButton
-                        ? customOptions.showNextDeckButton
-                        : 'Next Deck'}}</b-button
-          >
-        </div>
-      </b-modal>
-      <b-modal
-        id="reshuffleConfirm"
-        title="Restart and Reshuffle"
-        hide-footer
-      >
-        <p>Do you want to reshuffle all of the prompts and restart the game?</p>
-        <div
-          class="text-center mb-3"
-        >
-          <b-button
-            variant="dark"
-            v-on:click="shuffleAndResetGame()"
-            >Restart and Reshuffle</b-button
-          >
-        </div>
-      </b-modal>
-
     </div>
   </div>
 </template>
@@ -515,7 +477,6 @@ export default {
       });
     },
     nextDeck() {
-      this.$bvModal.hide("modalNextDeckConfirm")	
       let newCardIndex = this.roomInfo.currentCardIndex;
       let chapterIndexTracker = this.orderedCards.length;
       console.log("current:", newCardIndex);
@@ -573,7 +534,6 @@ export default {
     shuffleAndResetGame() {
       console.log("shuffling");
       this.firebaseCacheError = false;
-      this.$bvModal.hide("reshuffleConfirm")	
 
       // reset card count
       roomsCollection.doc(this.roomID).update({
