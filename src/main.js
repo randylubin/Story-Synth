@@ -56,6 +56,11 @@ router.beforeEach((to, from, next) => {
   if (to.path == '/_=_') {
     return next(false);
   }
+  if (to.fullPath.substr(-1) !== "/") {
+    const path = to.fullPath + "/"
+    next(path);
+    return;
+  }
   next();
 })
 
