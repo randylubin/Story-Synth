@@ -43,6 +43,7 @@
 </template>
 
 <script>
+  import firebase from 'firebase'
 
   // Remove for published version any components you aren't using
   import Header from './components/layout/Header.vue'
@@ -142,6 +143,16 @@
     }
   },
     mounted () {
+      firebase.auth().signInAnonymously()
+      .then(() => {
+        //console.log('anon auth')
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode, errorMessage)
+        // ...
+      });
 
     },
     methods: {
