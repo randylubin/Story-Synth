@@ -2,7 +2,7 @@
   <div class="shuffled game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
-    <b-alert show class="" variant="danger" v-if="firebaseCacheError">Warning: the length of the deck has changed since this room was first created. Click Re-shuffle to resync card data.</b-alert>
+    <b-alert show class="" variant="danger" v-if="firebaseCacheError">Warning: the length of the deck has changed since this room was first created. Click Restart to resync card data.</b-alert>
     <div class="" v-if="roomInfo">
       <div
         class="mb-4 game-meta d-none d-sm-block"

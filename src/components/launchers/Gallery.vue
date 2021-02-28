@@ -68,6 +68,14 @@ export default {
             "https://iili.io/f1F7F1.png",
         },
         {
+          title: "Clash at Ikara",
+          credits: "By Randy Lubin",
+          blurb:
+            "Tell the story of a group of heroes trying to protect a village from a bandit attack.",
+          link: "https://storysynth.org/Games/Clash-At-Ikara",
+          image: "https://img.itch.zone/aW1nLzUxOTM4NzMucG5n/original/Pbl0xw.png",
+        },
+        {
           title: "Reunion",
           credits: "By Yoshi Creelman, Jenn Martin, Andy Munich",
           blurb: "Tell the story of a group coming back together after a long time apart.",
@@ -91,14 +99,6 @@ export default {
           image:
             "https://diegeticgames.com/uploads/monster-game-cover-v2.png",
         },
-        /*{
-          title: "Clash at Ikara",
-          credits: "By Randy Lubin",
-          blurb:
-            "Tell the story of a group of heroes trying to protect a village from a bandit attack.",
-          link: "https://storysynth.org/Games/Clash-At-Ikara",
-          image: "https://img.itch.zone/aW1nLzUxOTM4NzMucG5n/original/Pbl0xw.png",
-        },*/
         /*{
           title: 'TK',
           credits: 'TK',

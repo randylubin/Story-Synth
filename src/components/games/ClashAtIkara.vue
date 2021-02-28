@@ -2,6 +2,7 @@
   <div class="shuffled game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+    <b-alert show class="" variant="danger" v-if="firebaseCacheError">Warning: the length of the deck has changed since this room was first created. Click Restart to resync card data.</b-alert>
     <div class="" v-if="roomInfo">
       <div
         class="mb-4 game-meta d-none d-sm-block"
@@ -22,6 +23,8 @@
           </div>
         </div>
       </div>
+
+      
 
       <div class="row mb-4">
         <transition name="fade">
@@ -133,7 +136,7 @@
                 v-if="!roomInfo.xCardIsActive"
               >
                 <div>
-                  <h1 class="">
+                  <h1 v-if="!customOptions.hideHeadersOnCards">
                     {{
                       gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
                         .headerText
@@ -149,6 +152,7 @@
                 </div>
               </div>
             </div>
+            <b-alert show class="mx-3" v-html="customOptions.lastCardReminderText" variant="info" v-if="customOptions.lastCardReminderText && customOptions.lastCardReminderFrequency && roomInfo.currentCardIndex > firstNonInstruction && ((roomInfo.currentCardIndex - firstNonInstruction) % customOptions.lastCardReminderFrequency == customOptions.lastCardReminderFrequency - 1)"></b-alert>
 
             <div
               class="card-body align-items-center justify-content-center"
@@ -191,16 +195,19 @@
         </transition>
       </div>
 
+
+
       <div class="btn-container" style>
         <div class="row mb-4">
           <div class="col-sm">
             <b-button-group aria-role="Deck control" class="d-flex w-100">
               <b-button
+                v-b-modal.reshuffleConfirm
                 variant="outline-dark"
                 :disabled="roomInfo.xCardIsActive"
-                v-on:click="shuffleAndResetGame()"
+                
                 color="rgb(187, 138, 200)"
-                >Re-shuffle</b-button
+                >Restart</b-button
               >
               <b-button
                 variant="outline-dark"
@@ -232,7 +239,7 @@
               <b-dropdown
                 variant="outline-dark"
                 id="dropdown-1"
-                text="Last Card"
+                v-bind:text="customOptions.lastCardLabel"
                 :disabled="
                   roomInfo.xCardIsActive ||
                     roomInfo.currentCardIndex == gSheet.length - 1 ||
@@ -242,10 +249,10 @@
                 right
               >
                 <b-dropdown-item v-on:click="lastCard()"
-                  >Go to last card</b-dropdown-item
+                  >Go to {{customOptions.lastCardLabel}}</b-dropdown-item
                 >
                 <b-dropdown-item v-on:click="shuffleLastCard('center')"
-                  >Shuffle near center</b-dropdown-item
+                  >Shuffle near middle</b-dropdown-item
                 >
                 <b-dropdown-item v-on:click="shuffleLastCard('end')"
                   >Shuffle near end</b-dropdown-item
@@ -255,7 +262,7 @@
           </div>
         </div>
       </div>
-
+      
       <div
         v-if="
           dataReady &&
@@ -317,8 +324,6 @@
         </div>
       </div>
 
-      
-
       <b-modal
         id="modalNextDeckConfirm"
         title="Advance?"
@@ -334,6 +339,22 @@
             >Advance to {{customOptions.showNextDeckButton
                         ? customOptions.showNextDeckButton
                         : 'Next Deck'}}</b-button
+          >
+        </div>
+      </b-modal>
+      <b-modal
+        id="reshuffleConfirm"
+        title="Restart and Reshuffle"
+        hide-footer
+      >
+        <p>Do you want to reshuffle all of the prompts and restart the game?</p>
+        <div
+          class="text-center mb-3"
+        >
+          <b-button
+            variant="dark"
+            v-on:click="shuffleAndResetGame()"
+            >Restart and Reshuffle</b-button
           >
         </div>
       </b-modal>
@@ -368,12 +389,15 @@ export default {
       tempExtensionData: { test: null },
       dataReady: false,
       firebaseReady: false,
+      firebaseCacheError: false,
       gSheet: [{ text: "loading" }],
       orderedCards: [],
       currentDeck: 0,
       totalDecks: 0,
       unorderedDecks: {},
-      customOptions: {},
+      customOptions: {
+        lastCardLabel: "Last Card"
+      },
       error: false,
     };
   },
@@ -452,6 +476,10 @@ export default {
           if (this.dataReady) {
             this.shuffleAndResetGame();
           }
+        } else if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.dataReady){
+          this.firebaseCacheError = true;
+        } else if (this.dataReady){
+          this.firebaseCacheError = false;
         }
       })
       .catch((error) => {
@@ -544,6 +572,8 @@ export default {
     },
     shuffleAndResetGame() {
       console.log("shuffling");
+      this.firebaseCacheError = false;
+      this.$bvModal.hide("reshuffleConfirm")	
 
       // reset card count
       roomsCollection.doc(this.roomID).update({
@@ -681,8 +711,22 @@ export default {
           console.log("done fetching and cleaning data");
           this.dataReady = true;
 
+          if (location.hostname.toString() !== 'localhost'){
+            this.$mixpanel.track('Visit Game Session', {
+              game_name: this.customOptions.gameTitle ?? 'untitled',
+              session_url: location.hostname.toString() + this.$route.fullPath,
+              format: 'Shuffled'
+            });
+          }
+
           if (this.firebaseReady && this.roomInfo.cardSequence.length < 4) {
             this.shuffleAndResetGame();
+          }
+
+          else if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.firebaseReady){
+            this.firebaseCacheError = true;
+          } else if (this.firebaseReady){
+            this.firebaseCacheError = false;
           }
         })
         .catch((error) => {
