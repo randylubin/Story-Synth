@@ -365,7 +365,6 @@
 
 <script>
 import { roomsCollection } from "../../firebase";
-import axios from "axios";
 import ExtensionManager from "../extensions/ExtensionManager.vue";
 
 export default {
@@ -616,133 +615,189 @@ export default {
         extensionData: this.roomInfo.extensionData,
       });
     },
-    fetchAndCleanSheetData(sheetID) {
-      // Remove for published version
-      if (!sheetID || sheetID == "demo") {
-        sheetID = "1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w";
+    fetchAndCleanSheetData() {
+      
+      let gRows = [
+                    ["option","gameTitle","Clash at Ikara"  ],
+                    ["option","byline","By Randy Lubin"  ],
+                    ["option","gameBlurb","<i>By Randy Lubin</i>\n\n<div class=\"text-left\" style=\"white-space:normal\">\n<h2>Pitch</h2>\nPlay as a group of heroes who have agreed to protect the defenseless community of Ikara from an imminent bandit raid. First meet the heroes, then discover Ikara and its inhabitants, and finally see how they fare in a battle against the bandits.\n<br><br>\nInspired by Seven Samurai and For the Queen\n<br><br>\n<h2>Info</h2>\n<ul>\n  <li>2+ players</li>\n  <li>30-60 minutes</li>\n  <li>Genre: Flexible (fantasy or science fiction work well)</li>\n  <li>Tone: tense preparation, heroic sacrifice</li>\n  <li>Activities: tell quick vignettes that build the characters and the world</li>\n</ul>\n</div>"  ],
+                    ["option","coverImage","https://diegeticgames.com/uploads/clash-at-ikara-cover.png"  ],
+                    ["option","showNextDeckButton","Next Act"  ],
+                    ["extension","playerTurnOrderHeader","The Heroes"  ],
+                    ["extension","playerTurnOrderButtonLabel","Add Hero"  ],
+                    ["extension","playerTurnOrderFirstVisible","10"  ],
+                    ["extension","playerTurnOrder","{}"  ],
+                    ["option","hideTitleInSession","TRUE"  ],
+                    ["option","instructionsProgressBar","6"  ],
+                    ["option","style","<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\">\n<link href=\"https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap\" rel=\"stylesheet\">\n\n<style>\n\nh1, h2 { font-family: 'Kelly Slab', sans-serif; }\n\n.full-page-background {\n\nbackground: #23074d;  /* fallback for old browsers */\nbackground: -webkit-linear-gradient(to top, #cc5333, #23074d);  /* Chrome 10-25, Safari 5.1-6 */\nbackground: linear-gradient(to top, #cc5333, #23074d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */\n\n}\n\n.game-meta {\n color: white;\n}\n\n.card {\n    background: url(https://www.toptal.com/designers/subtlepatterns/patterns/handmadepaper.png);\n    border: 0px;\n}\n\n\n</style>"  ],
+                    ["0","Clash at Ikara","One player should hit NEXT CARD and then players should take turns reading each card aloud.\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["0","The Pitch","Play as a group of heroes who have agreed to protect the defenseless community of Ikara from an imminent bandit raid.\n\nOne player should hit NEXT CARD and then players should take turns reading each card aloud."  ],
+                    ["0","Safety","If you need to pause the game for any reason, especially if you want to discuss, edit, or reverse any content decisions, just click the X-Card button."  ],
+                    ["0","The Setting","The story centers on the defenseless community of Ikara but the broader setting is up to you. As a group, define <b>your</b> Ikara.\n<div class=\"text-left mx-5\">\n– An ancient archive, full of magical tomes\n– An ice mining station, in the asteroid belt\n– A scrapyard, in the slums of a cyberpunk dystopia\n– Or, make up your own setting\n</div>"  ],
+                    ["0","The Story Arc","This game takes place over four Acts:\n<div class=\"text-left mx-5\">\nAct 1: Meet the heroes\nAct 2: Prepare the defenses\nAct 3: Fight the battle\nAct 4: Explore the aftermath\n</div>\n\nSome of the heroes may die – will their sacrifice be worth it?"  ],
+                    ["0","The Prompts","In this game, you'll take turns advancing the story by answering prompts. You can always choose to redraw a prompt or to ask another player to answer one in your place.\n\nEach Act will contain its own short instructions which you will read before drawing the prompts.\n\nHit 'Next Card' to begin the story."  ],
+                    ["1","Prelude","<style> .main-card {filter:invert()}</style>"  ],
+                    ["2","Prelude","The community of Ikara is frequently harassed by bandits, who threaten violence unless Ikara hands over its scarce resources.\n\nAfter years of suffering, the residents of Ikara have said ENOUGH. They've sought the help of heroes to help ward off the bandit attack and secure the long term safety of the community."  ],
+                    ["3","Act 1","In which we meet our heroes\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["4","Act 1","Instructions\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["5","Creating Heroes","In this act, you will take turns drawing hero cards. On your turn, you will read the hero's description and answer the question. Then, add the hero's archetype (e.g. The Veteran) to the list below (scroll down).\n\nDuring the game, you can refer to each hero by their archetype instead of giving them names."  ],
+                    ["6","Number of Heroes","Each player will create at least one hero. If there are fewer than five players, each player should create two heroes.\n\nKeep clicking 'Next Card' until you're done creating heroes. Then, click 'Next Act' to proceed to Act 2."  ],
+                    ["7","Hero Backgrounds","These heroes are not local to Ikara. All have answered the for help and are committed to helping the community.\n\nAs you introduce a hero, mention what relationships they have with the other heroes or with Ikara."  ],
+                    ["8","Act 1","Scenes\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["9","The Veteran","You are a jaded veteran who has seen too much combat.\n\nWhy have you chosen to help Ikara?\n\n<small><em>Click Next Act when you have enough heroes (1-2 per player)</em></small>"  ],
+                    ["9","The Untested","You are an untested youth, fully trained who has never seen combat.\n\nWhy have you chosen to help Ikara?\n\n<small><em>Click Next Act when you have enough heroes (1-2 per player)</em></small>"  ],
+                    ["9","The Charmer","You lack any combat skills but make up for it with kindness and charm.\n\nWhy have you chosen to help Ikara?\n\n<small><em>Click Next Act when you have enough heroes (1-2 per player)</em></small>"  ],
+                    ["9","The Virtuoso","You have dedicated your life to martial excellence and your skills are peerless.\n\nWhy have you chosen to help Ikara?\n\n<small><em>Click Next Act when you have enough heroes (1-2 per player)</em></small>"  ],
+                    ["9","The Strategist","You are a genius when it comes to strategy, tactics, and traps.\n\nWhy have you chosen to help Ikara?\n\n<small><em>Click Next Act when you have enough heroes (1-2 per player)</em></small>"  ],
+                    ["9","The Tinkerer","You are unparalleled at tinkering with devices and machinery.\n\nWhy have you chosen to help Ikara?\n\n<small><em>Click Next Act when you have enough heroes (1-2 per player)</em></small>"  ],
+                    ["9","The Sage","Everyone values your wisdom and seeks out your advice.\n\nWhy have you chosen to help Ikara?\n\n<small><em>Click Next Act when you have enough heroes (1-2 per player)</em></small>"  ],
+                    ["9","The Tagalong","The other heroes did not want you to join them but you came along anyway.\n\nWhy have you chosen to help Ikara?\n\n<small><em>Click Next Act when you have enough heroes (1-2 per player)</em></small>"  ],
+                    ["9","The Returned","You were born in Ikara but you swore that you'd never return.\n\nWhy have you chosen to come back and help?\n\n<small><em>Click Next Act when you have enough heroes (1-2 per player)</em></small>"  ],
+                    ["10","Act 2","In which the heroes help Ikara prepare for the bandit attack\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["11","Act 2","Instructions\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["12","Instructions","On your turn answer the prompt for the selected hero in the hero tracker.\n\nIf you don't want to answer a prompt, you can ask another player to answer it for their hero or you can choose to draw a different prompt.\n\nClicking on a hero in the tracker will set them to be the active hero."  ],
+                    ["13","Instructions","You can respond to the prompt however you wish, though a short answer is always okay.\n\nOther players are welcome to ask follow-up questions and clarifications.\n\nWhen you're done exploring the heroes and Ikara, advance to Act 3 for the battle with the Bandits. For a 30 minute game, answer 2 cards per hero."  ],
+                    ["14","Act 2","Scenes\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["15","The Preparations","Amid all the preparations you find time to unwind.\n\nWhat is the best way to relax in Ikara?"  ],
+                    ["15","The Preparations","You skirmish with the bandit scouts and get the better of them.\n\nWhat do you learn from the encounter?"  ],
+                    ["15","The Preparations","Wherever you look, Ikara bears the scars of past bandit raids.\n\nWhat scars are most notable?"  ],
+                    ["15","The Preparations","The layout of Ikara has a natural weakness that makes it hard to defend.\n\nWhat is it and how do you attempt to strengthen it?"  ],
+                    ["15","The Preparations","The layout of Ikara has a natural strong point that will help you during the attack.\n\nWhat is it and how will you take advantage of it?"  ],
+                    ["15","The Preparations","You set up clever traps for when the bandits attack.\n\nWhat are they?"  ],
+                    ["15","The Preparations","You improvise weapons out of local resources.\n\nWhat are they?"  ],
+                    ["15","The Preparations","You hold drills with the locals who will help you during the battle.\n\nWhat tactics do you teach them?"  ],
+                    ["15","The Preparations","You build defensive fortifications that will help you when the bandits attack.\n\nWhat are they?"  ],
+                    ["15","The Preparations","You scout ahead and learn something about the bandits that will help you in battle.\n\nWhat is it?"  ],
+                    ["15","The Preparations","You discover valuable weapons hidden in Ikara.\n\nWhat are they and how do you plan to use them?"  ],
+                    ["15","The Preparations","In order to maximize your chance of success, part of Ikara must be risked or sacrificed.\n\nWhat is the sacrifice and how do the locals react?"  ],
+                    ["15","The Preparations","One of the locals does not trust the heroes and wants them gone.\n\nWhat is their reason and how do you change their mind?"  ],
+                    ["15","The Preparations","A younger local wants to fight alongside you but their family wants them to hide and stay safe.\n\nHow do you handle the situation?"  ],
+                    ["15","The Preparations","One of the locals is falling in love with you.\n\nHow do you feel about them? Do you act on those feelings?"  ],
+                    ["15","The Preparations","One of the locals is convinced that you are doomed to failure and they are trying to convince the others that surrender is the only option.\n\nHow do you handle the situation?"  ],
+                    ["15","The Preparations","A community elder welcomes the heroes into their home.\n\nWhat is the traditional method of welcoming guests in Ikara?"  ],
+                    ["15","The Preparations","A local makes an impassioned case for why you should settle in Ikara after the battle.\n\nWhat do they say and do you seriously consider it?"  ],
+                    ["16","Act 3","In which the bandits attack and a terrible price is paid\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["17","Act 3","Instructions\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["18","Instructions","On your turn read the prompt and answer the question.\n\nSome of the prompts give you the option to sacrifice yourself to prevent a bad outcome; if you choose to do so, describe your hero going out in a blaze of glory. If you choose not to make the sacrifice, describe the cost of not intervening and mention different contribution you make to the battle.\n\nDepending on the tone of your game, you may want to have the sacrifice be a grevious injury instead of death."  ],
+                    ["19","Instructions","Once every hero has answered a prompt, you may end the battle and move to Act 4: The Aftermath.\n\nIf you want to extend the battle, you may continue to draw Act 3 prompts until you're ready to end the act."  ],
+                    ["20","Act 3","Scenes\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["21","The Battle","A bandit is poised to kill a beloved member of Ikara.\n\nDo you sacrifice yourself to save them?"  ],
+                    ["21","The Battle","The bandits are about to destroy a massive portion of Ikara.\n\nDo you sacrifice yourself to save it?"  ],
+                    ["21","The Battle","The bandits are about to wipe out a squad of locals.\n\nDo you sacrifice yourself to save them?"  ],
+                    ["21","The Battle","You see an opportunity to the bandits' prisoners at the cost of your own life.\n\nDo you sacrifice yourself to save them?"  ],
+                    ["21","The Battle","You save a fellow hero from certain death.\n\nWho was it and how did you save them?"  ],
+                    ["21","The Battle","You strike recklessly at the Bandits and come out ahead.\n\nWhat happened?"  ],
+                    ["21","The Battle","You catch some of the bandits with a pre-laid trap.\n\nWhat was it?"  ],
+                    ["21","The Battle","You take out the bandit leader, dealing a heavy blow to their morale.\n\nHow did you do it?"  ],
+                    ["21","The Battle","You undermine a key part of the Bandit assault.\n\nWhat is it and how do you do it?"  ],
+                    ["22","Act 4","In which we learn the fate of Ikara and the Heroes\n<style> .main-card {filter:invert()}</style>"  ],
+                    ["23","The Fate of Ikara","Did Ikara win the battle? Decide now, as a group."  ],
+                    ["24","The Fate of the Heroes","Take turns creating epilogues for your characters.\n\nIf your character died in battle, add some details about the future of Ikara and its residents.\n\nOnce every hero has gone, the game is over."  ],
+                    ["25","The End","<style> .main-card {filter:invert()}</style>"  ],
+                    ["26","Credits","Designed by Randy Lubin, Diegetic Games\n\nInspired by Seven Samurai and <a href=\"https://forthequeengame.com/\">For The Queen</a>\n\nPowered by <a href=\"https://docs.google.com/spreadsheets/d/1FIWw_lyefEPF9dc-4C-cBwr9gg3D1QH5vkW89WxGu68/edit?usp=sharing\">this spreadsheet</a> via Story Synth\n<style> .main-card {filter:invert()}</style>"  ]
+                  ]
+
+      var cleanData = [];
+
+      // Transform Sheets API response into cleanData
+      gRows.forEach((item, i) => {
+        if (i !== 0 && item[0]) {
+          // Handle options
+          if (item[0] == "option") {
+            this.customOptions[item[1]] =
+              item[2];
+            console.log(item[2]);
+          }
+
+          // Handle extensions
+          if (item[0] == "extension") {
+            this.tempExtensionData[item[1]] =
+              item[2];
+
+            console.log(
+              "extension -",
+              item[1],
+              item[2]
+            );
+          }
+
+          // Handle cards
+          if (
+            item[0] !== "option" &&
+            item[0] !== "extension"
+          ) {
+            var rowInfo = {
+              ordered: item[0],
+              headerText: item[1],
+              bodyText: item[2],
+            };
+
+            cleanData.push(rowInfo);
+
+            if (rowInfo.ordered >= this.totalDecks) {
+              this.totalDecks = parseInt(rowInfo.ordered) + 1;
+            }
+          }
+        }
+      });
+
+      if (
+        this.firebaseReady &&
+        Object.keys(this.tempExtensionData).length > 1
+      ) {
+        roomsCollection
+          .doc(this.roomID)
+          .update({ extensionData: this.tempExtensionData });
       }
 
-      // For published version, set getURL equal to the url of your spreadsheet
-      var getURL =
-        "https://sheets.googleapis.com/v4/spreadsheets/1FIWw_lyefEPF9dc-4C-cBwr9gg3D1QH5vkW89WxGu68/?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM";
+      if (this.customOptions.wallet) {
+        if (Math.random() <= this.customOptions.revShare) {
+          this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+        }
+      }
 
-      // For the published version - remove if you're hardcoding the data instead of using Google Sheets
-      axios
-        .get(getURL)
-        .then((response) => {
-          var cleanData = [];
-          var gRows = response.data.sheets[0].data[0].rowData;
+      this.unorderedDecks = [];
+      for (var d = 0; d < this.totalDecks; d++) {
+        this.unorderedDecks.push([]);
+      }
 
-          // Transform Sheets API response into cleanData
-          gRows.forEach((item, i) => {
-            if (i !== 0 && item.values[0].formattedValue) {
-              // Handle options
-              if (item.values[0].formattedValue == "option") {
-                this.customOptions[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
-                console.log(item.values[2].formattedValue);
-              }
+      // For the published version, set gSheet equal to your converted JSON object
+      this.gSheet = cleanData;
 
-              // Handle extensions
-              if (item.values[0].formattedValue == "extension") {
-                this.tempExtensionData[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
+      // Sort cleanData into ordered and unordered decks
+      cleanData.forEach((item, index) => {
+        if (item.ordered == "0") {
+          this.orderedCards.push(item);
+          this.firstNonInstruction += 1;
+        } else if (item.ordered !== "option") {
+          this.unorderedDecks[item.ordered].push(index);
+        }
+      });
 
-                console.log(
-                  "extension -",
-                  item.values[1].formattedValue,
-                  item.values[2].formattedValue
-                );
-              }
+      console.log("done fetching and cleaning data");
+      this.dataReady = true;
 
-              // Handle cards
-              if (
-                item.values[0].formattedValue !== "option" &&
-                item.values[0].formattedValue !== "extension"
-              ) {
-                var rowInfo = {
-                  ordered: item.values[0].formattedValue,
-                  headerText: item.values[1].formattedValue,
-                  bodyText: item.values[2].formattedValue,
-                };
-
-                cleanData.push(rowInfo);
-
-                if (rowInfo.ordered >= this.totalDecks) {
-                  this.totalDecks = parseInt(rowInfo.ordered) + 1;
-                }
-              }
-            }
-          });
-
-          if (
-            this.firebaseReady &&
-            Object.keys(this.tempExtensionData).length > 1
-          ) {
-            roomsCollection
-              .doc(this.roomID)
-              .update({ extensionData: this.tempExtensionData });
-          }
-
-          if (this.customOptions.wallet) {
-            if (Math.random() <= this.customOptions.revShare) {
-              this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-            }
-          }
-
-          this.unorderedDecks = [];
-          for (var d = 0; d < this.totalDecks; d++) {
-            this.unorderedDecks.push([]);
-          }
-
-          // For the published version, set gSheet equal to your converted JSON object
-          this.gSheet = cleanData;
-
-          // Sort cleanData into ordered and unordered decks
-          cleanData.forEach((item, index) => {
-            if (item.ordered == "0") {
-              this.orderedCards.push(item);
-              this.firstNonInstruction += 1;
-            } else if (item.ordered !== "option") {
-              this.unorderedDecks[item.ordered].push(index);
-            }
-          });
-
-          console.log("done fetching and cleaning data");
-          this.dataReady = true;
-
-          if (location.hostname.toString() !== 'localhost'){
-            this.$mixpanel.track('Visit Game Session', {
-              game_name: this.customOptions.gameTitle ?? 'untitled',
-              session_url: location.hostname.toString() + this.$route.fullPath,
-              format: 'Shuffled'
-            });
-          }
-
-          if (this.firebaseReady && this.roomInfo.cardSequence.length < 4) {
-            this.shuffleAndResetGame();
-          }
-
-          else if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.firebaseReady){
-            this.firebaseCacheError = true;
-          } else if (this.firebaseReady){
-            this.firebaseCacheError = false;
-          }
-        })
-        .catch((error) => {
-          this.gSheet = [
-            {
-              ordered: 0,
-              headerText: "Error",
-              bodyText:
-                "Error loading the Google Sheet. Please make sure that the link is correct and that it is publicly viewable",
-            },
-          ];
-
-          this.orderedCards = this.gSheet;
-          this.error = error;
-          console.log(error.message, error);
+      if (location.hostname.toString() !== 'localhost'){
+        this.$mixpanel.track('Visit Game Session', {
+          game_name: this.customOptions.gameTitle ?? 'untitled',
+          session_url: location.hostname.toString() + this.$route.fullPath,
+          format: 'Shuffled'
         });
+      }
+
+      if (this.firebaseReady && this.roomInfo.cardSequence.length < 4) {
+        this.shuffleAndResetGame();
+      }
+
+      else if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.firebaseReady){
+        this.firebaseCacheError = true;
+      } else if (this.firebaseReady){
+        this.firebaseCacheError = false;
+      }
+    
+
+      this.orderedCards = this.gSheet;
+
     },
   },
 };
