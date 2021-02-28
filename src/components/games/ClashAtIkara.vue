@@ -86,7 +86,7 @@
               v-bind:src="customOptions.coverImage"
               class="card-img-top"
               style="width:100%"
-              v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0"
+              v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0 && firebaseReady"
             />
             <img
               v-bind:src="customOptions.cardBackgroundImage"
@@ -700,43 +700,41 @@ export default {
       var cleanData = [];
 
       // Transform Sheets API response into cleanData
-      gRows.forEach((item, i) => {
-        if (i !== 0 && item[0]) {
-          // Handle options
-          if (item[0] == "option") {
-            this.customOptions[item[1]] =
-              item[2];
-            console.log(item[2]);
-          }
+      gRows.forEach((item) => {
+        // Handle options
+        if (item[0] == "option") {
+          this.customOptions[item[1]] =
+            item[2];
+          console.log(item[2]);
+        }
 
-          // Handle extensions
-          if (item[0] == "extension") {
-            this.tempExtensionData[item[1]] =
-              item[2];
+        // Handle extensions
+        if (item[0] == "extension") {
+          this.tempExtensionData[item[1]] =
+            item[2];
 
-            console.log(
-              "extension -",
-              item[1],
-              item[2]
-            );
-          }
+          console.log(
+            "extension -",
+            item[1],
+            item[2]
+          );
+        }
 
-          // Handle cards
-          if (
-            item[0] !== "option" &&
-            item[0] !== "extension"
-          ) {
-            var rowInfo = {
-              ordered: item[0],
-              headerText: item[1],
-              bodyText: item[2],
-            };
+        // Handle cards
+        if (
+          item[0] !== "option" &&
+          item[0] !== "extension"
+        ) {
+          var rowInfo = {
+            ordered: item[0],
+            headerText: item[1],
+            bodyText: item[2],
+          };
 
-            cleanData.push(rowInfo);
+          cleanData.push(rowInfo);
 
-            if (rowInfo.ordered >= this.totalDecks) {
-              this.totalDecks = parseInt(rowInfo.ordered) + 1;
-            }
+          if (rowInfo.ordered >= this.totalDecks) {
+            this.totalDecks = parseInt(rowInfo.ordered) + 1;
           }
         }
       });
@@ -794,9 +792,6 @@ export default {
       } else if (this.firebaseReady){
         this.firebaseCacheError = false;
       }
-    
-
-      this.orderedCards = this.gSheet;
 
     },
   },
