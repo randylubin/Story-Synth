@@ -86,6 +86,22 @@
       </div>
     </div>
 
+    <div
+        v-if="
+          dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+        ></app-extensionManager>
+      </div>
+
     <div class="row">
         <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
           <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
@@ -110,10 +126,14 @@
 
 <script>
 import { roomsCollection } from '../../firebase';
+import ExtensionManager from "../extensions/ExtensionManager.vue";
 import axios from 'axios'
 
 export default {
   name: 'app-slotMachine',
+  components: {
+    "app-extensionManager": ExtensionManager,
+  },
   props: {
     roomID: String,
     gSheetID: String
@@ -134,6 +154,7 @@ export default {
       orderedCards: [],
       unorderedCards: [],
       customOptions: {},
+      tempExtensionData: { test: null },
       error: false,
     }
   },
@@ -148,7 +169,7 @@ export default {
         if (!this.roomInfo){
           console.log("new room!")
 
-          roomsCollection.doc(this.roomID).set({currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
+          roomsCollection.doc(this.roomID).set({extensionData: this.tempExtensionData, currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
 
           if(this.dataReady){this.shuffle();}
         }
@@ -233,11 +254,26 @@ export default {
         shuffledCards.push(newEmptyCard)
       }
 
+      // add shuffled cards to array
+      newCardSequence = newCardSequence.concat(shuffledCards)
+
+      // add last cards
+      for (var l = 0; l < this.gSheet.length; l++) {
+        if (this.gSheet[l].ordered >= 2){
+          newCardSequence.push(l)
+        }
+      }
+
       // sync the shuffled array
       roomsCollection.doc(this.roomID).update({
-        cardSequence: newCardSequence.concat(shuffledCards)
+        cardSequence: newCardSequence,
       })
 
+    },
+    syncExtension() {
+      roomsCollection.doc(this.roomID).update({
+        extensionData: this.roomInfo.extensionData,
+      });
     },
     fetchAndCleanSheetData(sheetID){
 
@@ -273,7 +309,19 @@ export default {
               console.log(item.values[2].formattedValue)
             }
 
-            if (item.values[0].formattedValue !== "option"){
+            // Handle extensions
+            if (item.values[0].formattedValue == "extension") {
+              this.tempExtensionData[item.values[1].formattedValue] =
+                item.values[2].formattedValue;
+
+              console.log(
+                "extension -",
+                item.values[1].formattedValue,
+                item.values[2].formattedValue
+              );
+            }
+
+            if (item.values[0].formattedValue !== "option" && item.values[0].formattedValue !== "extension"){
 
               var rowInfo = {}
               if (item.values[0].formattedValue >= 0){
@@ -288,7 +336,7 @@ export default {
                   this.firstNonInstruction += 1
                 }
 
-                if (item.values[0].formattedValue != 0){
+                if (item.values[0].formattedValue == 1){
                   for (var j = 3; j < item.values.length; j++) {
                     this.wheels[j-3].push(item.values[j].formattedValue)
                   }
@@ -299,6 +347,21 @@ export default {
             
           }
         });
+
+        if (
+          this.firebaseReady &&
+          Object.keys(this.tempExtensionData).length > 1
+        ) {
+          roomsCollection
+            .doc(this.roomID)
+            .update({ extensionData: this.tempExtensionData });
+        }
+
+        if (this.customOptions.wallet) {
+          if (Math.random() <= this.customOptions.revShare) {
+            this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+          }
+        }
 
         // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData
