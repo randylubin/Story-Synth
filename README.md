@@ -41,6 +41,11 @@ npm install
 
 Then set up a free Firebase project, which will give you an API key. You can follow steps one and two of [the offical guide](https://firebase.google.com/docs/web/setup#create-firebase-project)
 
+Some potentially non-obvious steps are:
+
+- Set up both a "firestore database" and a "realtime database" via the Firebase console in order for a DatabaseURL to appear in your config
+- Configure security rules for each database. Firestore needs read and write both set to "if request.auth != null;" while Realtime only needs read set to "true"
+
 Then, update the project with your Firebase credentials:
 
 Add your your project name, database, and api key to `/src/firebase.js` (fill in between the "" on the lines with TODO)
