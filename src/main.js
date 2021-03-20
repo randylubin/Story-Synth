@@ -28,7 +28,7 @@ Vue.use(VueGtag, {
 
 import VueMixpanel from 'vue-mixpanel'
 Vue.use(VueMixpanel, {
-  token: 'e5df6aab318089da6c499bc6bf3123f9'
+  token: 'e5df6aab318089da6c499bc6bf3123f9' //TODO replace this token with your own MixPanel tracking token
 })
 
 
@@ -48,7 +48,13 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-   if (to.fullPath.substr(0,2) === "/#") {
+  if (to.fullPath.includes('?')) {
+    const path = to.fullPath.substr(0, to.fullPath.indexOf('?'))
+    next(path);
+    return;
+  }
+
+  if (to.fullPath.substr(0, 2) === "/#") {
     const path = to.fullPath.substr(2);
     next(path);
     return;
@@ -61,6 +67,7 @@ router.beforeEach((to, from, next) => {
     next(path);
     return;
   }
+  
   next();
 })
 
