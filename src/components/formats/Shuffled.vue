@@ -70,6 +70,12 @@
         </div>
       </div>
 
+      <div class="row mb-3 game-meta card-counter" v-if="customOptions.displayCardCount && customOptions.displayCardCount - 1 <= roomInfo.currentCardIndex && roomInfo.currentCardIndex < roomInfo.locationOfLastCard">
+        <div class="col-sm">
+          <h2><span v-if="customOptions.displayCardCountLabel">{{customOptions.displayCardCountLabel}}</span><span v-else>Cards seen:</span> {{roomInfo.currentCardIndex - customOptions.displayCardCount + 1}}</h2>
+        </div>
+      </div>
+
       <div
         v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]"
         class="mb-4"
