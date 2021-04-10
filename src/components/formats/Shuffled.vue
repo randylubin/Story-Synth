@@ -562,6 +562,12 @@ export default {
           tempNewLastCardLocation =
             this.roomInfo.cardSequence.length - Math.floor(Math.random() * 4);
           break;
+        default:
+          if(Number.isInteger(location)) {
+            console.log('last card', location)
+            tempNewLastCardLocation = location
+          }
+
       }
 
       this.roomInfo.cardSequence.splice(
@@ -611,11 +617,21 @@ export default {
         );
       }
 
+      // check for set last card location
+      let tempLastCardIndex = newCardSequence.length-1
+      if (this.customOptions.setLastCardLocation){
+        if (parseInt(this.customOptions.setLastCardLocation) > 0) {
+          tempLastCardIndex = parseInt(this.customOptions.setLastCardLocation) + this.orderedCards.length
+        } else {
+          tempLastCardIndex = newCardSequence.length + parseInt(this.customOptions.setLastCardLocation) - 1
+        }
+      }
+
       // sync the shuffled array
       roomsCollection.doc(this.roomID).update({
         cardSequence: newCardSequence,
-        locationOfLastCard: newCardSequence.length - 1,
-      });
+        locationOfLastCard: newCardSequence.length-1,
+      }).then(() => {this.shuffleLastCard(tempLastCardIndex)});
     },
     syncExtension() {
       roomsCollection.doc(this.roomID).update({

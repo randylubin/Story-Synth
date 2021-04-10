@@ -20,6 +20,7 @@ module.exports = {
         '/Shuffled/1q5LuB6H5F9hxJEZovAS4LJZc6YS8mYs0tOFIcCUp4lA/', //Raised by Mechs,
         '/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA/', // working for the corp
         '/Shuffled/1ghm-XOUZlYaOeHcl0zer4KSpCMaoN5u_X7iWmN2TrjY/', // For the Awesome
+        '/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/', // This Heart Within Me Burns
       ],
       useRenderEvent: true,
       headless: true,

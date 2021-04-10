@@ -68,6 +68,13 @@ export default {
             "https://iili.io/f1F7F1.png",
         },
         {
+          title: 'This Heart Within Me Burns',
+          credits: 'By Sam Dunnewold',
+          blurb: 'Tell the story of adventurers trying to lift a curse that\'s befallen one of them.',
+          link: 'https://storysynth.org/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/',
+          image: 'https://iili.io/q8gJR4.md.jpg'
+        },
+        {
           title: "Clash at Ikara",
           credits: "By Randy Lubin",
           blurb:
@@ -98,15 +105,8 @@ export default {
           link: "https://monster.diegeticgames.com",
           image:
             "https://diegeticgames.com/uploads/monster-game-cover-v2.png",
-        },
+        },        
         /*{
-          title: 'TK',
-          credits: 'TK',
-          blurb: 'TK',
-          link: 'TK',
-          image: 'TK'
-        },
-        {
           title: 'TK',
           credits: 'TK',
           blurb: 'TK',
