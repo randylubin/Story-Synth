@@ -7,7 +7,7 @@
         <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
         
         <div v-if="$route.fullPath == '/'">
-          <app-gameMaker :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameMaker>
+          <app-homepage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-homepage>
         </div>
 
         <div v-if="$route.fullPath == '/Gallery/'">
@@ -24,7 +24,7 @@
           <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
           <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
           <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
-          <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SlotMachine' && $route.params.roomID"></app-slotMachine>
+          <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="($route.params.gameType=='SlotMachine' || $route.params.gameType=='Composite') && $route.params.roomID"></app-slotMachine>
           <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
           
           <app-sandbox :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox' && $route.params.roomID"></app-sandbox>
@@ -50,7 +50,7 @@
   import RoomLink from './components/layout/RoomLink.vue'
   import Footer from './components/layout/Footer.vue'
 
-  import GameMaker from './components/launchers/GameMaker.vue'
+  import Homepage from './components/launchers/Homepage.vue'
   import GameLauncher from './components/launchers/GameLauncher.vue'
   import CustomGameLauncher from './components/games/CustomGameLauncher.vue'
 
@@ -71,7 +71,7 @@
       'app-header': Header,
       'app-roomLink': RoomLink,
       'app-footer': Footer,
-      'app-gameMaker': GameMaker,
+      'app-homepage': Homepage,
       'app-gameLauncher': GameLauncher,
       'app-gallery': Gallery,
       'app-timed': Timed,

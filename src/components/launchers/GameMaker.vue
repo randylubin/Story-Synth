@@ -4,47 +4,8 @@
     <div class="container">
       
 
-      <div v-if="!$route.params.gameType" class="card shadow mb-4" style="margin-top: 76px">
+      <div v-if="!$route.params.gameType" class="card shadow mb-4">
         <div class="card-body">
-
-          <!-- Remove for published version and replace with your own header and about section -->
-          <div id="homepage-intro-text" v-if="!$route.params.gSheetID">
-            <div class="row mb-4">
-              <div class="col-sm text-center">
-                <h1>Story Synth</h1>
-                <h3>Make, play, and share storytelling games</h3>
-              </div>
-            </div>
-
-            <div class="row mb-3">
-              <div class="col-sm text-left">
-                <p>This app allows game designers to make, play, and share simple storytelling games by putting their game content in a Google Spreadsheet. For information on how to use and remix this app, see the <a href="https://docs.storysynth.org/guide">About Page</a> or the <a href="https://docs.storysynth.org/guide/formats.html">Formats Page</a>.</p>
-                
-                <p>To see Story Synth in actions, watch this <a href="https://youtu.be/TLQk3zyVyVI">Video Tour</a> or try any of the following format demos:</p>
-                
-                <div class="row mb-3">
-                  <div class="col-sm-6 text-left">
-                    <ul style="margin-block-end: 0em;">
-                      <li><a href="/#/Shuffled/1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w">Shuffled (one deck)</a></li>
-                      <li><a href="/#/Shuffled/1N2N8URSswhmxLalPOkzi5d4kdeFiGrsobEmM_ojk0ow">Shuffled (multi-deck)</a></li>
-                      <li><a href="/#/Timed/1yq2AKwaYL1uZrCnEfwgSpC0SPkQAZqnCdjNxH_pm018">Timed</a></li>
-                      <li><a href="/#/Monster/1NgNHy7Qe1R8KhGR2cOmJwL2aOl2tocBemW2HIAKjrvI">Monster</a></li>
-                    </ul>  
-                  </div>
-                  <div class="col-sm-6 text-left">
-                    <ul>
-                      <li><a href="/#/SlotMachine/1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU">Slot Machine</a></li>
-                      <li><a href="/#/Phases/1HataDfV2lrA4hfzmLgDjXH09dEMLQV6OT10tVH9G52A">Phases</a></li>
-                      <li><a href="/#/SecretCards/1JwMF02DSxNKtjHp6u-wyznSs-iEG_3DpOobgc17I16o">Secret Player Prompts</a></li>
-                    </ul>  
-                  </div>
-                </div>
-                
-                <p>Check out the <a href="https://storysynth.org/Gallery/">Gallery</a> to find Story Synth games you can play right now.</p>
-              </div>
-            </div>
-          </div>
-          <!-- end of header and about section -->
 
           <!-- Take in game title, byline, and blurb from query params -->
           <div class="row mt-4" v-if="$route.query.gameTitle">
