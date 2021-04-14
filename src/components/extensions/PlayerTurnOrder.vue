@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-4 player-turn-order" v-if="playerTurnOrderFirstVisible && (playerTurnOrderFirstVisible <= currentCardIndex)">
+  <div class="mb-4 player-turn-order" v-if="typeof playerTurnOrderFirstVisible !== 'undefined' && (playerTurnOrderFirstVisible <= currentCardIndex)">
       <div class="row">
         <div class="col-sm">
           <div class="card d-flex shadow">
