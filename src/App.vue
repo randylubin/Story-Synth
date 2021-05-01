@@ -26,6 +26,7 @@
           <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
           <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="($route.params.gameType=='SlotMachine' || $route.params.gameType=='Composite') && $route.params.roomID"></app-slotMachine>
           <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
+          <app-generator :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Generator' && $route.params.roomID"></app-generator>
           
           <app-sandbox :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox' && $route.params.roomID"></app-sandbox>
         </div>
@@ -62,6 +63,7 @@
   import SecretCards from './components/formats/SecretCards.vue'
   import SlotMachine from './components/formats/SlotMachine.vue'
   import Phases from './components/formats/Phases.vue'
+  import Generator from './components/formats/Generator.vue'
   import Sandbox from './components/formats/Sandbox.vue'
   import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
 
@@ -80,6 +82,7 @@
       'app-secretCards': SecretCards,
       'app-slotMachine': SlotMachine,
       'app-phases': Phases,
+      'app-generator': Generator,
       'app-sandbox': Sandbox,
       'app-customGameLauncher': CustomGameLauncher,
       'app-customGameSessionManager': CustomGameSessionManager,
