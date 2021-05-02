@@ -20,29 +20,28 @@
     </div>
 
     <div class="mb-4">
-      <transition name="fade">
-        <div class="card d-flex shadow img-fluid">
+      
+        <div class="card d-flex shadow img-fluid" v-if="(!dataReady || !firebaseReady) && !error">
           
-          <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
+          <div class="card-body text-center">
             <h1 class="m-5">Loading</h1>
             <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
           </div>
+        </div>
 
-          <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
-            <button v-on:click="shuffleAll()">Regenerate</button>
-            <div>
-              <div v-for="(index) in numberOfCategories" v-bind:key="index">
-                <div v-html="categoryLabels[index-1]" class="categoryLabel"></div>
-                <div v-html="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]"></div>
+        <div class="mt-4">
+          <button v-on:click="shuffleAll()">Regenerate</button>
+          <div class="row generator-row">
+            <div v-for="(index) in numberOfCategories" v-bind:key="index" v-bind:class="customOptions.generatorRowLayout[index-1]">
+              <div class="my-4" style="white-space: pre-line">
+                <div v-html="categoryLabels[index-1]" class="category-label"></div>
+                <div v-html="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" class="category-body"></div>
                 <button v-on:click="shuffleOne(index)">Reroll</button>
               </div>
             </div>
-            
           </div>
-          
-
         </div>
-      </transition>
+      
     </div>
 
     <div
@@ -212,6 +211,37 @@ export default {
               console.log(item.values[2].formattedValue)
             }
 
+            if (item.values[1].formattedValue == 'generatorRowLayout'){
+               let rowLayout = this.customOptions.generatorRowLayout.split(',')
+
+               let bootstrapLayout = []
+
+              for (let j = 0; j < rowLayout.length; j++) {
+                let rowClass = 'generator-row-' + (j+1)
+                switch (rowLayout[j]) {
+                  case "2":
+                    bootstrapLayout.push('col-sm-6 generator-col ' + rowClass) 
+                    bootstrapLayout.push('col-sm-6 generator-col ' + rowClass)
+                    break;
+                  case "3":
+                    bootstrapLayout.push('col-sm-4 generator-col ' + rowClass) 
+                    bootstrapLayout.push('col-sm-4 generator-col ' + rowClass)
+                    bootstrapLayout.push('col-sm-4 generator-col ' + rowClass)
+                    break;
+                  case "4":
+                    bootstrapLayout.push('col-sm-3 generator-col ' + rowClass)
+                    bootstrapLayout.push('col-sm-3 generator-col ' + rowClass)
+                    bootstrapLayout.push('col-sm-3 generator-col ' + rowClass)
+                    bootstrapLayout.push('col-sm-3 generator-col ' + rowClass)
+                    break;
+                  default:
+                    bootstrapLayout.push('col-sm-12 generator-col ' + rowClass)
+                 }
+               }
+
+               this.customOptions.generatorRowLayout = bootstrapLayout
+            }
+
             // Handle extensions
             if (item.values[0].formattedValue == "extension") {
               this.tempExtensionData[item.values[1].formattedValue] =
@@ -241,7 +271,9 @@ export default {
 
                 if (item.values[0].formattedValue == 1){
                   for (var j = 3; j < item.values.length; j++) {
-                    this.categoryData[j-3].push(item.values[j].formattedValue)
+                    if (item.values[j].formattedValue){
+                      this.categoryData[j-3].push(item.values[j].formattedValue)
+                    }
                   }
                 }
               }
