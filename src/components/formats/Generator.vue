@@ -30,13 +30,17 @@
         </div>
 
         <div class="mt-4">
-          <button v-on:click="shuffleAll()">Regenerate</button>
+          <div class="regenerate-button my-4">
+            <button v-on:click="shuffleAll()" class="btn btn-dark">Regenerate</button>
+          </div>
           <div class="row generator-row">
             <div v-for="(index) in numberOfCategories" v-bind:key="index" v-bind:class="customOptions.generatorRowLayout[index-1]">
               <div class="my-4" style="white-space: pre-line">
-                <div v-html="categoryLabels[index-1]" class="category-label"></div>
-                <div v-html="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" class="category-body"></div>
-                <button v-on:click="shuffleOne(index)">Reroll</button>
+                <div class="mb-2">
+                  <span v-html="categoryLabels[index-1]" v-on:click="shuffleOne(index)" class="category-label px-2" style="cursor:pointer;"></span>
+                </div>
+                <div v-html="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" class="category-body mb-2"></div>
+                <button v-on:click="shuffleOne(index)" class="reroll-button btn btn-dark btn-sm" v-if="customOptions.rerollButton">Reroll</button>
               </div>
             </div>
           </div>
