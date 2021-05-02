@@ -6,6 +6,7 @@
           <app-playerTurnOrder :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :playerTurnOrderHeader="extensionData.playerTurnOrderHeader" :playerTurnOrderButtonLabel="extensionData.playerTurnOrderButtonLabel" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['playerTurnOrder']"></app-playerTurnOrder>
           <app-plusMinus :plusMinus="JSON.parse(extensionData.plusMinus)" :plusMinusTitle="extensionData.plusMinusTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['plusMinus']"></app-plusMinus>
           <app-editableList :editableList="extensionData.editableList.split(',')" :editableListTitle="extensionData.editableListTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['editableList']"></app-editableList>
+          <app-multiEditableLists :multiEditableLists="JSON.parse(extensionData.multiEditableLists)" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['multiEditableLists']"></app-multiEditableLists>
           <app-diceRoller :diceResults="extensionData.diceRoller.split(',')" :diceRollerTitle="extensionData.diceRollerTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['diceRoller']"></app-diceRoller>
           <app-standardDeck :standardDeck="JSON.parse(extensionData.standardDeck)" :standardDeckTitle="extensionData.standardDeckTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['standardDeck']"></app-standardDeck>
         </div>
@@ -17,6 +18,7 @@
 import PlayerTurnOrder from './PlayerTurnOrder'
 import PlusMinus from './PlusMinus.vue'
 import EditableList from './EditableList.vue'
+import MultiEditableLists from './MultiEditableLists.vue'
 import DiceRoller from './DiceRoller.vue'
 import StaticBox from './StaticBox.vue'
 import StandardDeck from './StandardDeck.vue'
@@ -26,6 +28,7 @@ export default {
   components: {
     'app-plusMinus': PlusMinus,
     'app-editableList': EditableList,
+    'app-multiEditableLists': MultiEditableLists,
     'app-diceRoller': DiceRoller,
     'app-staticBox': StaticBox,
     'app-playerTurnOrder': PlayerTurnOrder,
