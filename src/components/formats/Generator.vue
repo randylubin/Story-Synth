@@ -19,6 +19,29 @@
       </div>
     </div>
 
+    <div class="upper-text row" v-if="customOptions.upperText">
+      <div class="col-sm" style="white-space: pre-line" v-html="customOptions.upperText"></div>
+    </div>
+
+    <div class="row">
+        <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+          <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
+
+          <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
+            <div class="d-block text-left" style="white-space: pre-line" v-html="customOptions.modalOneText">
+              
+            </div>
+          </b-modal>
+
+          <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button>
+
+          <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
+            <div class="d-block text-left" style="white-space: pre-line" v-html="customOptions.modalTwoText">
+            </div>
+          </b-modal>
+        </div>
+      </div> 
+
     <div class="mb-4">
       
         <div class="card d-flex shadow img-fluid" v-if="(!dataReady || !firebaseReady) && !error">
@@ -29,7 +52,7 @@
           </div>
         </div>
 
-        <div class="mt-4">
+        <div class="mt-4 generator-main">
           <div class="regenerate-button my-4">
             <button v-on:click="shuffleAll()" class="btn btn-dark">Regenerate</button>
           </div>
@@ -44,6 +67,10 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="lower-text row mt-4" v-if="customOptions.lowerText">
+          <div class="col-sm" v-html="customOptions.lowerText"></div>
         </div>
       
     </div>
@@ -64,24 +91,7 @@
         ></app-extensionManager>
     </div>
 
-    <div class="row">
-        <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
-          <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
-
-          <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
-            <div class="d-block text-left" v-html="customOptions.modalOneText">
-              
-            </div>
-          </b-modal>
-
-          <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button>
-
-          <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
-            <div class="d-block text-left" v-html="customOptions.modalTwoText">
-            </div>
-          </b-modal>
-        </div>
-      </div> 
+    
 
   </div>
 </template>
@@ -316,7 +326,7 @@ export default {
           });
         }
 
-        if(this.firebaseReady && this.roomInfo.categoryData){this.shuffleAll();}
+        if(this.firebaseReady && this.categoryData){this.shuffleAll();}
 
       }).catch(error => {
         this.gSheet = [
