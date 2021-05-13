@@ -698,7 +698,7 @@ export default {
 
           // Transform Sheets API response into cleanData
           gRows.forEach((item, i) => {
-            if (i !== 0 && item.values[0].formattedValue) {
+            if (i !== 0 && item.values[0] && item.values[0].formattedValue) {
               // Handle options
               if (item.values[0].formattedValue == "option") {
                 this.customOptions[item.values[1].formattedValue] =
@@ -729,7 +729,7 @@ export default {
                   bodyText: item.values[2].formattedValue,
                 };
 
-                if (item.values[3].formattedValue) {
+                if (item.values[3] && item.values[3].formattedValue) {
                   rowInfo.cardBack = item.values[3].formattedValue
                 }
 
