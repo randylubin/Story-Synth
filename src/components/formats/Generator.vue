@@ -1,5 +1,5 @@
 <template>
-  <div class="generator game-room container" v-if="roomInfo">
+  <div class="generator game-room container" v-if="roomInfo" v-bind:class="['style-template-' + customOptions.styleTemplate]">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
 
@@ -24,23 +24,23 @@
     </div>
 
     <div class="row">
-        <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
-          <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
+      <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+        <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
 
-          <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
-            <div class="d-block text-left" style="white-space: pre-line" v-html="customOptions.modalOneText">
-              
-            </div>
-          </b-modal>
+        <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
+          <div class="d-block text-left" style="white-space: pre-line" v-html="customOptions.modalOneText">
+            
+          </div>
+        </b-modal>
 
-          <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button>
+        <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button>
 
-          <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
-            <div class="d-block text-left" style="white-space: pre-line" v-html="customOptions.modalTwoText">
-            </div>
-          </b-modal>
-        </div>
-      </div> 
+        <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
+          <div class="d-block text-left" style="white-space: pre-line" v-html="customOptions.modalTwoText">
+          </div>
+        </b-modal>
+      </div>
+    </div> 
 
     <div class="mb-4">
       
@@ -60,10 +60,46 @@
             <div v-for="(index) in numberOfCategories" v-bind:key="index" v-bind:class="customOptions.generatorRowLayout[index-1]">
               <div class="my-4" style="white-space: pre-line">
                 <div class="mb-2">
-                  <span v-html="categoryLabels[index-1]" v-on:click="shuffleOne(index)" class="category-label px-2" style="cursor:pointer;"></span>
+                  <span v-html="categoryLabels[index-1]" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="category-label px-2" style="cursor:pointer;"></span>
                 </div>
                 <div v-html="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" class="category-body mb-2"></div>
                 <button v-on:click="shuffleOne(index)" class="reroll-button btn btn-dark btn-sm" v-if="customOptions.rerollButton">Reroll</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="generator-summary mt-4" v-if="customOptions.showSummary">
+          <h1>Summary</h1>
+          <div class="regenerate-button my-4">
+            <button v-on:click="shuffleAll()" class="btn btn-dark">Regenerate</button>
+          </div>
+          <div class="row generator-row text-left">
+            <div v-for="(index) in numberOfCategories" v-bind:key="index" class="col-12">
+              <div class="" style="white-space: pre-line">
+                <span v-html="categoryLabels[index-1] + ':'" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="summary-category-label px-2 font-weight-bold" style="cursor:pointer;"></span>
+                <span v-html="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" class="category-body mb-2"></span>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="generator-full-lists mt-4" v-if="customOptions.showFullLists">
+          <h1>Full Lists</h1>
+          <div class="regenerate-button my-4">
+            <button v-on:click="shuffleAll()" class="btn btn-dark">Regenerate All</button>
+          </div>
+          <div class="row generator-row text-left">
+            <div v-for="(index) in numberOfCategories" v-bind:key="index" class="col-12 my-3">
+              <div>
+                <span v-html="categoryLabels[index-1]" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="summary-category-label font-weight-bold" style="cursor:pointer; white-space: pre-line;"></span>
+                <button v-on:click="shuffleOne(index)" class="reroll-button btn btn-dark btn-sm ml-2" v-if="customOptions.rerollButton">Reroll</button>
+              </div>
+              <div>
+                <div v-for="(option, optionIndex) in categoryData[index-1]" v-bind:key="option">
+                  <span v-html="option" v-on:click="selectOne(index, optionIndex)" v-bind:class="{'font-weight-bold': option == categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]] }" style="cursor:pointer;"></span>
+                </div>
               </div>
             </div>
           </div>
@@ -176,6 +212,16 @@ export default {
         currentGeneratorSelection: newGeneratorSelection,
       })
       
+    },
+    selectOne(index, optionIndex){
+      let newGeneratorSelection = this.roomInfo.currentGeneratorSelection;
+      
+      newGeneratorSelection[index-1] = optionIndex;
+
+      // sync the shuffled array
+      roomsCollection.doc(this.roomID).update({
+        currentGeneratorSelection: newGeneratorSelection,
+      })
     },
     syncExtension() {
       roomsCollection.doc(this.roomID).update({
@@ -350,6 +396,10 @@ export default {
 
 
 <style scoped>
+
+  .style-template-red {
+    color: red;
+  }
 
   .slot-machine{
 
