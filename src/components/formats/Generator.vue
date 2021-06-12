@@ -76,7 +76,7 @@
             </b-tab>
 
             <b-tab title="Summary">
-              <div class="row text-left">
+              <div class="row generator-summary text-left">
                 <div v-for="(index) in numberOfCategories" v-bind:key="index" class="col-12">
                   <div class="" style="white-space: pre-line">
                     <span v-html="categoryLabels[index-1] + ':'" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="summary-category-label px-2 font-weight-bold" style="cursor:pointer;"></span>
@@ -89,7 +89,7 @@
             </b-tab>
 
             <b-tab title="Full">
-              <div v-for="(index) in numberOfCategories" v-bind:key="index" class="col-12 my-3 text-left">
+              <div v-for="(index) in numberOfCategories" v-bind:key="index" class="generator-full col-12 my-3 text-left">
                 <div>
                   <span v-html="categoryLabels[index-1]" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="summary-category-label font-weight-bold" style="cursor:pointer; white-space: pre-line;"></span>
                   <button v-on:click="shuffleOne(index)" class="reroll-button btn btn-dark btn-sm ml-2" v-if="customOptions.rerollButton">Reroll</button>
