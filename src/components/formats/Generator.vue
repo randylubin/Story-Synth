@@ -56,53 +56,53 @@
           <div class="regenerate-button my-4">
             <button v-on:click="shuffleAll()" class="btn btn-dark">Regenerate</button>
           </div>
+          <div class="row generator-row">
+            <div v-for="(index) in numberOfCategories" v-bind:key="index" v-bind:class="customOptions.generatorRowLayout[index-1]">
+              <div class="my-4" style="white-space: pre-line">
+                <div class="mb-2">
+                  <span v-html="categoryLabels[index-1]" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="category-label px-2" style="cursor:pointer;"></span>
+                </div>
+                <div v-html="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" class="category-body mb-2"></div>
+                <button v-on:click="shuffleOne(index)" class="reroll-button btn btn-dark btn-sm" v-if="customOptions.rerollButton">Reroll</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <b-tabs pills dark content-class="mt-3" align="center">
+        <div class="generator-summary mt-4" v-if="customOptions.showSummary">
+          <h1>Summary</h1>
+          <div class="regenerate-button my-4">
+            <button v-on:click="shuffleAll()" class="btn btn-dark">Regenerate</button>
+          </div>
+          <div class="row generator-row text-left">
+            <div v-for="(index) in numberOfCategories" v-bind:key="index" class="col-12">
+              <div class="" style="white-space: pre-line">
+                <span v-html="categoryLabels[index-1] + ':'" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="summary-category-label px-2 font-weight-bold" style="cursor:pointer;"></span>
+                <span v-html="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" class="category-body mb-2"></span>
+                
+              </div>
+            </div>
+          </div>
+        </div>
 
-            <b-tab title="Grid" active>
-              <div class="row generator-row">
-                <div v-for="(index) in numberOfCategories" v-bind:key="index" v-bind:class="customOptions.generatorRowLayout[index-1]">
-                  <div class="my-4" style="white-space: pre-line">
-                    <div class="mb-2">
-                      <span v-html="categoryLabels[index-1]" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="category-label px-2" style="cursor:pointer;"></span>
-                    </div>
-                    <transition name="fade" mode="out-in">
-                      <div :key="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" v-html="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" class="category-body mb-2"></div>
-                    </transition>
-                    <button v-on:click="shuffleOne(index)" class="reroll-button btn btn-dark btn-sm" v-if="customOptions.rerollButton">Reroll</button>
-                  </div>
+        <div class="generator-full-lists mt-4" v-if="customOptions.showFullLists">
+          <h1>Full Lists</h1>
+          <div class="regenerate-button my-4">
+            <button v-on:click="shuffleAll()" class="btn btn-dark">Regenerate All</button>
+          </div>
+          <div class="row generator-row text-left">
+            <div v-for="(index) in numberOfCategories" v-bind:key="index" class="col-12 my-3">
+              <div>
+                <span v-html="categoryLabels[index-1]" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="summary-category-label font-weight-bold" style="cursor:pointer; white-space: pre-line;"></span>
+                <button v-on:click="shuffleOne(index)" class="reroll-button btn btn-dark btn-sm ml-2" v-if="customOptions.rerollButton">Reroll</button>
+              </div>
+              <div>
+                <div v-for="(option, optionIndex) in categoryData[index-1]" v-bind:key="option">
+                  <span v-html="option" v-on:click="selectOne(index, optionIndex)" v-bind:class="{'font-weight-bold': option == categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]] }" style="cursor:pointer;"></span>
                 </div>
               </div>
-            </b-tab>
-
-            <b-tab title="Summary">
-              <div class="row text-left">
-                <div v-for="(index) in numberOfCategories" v-bind:key="index" class="col-12">
-                  <div class="" style="white-space: pre-line">
-                    <span v-html="categoryLabels[index-1] + ':'" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="summary-category-label px-2 font-weight-bold" style="cursor:pointer;"></span>
-                    <transition name="fade" mode="out-in">
-                      <span :key="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" v-html="categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]]" class="category-body mb-2"></span>
-                    </transition>
-                  </div>
-                </div>
-              </div>
-            </b-tab>
-
-            <b-tab title="Full">
-              <div v-for="(index) in numberOfCategories" v-bind:key="index" class="col-12 my-3 text-left">
-                <div>
-                  <span v-html="categoryLabels[index-1]" v-on:click="shuffleOne(index)" v-if="!customOptions.hideLabels" class="summary-category-label font-weight-bold" style="cursor:pointer; white-space: pre-line;"></span>
-                  <button v-on:click="shuffleOne(index)" class="reroll-button btn btn-dark btn-sm ml-2" v-if="customOptions.rerollButton">Reroll</button>
-                </div>
-                <div>
-                  <div v-for="(option, optionIndex) in categoryData[index-1]" v-bind:key="option">
-                    <span v-html="option" v-on:click="selectOne(index, optionIndex)" v-bind:class="{'font-weight-bold': option == categoryData[index-1][roomInfo.currentGeneratorSelection[index-1]] }" style="cursor:pointer;"></span>
-                  </div>
-                </div>
-              </div>
-            </b-tab>
-          </b-tabs>
-          
+            </div>
+          </div>
         </div>
 
         <div class="lower-text row mt-4" v-if="customOptions.lowerText">
