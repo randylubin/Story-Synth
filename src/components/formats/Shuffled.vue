@@ -189,7 +189,7 @@
               <div class="mt-5 pt-5 mb-5">
                 <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
                 <div
-                  class="safety-card-tet"
+                  class="safety-card-text"
                   v-html="customOptions.safetyCardText"
                   v-if="customOptions.safetyCardText"
                 ></div>

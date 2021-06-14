@@ -23,7 +23,11 @@
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-outline-dark" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
+          <button class="btn btn-outline-dark" v-html="
+                  customOptions.safetyCardButton
+                    ? customOptions.safetyCardButton
+                    : 'Pause'
+                " v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
           <button class="btn btn-outline-dark" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
             <span v-if="roomInfo.currentCardIndex == 0">Start</span>
             <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
@@ -47,13 +51,18 @@
       <transition name="fade">
         <div class="card d-flex align-items-center shadow">
           <div class="card-title">
-            <h1 class="mt-5">Pause</h1>
+            <h1 v-if="!customOptions.safetyCardText">Pause</h1>
           </div>
-          <div class="card-body align-items-center d-flex justify-content-center">
+          <div class="card-body align-items-center d-flex justify-content-center" v-if="!customOptions.safetyCardText">
             <h4>
               Talk about the direction of story, or revise some content, or adjust the tone. Once everyone is on the same page, resume play.
             </h4>
           </div>
+          <div
+            class="safety-card-text"
+            v-html="customOptions.safetyCardText"
+            v-if="customOptions.safetyCardText"
+          ></div>
 
           <button class="btn btn-outline-dark mb-5" style="width:100px;" type="button" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Continue</button>
         </div>
@@ -100,16 +109,16 @@
                     <div class="card-text text-left" v-if="clickedCard == index || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered" style="white-space: pre-line">
 
                       <h5>{{row.characterQuestion}}</h5>
-                      <p>
+                      <div v-html="row.characterDetail">
                         {{row.characterDetail}}
-                      </p>
+                      </div>
                       <h5 class="mt-4">{{row.keyQuestion}}</h5>
-                      <p>
+                      <div v-html="row.keyDetails">
                         {{row.keyDetails}}
-                      </p>
+                      </div>
                     </div>
 
-                    <svg v-if="clickedCard !== index && row.characterQuestion" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <svg v-if="clickedCard !== index && (row.characterQuestion || (row.subtitle && row.characterDetail))" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                       <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                       <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                     </svg>
@@ -170,7 +179,7 @@ export default {
       orderedCards: [],
       unorderedCards: [],
       clickedCard: -1,
-      instructionCardCount: 15,
+      instructionCardCount: 0,
       gameRoundCount: 6,
       customOptions: {},
       error: false,
