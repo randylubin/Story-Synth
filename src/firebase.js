@@ -1,10 +1,10 @@
 import { initializeApp } from 'firebase/app';
 
 const app = initializeApp({
-  apiKey: "AIzaSyDmcF7_1rUwKCFq0pO1Z66GnMiBWPeq4ls", // TODO: Add your apiKey here
+  apiKey: "", // TODO: Add your apiKey here
   authDomain: "",
-  databaseURL: "https://story-synth.firebaseio.com/", // TODO: Add your databaseURL here
-  projectId: "story-synth", // TODO: Add your projectId here
+  databaseURL: "", // TODO: Add your databaseURL here
+  projectId: "", // TODO: Add your projectId here
   storageBucket: "",
   messagingSenderId: ""
 });
