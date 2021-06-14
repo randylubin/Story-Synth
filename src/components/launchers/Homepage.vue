@@ -17,7 +17,7 @@
                 
                 <p>Story Synth games have a unique session-creation URL, which you can share with others. When you launch a session, everyone in that game will see the same prompts at the same time.</p>
                   
-                <p>There are a handful of different formats that you can use for your game and plenty of customization options and extensions you can include. To learn more, watch this <a href="https://youtu.be/TLQk3zyVyVI">Video Tour</a>, or check out the <a href="https://docs.storysynth.org/guide">About Page</a> or the <a href="https://docs.storysynth.org/guide/formats.html">Formats Page</a>.</p>
+                <p>There are a handful of different formats that you can use for your game and plenty of customization options and extensions you can include. To learn more, watch this <a href="https://www.youtube.com/watch?v=FqfBcB4iZEI">Video Tour</a>, or check out the <a href="https://docs.storysynth.org/guide">About Page</a> or the <a href="https://docs.storysynth.org/guide/formats.html">Formats Page</a>.</p>
               </div>
             </div>
           </div>
