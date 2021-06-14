@@ -9,7 +9,7 @@
 
               <div v-if="editableList != []">
                 <div v-for="(item, index) in editableList" v-bind:key="index" class="">
-                  <div class="row" v-if="item">
+                  <div class="row editable-list-row" v-if="item">
                     <div class="col-sm justify-content-between d-flex my-1">
                       <span style="min-width:1em"></span>
                       <div>{{item}}</div>
