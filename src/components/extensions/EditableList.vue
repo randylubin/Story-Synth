@@ -9,7 +9,7 @@
 
               <div v-if="editableList != []">
                 <div v-for="(item, index) in editableList" v-bind:key="index" class="">
-                  <div class="row editable-list-row" v-if="item">
+                  <div class="row editable-list-row" v-if="item && (item != 'EMPTY')">
                     <div class="col-sm justify-content-between d-flex my-1">
                       <span style="min-width:1em"></span>
                       <div>{{item}}</div>
@@ -57,7 +57,7 @@ export default {
     deleteItem(index){
       
       var tempNewList = this.editableList
-      tempNewList.length == 0 ? tempNewList = [] : tempNewList.splice(index, 1)
+      tempNewList.length == 0 ? tempNewList = ['EMPTY'] : tempNewList.splice(index, 1)
 
       this.$emit('process-extension-update', ['editableList',tempNewList.toString()])
     }
