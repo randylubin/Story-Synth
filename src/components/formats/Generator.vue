@@ -566,6 +566,12 @@ export default {
             }
           }
 
+          // apply custom style to body
+          let styleTemplate =
+            "style-template-" + this.customOptions.styleTemplate;
+          let body = document.getElementById("app"); // document.body;
+          body.classList.add(styleTemplate);
+
           // For the published version, set gSheet equal to your converted JSON object
           this.gSheet = cleanData;
 
@@ -625,13 +631,26 @@ export default {
 .generator-cell-body {
 }
 
+.style-template-light {
+  color: rgb(0, 0, 0) !important;
+  background-color: rgb(255, 255, 255) !important;
+}
+
 .style-template-dark {
   color: white;
   background-color: black;
 }
 
-.style-template-red {
-  color: red;
+.style-template-cyberpunk {
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 0, 217);
+  font-family: "Courier New", Courier, monospace;
+}
+
+.style-template-fantasy {
+  color: rgb(40, 28, 2);
+  background-color: rgb(244, 239, 229);
+  font-family: Garamond, serif;
 }
 
 .slot-machine {
