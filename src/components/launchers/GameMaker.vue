@@ -58,6 +58,11 @@
           <form>
             <!-- Remove for published version. Comment out the format selection and gSheetID field. Make sure to hard code the gSheetID in the game's .vue file. -->
             <div v-if="!routeGSheetID">
+              <div class="row">
+                <div class="col">
+                  <p>Get started by pasting your Google Sheet link below. Check out the <a href="https://docs.storysynth.org/guide/#overview">Story Synth Guide</a> to learn more.</p>
+                </div>
+              </div>
               <div class="row mb-4">
                 <div class="col-sm">
                   Game Format

@@ -610,27 +610,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
-
-<style scoped>
-.generator-main {
-}
-.generator-row {
-}
-.generator-row-full {
-}
-.generator-row-half {
-}
-.generator-row-one-third {
-}
-.generator-row-one-quarter {
-}
-.generator-cell {
-}
-.generator-cell-label {
-}
-.generator-cell-body {
-}
-
+<style>
 .style-template-light {
   color: rgb(0, 0, 0) !important;
   background-color: rgb(255, 255, 255) !important;
@@ -651,6 +631,28 @@ export default {
   color: rgb(40, 28, 2);
   background-color: rgb(244, 239, 229);
   font-family: Garamond, serif;
+}
+</style>
+
+
+<style scoped>
+.generator-main {
+}
+.generator-row {
+}
+.generator-row-full {
+}
+.generator-row-half {
+}
+.generator-row-one-third {
+}
+.generator-row-one-quarter {
+}
+.generator-cell {
+}
+.generator-cell-label {
+}
+.generator-cell-body {
 }
 
 .slot-machine {
