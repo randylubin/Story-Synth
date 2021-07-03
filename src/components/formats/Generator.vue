@@ -640,17 +640,20 @@ export default {
 }
 .generator-row {
 }
-.generator-row-full {
+.generator-row-full .generator-cell-body {
+  font-size: 2em;
 }
 .generator-row-half {
 }
 .generator-row-one-third {
 }
-.generator-row-one-quarter {
+.generator-row-one-quarter .generator-cell-body {
+  font-size: 0.8em;
 }
 .generator-cell {
 }
 .generator-cell-label {
+  font-size: 0.8em;
 }
 .generator-cell-body {
 }
