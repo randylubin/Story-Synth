@@ -102,46 +102,56 @@
 
         <b-tabs pills dark content-class="mt-3" align="center">
           <b-tab title="Grid" active>
+            
             <div class="row generator-row">
-              <div
+              <button
                 v-for="index in numberOfCategories"
                 v-bind:key="index"
                 v-bind:class="customOptions.generatorRowLayout[index - 1]"
+                v-on:click="shuffleOne(index)"
+                tabindex="0"
               >
-                <div class="my-4" style="white-space: pre-line">
-                  <div class="mb-2">
-                    <span
-                      v-html="categoryLabels[index - 1]"
-                      v-on:click="shuffleOne(index)"
-                      v-if="!customOptions.hideLabels"
-                      class="generator-cell-label px-2"
-                      style="cursor: pointer"
-                    ></span>
-                  </div>
-                  <transition name="fade" mode="out-in">
-                    <div
-                      :key="
-                        categoryData[index - 1][
-                          roomInfo.currentGeneratorSelection[index - 1]
-                        ]
-                      "
-                      v-html="
-                        categoryData[index - 1][
-                          roomInfo.currentGeneratorSelection[index - 1]
-                        ]
-                      "
-                      class="generator-cell-body mb-2"
-                    ></div>
-                  </transition>
-                  <button
-                    v-on:click="shuffleOne(index)"
-                    class="generator-cell-reroll-button btn btn-dark btn-sm"
-                    v-if="customOptions.rerollButton"
+                <transition name="reroll" mode="out-in">
+                  <div 
+                    class="mt-4 mb-3 generator-cell-contents"
+                    :key="
+                      categoryData[index - 1][
+                        roomInfo.currentGeneratorSelection[index - 1]
+                      ]
+                    "
                   >
-                    Reroll
-                  </button>
-                </div>
-              </div>
+                    <div class="mb-2">
+                      <div
+                        v-html="categoryLabels[index - 1]"
+                        v-if="!customOptions.hideLabels"
+                        class="generator-cell-label px-2"
+                        style="cursor: pointer"
+                      ></div>
+                    </div>
+                    
+                      <div
+                        :key="
+                          categoryData[index - 1][
+                            roomInfo.currentGeneratorSelection[index - 1]
+                          ]
+                        "
+                        v-html="
+                          categoryData[index - 1][
+                            roomInfo.currentGeneratorSelection[index - 1]
+                          ]
+                        "
+                        class="generator-cell-body mb-2"
+                      ></div>
+                    <div
+                    
+                      class="generator-cell-reroll-button"
+                      v-if="customOptions.rerollButton"
+                    >
+                      <span>Reroll</span> <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
+                    </div>
+                  </div>
+                </transition>
+              </button>
             </div>
           </b-tab>
 
@@ -160,7 +170,7 @@
                     class="summary-category-label px-2 font-weight-bold"
                     style="cursor: pointer"
                   ></span>
-                  <transition name="fade" mode="out-in">
+                  <transition name="reroll" mode="out-in">
                     <span
                       :key="
                         categoryData[index - 1][
@@ -187,7 +197,7 @@
                 v-bind:key="index"
                 v-bind:class="customOptions.generatorRowLayout[index - 1]"
               >
-                <div class="my-4" style="white-space: pre-line">
+                <div class="my-4 generator-cell-contents">
                   <div class="mb-2">
                     <span
                       v-html="categoryLabels[index - 1]"
@@ -201,7 +211,7 @@
                     v-for="(option, optionIndex) in categoryData[index - 1]"
                     v-bind:key="option"
                   >
-                    <transition name="fade" mode="out-in">
+                    <transition name="reroll" mode="out-in">
                       <span
                         v-html="option"
                         v-on:click="selectOne(index, optionIndex)"
@@ -227,6 +237,7 @@
                     v-if="customOptions.rerollButton"
                   >
                     Reroll
+                    <b-icon class="bi bi-arrow-clockwise"></b-icon>
                   </button>
                 </div>
               </div>
@@ -457,49 +468,49 @@ export default {
                   switch (rowLayout[j]) {
                     case "2":
                       bootstrapLayout.push(
-                        "col-sm-6 generator-row-one-half generator-cell " +
+                        "col-sm-6 generator-cell-one-half generator-cell " +
                           rowClass
                       );
                       bootstrapLayout.push(
-                        "col-sm-6 generator-row-one-half generator-cell " +
+                        "col-sm-6 generator-cell-one-half generator-cell " +
                           rowClass
                       );
                       break;
                     case "3":
                       bootstrapLayout.push(
-                        "col-sm-4 generator-row-one-third generator-cell " +
+                        "col-sm-4 generator-cell-one-third generator-cell " +
                           rowClass
                       );
                       bootstrapLayout.push(
-                        "col-sm-4 generator-row-one-third generator-cell " +
+                        "col-sm-4 generator-cell-one-third generator-cell " +
                           rowClass
                       );
                       bootstrapLayout.push(
-                        "col-sm-4 generator-row-one-third generator-cell " +
+                        "col-sm-4 generator-cell-one-third generator-cell " +
                           rowClass
                       );
                       break;
                     case "4":
                       bootstrapLayout.push(
-                        "col-sm-3 generator-row-one-quarter generator-cell " +
+                        "col-sm-3 generator-cell-one-quarter generator-cell " +
                           rowClass
                       );
                       bootstrapLayout.push(
-                        "col-sm-3 generator-row-one-quarter generator-cell " +
+                        "col-sm-3 generator-cell-one-quarter generator-cell " +
                           rowClass
                       );
                       bootstrapLayout.push(
-                        "col-sm-3 generator-row-one-quarter generator-cell " +
+                        "col-sm-3 generator-cell-one-quarter generator-cell " +
                           rowClass
                       );
                       bootstrapLayout.push(
-                        "col-sm-3 generator-row-one-quarter generator-cell " +
+                        "col-sm-3 generator-cell-one-quarter generator-cell " +
                           rowClass
                       );
                       break;
                     default:
                       bootstrapLayout.push(
-                        "col-sm-12 generator-row-full generator-cell " +
+                        "col-sm-12 generator-cell-full generator-cell " +
                           rowClass
                       );
                   }
@@ -610,7 +621,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
-<style>
+<style lang='scss'>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
 .style-template-light {
   color: rgb(0, 0, 0) !important;
   background-color: rgb(255, 255, 255) !important;
@@ -622,9 +635,22 @@ export default {
 }
 
 .style-template-cyberpunk {
-  color: rgb(0, 0, 0);
-  background-color: rgb(255, 0, 217);
-  font-family: "Courier New", Courier, monospace;
+  color: rgb(0, 255, 123);
+  text-shadow: 0px 0px 8px rgba(0, 255, 123, 0.5);
+  background-color: rgb(23, 0, 19);
+
+  // font-family: "Courier New", Courier, monospace;
+  font-family: 'Share Tech Mono', monospace;
+
+  .generator-cell-label {
+    background: rgba(0, 255, 123, 0.8);
+    color: black;
+  }
+
+  .generator-cell:hover {
+    background-color: rgba(0, 255, 123, 0.3);
+    box-shadow: 0px 0px 8px rgba(0, 255, 123, 0.25);
+  }
 }
 
 .style-template-fantasy {
@@ -635,26 +661,93 @@ export default {
 </style>
 
 
-<style scoped>
+<style scoped lang='scss'>
 .generator-main {
+  font-weight: bold;  
+  border-radius: 5px;
 }
-.generator-row {
-}
-.generator-row-full .generator-cell-body {
-  font-size: 2em;
-}
-.generator-row-half {
-}
-.generator-row-one-third {
-}
-.generator-row-one-quarter .generator-cell-body {
-  font-size: 0.8em;
-}
+
+// CELL
 .generator-cell {
+  display: inline-flex; /* keep the inline nature of buttons */
+  align-items: stretch; /* this is default */  
+  font-family: inherit;
+  font-size: 100%;
+  border: 0;
+  background: inherit;
+  color: inherit;
+  transition: background-color 0.2s;
+  transition: all 0.3s;  
+  white-space: nowrap;
 }
+
+.generator-cell-contents {
+  width: 100%;
+  white-space: pre-line;
+  display: flex;
+  flex-direction: column;
+}
+
+// CELL LABEL
 .generator-cell-label {
   font-size: 0.8em;
 }
+
+// CELL BODY
+.generator-cell-body {
+  flex-grow: 1;
+  transition: all 0.2s;
+}
+
+.generator-cell-full {
+  .generator-cell-body {
+    font-size: 2em; 
+  }
+}
+.generator-cell-one-half {
+  .generator-cell-body {
+    font-size: 1.1em;
+  }
+}
+.generator-cell-one-third {
+  .generator-cell-body {
+    font-size: 1.1em;
+  }  
+}
+.generator-cell-one-quarter {  
+  .generator-cell-body {
+    font-size: 0.9em;
+  }
+}
+
+
+// CELL REROLL BUTTON
+.generator-cell-reroll-button {
+  margin-top: 8px;
+  text-transform: uppercase;
+  font-size: 0.8em;
+}
+.generator-cell-reroll-button   {
+  opacity: 0;
+}
+.generator-cell-reroll-button span {
+  transition: opacity 1s;
+  transition-delay: 1s;
+}
+
+.generator-cell:hover {
+  cursor: pointer;
+  transform: scale(1.025);
+
+  .generator-cell-reroll-button {
+    opacity: 1;
+  }
+}
+
+
+
+
+
 .generator-cell-body {
 }
 
@@ -676,6 +769,44 @@ export default {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
 }
+
+// Reroll transition
+.reroll-enter-active,
+.reroll-leave-active {
+  transition: all .25s;
+  
+  .generator-cell-reroll-icon {
+    opacity: 1;
+    transition: opacity 0.1s;
+  } 
+  .generator-cell-reroll-button {
+    opacity: 1;
+  } 
+  .generator-cell-reroll-button span {
+    display: none;
+  }  
+
+}
+.reroll-enter, .reroll-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  transform: scale(1.05);
+
+  .generator-cell-body {
+    transition-delay: 0.25s;
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  // .generator-cell-reroll-button span {
+  //   display: none;
+  //   opacity: 0;
+  // }
+  .generator-cell-reroll-icon {
+    transition: transform 0.25s;
+    opacity: 1;
+    transform: rotate(360deg)
+  }
+}
+
 .x-card-text {
   font-size: 0.5em;
   text-decoration: underline;

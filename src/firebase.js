@@ -1,12 +1,13 @@
 import { initializeApp } from 'firebase/app';
 
 const app = initializeApp({
-  apiKey: "", // TODO: Add your apiKey here
-  authDomain: "",
-  databaseURL: "", // TODO: Add your databaseURL here
-  projectId: "", // TODO: Add your projectId here
-  storageBucket: "",
-  messagingSenderId: ""
+  apiKey: "AIzaSyA4SfYWfVnN5yUoFokGcMOAUvFGXXOWcgI",
+  authDomain: "storysynth-raph.firebaseapp.com",
+  databaseURL: "https://storysynth-raph-default-rtdb.firebaseio.com",
+  projectId: "storysynth-raph",
+  storageBucket: "storysynth-raph.appspot.com",
+  messagingSenderId: "705821570895",
+  appId: "1:705821570895:web:f26b5a2a24baf3e172773a"
 });
 
 export const db = app.firestore();
