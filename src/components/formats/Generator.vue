@@ -392,6 +392,14 @@ export default {
         Math.random() * this.categoryData[index - 1].length
       );
 
+      if (newGeneratorSelection[index - 1] == newValueIndex){
+        newGeneratorSelection[index - 1] = ''
+        roomsCollection.doc(this.roomID).update({
+          currentGeneratorSelection: newGeneratorSelection,
+        });
+        
+      }      
+
       newGeneratorSelection[index - 1] = newValueIndex;
 
       // sync the shuffled array
@@ -636,15 +644,20 @@ export default {
 
 .style-template-cyberpunk {
   color: rgb(0, 255, 123);
-  text-shadow: 0px 0px 8px rgba(0, 255, 123, 0.5);
-  background-color: rgb(23, 0, 19);
+  text-shadow: 0px 0px 8px rgba(0, 255, 123, 0.9);
+  background: linear-gradient(#170000, #000321);
 
   // font-family: "Courier New", Courier, monospace;
   font-family: 'Share Tech Mono', monospace;
 
   .generator-cell-label {
     background: rgba(0, 255, 123, 0.8);
+    box-shadow: 0px 0px 15px rgba(0, 255, 123, 0.3);
     color: black;
+  }
+
+  .generator-cell-body {
+      text-shadow: 0px 0px 8px rgba(0, 255, 123, 0.9);
   }
 
   .generator-cell:hover {
@@ -681,11 +694,32 @@ export default {
   white-space: nowrap;
 }
 
+
+.generator-cell:hover {
+  cursor: pointer;
+
+  .generator-cell-contents {
+    transform: scale(1.04);
+  }
+
+  .generator-cell-reroll-button {
+    opacity: 0.5;
+  }
+}
+
+.generator-cell:focus {
+  outline: 1px solid rgba(255, 255, 255, 0.25);
+  .generator-cell-reroll-button {
+    opacity: 0.5;
+  }  
+}
+
 .generator-cell-contents {
   width: 100%;
   white-space: pre-line;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s;  
 }
 
 // CELL LABEL
@@ -726,30 +760,11 @@ export default {
   margin-top: 8px;
   text-transform: uppercase;
   font-size: 0.8em;
-}
-.generator-cell-reroll-button   {
+  transition: opacity 0.25s;
   opacity: 0;
 }
-.generator-cell-reroll-button span {
-  transition: opacity 1s;
-  transition-delay: 1s;
-}
 
-.generator-cell:hover {
-  cursor: pointer;
-  transform: scale(1.025);
-
-  .generator-cell-reroll-button {
-    opacity: 1;
-  }
-}
-
-
-
-
-
-.generator-cell-body {
-}
+////////////////////////////////
 
 .slot-machine {
   margin: auto;
@@ -773,36 +788,20 @@ export default {
 // Reroll transition
 .reroll-enter-active,
 .reroll-leave-active {
-  transition: all .25s;
-  
-  .generator-cell-reroll-icon {
-    opacity: 1;
-    transition: opacity 0.1s;
-  } 
-  .generator-cell-reroll-button {
-    opacity: 1;
-  } 
-  .generator-cell-reroll-button span {
-    display: none;
-  }  
+  transition: all .5s;
 
 }
 .reroll-enter, .reroll-leave-to /* .fade-leave-active below version 2.1.8 */ {
   transform: scale(1.05);
 
   .generator-cell-body {
-    transition-delay: 0.25s;
+    // transition-delay: 0.25s;
     opacity: 0;
     transform: scale(0.9);
   }
-
-  // .generator-cell-reroll-button span {
-  //   display: none;
-  //   opacity: 0;
-  // }
+  
   .generator-cell-reroll-icon {
-    transition: transform 0.25s;
-    opacity: 1;
+    transition: transform 0.5s;
     transform: rotate(360deg)
   }
 }
