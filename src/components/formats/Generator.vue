@@ -95,9 +95,16 @@
 
       <div class="mt-4 generator-main">
         <div class="regenerate-button my-4">
-          <button v-on:click="shuffleAll()" class="btn btn-dark">
-            Regenerate
-          </button>
+          <b-form inline class="justify-content-center">
+            <b-button v-on:click="shuffleAll()" class="btn btn-dark">
+              <span>Randomize All</span> <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
+            </b-button>
+            <b-form-select v-model="selected" class="ml-3">
+              <b-form-select-option :value="null">Please select an option</b-form-select-option>
+              <b-form-select-option value="a">Option A</b-form-select-option>
+              <b-form-select-option value="b" disabled>Option B (disabled)</b-form-select-option>
+            </b-form-select>
+          </b-form>
         </div>
 
         <b-tabs pills dark content-class="mt-3" align="center">
@@ -231,14 +238,13 @@
                       ></span>
                     </transition>
                   </div>
-                  <button
+                  <div
                     v-on:click="shuffleOne(index)"
                     class="reroll-button btn btn-dark btn-sm mt-2"
                     v-if="customOptions.rerollButton"
                   >
-                    Reroll
-                    <b-icon class="bi bi-arrow-clockwise"></b-icon>
-                  </button>
+                    <span>Reroll</span> <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
+                  </div>
                 </div>
               </div>
             </div>
@@ -631,6 +637,9 @@ export default {
 
 <style lang='scss'>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+:root {
+  --dark: #1e90ff;
+}
 
 .style-template-light {
   color: rgb(0, 0, 0) !important;
@@ -643,26 +652,41 @@ export default {
 }
 
 .style-template-cyberpunk {
-  color: rgb(0, 255, 123);
-  text-shadow: 0px 0px 8px rgba(0, 255, 123, 0.9);
+  $base-color: rgb(0, 255, 123);
+  // $base-color: rgb(255, 0, 255);
+
+  // color: rgb(0, 255, 123);
+  color: $base-color;
+  text-shadow: 0px 0px 8px rgba($base-color, 0.9);
   background: linear-gradient(#170000, #000321);
 
   // font-family: "Courier New", Courier, monospace;
   font-family: 'Share Tech Mono', monospace;
 
+  .btn {
+    background: $base-color !important;
+    color: black !important;
+  }
+  .btn:hover {
+    background: rgba($base-color, 0.8) !important;
+    color: black !important;
+  }  
+
   .generator-cell-label {
-    background: rgba(0, 255, 123, 0.8);
-    box-shadow: 0px 0px 15px rgba(0, 255, 123, 0.3);
-    color: black;
+    background: $base-color !important;
+    color: black !important;
+    text-transform: uppercase;
+    padding-top: 4px !important;
+    box-shadow: 0px 0px 15px rgba($base-color, 0.3);
   }
 
   .generator-cell-body {
-      text-shadow: 0px 0px 8px rgba(0, 255, 123, 0.9);
+      text-shadow: 0px 0px 8px rgba($base-color, 0.9);
   }
 
   .generator-cell:hover {
-    background-color: rgba(0, 255, 123, 0.3);
-    box-shadow: 0px 0px 8px rgba(0, 255, 123, 0.25);
+    background-color: rgba($base-color, 0.3);
+    box-shadow: 0px 0px 8px rgba($base-color, 0.25);
   }
 }
 
@@ -724,13 +748,20 @@ export default {
 
 // CELL LABEL
 .generator-cell-label {
+  background: var(--dark);
+  padding-top: 2px;
+  padding-bottom: 2px;
+  color: white;  
+  transition: all 0.2s;
   font-size: 0.8em;
+  font-weight: bold;
 }
 
 // CELL BODY
 .generator-cell-body {
   flex-grow: 1;
   transition: all 0.2s;
+  font-weight: 500;
 }
 
 .generator-cell-full {
@@ -741,16 +772,19 @@ export default {
 .generator-cell-one-half {
   .generator-cell-body {
     font-size: 1.1em;
+    font-weight: 600;
   }
 }
 .generator-cell-one-third {
   .generator-cell-body {
     font-size: 1.1em;
+    font-weight: 600;
   }  
 }
 .generator-cell-one-quarter {  
   .generator-cell-body {
     font-size: 0.9em;
+    font-weight: 600;
   }
 }
 
@@ -792,7 +826,10 @@ export default {
 
 }
 .reroll-enter, .reroll-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  transform: scale(1.05);
+
+  .generator-cell-label {
+    transform: scale(1.025);
+  }
 
   .generator-cell-body {
     // transition-delay: 0.25s;
