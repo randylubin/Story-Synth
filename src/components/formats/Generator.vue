@@ -99,86 +99,44 @@
             <b-button v-on:click="shuffleAll()" class="btn btn-dark">
               <span>Randomize All</span> <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
             </b-button>
-            <b-form-select v-model="selected" class="ml-3">
-              <b-form-select-option :value="null">Please select an option</b-form-select-option>
-              <b-form-select-option value="a">Option A</b-form-select-option>
-              <b-form-select-option value="b" disabled>Option B (disabled)</b-form-select-option>
+            <b-form-select v-model="generatorView" class="ml-3">
+              <b-form-select-option value="Grid View">Grid View</b-form-select-option>
+              <b-form-select-option value="Summary View">Summary View</b-form-select-option>
+              <b-form-select-option value="Full View">Full View</b-form-select-option>
             </b-form-select>
           </b-form>
         </div>
 
-        <b-tabs pills dark content-class="mt-3" align="center">
-          <b-tab title="Grid" active>
-            
-            <div class="row generator-row">
-              <button
-                v-for="index in numberOfCategories"
-                v-bind:key="index"
-                v-bind:class="customOptions.generatorRowLayout[index - 1]"
-                v-on:click="shuffleOne(index)"
-                tabindex="0"
-              >
-                <transition name="reroll" mode="out-in">
-                  <div 
-                    class="mt-4 mb-3 generator-cell-contents"
-                    :key="
-                      categoryData[index - 1][
-                        roomInfo.currentGeneratorSelection[index - 1]
-                      ]
-                    "
-                  >
-                    <div class="mb-2">
-                      <div
-                        v-html="categoryLabels[index - 1]"
-                        v-if="!customOptions.hideLabels"
-                        class="generator-cell-label px-2"
-                        style="cursor: pointer"
-                      ></div>
-                    </div>
-                    
-                      <div
-                        :key="
-                          categoryData[index - 1][
-                            roomInfo.currentGeneratorSelection[index - 1]
-                          ]
-                        "
-                        v-html="
-                          categoryData[index - 1][
-                            roomInfo.currentGeneratorSelection[index - 1]
-                          ]
-                        "
-                        class="generator-cell-body mb-2"
-                      ></div>
+        
+        <div title="Grid" v-if="generatorView == 'Grid View'">
+          
+          <div class="row generator-row">
+            <button
+              v-for="index in numberOfCategories"
+              v-bind:key="index"
+              v-bind:class="customOptions.generatorRowLayout[index - 1]"
+              v-on:click="shuffleOne(index)"
+              tabindex="0"
+            >
+              <transition name="reroll" mode="out-in">
+                <div 
+                  class="mt-4 mb-3 generator-cell-contents"
+                  :key="
+                    categoryData[index - 1][
+                      roomInfo.currentGeneratorSelection[index - 1]
+                    ]
+                  "
+                >
+                  <div class="mb-2">
                     <div
-                    
-                      class="generator-cell-reroll-button"
-                      v-if="customOptions.rerollButton"
-                    >
-                      <span>Reroll</span> <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
-                    </div>
+                      v-html="categoryLabels[index - 1]"
+                      v-if="!customOptions.hideLabels"
+                      class="generator-cell-label px-2"
+                      style="cursor: pointer"
+                    ></div>
                   </div>
-                </transition>
-              </button>
-            </div>
-          </b-tab>
-
-          <b-tab title="Summary">
-            <div class="row generator-summary text-left">
-              <div
-                v-for="index in numberOfCategories"
-                v-bind:key="index"
-                class="col-12"
-              >
-                <div class="" style="white-space: pre-line">
-                  <span
-                    v-html="categoryLabels[index - 1] + ':'"
-                    v-on:click="shuffleOne(index)"
-                    v-if="!customOptions.hideLabels"
-                    class="summary-category-label px-2 font-weight-bold"
-                    style="cursor: pointer"
-                  ></span>
-                  <transition name="reroll" mode="out-in">
-                    <span
+                  
+                    <div
                       :key="
                         categoryData[index - 1][
                           roomInfo.currentGeneratorSelection[index - 1]
@@ -189,110 +147,109 @@
                           roomInfo.currentGeneratorSelection[index - 1]
                         ]
                       "
-                      class="summary-category-body mb-2"
-                    ></span>
-                  </transition>
-                </div>
-              </div>
-            </div>
-          </b-tab>
-
-          <b-tab title="Full">
-            <div class="row generator-row generator-full">
-              <div
-                v-for="index in numberOfCategories"
-                v-bind:key="index"
-                v-bind:class="customOptions.generatorRowLayout[index - 1]"
-              >
-                <div class="my-4 generator-cell-contents">
-                  <div class="mb-2">
-                    <span
-                      v-html="categoryLabels[index - 1]"
-                      v-on:click="shuffleOne(index)"
-                      v-if="!customOptions.hideLabels"
-                      class="generator-cell-label px-2"
-                      style="cursor: pointer"
-                    ></span>
-                  </div>
+                      class="generator-cell-body mb-2"
+                    ></div>
                   <div
-                    v-for="(option, optionIndex) in categoryData[index - 1]"
-                    v-bind:key="option"
-                  >
-                    <transition name="reroll" mode="out-in">
-                      <span
-                        v-html="option"
-                        v-on:click="selectOne(index, optionIndex)"
-                        v-bind:class="{
-                          'font-weight-bold':
-                            option ==
-                            categoryData[index - 1][
-                              roomInfo.currentGeneratorSelection[index - 1]
-                            ],
-                        }"
-                        :key="
-                          categoryData[index - 1][
-                            roomInfo.currentGeneratorSelection[index - 1]
-                          ]
-                        "
-                        style="cursor: pointer"
-                      ></span>
-                    </transition>
-                  </div>
-                  <div
-                    v-on:click="shuffleOne(index)"
-                    class="reroll-button btn btn-dark btn-sm mt-2"
+                  
+                    class="generator-cell-reroll-button"
                     v-if="customOptions.rerollButton"
                   >
                     <span>Reroll</span> <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
                   </div>
                 </div>
-              </div>
-            </div>
-            <!-- LIST FORM
+              </transition>
+            </button>
+          </div>
+        </div>
+
+        <div title="Summary" v-if="generatorView == 'Summary View'">
+          <div class="row generator-summary text-left">
             <div
               v-for="index in numberOfCategories"
               v-bind:key="index"
-              class="generator-full col-12 my-3 text-left"
+              class="col-12"
             >
-              <div>
+              <div v-on:click="shuffleOne(index)" class="" style="white-space: pre-line; cursor: pointer">
                 <span
-                  v-html="categoryLabels[index - 1]"
-                  v-on:click="shuffleOne(index)"
+                  v-html="categoryLabels[index - 1] + ':'"
                   v-if="!customOptions.hideLabels"
-                  class="summary-category-label font-weight-bold"
-                  style="cursor: pointer; white-space: pre-line"
+                  class="summary-category-label px-2 font-weight-bold"
                 ></span>
-                <button
-                  v-on:click="shuffleOne(index)"
-                  class="reroll-button btn btn-dark btn-sm ml-2"
-                  v-if="customOptions.rerollButton"
-                >
-                  Reroll
-                </button>
+                <transition name="reroll" mode="out-in">
+                  <span
+                    :key="
+                      categoryData[index - 1][
+                        roomInfo.currentGeneratorSelection[index - 1]
+                      ]
+                    "
+                    v-html="
+                      categoryData[index - 1][
+                        roomInfo.currentGeneratorSelection[index - 1]
+                      ]
+                    "
+                    class="summary-category-body mb-2"
+                  ></span>
+                </transition>
+                <b-icon v-on:click="shuffleOne(index)" class='ml-2 generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
               </div>
-              <div>
+            </div>
+          </div>
+        </div>
+
+        <div title="Full" v-if="generatorView == 'Full View'">
+          <div class="row generator-row generator-full">
+            <div
+              v-for="index in numberOfCategories"
+              v-bind:key="index"
+              v-bind:class="customOptions.generatorRowLayout[index - 1]"
+            >
+              <div class="my-4 generator-cell-contents">
+                <div class="mb-2">
+                  <div
+                    v-html="categoryLabels[index - 1]"
+                    v-on:click="shuffleOne(index)"
+                    v-if="!customOptions.hideLabels"
+                    class="generator-cell-label px-2"
+                    style="cursor: pointer"
+                  ></div>
+                </div>
                 <div
                   v-for="(option, optionIndex) in categoryData[index - 1]"
                   v-bind:key="option"
                 >
-                  <span
-                    v-html="option"
-                    v-on:click="selectOne(index, optionIndex)"
-                    v-bind:class="{
-                      'font-weight-bold':
-                        option ==
+                  <transition name="reroll" mode="out-in">
+                    <span
+                      v-html="option"
+                      v-on:click="selectOne(index, optionIndex)"
+                      class="font-weight-normal"
+                      v-bind:class="{
+                        'font-weight-bolder':
+                          option ==
+                          categoryData[index - 1][
+                            roomInfo.currentGeneratorSelection[index - 1]
+                          ],
+                      }"
+                      :key="
                         categoryData[index - 1][
                           roomInfo.currentGeneratorSelection[index - 1]
-                        ],
-                    }"
-                    style="cursor: pointer"
-                  ></span>
+                        ]
+                      "
+                      style="cursor: pointer"
+                    ></span>
+                  </transition>
+                </div>
+                <div
+                  v-on:click="shuffleOne(index)"
+                  class="generator-cell-reroll-button"
+                  v-if="customOptions.rerollButton"
+                >
+                  <span>Random</span> <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
                 </div>
               </div>
             </div>
-            -->
-          </b-tab>
-        </b-tabs>
+          </div>
+
+        </div>
       </div>
 
       <div class="lower-text row mt-4" v-if="customOptions.lowerText">
@@ -341,6 +298,7 @@ export default {
       firebaseReady: false,
       gSheet: [{ text: "loading" }],
       generatorLayout: [],
+      generatorView: 'Grid View',
       numberOfCategories: 0,
       categoryLabels: [],
       categoryData: [],
@@ -798,6 +756,10 @@ export default {
   opacity: 0;
 }
 
+.summary-category-body {
+  transition: all 0.3s;
+}
+
 ////////////////////////////////
 
 .slot-machine {
@@ -840,6 +802,11 @@ export default {
   .generator-cell-reroll-icon {
     transition: transform 0.5s;
     transform: rotate(360deg)
+  }
+
+  .summary-category-body {
+    opacity: 0;
+    transform: scale(0.9);
   }
 }
 
