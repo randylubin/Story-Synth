@@ -381,6 +381,15 @@ export default {
         Math.random() * this.categoryData[index - 1].length
       );
 
+      if (newGeneratorSelection[index - 1] == newValueIndex){
+        newGeneratorSelection[index - 1] = ''
+
+        roomsCollection.doc(this.roomID).update({
+          currentGeneratorSelection: newGeneratorSelection,
+        });
+        
+      }
+
       newGeneratorSelection[index - 1] = newValueIndex;
 
       // sync the shuffled array
