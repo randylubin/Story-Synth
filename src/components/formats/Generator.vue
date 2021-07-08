@@ -108,7 +108,7 @@
         </div>
 
         
-        <div title="Grid" class='pl-3 pr-3 pb-3' v-if="generatorView == 'Grid View'">
+        <div title="Grid" class='pl-3 pr-3' v-if="generatorView == 'Grid View'">
           
           <div class="row generator-row">
             <button
@@ -443,7 +443,7 @@ export default {
                           rowClass
                       );
                       bootstrapLayout.push(
-                        "col-sm-6 generator-cell-one-half generator-cell " +
+                        "col-sm-6 generator-cell-one-half generator-cell generator-cell-row-end " +
                           rowClass
                       );
                       break;
@@ -457,7 +457,7 @@ export default {
                           rowClass
                       );
                       bootstrapLayout.push(
-                        "col-sm-4 generator-cell-one-third generator-cell " +
+                        "col-sm-4 generator-cell-one-third generator-cell generator-cell-row-end " +
                           rowClass
                       );
                       break;
@@ -475,13 +475,13 @@ export default {
                           rowClass
                       );
                       bootstrapLayout.push(
-                        "col-sm-3 generator-cell-one-quarter generator-cell " +
+                        "col-sm-3 generator-cell-one-quarter generator-cell generator-cell-row-end " +
                           rowClass
                       );
                       break;
                     default:
                       bootstrapLayout.push(
-                        "col-sm-12 generator-cell-full generator-cell " +
+                        "col-sm-12 generator-cell-full generator-cell generator-cell-row-end " +
                           rowClass
                       );
                   }
@@ -601,24 +601,36 @@ export default {
 
 .style-template-dark {
   $base-color: var(--light);
+  $dark-color: rgb(36, 36, 36);
 
   color: $base-color;
-  background: var(--dark) !important;
+  .full-page-background {
+    background: $dark-color !important;    
+  }
 
+  .card {
+    background: var(--dark) !important;
+  }
+  .generator-cell {
+    border-top: 1px solid $dark-color !important;
+  }
+  .generator-cell:not(.generator-cell-row-end) {    
+    border-right: 1px solid $dark-color !important;
+  }  
 
-
-  .btn {
-    background: $base-color !important;
-    color: var(--dark) !important;
+  .btn, select {
+    border: none;
+    background: $dark-color !important;
+    color: white !important;
   }
   .btn:hover {
-    background: rgba(white, 0.8) !important;
-    color: var(--dark) !important;
+    background: rgba($dark-color, 0.8) !important;
   }  
 
   .generator-cell-label {
-    background: $base-color !important;
-    color: var(--dark) !important;
+    background: none !important;
+    color: rgba(255,255,255, 0.7) !important;
+    padding-bottom: 4px !important;
     text-transform: uppercase;
     padding-top: 4px !important;
     box-shadow: 0px 0px 15px rgba($base-color, 0.3);
@@ -629,37 +641,53 @@ export default {
   }
 
   .generator-cell:hover {
-    background-color: rgba($base-color, 0.3);
+    background-color: rgba($dark-color, 0.3);
     box-shadow: 0px 0px 8px rgba($base-color, 0.25);
   }
 }
 
 .style-template-cyberpunk {
+  
+  // Base styles
   $base-color: rgb(0, 255, 123);
-  // $base-color: rgb(255, 0, 255);
-
-  // color: rgb(0, 255, 123);
+  font-family: 'Share Tech Mono', monospace;
   color: $base-color;
   text-shadow: 0px 0px 8px rgba($base-color, 0.9);
-  background: linear-gradient(#170000, #000321);
 
-  // font-family: "Courier New", Courier, monospace;
-  font-family: 'Share Tech Mono', monospace;
-
-  .card {
-    background: none;
-    box-shadow: none;
+  .full-page-background {
+    background: linear-gradient(#170000, #000321);
   }
 
-  .btn {
+  .btn, select {
+    border: none !important;
     background: $base-color !important;
-    color: black !important;
+    color: black !important;  
+    .btn:hover {
+      background: rgba($base-color, 0.8) !important;
+    }  
   }
-  .btn:hover {
-    background: rgba($base-color, 0.8) !important;
-    color: black !important;
+
+  // Card and divider styles
+  .card {
+    background: transparent;
+    box-shadow: 0px 0px 48px rgba($base-color, 0.15), 
+                inset 0px 0px 48px rgba($base-color, 0.15) !important;
+    border: 1px solid rgba($base-color, 0.5) !important;
+  }
+  
+  .generator-cell {
+    border-top: 1px solid rgba($base-color, 0.5) !important;
+  }
+  .generator-cell:not(.generator-cell-row-end) {    
+    border-right: 1px solid rgba($base-color, 0.5) !important;
   }  
 
+  // Make the labels fill full card width
+  .generator-cell-contents {
+    align-items: normal !important;
+  }
+
+  // Label styles
   .generator-cell-label {
     background: $base-color !important;
     color: black !important;
@@ -667,32 +695,140 @@ export default {
     padding-top: 4px !important;
     box-shadow: 0px 0px 15px rgba($base-color, 0.3);
   }
-
+    
+  // Main body
   .generator-cell-body {
       text-shadow: 0px 0px 8px rgba($base-color, 0.9);
   }
 
+  // Cool hover effect
   .generator-cell:hover {
     background-color: rgba($base-color, 0.3);
     box-shadow: 0px 0px 8px rgba($base-color, 0.25);
   }
 }
 
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap');
 .style-template-fantasy {
-  $base-color:var(--dark);
-  
-  color: $base-color;
-  background-color: rgb(244, 239, 229);
-  background: url(https://www.toptal.com/designers/subtlepatterns/patterns/handmadepaper.png);
-  filter: sepia(0.05);
-  font-family: Garamond, serif;
 
-  font-size: 1.1em;
+  font-family: 'Cardo', Garamond, serif !important;
+  font-size: 1.1em !important;
+  $base-color: rgb(55, 10, 0);
+  $label-text: rgb(92, 0, 71);
+  $label-bg: rgb(206, 131, 0);
+  $card-bg: rgb(92, 0, 71);
+
+  color: $base-color;
+
+  .btn, select {
+    border: none !important;
+    background: $base-color !important;
+    color: white !important;  
+    .btn:hover {
+      background: rgba($base-color, 0.8) !important;
+    }  
+  }
+
+  .full-page-background {
+    background-color: #ffe8b8;
+    background-blend-mode: multiply;
+    background-image: url(https://www.toptal.com/designers/subtlepatterns/patterns/handmadepaper.png);
+  }
+
+  h1, h2, h3 {
+    font-family: 'MedievalSharp', cursive !important;    
+    text-shadow:  1px 0 $label-bg, 
+                  0 1px $label-bg, 
+                  1px 0 $label-bg, 
+                  0 1px $label-bg;  
+  }
+  .generator-cell-label {
+    font-family: 'MedievalSharp', cursive !important;
+    background: none !important;
+    color: $label-text !important;
+    text-shadow: -0.5px 0 $label-bg, 
+                  0 0.5px $label-bg, 
+                  0.5px 0 $label-bg, 
+                  0 -0.5px $label-bg;
+    text-transform: uppercase;
+  }
+
+
+  .card {
+    background: linear-gradient(rgb(233, 173, 70), rgb(255, 232, 175));
+    border: 1px solid $card-bg;
+    color: $base-color;
+  }
+  
 }
+
+// @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Pacifico&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+.style-template-vaporwave {
+  font-family: 'Arial', sans-serif !important;
+  font-size: 1.1em !important;
+  $base-color: rgb(255, 255, 255);
+  $contrast-color: rgb(29, 29, 29);
+  $label-text: #6EFCBB;
+  $label-bg: rgb(206, 131, 0);
+  $card-bg: rgb(92, 0, 71);
+
+  color: $base-color;
+
+  .full-page-background {
+    background: linear-gradient(rgb(55, 0, 255), rgb(255, 0, 162));
+    color: $label-text !important;
+    text-shadow: 4px 4px 0px #4AB18E;
+    text-transform: uppercase;
+  }
+
+  .btn, select {
+    border: none !important;
+    background: $label-text !important;
+    color: $contrast-color !important;  
+    .btn:hover {
+      background: rgba($base-color, 0.8) !important;
+    }  
+  }
+
+  .card {
+    background: linear-gradient(rgba(55, 0, 255, 0.694), rgba(205, 0, 223, 0.502));
+    border: 1px solid $card-bg;
+    color: $base-color;
+  }
+  
+
+  h1 {
+    font-weight: 700;
+    color: $label-text !important;
+    text-shadow: 4px 4px 0px #4AB18E;
+  }
+  .generator-cell-label {
+    font-weight: 700;
+    background: none !important;
+    color: $label-text !important;
+    text-shadow: 1px 1px 0px #4AB18E;
+    text-transform: uppercase;
+  }
+
+  .generator-cell-body {
+    text-shadow: 0px 0px 10px rgb(255, 0, 195) !important;
+    transform: rotate(-3deg);
+  }  
+
+
+  
+}
+
 </style>
 
 
 <style scoped lang='scss'>
+
+$base-color: rgb(33, 33, 33);
+
 .generator-main {
   font-weight: bold;  
   border-radius: 5px;
@@ -700,7 +836,7 @@ export default {
 
 // CELL
 .generator-cell {
-  border-top: 1px solid rgba(0, 0, 0, 0.118);
+  border-top: 1px solid rgba($base-color, 0.1);
   border-right: 0px;
   border-left: 0px;
   border-bottom: 0px;
@@ -714,8 +850,12 @@ export default {
   transition: all 0.3s;  
   white-space: nowrap;
   overflow: hidden;
+  outline-offset: -1px;
 }
 
+.generator-cell:not(.generator-cell-row-end) {    
+  border-right: 1px solid rgba($base-color, 0.1);
+}  
 
 .generator-cell:hover {
   cursor: pointer;
@@ -731,6 +871,7 @@ export default {
 
 .generator-cell:focus {
   outline: 1px solid rgba(255, 255, 255, 0.25);
+  outline-offset: -1px;
   .generator-cell-reroll-button {
     opacity: 0.5;
   }  
