@@ -786,10 +786,6 @@ export default {
   opacity: 0;
 }
 
-.summary-category-body {
-  transition: all 0.3s;
-}
-
 ////////////////////////////////
 
 .slot-machine {
@@ -834,10 +830,6 @@ export default {
     transform: rotate(360deg)
   }
 
-  .summary-category-body {
-    opacity: 0;
-    transform: scale(0.9);
-  }
 }
 
 .x-card-text {
