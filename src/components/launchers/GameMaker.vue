@@ -78,6 +78,7 @@
                     <option>Secret Cards</option>
                     <option>Slot Machine</option>
                     <option>Phases</option>
+                    <option>Generator</option>
                   </select>
                 </div>
               </div>
@@ -167,6 +168,8 @@ export default {
         this.gameType = "Slot Machine";
       } else if (this.routeGameType == "Phases") {
         this.gameType = "Phases";
+      } else if (this.routeGameType == "Generator") {
+        this.gameType = "Generator"
       } else {
         this.gameType = "SecretCards";
       }
@@ -192,6 +195,8 @@ export default {
         newPath += "SecretCards";
       } else if (gameType == "Phases") {
         newPath += "Phases";
+      } else if (gameType == "Generator") {
+        newPath += "Generator"
       } else {
         newPath += "SlotMachine";
       }

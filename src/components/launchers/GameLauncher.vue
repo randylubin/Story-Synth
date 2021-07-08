@@ -1677,6 +1677,12 @@ export default {
             }
           });
 
+          // custom style template
+          let styleTemplate =
+            "style-template-" + this.customOptions.styleTemplate;
+          let body = document.getElementsByClassName("non-footer-content")[0]; // document.body;
+          body.classList.add(styleTemplate);
+
           if (location.hostname.toString() !== "localhost") {
             this.$mixpanel.track("Visit Game Launcher", {
               game_name: this.customOptions.gameTitle ?? "untitled",

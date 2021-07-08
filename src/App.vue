@@ -2,8 +2,11 @@
   <div id="app">
     <!-- <router-view></router-view>-->
     <div v-if="$route.path !== '/about'">
-      <div class="non-footer-content">
+      <div class="navbar">
         <app-header class=""></app-header>
+      </div>
+      <div class="non-footer-content">
+        
         <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
         
         <div v-if="$route.fullPath == '/'">

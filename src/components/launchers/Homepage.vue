@@ -145,6 +145,12 @@
                   <ul>
                     <li>
                       <a
+                        href="/#/Generator/1F0g3rVHxRA7O0rRMIQSsLCepJStxBO6pa7QJUNJb3K0/"
+                        >Generator</a
+                      >
+                    </li>
+                    <li>
+                      <a
                         href="/#/SlotMachine/1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU"
                         >Slot Machine</a
                       >
