@@ -163,7 +163,7 @@
         </div>
 
         <div title="Summary" v-if="generatorView == 'Summary View'">
-          <div class="row generator-summary text-left">
+          <div class="row generator-summary text-left my-5">
             <div
               v-for="index in numberOfCategories"
               v-bind:key="index"
@@ -187,7 +187,7 @@
                         roomInfo.currentGeneratorSelection[index - 1]
                       ]
                     "
-                    class="summary-category-body mb-2"
+                    class="summary-category-body font-weight-normal mb-2"
                   ></span>
                 </transition>
                 <b-icon v-on:click="shuffleOne(index)" class='ml-2 generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
@@ -595,18 +595,42 @@ export default {
 
 <style lang='scss'>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-:root {
-  --dark: #1e90ff;
-}
 
 .style-template-light {
-  color: rgb(0, 0, 0) !important;
-  background-color: rgb(255, 255, 255) !important;
+  background-color: var(--light);
 }
 
 .style-template-dark {
-  color: white;
-  background-color: black;
+  $base-color: var(--light);
+
+  color: $base-color;
+  background: var(--dark) !important;
+
+  .btn {
+    background: $base-color !important;
+    color: var(--dark) !important;
+  }
+  .btn:hover {
+    background: rgba(white, 0.8) !important;
+    color: var(--dark) !important;
+  }  
+
+  .generator-cell-label {
+    background: $base-color !important;
+    color: var(--dark) !important;
+    text-transform: uppercase;
+    padding-top: 4px !important;
+    box-shadow: 0px 0px 15px rgba($base-color, 0.3);
+  }
+
+  .generator-cell-body {
+    text-shadow: 0px 0px 8px rgba($base-color, 0.9);
+  }
+
+  .generator-cell:hover {
+    background-color: rgba($base-color, 0.3);
+    box-shadow: 0px 0px 8px rgba($base-color, 0.25);
+  }
 }
 
 .style-template-cyberpunk {
@@ -649,9 +673,15 @@ export default {
 }
 
 .style-template-fantasy {
-  color: rgb(40, 28, 2);
+  $base-color:var(--dark);
+  
+  color: $base-color;
   background-color: rgb(244, 239, 229);
+  background: url(https://www.toptal.com/designers/subtlepatterns/patterns/handmadepaper.png);
+  filter: sepia(0.05);
   font-family: Garamond, serif;
+
+  font-size: 1.1em;
 }
 </style>
 
