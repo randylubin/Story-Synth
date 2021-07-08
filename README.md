@@ -50,9 +50,13 @@ Some potentially non-obvious steps are:
 - Set up both a "firestore database" and a "realtime database" via the Firebase console in order for a DatabaseURL to appear in your config
 - Configure security rules for each database. Firestore needs read and write both set to "if request.auth != null;" while Realtime only needs read set to "true"
 
-Then, update the project with your Firebase credentials:
+Then, update the project with your Firebase credentials by adding them to a new .env file in the root folder of Story Synth. You need to add your your firebase api key, database url and project ID, replacing TODO in the following:
 
-Add your your project name, database, and api key to `/src/firebase.js` (fill in between the "" on the lines with TODO)
+```
+VUE_APP_FIREBASE_API_KEY=TODO
+VUE_APP_FIREBASE_DATABASE_URL=TODO
+VUE_APP_FIREBASE_PROJECT_ID=TODO
+```
 
 For analytics, you can optionally create a free [Mixpanel](https://mixpanel.com/) account and add your account ID in the main.js file.
 
