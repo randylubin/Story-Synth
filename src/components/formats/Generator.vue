@@ -674,6 +674,7 @@ export default {
   transition: background-color 0.2s;
   transition: all 0.3s;  
   white-space: nowrap;
+  overflow: hidden;
 }
 
 
@@ -790,7 +791,9 @@ export default {
 .reroll-enter, .reroll-leave-to /* .fade-leave-active below version 2.1.8 */ {
 
   .generator-cell-label {
-    transform: scale(1.025);
+    // transform: scale(1.025);
+    transition: transform 0.5s;
+    transform: translateY(0px) scale(1.05);
   }
 
   .generator-cell-body {
@@ -798,7 +801,12 @@ export default {
     opacity: 0;
     transform: scale(0.9);
   }
-  
+
+  .generator-cell-reroll-button {
+    transition: transform 0.5s;
+    transform: scale(1.1);
+  }
+
   .generator-cell-reroll-icon {
     transition: transform 0.5s;
     transform: rotate(360deg)
