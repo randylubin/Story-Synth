@@ -13,5 +13,4 @@ firebase-config.js
 *.ntvs*
 *.njsproj
 *.sln
-package-lock.json
-src/firebase.js
+.env

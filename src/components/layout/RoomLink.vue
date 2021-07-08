@@ -80,7 +80,7 @@ export default {
         "rooms/" +
         this.routeRoomID +
         "/" +
-        Math.trunc(Math.random() * 1000).toString();
+        Math.trunc(Math.random() * 100000).toString();
 
       var userRef = rtdb.ref(tempUserRef);
 
