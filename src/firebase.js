@@ -1,10 +1,10 @@
 import { initializeApp } from 'firebase/app';
 
 const app = initializeApp({
-  apiKey: "", // TODO: Add your apiKey here
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
   authDomain: "",
-  databaseURL: "", // TODO: Add your databaseURL here
-  projectId: "", // TODO: Add your projectId here
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
   storageBucket: "",
   messagingSenderId: ""
 });
