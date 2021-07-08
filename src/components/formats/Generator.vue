@@ -80,7 +80,7 @@
 
     <div class="mb-4">
       <div
-        class="card d-flex shadow img-fluid"
+        class="d-flex shadow img-fluid"
         v-if="(!dataReady || !firebaseReady) && !error"
       >
         <div class="card-body text-center">
@@ -93,7 +93,7 @@
         </div>
       </div>
 
-      <div class="mt-4 generator-main">
+      <div class="mt-4 generator-main card shadow mb-4">
         <div class="regenerate-button my-4">
           <b-form inline class="justify-content-center">
             <b-button v-on:click="shuffleAll()" class="btn btn-dark">
@@ -108,7 +108,7 @@
         </div>
 
         
-        <div title="Grid" v-if="generatorView == 'Grid View'">
+        <div title="Grid" class='pl-3 pr-3 pb-3' v-if="generatorView == 'Grid View'">
           
           <div class="row generator-row">
             <button
@@ -605,6 +605,8 @@ export default {
   color: $base-color;
   background: var(--dark) !important;
 
+
+
   .btn {
     background: $base-color !important;
     color: var(--dark) !important;
@@ -643,6 +645,11 @@ export default {
 
   // font-family: "Courier New", Courier, monospace;
   font-family: 'Share Tech Mono', monospace;
+
+  .card {
+    background: none;
+    box-shadow: none;
+  }
 
   .btn {
     background: $base-color !important;
@@ -693,11 +700,14 @@ export default {
 
 // CELL
 .generator-cell {
+  border-top: 1px solid rgba(0, 0, 0, 0.118);
+  border-right: 0px;
+  border-left: 0px;
+  border-bottom: 0px;
   display: inline-flex; /* keep the inline nature of buttons */
   align-items: stretch; /* this is default */  
   font-family: inherit;
   font-size: 100%;
-  border: 0;
   background: inherit;
   color: inherit;
   transition: background-color 0.2s;
@@ -730,16 +740,20 @@ export default {
   width: 100%;
   white-space: pre-line;
   display: flex;
+  align-items: center;
   flex-direction: column;
   transition: all 0.3s;  
 }
 
 // CELL LABEL
 .generator-cell-label {
-  background: var(--dark);
+  // background: var(--dark);
+  // color: white;  
+  background: var(--yellow);
+  // border-bottom: 4px solid var(--dark);
+  text-transform: uppercase;
   padding-top: 2px;
   padding-bottom: 2px;
-  color: white;  
   transition: all 0.2s;
   font-size: 0.8em;
   font-weight: bold;

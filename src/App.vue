@@ -204,7 +204,7 @@
   }
 
   body {
-    background: beige;
+    background: var(--light);
     height: 100%;
     margin: auto;
     background-repeat: no-repeat;
