@@ -14,7 +14,7 @@
         v-for="(game, key) in gameList"
         v-bind:key="key"
       >
-        <div class="card mb-2">
+        <div class="card shadow mb-2">
           <div class="row no-gutters">
             <div class="col-lg-4">
               <a v-bind:href="game.link">

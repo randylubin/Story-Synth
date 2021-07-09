@@ -99,10 +99,10 @@
             <b-button v-on:click="shuffleAll()" class="btn btn-dark">
               <span>Randomize All</span> <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
             </b-button>
-            <b-form-select v-model="generatorView" class="ml-3">
+            <b-form-select v-model="generatorView" class="ml-3" v-if="customOptions.showSummary || customOptions.showFullLists">
               <b-form-select-option value="Grid View">Grid View</b-form-select-option>
-              <b-form-select-option value="Summary View">Summary View</b-form-select-option>
-              <b-form-select-option value="Full View">Full View</b-form-select-option>
+              <b-form-select-option value="Summary View" v-if="customOptions.showSummary">Summary View</b-form-select-option>
+              <b-form-select-option value="Full View" v-if="customOptions.showFullLists">Full View</b-form-select-option>
             </b-form-select>
           </b-form>
         </div>
@@ -149,11 +149,7 @@
                       "
                       class="generator-cell-body mb-2"
                     ></div>
-                  <div
-                  
-                    class="generator-cell-reroll-button"
-                    v-if="customOptions.rerollButton"
-                  >
+                  <div class="generator-cell-reroll-button">
                     <span>Reroll</span> <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
                   </div>
                 </div>
