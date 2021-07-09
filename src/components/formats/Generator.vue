@@ -594,7 +594,12 @@ export default {
   $base-color: var(--light);
   $dark-color: rgb(36, 36, 36);
 
-  color: $base-color;
+  color: $base-color !important;
+
+  .game-meta {
+    color: $base-color !important;
+  }
+
   .full-page-background {
     background: $dark-color !important;    
   }
@@ -644,6 +649,10 @@ export default {
   font-family: 'Share Tech Mono', monospace;
   color: $base-color;
   text-shadow: 0px 0px 8px rgba($base-color, 0.9);
+
+  .game-meta {
+    color: $base-color !important;
+  }
 
   .full-page-background {
     background: linear-gradient(#170000, #000321);
@@ -712,6 +721,10 @@ export default {
 
   color: $base-color;
 
+  .game-meta {
+    color: $base-color !important;
+  }
+
   .btn, select {
     border: none !important;
     background-color: $base-color !important;
@@ -767,6 +780,10 @@ export default {
   $card-bg: rgb(92, 0, 71);
 
   color: $base-color;
+
+  .game-meta {
+    color: $base-color !important;
+  }
 
   .full-page-background {
     background: linear-gradient(rgb(55, 0, 255), rgb(255, 0, 162));
