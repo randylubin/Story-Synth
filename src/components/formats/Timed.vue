@@ -252,6 +252,12 @@ export default {
           }
         });
 
+        // apply custom style to body
+        let styleTemplate =
+          "style-template-" + this.customOptions.styleTemplate;
+        let body = document.getElementById("app"); // document.body;
+        body.classList.add(styleTemplate);
+
         this.gSheet = cleanData.slice().reverse();
         this.playerArray = playerArray
         this.dataReady = true

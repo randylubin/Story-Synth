@@ -3,7 +3,6 @@ import 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/database'
 
-
 import Vue from 'vue'
 
 import VueMeta from 'vue-meta'
@@ -18,6 +17,12 @@ Vue.use(IconsPlugin)
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+import './assets/styleTemplates/light.scss'
+import './assets/styleTemplates/dark.scss'
+import './assets/styleTemplates/cyberpunk.scss'
+import './assets/styleTemplates/vaporwave.scss'
+import './assets/styleTemplates/fantasy.scss'
 
 import App from './App.vue'
 

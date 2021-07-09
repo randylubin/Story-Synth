@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap");
+.style-template-cyberpunk {
+  // Base styles
+  $base-color: rgb(0, 255, 123);
+  font-family: "Share Tech Mono", monospace;
+  color: $base-color !important;
+  text-shadow: 0px 0px 8px rgba($base-color, 0.9);
+
+  .game-meta {
+    color: $base-color !important;
+  }
+
+  .full-page-background {
+    background: linear-gradient(#170000, #000321);
+  }
+
+  .btn,
+  select {
+    border: none !important;
+    background-color: $base-color !important;
+    color: black !important;
+    .btn:hover {
+      background: rgba($base-color, 0.8) !important;
+    }
+  }
+
+  // Card and divider styles
+  .card {
+    background: transparent;
+    box-shadow: 0px 0px 48px rgba($base-color, 0.15),
+      inset 0px 0px 48px rgba($base-color, 0.15) !important;
+    border: 1px solid rgba($base-color, 0.5) !important;
+  }
+
+  .generator-cell {
+    border-top: 1px solid rgba($base-color, 0.5) !important;
+  }
+  .generator-cell:not(.generator-cell-row-end) {
+    border-right: 1px solid rgba($base-color, 0.5) !important;
+  }
+
+  // Make the labels fill full card width
+  .generator-cell-contents {
+    align-items: normal !important;
+  }
+
+  // Label styles
+  .generator-cell-label {
+    background: $base-color !important;
+    color: black !important;
+    text-transform: uppercase;
+    padding-top: 4px !important;
+    box-shadow: 0px 0px 15px rgba($base-color, 0.3);
+  }
+
+  // Main body
+  .generator-cell-body {
+    text-shadow: 0px 0px 8px rgba($base-color, 0.9);
+  }
+
+  // Cool hover effect
+  .generator-cell:hover {
+    background-color: rgba($base-color, 0.3);
+    box-shadow: 0px 0px 8px rgba($base-color, 0.25);
+  }
+}

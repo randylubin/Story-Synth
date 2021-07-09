@@ -363,6 +363,12 @@ export default {
           }
         }
 
+        // apply custom style to body
+        let styleTemplate =
+          "style-template-" + this.customOptions.styleTemplate;
+        let body = document.getElementById("app"); // document.body;
+        body.classList.add(styleTemplate);
+
         // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData
 

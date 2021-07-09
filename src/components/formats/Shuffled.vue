@@ -742,6 +742,12 @@ export default {
             }
           });
 
+          // apply custom style to body
+          let styleTemplate =
+            "style-template-" + this.customOptions.styleTemplate;
+          let body = document.getElementById("app"); // document.body;
+          body.classList.add(styleTemplate);
+
           if (
             this.firebaseReady &&
             Object.keys(this.tempExtensionData).length > 1

@@ -1,0 +1,52 @@
+.style-template-dark {
+  $base-color: var(--light);
+  $dark-color: rgb(36, 36, 36);
+
+  color: $base-color !important;
+
+  .game-meta {
+    color: $base-color !important;
+  }
+
+  .full-page-background {
+    background: $dark-color !important;
+  }
+
+  .card {
+    background: var(--dark) !important;
+  }
+  .generator-cell {
+    border-top: 1px solid $dark-color !important;
+  }
+  .generator-cell:not(.generator-cell-row-end) {
+    border-right: 1px solid $dark-color !important;
+  }
+
+  .generator .btn,
+  select {
+    border: none;
+    background: $dark-color !important;
+    color: white !important;
+  }
+  .btn:hover {
+    background: rgba($dark-color, 0.8) !important;
+  }
+
+  .generator-cell-label {
+    background: none !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    padding-bottom: 4px !important;
+    text-transform: uppercase;
+    padding-top: 4px !important;
+    box-shadow: 0px 0px 15px rgba($base-color, 0.3);
+  }
+
+  .generator-cell-body {
+    text-shadow: 0px 0px 8px rgba($base-color, 0.9);
+  }
+
+  .generator-cell:hover {
+    background-color: rgba($dark-color, 0.3);
+    box-shadow: 0px 0px 8px rgba($base-color, 0.25);
+  }
+}

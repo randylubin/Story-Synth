@@ -1,0 +1,59 @@
+.style-template-vaporwave {
+  font-family: "Arial", sans-serif !important;
+  font-size: 1.1em !important;
+  $base-color: rgb(255, 255, 255);
+  $contrast-color: rgb(29, 29, 29);
+  $label-text: #6efcbb;
+  $label-bg: rgb(206, 131, 0);
+  $card-bg: rgb(92, 0, 71);
+
+  color: $base-color;
+
+  .game-meta {
+    color: $base-color !important;
+  }
+
+  .full-page-background {
+    background: linear-gradient(rgb(55, 0, 255), rgb(255, 0, 162));
+    color: $label-text !important;
+    text-shadow: 4px 4px 0px #4ab18e;
+    text-transform: uppercase;
+  }
+
+  .btn,
+  select {
+    border: none !important;
+    background-color: $label-text !important;
+    color: $contrast-color !important;
+    .btn:hover {
+      background: rgba($base-color, 0.8) !important;
+    }
+  }
+
+  .card {
+    background: linear-gradient(
+      rgba(55, 0, 255, 0.694),
+      rgba(205, 0, 223, 0.502)
+    );
+    border: 1px solid $card-bg;
+    color: $base-color;
+  }
+
+  h1 {
+    font-weight: 700;
+    color: $label-text !important;
+    text-shadow: 4px 4px 0px #4ab18e;
+  }
+  .generator-cell-label {
+    font-weight: 700;
+    background: none !important;
+    color: $label-text !important;
+    text-shadow: 1px 1px 0px #4ab18e;
+    text-transform: uppercase;
+  }
+
+  .generator-cell-body {
+    text-shadow: 0px 0px 10px rgb(255, 0, 195) !important;
+    transform: rotate(-3deg);
+  }
+}

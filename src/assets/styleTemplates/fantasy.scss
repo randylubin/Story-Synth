@@ -1,0 +1,55 @@
+@import url("https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap");
+
+.style-template-fantasy {
+  font-family: "Cardo", Garamond, serif !important;
+  font-size: 1.1em !important;
+  $base-color: rgb(55, 10, 0);
+  $label-text: rgb(92, 0, 71);
+  $label-bg: rgb(206, 131, 0);
+  $card-bg: rgb(92, 0, 71);
+
+  color: $base-color;
+
+  .game-meta {
+    color: $base-color !important;
+  }
+
+  .btn,
+  select {
+    border: none !important;
+    background-color: $base-color !important;
+    color: white !important;
+    .btn:hover {
+      background: rgba($base-color, 0.8) !important;
+    }
+  }
+
+  .full-page-background {
+    background-color: #ffe8b8;
+    background-blend-mode: multiply;
+    background-image: url(https://www.toptal.com/designers/subtlepatterns/patterns/handmadepaper.png);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "MedievalSharp", cursive !important;
+    text-shadow: 1px 0 $label-bg, 0 1px $label-bg, 1px 0 $label-bg,
+      0 1px $label-bg;
+  }
+  .generator-cell-label {
+    font-family: "MedievalSharp", cursive !important;
+    background: none !important;
+    color: $label-text !important;
+    text-shadow: -0.5px 0 $label-bg, 0 0.5px $label-bg, 0.5px 0 $label-bg,
+      0 -0.5px $label-bg;
+    text-transform: uppercase;
+  }
+
+  .card {
+    background: linear-gradient(rgb(233, 173, 70), rgb(255, 232, 175));
+    border: 1px solid $card-bg;
+    color: $base-color;
+  }
+}
