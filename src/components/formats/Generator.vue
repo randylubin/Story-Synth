@@ -825,6 +825,13 @@ $base-color: rgb(33, 33, 33);
   border-radius: 5px;
 }
 
+@media (max-width: 575px) {  
+  .generator-cell-body {
+    font-size:1rem !important;
+    font-weight: 500 !important;  
+  } /*1rem = 16px*/
+}
+
 select {
   width: auto;
 }
