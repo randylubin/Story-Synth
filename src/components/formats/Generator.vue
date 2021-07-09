@@ -148,6 +148,7 @@
                         ]
                       "
                       class="generator-cell-body mb-2"
+                      v-bind:class="{'generator-cell-full-small': String(categoryData[index - 1][roomInfo.currentGeneratorSelection[index - 1]]).length >= 50}"
                     ></div>
                   <div class="generator-cell-reroll-button" v-if="categoryData[index - 1][
                           roomInfo.currentGeneratorSelection[index - 1]
@@ -678,7 +679,13 @@ select {
   .generator-cell-body {
     font-size: 2em; 
   }
+  .generator-cell-full-small {
+    font-size: 1.2em;
+    font-weight: 600;
+  }
 }
+
+
 .generator-cell-one-half {
   .generator-cell-body {
     font-size: 1.1em;
