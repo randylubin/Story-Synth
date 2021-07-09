@@ -173,12 +173,10 @@
                   v-if="!customOptions.hideLabels"
                   class="summary-category-label px-2 font-weight-bold"
                 ></span>
-                <transition name="reroll" mode="out-in">
+                <transition-group name="reroll-list" mode="out-in">
                   <span
                     :key="
-                      categoryData[index - 1][
-                        roomInfo.currentGeneratorSelection[index - 1]
-                      ]
+                      roomInfo.currentGeneratorSelection[index - 1]
                     "
                     v-html="
                       categoryData[index - 1][
@@ -187,7 +185,7 @@
                     "
                     class="summary-category-body font-weight-normal mb-2"
                   ></span>
-                </transition>
+                </transition-group>
                 <b-icon v-on:click="shuffleOne(index)" class='ml-2 generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
               </div>
             </div>
@@ -208,14 +206,13 @@
                     v-on:click="shuffleOne(index)"
                     v-if="!customOptions.hideLabels"
                     class="generator-cell-label px-2"
-                    style="cursor: pointer"
                   ></div>
                 </div>
                 <div
                   v-for="(option, optionIndex) in categoryData[index - 1]"
                   v-bind:key="option"
                 >
-                  <transition name="reroll" mode="out-in">
+                  <transition name="reroll-list" mode="out-in">
                     <span
                       v-html="option"
                       v-on:click="selectOne(index, optionIndex)"
@@ -227,12 +224,8 @@
                             roomInfo.currentGeneratorSelection[index - 1]
                           ],
                       }"
-                      :key="
-                        categoryData[index - 1][
-                          roomInfo.currentGeneratorSelection[index - 1]
-                        ]
-                      "
-                      style="cursor: pointer"
+                      style="cursor: pointer;"
+                      :key="roomInfo.currentGeneratorSelection[index - 1]"
                     ></span>
                   </transition>
                 </div>
@@ -856,7 +849,6 @@ $base-color: rgb(33, 33, 33);
 }  
 
 .generator-cell:hover {
-  cursor: pointer;
 
   .generator-cell-contents {
     transform: scale(1.04);
@@ -990,6 +982,27 @@ $base-color: rgb(33, 33, 33);
     transform: rotate(360deg)
   }
 
+}
+
+.reroll-list-enter-active {
+  transition: all .5s;
+}
+.reroll-list-leave-active {
+ transition: all 0s;
+}
+
+.reroll-list-enter, .reroll-list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(0px);
+}
+
+.reroll-list-enter-active, .reroll-list-leave-active {
+  transition: all .5s;
+}
+
+.reroll-list-enter, .reroll-list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(0px);
 }
 
 .x-card-text {
