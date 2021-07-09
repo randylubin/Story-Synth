@@ -196,6 +196,13 @@ export default {
     routeGSheetID: String,
     routeRoomID: String,
   },
+  mounted(){
+    let body = document.getElementById("app"); // document.body;
+    body.classList.remove(body.classList[0]);
+
+    let page = document.getElementsByClassName("non-footer-content")[0]; // document.body;
+    page.classList.remove(page.classList[1])
+  }
 };
 </script>
 

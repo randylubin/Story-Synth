@@ -347,6 +347,9 @@ export default {
       gameTitle: this.customOptions.gameTitle,
       gameLauncherURL: this.currentUrl,
     });
+
+    let body = document.getElementById("app"); // document.body;
+    body.classList.remove(body.classList[0]);
   },
   methods: {
     updateUrl() {
