@@ -19,8 +19,8 @@
     border: none !important;
     background-color: $base-color !important;
     color: black !important;
-    .btn:hover {
-      background: rgba($base-color, 0.8) !important;
+    &:hover {
+      background-color: rgba($base-color, 0.8) !important;
     }
   }
 

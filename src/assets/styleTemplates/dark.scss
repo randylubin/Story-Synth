@@ -25,11 +25,12 @@
   .generator .btn,
   select {
     border: none;
-    background: $dark-color !important;
+    background-color: $dark-color !important;
     color: white !important;
-  }
-  .btn:hover {
-    background: rgba($dark-color, 0.8) !important;
+
+    &:hover {
+      background-color: rgba($dark-color, 0.8) !important;
+    }
   }
 
   .generator-cell-label {
