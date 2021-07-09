@@ -993,16 +993,10 @@ $base-color: rgb(33, 33, 33);
 
 .reroll-list-enter, .reroll-list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
-  transform: translateY(0px);
 }
 
-.reroll-list-enter-active, .reroll-list-leave-active {
-  transition: all .5s;
-}
-
-.reroll-list-enter, .reroll-list-leave-to /* .list-leave-active below version 2.1.8 */ {
-  opacity: 0;
-  transform: translateY(0px);
+.reroll-list-move {
+  transition: transform 1s;
 }
 
 .x-card-text {
