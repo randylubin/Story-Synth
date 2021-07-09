@@ -651,7 +651,7 @@ export default {
 
   .btn, select {
     border: none !important;
-    background: $base-color !important;
+    background-color: $base-color !important;
     color: black !important;  
     .btn:hover {
       background: rgba($base-color, 0.8) !important;
@@ -714,7 +714,7 @@ export default {
 
   .btn, select {
     border: none !important;
-    background: $base-color !important;
+    background-color: $base-color !important;
     color: white !important;  
     .btn:hover {
       background: rgba($base-color, 0.8) !important;
@@ -777,7 +777,7 @@ export default {
 
   .btn, select {
     border: none !important;
-    background: $label-text !important;
+    background-color: $label-text !important;
     color: $contrast-color !important;  
     .btn:hover {
       background: rgba($base-color, 0.8) !important;
@@ -823,6 +823,10 @@ $base-color: rgb(33, 33, 33);
 .generator-main {
   font-weight: bold;  
   border-radius: 5px;
+}
+
+select {
+  width: auto;
 }
 
 // CELL
