@@ -149,7 +149,9 @@
                       "
                       class="generator-cell-body mb-2"
                     ></div>
-                  <div class="generator-cell-reroll-button">
+                  <div class="generator-cell-reroll-button" v-if="categoryData[index - 1][
+                          roomInfo.currentGeneratorSelection[index - 1]
+                        ]">
                     <span>Reroll</span> <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
                   </div>
                 </div>
