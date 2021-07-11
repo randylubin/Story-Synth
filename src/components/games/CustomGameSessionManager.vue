@@ -1,5 +1,6 @@
 <template>
   <div class="">
+    <app-aethelredsAcademy :roomID="$route.params.roomID" v-if="routeGSheetID == 'Aethelreds-Academy'"></app-aethelredsAcademy>
     <app-aroundTheRealm :roomID="$route.params.roomID" v-if="routeGSheetID == 'Around-The-Realm'"></app-aroundTheRealm>
     <app-clashAtIkara :roomID="$route.params.roomID" v-if="routeGSheetID == 'Clash-At-Ikara'"></app-clashAtIkara> 
     <app-postWorkParadise :roomID="$route.params.roomID" v-if="routeGSheetID == 'Post-Work-Paradise'"></app-postWorkParadise>
@@ -8,14 +9,16 @@
 </template>
 
 <script>
-import AroundTheRealm from './AroundTheRealm.vue'
-import ClashAtIkara from './ClashAtIkara.vue'
+import AethelredsAcedemy from './AethelredsAcademy.vue';
+import AroundTheRealm from './AroundTheRealm.vue';
+import ClashAtIkara from './ClashAtIkara.vue';
 import PostWorkParadise from './PostWorkParadise.vue';
 import RaisedByMechs from './RaisedByMechs.vue';
 
 export default {
   name: 'app-customGameSession',
   components: {
+    'app-aethelredsAcademy': AethelredsAcedemy,
     'app-aroundTheRealm': AroundTheRealm,
     'app-clashAtIkara': ClashAtIkara,
     'app-postWorkParadise': PostWorkParadise,
@@ -27,6 +30,11 @@ export default {
   data: function() {
     return {
       gameMetaData: {
+        'Aethelreds-Academy': {
+          'gameTitle': 'Aethelred\'s Academy for Aspiring Heroes',
+          'gameBlurb': 'Tell silly stories about how aspiring heroes go on unlikely quests to earn dubious certificates. By Greg and Randy Lubin.',
+          'ogImage': 'https://diegeticgames.com/uploads/aethelreds-logo-square.png'
+        },
         'Around-The-Realm': {
           'gameTitle': 'Around The Realm',
           'gameBlurb': 'Tell the story of two close companions racing their way around a fantasy world. Nella and Bly wagered that they could travel completely around the realm and return before the summer solstice. However, the lands are full of magic, danger, and adventure – will they make it back in time?',

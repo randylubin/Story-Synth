@@ -91,6 +91,14 @@ export default {
             "https://iili.io/fjX1ZQ.md.png",
         },
         {
+          title: "Æthelred's Academy for Aspiring Heroes",
+          credits: "By Greg Lubin and Randy Lubin",
+          blurb: "Tell silly stories about how aspiring heroes accept unlikely quests to earn dubious certificates.",
+          link: "https://storysynth.org/Games/Aethelreds-Academy",
+          image:
+            "https://diegeticgames.com/uploads/aethelreds-logo.png",
+        },
+        {
           title: "Working For The Corp",
           credits: "By Ken Davidson, with contributions from Jess Meir",
           blurb: 'Play as workers at a cyberpunk megacorp who are tasked with defending key info from runners.  Will you defend The Corp?',

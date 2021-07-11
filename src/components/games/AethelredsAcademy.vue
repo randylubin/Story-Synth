@@ -273,13 +273,12 @@ import ExtensionManager from "../extensions/ExtensionManager.vue";
 import axios from "axios";
 
 export default {
-  name: "app-generator",
+  name: "app-aethelredsAcademy",
   components: {
     "app-extensionManager": ExtensionManager,
   },
   props: {
     roomID: String,
-    gSheetID: String,
   },
   data: function () {
     return {
@@ -300,7 +299,7 @@ export default {
     };
   },
   mounted() {
-    this.fetchAndCleanSheetData(this.gSheetID);
+    this.fetchAndCleanSheetData();
 
     this.$bind("roomInfo", roomsCollection.doc(this.roomID))
       .then(() => {
@@ -377,17 +376,10 @@ export default {
         extensionData: this.roomInfo.extensionData,
       });
     },
-    fetchAndCleanSheetData(sheetID) {
-      // Remove for published version
-      if (!sheetID || sheetID == "demo") {
-        sheetID = "1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU";
-      }
+    fetchAndCleanSheetData() {
 
       // For published version, set getURL equal to the url of your spreadsheet
-      var getURL =
-        "https://sheets.googleapis.com/v4/spreadsheets/" +
-        sheetID +
-        "?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM";
+      var getURL = "https://sheets.googleapis.com/v4/spreadsheets/1q6ciH-ZfFRohtjGwPTHLSo8gRdaPnsNVQOXYX_KPiLk/"+"?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM";
 
       // For the published version - remove if you're hardcoding the data instead of using Google Sheets
       axios
