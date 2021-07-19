@@ -31,8 +31,8 @@ export default {
     return {
       gameMetaData: {
         'Aethelreds-Academy': {
-          'gameTitle': 'Aethelred\'s Academy for Aspiring Heroes',
-          'gameBlurb': 'Tell silly stories about how aspiring heroes go on unlikely quests to earn dubious certificates. By Greg and Randy Lubin.',
+          'gameTitle': ' Æthelred\'s Academy for Aspiring Heroes',
+          'gameBlurb': 'Tell silly stories about how aspiring heroes go on unlikely quests to earn dubious certifications in adventuring skills. By Greg and Randy Lubin.',
           'ogImage': 'https://diegeticgames.com/uploads/aethelreds-logo-square.png'
         },
         'Around-The-Realm': {

@@ -93,7 +93,7 @@ export default {
         {
           title: "Æthelred's Academy for Aspiring Heroes",
           credits: "By Greg Lubin and Randy Lubin",
-          blurb: "Tell silly stories about how aspiring heroes accept unlikely quests to earn dubious certificates.",
+          blurb: "Tell silly stories about how aspiring heroes accept unlikely quests to earn dubious certifications in adventuring skills.",
           link: "https://storysynth.org/Games/Aethelreds-Academy",
           image:
             "https://diegeticgames.com/uploads/aethelreds-logo.png",
@@ -150,14 +150,14 @@ export default {
               content: "Check out the top games you can play with Story Synth",
               vmid: "og:description",
             },
-            /*
+            {
               property: "og:image",
-              content: this.customOptions.ogImageSquare,
+              content: "https://diegeticgames.com/uploads/gallery-collage-unfurl.png",
               vmid: "og:image",
             },
             {
               property: "og:url",
-              content: "https://storysynth.org/#" + this.$route.fullPath,
+              content: "https://storysynth.org/" + this.$route.fullPath,
               vmid: "og:url",
             },
             {
@@ -172,9 +172,9 @@ export default {
             },
             {
               property: "twitter:image:alt",
-              content: this.customOptions.gameTitle + " logo",
+              content: "The logos of several games in the Story Synth Gallery",
               vmid: "twitter:image:alt",
-            },*/
+            },
           ],
       }
     },

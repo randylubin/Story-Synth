@@ -108,7 +108,7 @@
         </div>
 
         
-        <div title="Grid" class='pl-3 pr-3' v-if="generatorView == 'Grid View'">
+        <div class='pl-3 pr-3' v-if="generatorView == 'Grid View'">
           
           <div class="row generator-row">
             <button
