@@ -176,7 +176,8 @@
       </div>
     </div>
 
-    <app-gameMaker
+    <app-gameLauncherSingleGame v-if="launcherOnHomepage" :gameRoute="String(launcherOnHomepage)"></app-gameLauncherSingleGame>
+    <app-gameMaker v-if="!launcherOnHomepage"
       :routeRoomID="$route.params.roomID"
       :routeGSheetID="$route.params.gSheetID"
       :routeGameType="$route.params.gameType"
@@ -186,15 +187,23 @@
 
 <script>
 import GameMaker from "./GameMaker.vue";
+import GameLauncherSingleGame from "./GameLauncherSingleGame.vue"
+
 export default {
   name: "app-homepage",
   components: {
     "app-gameMaker": GameMaker,
+    "app-gameLauncherSingleGame": GameLauncherSingleGame,
   },
   props: {
     routeGameType: String,
     routeGSheetID: String,
     routeRoomID: String,
+  },
+  data() {
+    return {
+      launcherOnHomepage: false, // if you want the game launcher on the homepage, add in the route up until the roomID e.g. "/Games/Around-The-Realm/"
+    }
   },
   mounted(){
     let body = document.getElementById("app"); // document.body;
