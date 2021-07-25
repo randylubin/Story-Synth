@@ -379,7 +379,7 @@ export default {
     fetchAndCleanSheetData() {
 
       // For published version, set getURL equal to the url of your spreadsheet
-      var getURL = "https://sheets.googleapis.com/v4/spreadsheets/1q6ciH-ZfFRohtjGwPTHLSo8gRdaPnsNVQOXYX_KPiLk/"+"?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM";
+      var getURL = "https://sheets.googleapis.com/v4/spreadsheets/1q6ciH-ZfFRohtjGwPTHLSo8gRdaPnsNVQOXYX_KPiLk/"+"?includeGridData=true&ranges=a1:aa100&key="  + process.env.VUE_APP_FIREBASE_API_KEY;
 
       // For the published version - remove if you're hardcoding the data instead of using Google Sheets
       axios

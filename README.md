@@ -1,7 +1,7 @@
+# Story Synth
+
 ![Version 1.0.2](https://img.shields.io/badge/version-1.0.2-blue)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
-
-# Story Synth
 
 ## Realtime Storytelling App
 
@@ -19,7 +19,7 @@ You can use the app as a starting point for more complex or polished games. Here
 
 Read more about the app at [About Story Synth](https://storysynth.org/about)
 
-# Getting the app working locally
+## Getting the app working locally
 
 The app uses Vue.js as it's main framework, with Bootstrap as a visual framework. Game content is loaded via Google Sheets and game state is shared among players via Firebase.
 
@@ -34,7 +34,7 @@ A quick overview of the most relevant libraries in use:
 - [BootstrapVue](https://bootstrap-vue.org/) – easy access to Bootstrap's js components such as modals and tooltips
 - [Axios](https://www.npmjs.com/package/axios) – the http libary used to pull data from Google Sheets
 
-## Project setup
+### Project setup
 
 Make sure you have [Node.js and npm](https://www.npmjs.com/get-npm) installed locally, then clone or download this project repo, navigate to the folder, and run:
 
@@ -42,11 +42,15 @@ Make sure you have [Node.js and npm](https://www.npmjs.com/get-npm) installed lo
 npm install
 ```
 
-Then set up a free Firebase project, which will give you an API key. You can follow steps one and two of [the offical guide](https://firebase.google.com/docs/web/setup#create-firebase-project)
+Then set up a free Firebase project, which will give you an API key. You can follow steps one and two of [the offical guide](https://firebase.google.com/docs/web/setup#create-firebase-project):
+
+1. Create a new project
+2. Register your app with firebase
+
+Also – install the [Firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) tool if you haven't yet.
 
 Some potentially non-obvious steps are:
 
-- Make sure you have the Firebase CLI tool installed
 - Set up both a "firestore database" and a "realtime database" via the Firebase console in order for a DatabaseURL to appear in your config
 - Configure security rules for each database. Firestore needs read and write both set to "if request.auth != null;" while Realtime only needs read set to "true"
 

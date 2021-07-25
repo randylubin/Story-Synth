@@ -578,7 +578,7 @@ export default {
       var getURL =
         "https://sheets.googleapis.com/v4/spreadsheets/" +
         '1q5LuB6H5F9hxJEZovAS4LJZc6YS8mYs0tOFIcCUp4lA' +
-        "?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM";
+        "?includeGridData=true&ranges=a1:aa100&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
 
       // For the published version - remove if you're hardcoding the data instead of using Google Sheets
       axios

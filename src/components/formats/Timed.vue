@@ -211,7 +211,7 @@ export default {
         sheetID = '1yq2AKwaYL1uZrCnEfwgSpC0SPkQAZqnCdjNxH_pm018'
       }
 
-      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa100&key=AIzaSyDsIM5nJ3hNoVRCSd3kJXfrAL8_n9gwFdM'
+      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa100&key=' + process.env.VUE_APP_FIREBASE_API_KEY
       axios.get(getURL)
       .then(response => {
 
