@@ -62,6 +62,8 @@ VUE_APP_FIREBASE_DATABASE_URL=TODO
 VUE_APP_FIREBASE_PROJECT_ID=TODO
 ```
 
+Finally, you'll need enable the Google Sheets API for the same API Key. Do that by going to the [Google Cloud Platform Console – API Library – Google Sheets API](https://console.cloud.google.com/apis/api/sheets.googleapis.com/overview) and enable the API.
+
 For analytics, you can optionally create a free [Mixpanel](https://mixpanel.com/) account and add your account ID in the main.js file.
 
 ### Run your app locally
