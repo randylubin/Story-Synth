@@ -42,7 +42,9 @@ Make sure you have [Node.js and npm](https://www.npmjs.com/get-npm) installed lo
 npm install
 ```
 
-Then set up a free Firebase project, which will give you an API key. You can follow steps one and two of [the offical guide](https://firebase.google.com/docs/web/setup#create-firebase-project):
+DO NOT run `npm audit fix --force` as it will break dependencies.
+
+Next, set up a free Firebase project, which will give you an API key. You can follow steps one and two of [the offical guide](https://firebase.google.com/docs/web/setup#create-firebase-project):
 
 1. Create a new project
 2. Register your app with firebase
