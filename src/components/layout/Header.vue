@@ -8,9 +8,8 @@
         
           <b-collapse id="navbarSupportedContent" is-nav>
             <b-navbar-nav>
-                <b-nav-item href="https://docs.storysynth.org/guide">About</b-nav-item>
-                <b-nav-item href="/Gallery/">Gallery</b-nav-item>
-                <b-nav-item href="https://docs.storysynth.org/guide/design.html">Guide</b-nav-item>
+                <b-nav-item href="/">Reset game</b-nav-item>
+                <b-nav-item href="https://amble.studio">Back to Amble</b-nav-item>
             </b-navbar-nav>
           </b-collapse>
         </b-navbar>
