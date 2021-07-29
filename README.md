@@ -42,17 +42,42 @@ Make sure you have [Node.js and npm](https://www.npmjs.com/get-npm) installed lo
 npm install
 ```
 
-Then set up a free Firebase project, which will give you an API key. You can follow steps one and two of [the offical guide](https://firebase.google.com/docs/web/setup#create-firebase-project):
+DO NOT run `npm audit fix --force` as it will break dependencies.
+
+Next, set up a free Firebase project, which will give you an API key. You can follow steps one and two of [the offical guide](https://firebase.google.com/docs/web/setup#create-firebase-project):
 
 1. Create a new project
 2. Register your app with firebase
+3. Set up Firestore Database with the below rules
+4. Set up Realtime Database with the below rules
+5. Enable anonymous sign-in under Authentication > Sign-in method
 
-Also – install the [Firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) tool if you haven't yet.
+#### Firestore Rules (update these later)
 
-Some potentially non-obvious steps are:
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if
+           request.auth != null;
+    }
+  }
+}
+```
 
-- Set up both a "firestore database" and a "realtime database" via the Firebase console in order for a DatabaseURL to appear in your config
-- Configure security rules for each database. Firestore needs read and write both set to "if request.auth != null;" while Realtime only needs read set to "true"
+#### Realtime Database Rules
+
+```
+{
+  "rules": {
+    ".read": "now < 4759953387000",  // 2020-11-5
+    ".write": "now < 4759953387000",  // 2020-11-5
+  }
+}
+```
+
+Install the [Firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) tool, if you haven't yet, and log in with the same account that you created the project with.
 
 Then, update the project with your Firebase credentials by adding them to a new .env file in the root folder of Story Synth. You need to add your your firebase api key, database url and project ID, replacing TODO in the following:
 
@@ -61,6 +86,11 @@ VUE_APP_FIREBASE_API_KEY=TODO
 VUE_APP_FIREBASE_DATABASE_URL=TODO
 VUE_APP_FIREBASE_PROJECT_ID=TODO
 ```
+
+Notes:
+
+- The Firebase Database URL should have the format of `https://PROJECT_ID.firebaseio.com` where PROJECT_ID should be the name of your project.
+- Firebase Project ID should be the ID name (e.g. story-synth) not the number code associated with it
 
 Finally, you'll need enable the Google Sheets API for the same API Key. Do that by going to the [Google Cloud Platform Console – API Library – Google Sheets API](https://console.cloud.google.com/apis/api/sheets.googleapis.com/overview) and enable the API.
 
