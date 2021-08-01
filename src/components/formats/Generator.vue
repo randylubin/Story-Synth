@@ -161,7 +161,7 @@
           </div>
         </div>
 
-        <div title="Summary" class='pl-3 pr-3' v-if="generatorView == 'Summary View'">
+        <div class='pl-3 pr-3' v-if="generatorView == 'Summary View'">
           <div class="row generator-summary text-left my-5">
             <div
               v-for="index in numberOfCategories"
@@ -193,7 +193,7 @@
           </div>
         </div>
 
-        <div title="Full" class='pl-3 pr-3' v-if="generatorView == 'Full View'">
+        <div class='pl-3 pr-3' v-if="generatorView == 'Full View'">
           <div class="row generator-row generator-full">
             <div
               v-for="index in numberOfCategories"
