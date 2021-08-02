@@ -55,7 +55,7 @@ export default {
           credits: "By Randy Lubin",
           blurb:
             "Tell the story of two companions racing around a fantasy world in order to win a wager.",
-          link: "https://storysynth.org/Games/Around-The-Realm",
+          link: "/Games/Around-The-Realm",
           image:
             "https://img.itch.zone/aW1nLzQ4MzI3NjAucG5n/315x250%23cb/Kb6Vr8.png",
         },
@@ -63,7 +63,7 @@ export default {
           title: "Raised By Mechs",
           credits: "By Raph D'Amico",
           blurb: "Tell the story of a group of children raised by their mech mother.",
-          link: "https://storysynth.org/Games/Raised-By-Mechs/",
+          link: "/Games/Raised-By-Mechs/",
           image:
             "https://iili.io/f1F7F1.png",
         },
@@ -71,7 +71,7 @@ export default {
           title: 'This Heart Within Me Burns',
           credits: 'By Sam Dunnewold',
           blurb: 'Tell the story of adventurers trying to lift a curse that\'s befallen one of them.',
-          link: 'https://storysynth.org/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/',
+          link: '/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/',
           image: 'https://iili.io/q8gJR4.md.jpg'
         },
         {
@@ -79,14 +79,14 @@ export default {
           credits: "By Randy Lubin",
           blurb:
             "Tell the story of a group of heroes trying to protect a village from a bandit attack.",
-          link: "https://storysynth.org/Games/Clash-At-Ikara",
+          link: "/Games/Clash-At-Ikara",
           image: "https://img.itch.zone/aW1nLzUxOTM4NzMucG5n/original/Pbl0xw.png",
         },
         {
           title: "Reunion",
           credits: "By Yoshi Creelman, Jenn Martin, Andy Munich",
           blurb: "Tell the story of a group coming back together after a long time apart.",
-          link: "https://storysynth.org/Shuffled/1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc/",
+          link: "/Shuffled/1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc/",
           image:
             "https://iili.io/fjX1ZQ.md.png",
         },
@@ -94,7 +94,7 @@ export default {
           title: "Æthelred's Academy for Aspiring Heroes",
           credits: "By Greg Lubin and Randy Lubin",
           blurb: "Tell silly stories about how aspiring heroes accept unlikely quests to earn dubious certifications in adventuring skills.",
-          link: "https://storysynth.org/Games/Aethelreds-Academy",
+          link: "/Games/Aethelreds-Academy",
           image:
             "https://diegeticgames.com/uploads/aethelreds-logo.png",
         },
@@ -102,7 +102,7 @@ export default {
           title: "Working For The Corp",
           credits: "By Ken Davidson, with contributions from Jess Meir",
           blurb: 'Play as workers at a cyberpunk megacorp who are tasked with defending key info from runners.  Will you defend The Corp?',
-          link: "https://storysynth.org/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA",
+          link: "/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA",
           image:
             "https://iili.io/f1Kl07.md.png",
         },
