@@ -67,7 +67,7 @@ export default {
       roomID: null,
       gameType: null,
       gSheetID: null,
-      currentUrl: location.hostname.toString() + "/#" + this.$route.fullPath,
+      currentUrl: location.hostname.toString() + "/" + this.$route.fullPath,
       roomInfo: {},
     };
   },
@@ -97,6 +97,8 @@ export default {
         sheetID: this.$route.gSheetID,
         gameSessionURL: this.currentUrl,
       });
+
+      this.updateUrl()
     }
   },
   watch: {
@@ -133,8 +135,13 @@ export default {
   },
   methods: {
     updateUrl() {
-      this.currentUrl =
-        "https://" + location.hostname.toString() + this.$route.fullPath;
+      if (!this.$route.params.userRole){
+        this.currentUrl =
+          "https://" + location.hostname.toString() + this.$route.fullPath;
+      } else {
+        this.currentUrl = "https://" + location.hostname.toString() + '/' + this.$route.params.gameType + '/' + this.$route.params.gSheetID + '/' + this.$route.params.roomID + '/player/'
+        console.log('current URL is now', this.$route.params.userRole, this.currentUrl)
+      }
     },
     copyTextToClipboard() {
       var copyText = document.getElementById("urlForCopying");

@@ -361,7 +361,13 @@ export default {
         routeFullPath = routeFullPath.slice(0, -1);
       }
 
-      return routeFullPath + "/" + roomID;
+      let tempURL = routeFullPath + "/" + roomID
+
+      if (this.customOptions.facilitatorMode){
+        tempURL += '/facilitator/'
+      }
+
+      return tempURL;
     },
     recreateSheetURL(sheetID) {
       return "https://docs.google.com/spreadsheets/d/" + sheetID;

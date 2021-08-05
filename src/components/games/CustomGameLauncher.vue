@@ -262,6 +262,7 @@ export default {
   props: {
     routeGSheetID: String,
     routeGameType: String,
+    routeUserRole: String,
   },
   data() {
     return {
