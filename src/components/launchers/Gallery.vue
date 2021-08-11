@@ -107,6 +107,13 @@ export default {
             "https://iili.io/f1Kl07.md.png",
         },
         {
+          title: 'Compersion',
+          credits: 'By Justin Ford',
+          blurb: 'Explore the excitement and intrigue of a polyamorous romance with the Queen in this GM-less game for 2-6 players.',
+          link: 'https://storysynth.org/Shuffled/1XVd4Kgq3X3utOm25JXOsDbhI_jLjAHX8mGzpiT6Sgho/',
+          image: 'https://iili.io/RuxtON.png'
+        },
+        {
           title: "Dawn of the Monster Invasion",
           credits: "By Randy Lubin",
           blurb: "Create a monster movie spoof through six speeches.",

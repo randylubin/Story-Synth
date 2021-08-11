@@ -22,6 +22,7 @@ module.exports = {
         '/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA/', // working for the corp
         '/Shuffled/1ghm-XOUZlYaOeHcl0zer4KSpCMaoN5u_X7iWmN2TrjY/', // For the Awesome
         '/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/', // This Heart Within Me Burns
+        '/Shuffled/1XVd4Kgq3X3utOm25JXOsDbhI_jLjAHX8mGzpiT6Sgho/', // Compersion
       ],
       useRenderEvent: true,
       headless: true,
