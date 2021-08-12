@@ -1,5 +1,6 @@
 <template>
   <div class="">
+    <app-arribaTown :roomID="$route.params.roomID" v-if="routeGSheetID == 'Arriba-Town'"></app-arribaTown>
     <app-aethelredsAcademy :roomID="$route.params.roomID" v-if="routeGSheetID == 'Aethelreds-Academy'"></app-aethelredsAcademy>
     <app-aroundTheRealm :roomID="$route.params.roomID" v-if="routeGSheetID == 'Around-The-Realm'"></app-aroundTheRealm>
     <app-clashAtIkara :roomID="$route.params.roomID" v-if="routeGSheetID == 'Clash-At-Ikara'"></app-clashAtIkara> 
@@ -9,6 +10,7 @@
 </template>
 
 <script>
+import ArribaTown from './ArribaTown.vue';
 import AethelredsAcedemy from './AethelredsAcademy.vue';
 import AroundTheRealm from './AroundTheRealm.vue';
 import ClashAtIkara from './ClashAtIkara.vue';
@@ -18,6 +20,7 @@ import RaisedByMechs from './RaisedByMechs.vue';
 export default {
   name: 'app-customGameSession',
   components: {
+    'app-arribaTown': ArribaTown,
     'app-aethelredsAcademy': AethelredsAcedemy,
     'app-aroundTheRealm': AroundTheRealm,
     'app-clashAtIkara': ClashAtIkara,
@@ -30,6 +33,11 @@ export default {
   data: function() {
     return {
       gameMetaData: {
+        'Arriba-Town': {
+          'gameTitle': 'Arriba Town',
+          'gameBlurb': 'Tell silly stories about how aspiring heroes go on unlikely quests to earn dubious certifications in adventuring skills. By Greg and Randy Lubin.',
+          'ogImage': 'https://diegeticgames.com/uploads/aethelreds-logo-square.png'
+        },
         'Aethelreds-Academy': {
           'gameTitle': ' Æthelred\'s Academy for Aspiring Heroes',
           'gameBlurb': 'Tell silly stories about how aspiring heroes go on unlikely quests to earn dubious certifications in adventuring skills. By Greg and Randy Lubin.',
