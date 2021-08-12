@@ -94,6 +94,9 @@
       </div>
 
       <div class="mt-4 generator-main card shadow mb-4">
+        <div class="game-title-on-card mt-4" v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard">
+          <h1>{{customOptions.gameTitle}}</h1>
+        </div>
         <div class="regenerate-button my-4">
           <b-form inline class="justify-content-center">
             <b-button v-on:click="shuffleAll()" class="btn btn-dark mx-2 my-1">
@@ -161,7 +164,7 @@
           </div>
         </div>
 
-        <div title="Summary" class='pl-3 pr-3' v-if="generatorView == 'Summary View'">
+        <div class='pl-3 pr-3' v-if="generatorView == 'Summary View'">
           <div class="row generator-summary text-left my-5">
             <div
               v-for="index in numberOfCategories"
@@ -193,7 +196,7 @@
           </div>
         </div>
 
-        <div title="Full" class='pl-3 pr-3' v-if="generatorView == 'Full View'">
+        <div class='pl-3 pr-3' v-if="generatorView == 'Full View'">
           <div class="row generator-row generator-full">
             <div
               v-for="index in numberOfCategories"
@@ -597,6 +600,11 @@ $base-color: rgb(33, 33, 33);
     font-size:1rem !important;
     font-weight: 500 !important;  
   } /*1rem = 16px*/
+
+  .generator-cell-reroll-button {
+    display: none;
+  }
+
 }
 
 select {

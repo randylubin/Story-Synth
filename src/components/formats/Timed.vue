@@ -57,7 +57,7 @@
     </div>
 
     <div v-for="(row, index) in gSheet" v-bind:key="index">
-      <div v-if="roomInfo.timeBegan">
+      <div v-if="roomInfo && roomInfo.timeBegan">
         <transition name="fade">
           <div class="row mb-4" v-if="row.time <= secondsElapsed && row[playerSelected]">
             <div class="col-sm">
@@ -114,10 +114,36 @@ export default {
     }
   },
   mounted(){
-    roomsCollection.doc(this.roomID).set(this.roomInfo);
     this.fetchAndCleanSheetData(this.gSheetID);
+    this.$bind("roomInfo", roomsCollection.doc(this.roomID))
+      .then(() => {
+        this.firebaseReady = true;
+      })
+      .then(() => {
+        if (!this.roomInfo) {
+          console.log("new room!");
+
+          roomsCollection
+            .doc(this.roomID)
+            .set({
+              timeBegan: null
+            , timeStopped: null
+            , stoppedDuration: 0
+            , running: false
+            });
+
+          if (this.dataReady) {
+            this.shuffleAndResetGame();
+          }
+        } else if (this.dataReady){
+          this.firebaseCacheError = false;
+        }
+    })
+    .catch((error) => {
+      console.log("error in loading: ", error);
+    });
+
     this.sync();
-    this.firebaseReady = true;
   },
   firestore() {
     return {
