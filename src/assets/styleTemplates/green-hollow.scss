@@ -1,6 +1,73 @@
 @import url("https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap");
 
+@font-face {
+  font-family:avenir lt std;
+  src:url(/wp-content/themes/Divi-child/fonts/AvenirLTStd-Roman.eot);
+  src:url(/wp-content/themes/Divi-child/fonts/AvenirLTStd-Roman.eot?#iefix) format('embedded-opentype'),
+  url(/wp-content/themes/Divi-child/fonts/AvenirLTStd-Roman.woff2) format('woff2'),
+  url(/wp-content/themes/Divi-child/fonts/AvenirLTStd-Roman.woff) format('woff'),
+  url(/wp-content/themes/Divi-child/fonts/AvenirLTStd-Roman.ttf) format('truetype'),
+  url(/wp-content/themes/Divi-child/fonts/AvenirLTStd-Roman.svg#AvenirLTStd-Roman) format('svg');
+  font-weight:400;
+  font-style:normal
+}
+
+@font-face{
+  font-family:avenir lt std;
+  src:
+  url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Medium.eot);
+  src:
+    url(/wp-content/themes/Divi-child/fonts/AvenirLTStd-Medium.eot?#iefix) format('embedded-opentype'),
+    url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Medium.woff2) format('woff2'),
+    url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Medium.woff) format('woff'),
+    url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Medium.ttf) format('truetype'),
+    url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Medium.svg#AvenirLTStd-Medium) format('svg');
+  font-weight:500;
+  font-style:normal
+}
+
+@font-face {
+  font-family:avenir lt std;
+  src:
+    url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Black.eot);
+  src:
+    url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Black.eot?#iefix) format('embedded-opentype'),
+    url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Black.woff2) format('woff2'),
+    url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Black.woff) format('woff'),
+    url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Black.ttf) format('truetype'),
+    url(https://www.aimbigemployment.com.au/wp-content/themes/Divi-child/fonts/AvenirLTStd-Black.svg#AvenirLTStd-Black) format('svg');
+  font-weight:900;
+  font-style:normal
+}
+
+@font-face {
+  font-family:avenir;
+  src:url(/wp-content/themes/Divi-child/fonts/Avenir-Roman.eot);
+  src:url(/wp-content/themes/Divi-child/fonts/Avenir-Roman.eot?#iefix) format('embedded-opentype'),
+  url(/wp-content/themes/Divi-child/fonts/Avenir-Roman.woff2) format('woff2'),
+  url(/wp-content/themes/Divi-child/fonts/Avenir-Roman.woff) format('woff'),
+  url(/wp-content/themes/Divi-child/fonts/Avenir-Roman.ttf) format('truetype'),
+  url(/wp-content/themes/Divi-child/fonts/Avenir-Roman.svg#Avenir-Roman) format('svg');font-weight:400;
+  font-style:normal
+}
+  
+  @font-face{
+    font-family:avenir;
+    src:url(/wp-content/themes/Divi-child/fonts/Avenir-Heavy.eot);
+    src:url(/wp-content/themes/Divi-child/fonts/Avenir-Heavy.eot?#iefix) format('embedded-opentype'),
+    url(/wp-content/themes/Divi-child/fonts/Avenir-Heavy.woff2) format('woff2'),
+    url(/wp-content/themes/Divi-child/fonts/Avenir-Heavy.woff) format('woff'),
+    url(/wp-content/themes/Divi-child/fonts/Avenir-Heavy.ttf) format('truetype'),
+    url(/wp-content/themes/Divi-child/fonts/Avenir-Heavy.svg#Avenir-Heavy) format('svg');
+    font-weight:900;
+    font-style:normal
+  }
+  
+  body{
+    font-family:avenir lt std, 'Poppins', sans-serif;
+  }
+
 .style-template-fantasy {
   font-family: "Cardo", Garamond, serif !important;
   font-size: 1.1em !important;
