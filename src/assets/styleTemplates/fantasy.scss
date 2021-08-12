@@ -52,4 +52,13 @@
     border: 1px solid $card-bg;
     color: $base-color;
   }
+
+  a {
+    color: $label-text;
+
+    :hover {
+      color: $base-color;
+      text-decoration: underline;
+    }
+  }
 }
