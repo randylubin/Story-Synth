@@ -29,6 +29,7 @@ export default {
   },
   props: {
     routeGSheetID: String,
+    routeUserRole: String,
   },
   data: function() {
     return {
