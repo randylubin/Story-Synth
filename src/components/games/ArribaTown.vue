@@ -1,5 +1,5 @@
 <template>
-  <div class="shuffled game-room container arriba" v-if="roomInfo">
+  <div class="shuffled game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
     <b-alert show class="" variant="danger" v-if="firebaseCacheError"
@@ -27,7 +27,16 @@
         </div>
       </div>
 
-      <div class="row mb-4">
+      <!-- TODO: Facilitator Notes
+      <div class="facilitator-panel" v-if="userRole == 'facilitator' && customOptions.facilitatorMode">
+        <h1>Faciliator</h1>
+      </div>
+      -->
+
+      <div
+        class="row mb-4"
+        v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+      >
         <transition name="fade">
           <div class="btn-group col-sm" role="group" aria-label="Card Controls">
             <button
@@ -292,7 +301,10 @@
         </transition>
       </div>
 
-      <div class="btn-container" style>
+      <div
+        class="btn-container"
+        v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+      >
         <div class="row mb-4">
           <div class="col-sm">
             <b-button-group aria-role="Deck control" class="d-flex w-100">
@@ -300,6 +312,9 @@
                 v-b-modal.reshuffleConfirm
                 variant="outline-dark"
                 :disabled="roomInfo.xCardIsActive"
+                v-if="
+                  !customOptions.facilitatorMode || userRole == 'facilitator'
+                "
                 color="rgb(187, 138, 200)"
                 >Restart</b-button
               >
@@ -316,7 +331,10 @@
               <b-button
                 v-b-modal.modalNextDeckConfirm
                 variant="outline-dark"
-                v-if="this.customOptions.showNextDeckButton"
+                v-if="
+                  this.customOptions.showNextDeckButton &&
+                  (!customOptions.facilitatorMode || userRole == 'facilitator')
+                "
                 :disabled="
                   roomInfo.xCardIsActive ||
                   roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
@@ -338,7 +356,10 @@
                   roomInfo.currentCardIndex == gSheet.length - 1 ||
                   roomInfo.currentCardIndex == roomInfo.locationOfLastCard
                 "
-                v-if="!this.customOptions.showNextDeckButton"
+                v-if="
+                  !this.customOptions.showNextDeckButton &&
+                  (!customOptions.facilitatorMode || userRole == 'facilitator')
+                "
                 right
               >
                 <b-dropdown-item v-on:click="lastCard()"
@@ -455,6 +476,7 @@ export default {
   props: {
     roomID: String,
     gSheetID: String,
+    userRole: String,
   },
   data: function () {
     return {
@@ -477,6 +499,7 @@ export default {
       customOptions: {
         lastCardLabel: "Last Card",
       },
+      deckTransitionArray: null,
       error: false,
     };
   },
@@ -567,6 +590,12 @@ export default {
       });
   },
   methods: {
+    goToCard(index) {
+      roomsCollection.doc(this.roomID).update({
+        currentCardIndex: index,
+        showCardBack: false,
+      });
+    },
     previousCard() {
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: (this.roomInfo.currentCardIndex -= 1),
@@ -574,13 +603,30 @@ export default {
       });
     },
     nextCard() {
+      // make sure there's a deck
       if (this.roomInfo.cardSequence.length == 1) {
         this.shuffleAndResetGame();
       }
-      roomsCollection.doc(this.roomID).update({
-        currentCardIndex: (this.roomInfo.currentCardIndex += 1),
-        showCardBack: false,
-      });
+
+      // default to one more than the current card
+      let destinationCard = this.roomInfo.currentCardIndex + 1;
+
+      if (this.deckTransitionArray) {
+        console.log(this.roomInfo.currentCardIndex, this.firstNonInstruction);
+        if (
+          this.deckTransitionArray.includes(this.roomInfo.currentCardIndex + 1)
+        ) {
+          destinationCard = null;
+          this.nextDeck();
+        }
+      }
+
+      if (destinationCard) {
+        roomsCollection.doc(this.roomID).update({
+          currentCardIndex: destinationCard,
+          showCardBack: false,
+        });
+      }
     },
     lastCard() {
       if (this.roomInfo.cardSequence.length == 1) {
@@ -847,6 +893,23 @@ export default {
               this.unorderedDecks[item.ordered].push(index);
             }
           });
+
+          // check for next deck transitions
+          if (this.customOptions.cardsDrawnPerDeck) {
+            this.deckTransitionArray = [];
+
+            let temporaryDeckTransitionArray =
+              this.customOptions.cardsDrawnPerDeck.split(",");
+            let deckTransitionIndexTracking = this.firstNonInstruction;
+
+            for (let i = 0; i < temporaryDeckTransitionArray.length; i++) {
+              deckTransitionIndexTracking += this.unorderedDecks[i].length;
+              this.deckTransitionArray.push(
+                deckTransitionIndexTracking +
+                  parseInt(temporaryDeckTransitionArray[i])
+              );
+            }
+          }
 
           console.log("done fetching and cleaning data");
           this.dataReady = true;

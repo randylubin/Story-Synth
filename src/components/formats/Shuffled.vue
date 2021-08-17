@@ -2,13 +2,16 @@
   <div class="shuffled game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
-    <b-alert show class="" variant="danger" v-if="firebaseCacheError">Warning: the length of the deck has changed since this room was first created. Click Restart to resync card data.</b-alert>
+    <b-alert show class="" variant="danger" v-if="firebaseCacheError"
+      >Warning: the length of the deck has changed since this room was first
+      created. Click Restart to resync card data.</b-alert
+    >
     <div class="" v-if="roomInfo">
       <div
         class="mb-4 game-meta d-none d-sm-block"
         v-if="
           !customOptions.hideTitleInSession &&
-            (customOptions.gameTitle || customOptions.byline)
+          (customOptions.gameTitle || customOptions.byline)
         "
       >
         <div class="row text-center" v-if="customOptions.gameTitle">
@@ -30,7 +33,10 @@
       </div>
       -->
 
-      <div class="row mb-4" v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
+      <div
+        class="row mb-4"
+        v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+      >
         <transition name="fade">
           <div class="btn-group col-sm" role="group" aria-label="Card Controls">
             <button
@@ -47,7 +53,7 @@
               v-on:click="nextCard()"
               :disabled="
                 roomInfo.xCardIsActive ||
-                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+                roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
               "
             >
               Next Card
@@ -60,8 +66,8 @@
         class="row mb-4 game-meta"
         v-if="
           customOptions.instructionsProgressBar &&
-            roomInfo.currentCardIndex < firstNonInstruction &&
-            roomInfo.currentCardIndex != 0
+          roomInfo.currentCardIndex < firstNonInstruction &&
+          roomInfo.currentCardIndex != 0
         "
       >
         <div class="col-sm">
@@ -74,9 +80,22 @@
         </div>
       </div>
 
-      <div class="row mb-3 game-meta card-counter" v-if="customOptions.displayCardCount && customOptions.displayCardCount - 1 <= roomInfo.currentCardIndex && roomInfo.currentCardIndex < roomInfo.locationOfLastCard">
+      <div
+        class="row mb-3 game-meta card-counter"
+        v-if="
+          customOptions.displayCardCount &&
+          customOptions.displayCardCount - 1 <= roomInfo.currentCardIndex &&
+          roomInfo.currentCardIndex < roomInfo.locationOfLastCard
+        "
+      >
         <div class="col-sm">
-          <h2><span v-if="customOptions.displayCardCountLabel">{{customOptions.displayCardCountLabel}}</span><span v-else>Cards seen:</span> {{roomInfo.currentCardIndex - customOptions.displayCardCount + 1}}</h2>
+          <h2>
+            <span v-if="customOptions.displayCardCountLabel">{{
+              customOptions.displayCardCountLabel
+            }}</span
+            ><span v-else>Cards seen:</span>
+            {{ roomInfo.currentCardIndex - customOptions.displayCardCount + 1 }}
+          </h2>
         </div>
       </div>
 
@@ -95,18 +114,17 @@
             <img
               v-bind:src="customOptions.coverImage"
               class="card-img-top"
-              style="width:100%"
+              style="width: 100%"
               v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0"
             />
             <img
               v-bind:src="customOptions.cardBackgroundImage"
               class="card-img-top card-background"
-              style="width:100%"
+              style="width: 100%"
               v-if="
                 customOptions.cardBackgroundImage &&
-                  (!customOptions.coverImage ||
-                    roomInfo.currentCardIndex != 0) &&
-                  !customOptions.cardBackgroundImageAlign
+                (!customOptions.coverImage || roomInfo.currentCardIndex != 0) &&
+                !customOptions.cardBackgroundImageAlign
               "
             />
             <b-card-img
@@ -115,7 +133,7 @@
               top
               v-if="
                 customOptions.cardBackgroundImageAlign == 'top' &&
-                  roomInfo.currentCardIndex != 0
+                roomInfo.currentCardIndex != 0
               "
             ></b-card-img>
 
@@ -126,7 +144,7 @@
               <h1 class="m-5">Loading</h1>
               <b-spinner
                 class="m-5"
-                style="width: 4rem; height: 4rem;"
+                style="width: 4rem; height: 4rem"
                 label="Busy"
               ></b-spinner>
             </div>
@@ -135,7 +153,13 @@
               v-if="!customOptions.coverImage || roomInfo.currentCardIndex != 0"
             >
               <div
-                class="card-body justify-content-center d-flex align-items-center mt-4"
+                class="
+                  card-body
+                  justify-content-center
+                  d-flex
+                  align-items-center
+                  mt-4
+                "
                 style="white-space: pre-line"
                 v-bind:class="{
                   'card-body': !customOptions.cardBackgroundImage,
@@ -159,26 +183,82 @@
                         .bodyText
                     "
                   ></p>
-                  <button class="btn btn-outline-dark" v-on:click="flipCard()" v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack && customOptions.reversableCards">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-                      <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                      <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                  <button
+                    class="btn btn-outline-dark"
+                    v-on:click="flipCard()"
+                    v-if="
+                      gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
+                        .cardBack && customOptions.reversableCards
+                    "
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-arrow-repeat"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+                      />
                     </svg>
                   </button>
                 </div>
                 <div v-else>
-                  <div class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack">
-                  </div> 
-                  <button class="btn btn-outline-dark" v-on:click="flipCard()" v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack && customOptions.reversableCards">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-                      <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                      <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                  <div
+                    class="mt-4 mb-4"
+                    v-html="
+                      gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
+                        .cardBack
+                    "
+                  ></div>
+                  <button
+                    class="btn btn-outline-dark"
+                    v-on:click="flipCard()"
+                    v-if="
+                      gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
+                        .cardBack && customOptions.reversableCards
+                    "
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-arrow-repeat"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+                      />
                     </svg>
                   </button>
                 </div>
               </div>
             </div>
-            <b-alert show class="mx-3" v-html="customOptions.lastCardReminderText" variant="info" v-if="customOptions.lastCardReminderText && customOptions.lastCardReminderFrequency && roomInfo.currentCardIndex > firstNonInstruction && ((roomInfo.currentCardIndex - firstNonInstruction) % customOptions.lastCardReminderFrequency == customOptions.lastCardReminderFrequency - 1)"></b-alert>
+            <b-alert
+              show
+              class="mx-3"
+              v-html="customOptions.lastCardReminderText"
+              variant="info"
+              v-if="
+                customOptions.lastCardReminderText &&
+                customOptions.lastCardReminderFrequency &&
+                roomInfo.currentCardIndex > firstNonInstruction &&
+                (roomInfo.currentCardIndex - firstNonInstruction) %
+                  customOptions.lastCardReminderFrequency ==
+                  customOptions.lastCardReminderFrequency - 1
+              "
+            ></b-alert>
 
             <div
               class="card-body align-items-center justify-content-center"
@@ -214,16 +294,17 @@
               bottom
               v-if="
                 customOptions.cardBackgroundImageAlign == 'bottom' &&
-                  roomInfo.currentCardIndex != 0
+                roomInfo.currentCardIndex != 0
               "
             ></b-card-img>
           </div>
         </transition>
       </div>
 
-
-
-      <div class="btn-container" v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
+      <div
+        class="btn-container"
+        v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+      >
         <div class="row mb-4">
           <div class="col-sm">
             <b-button-group aria-role="Deck control" class="d-flex w-100">
@@ -231,7 +312,9 @@
                 v-b-modal.reshuffleConfirm
                 variant="outline-dark"
                 :disabled="roomInfo.xCardIsActive"
-                v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+                v-if="
+                  !customOptions.facilitatorMode || userRole == 'facilitator'
+                "
                 color="rgb(187, 138, 200)"
                 >Restart</b-button
               >
@@ -248,11 +331,13 @@
               <b-button
                 v-b-modal.modalNextDeckConfirm
                 variant="outline-dark"
-                
-                v-if="this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator')"
+                v-if="
+                  this.customOptions.showNextDeckButton &&
+                  (!customOptions.facilitatorMode || userRole == 'facilitator')
+                "
                 :disabled="
                   roomInfo.xCardIsActive ||
-                    roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
                 "
                 v-html="
                   customOptions.showNextDeckButton
@@ -268,14 +353,17 @@
                 v-bind:text="customOptions.lastCardLabel"
                 :disabled="
                   roomInfo.xCardIsActive ||
-                    roomInfo.currentCardIndex == gSheet.length - 1 ||
-                    roomInfo.currentCardIndex == roomInfo.locationOfLastCard
+                  roomInfo.currentCardIndex == gSheet.length - 1 ||
+                  roomInfo.currentCardIndex == roomInfo.locationOfLastCard
                 "
-                v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator')"
+                v-if="
+                  !this.customOptions.showNextDeckButton &&
+                  (!customOptions.facilitatorMode || userRole == 'facilitator')
+                "
                 right
               >
                 <b-dropdown-item v-on:click="lastCard()"
-                  >Go to {{customOptions.lastCardLabel}}</b-dropdown-item
+                  >Go to {{ customOptions.lastCardLabel }}</b-dropdown-item
                 >
                 <b-dropdown-item v-on:click="shuffleLastCard('center')"
                   >Shuffle near middle</b-dropdown-item
@@ -288,13 +376,13 @@
           </div>
         </div>
       </div>
-      
+
       <div
         v-if="
           dataReady &&
-            firebaseReady &&
-            roomInfo &&
-            Object.keys(roomInfo.extensionData).length > 1
+          firebaseReady &&
+          roomInfo &&
+          Object.keys(roomInfo.extensionData).length > 1
         "
       >
         <app-extensionManager
@@ -350,41 +438,27 @@
         </div>
       </div>
 
-      <b-modal
-        id="modalNextDeckConfirm"
-        title="Advance?"
-        hide-footer
-      >
+      <b-modal id="modalNextDeckConfirm" title="Advance?" hide-footer>
         <p></p>
-        <div
-          class="text-center mb-3"
-        >
-          <b-button
-            variant="dark"
-            v-on:click="nextDeck()"
-            >Advance to {{customOptions.showNextDeckButton
-                        ? customOptions.showNextDeckButton
-                        : 'Next Deck'}}</b-button
+        <div class="text-center mb-3">
+          <b-button variant="dark" v-on:click="nextDeck()"
+            >Advance to
+            {{
+              customOptions.showNextDeckButton
+                ? customOptions.showNextDeckButton
+                : "Next Deck"
+            }}</b-button
           >
         </div>
       </b-modal>
-      <b-modal
-        id="reshuffleConfirm"
-        title="Restart and Reshuffle"
-        hide-footer
-      >
+      <b-modal id="reshuffleConfirm" title="Restart and Reshuffle" hide-footer>
         <p>Do you want to reshuffle all of the prompts and restart the game?</p>
-        <div
-          class="text-center mb-3"
-        >
-          <b-button
-            variant="dark"
-            v-on:click="shuffleAndResetGame()"
+        <div class="text-center mb-3">
+          <b-button variant="dark" v-on:click="shuffleAndResetGame()"
             >Restart and Reshuffle</b-button
           >
         </div>
       </b-modal>
-
     </div>
   </div>
 </template>
@@ -404,7 +478,7 @@ export default {
     gSheetID: String,
     userRole: String,
   },
-  data: function() {
+  data: function () {
     return {
       roomInfo: {
         currentCardIndex: 0,
@@ -423,7 +497,7 @@ export default {
       totalDecks: 0,
       unorderedDecks: {},
       customOptions: {
-        lastCardLabel: "Last Card"
+        lastCardLabel: "Last Card",
       },
       deckTransitionArray: null,
       error: false,
@@ -492,21 +566,22 @@ export default {
         if (!this.roomInfo) {
           console.log("new room!");
 
-          roomsCollection
-            .doc(this.roomID)
-            .set({
-              extensionData: this.tempExtensionData,
-              currentCardIndex: 0,
-              xCardIsActive: false,
-              cardSequence: [0, 1, 2],
-            });
+          roomsCollection.doc(this.roomID).set({
+            extensionData: this.tempExtensionData,
+            currentCardIndex: 0,
+            xCardIsActive: false,
+            cardSequence: [0, 1, 2],
+          });
 
           if (this.dataReady) {
             this.shuffleAndResetGame();
           }
-        } else if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.dataReady){
+        } else if (
+          this.roomInfo.cardSequence.length !== this.gSheet.length &&
+          this.dataReady
+        ) {
           this.firebaseCacheError = true;
-        } else if (this.dataReady){
+        } else if (this.dataReady) {
           this.firebaseCacheError = false;
         }
       })
@@ -515,9 +590,9 @@ export default {
       });
   },
   methods: {
-    goToCard(index){
+    goToCard(index) {
       roomsCollection.doc(this.roomID).update({
-        currentCardIndex: (index),
+        currentCardIndex: index,
         showCardBack: false,
       });
     },
@@ -534,17 +609,19 @@ export default {
       }
 
       // default to one more than the current card
-      let destinationCard = this.roomInfo.currentCardIndex + 1
+      let destinationCard = this.roomInfo.currentCardIndex + 1;
 
-      if (this.deckTransitionArray){
-        console.log(this.roomInfo.currentCardIndex, this.firstNonInstruction)
-        if (this.deckTransitionArray.includes(this.roomInfo.currentCardIndex + 1)) {
+      if (this.deckTransitionArray) {
+        console.log(this.roomInfo.currentCardIndex, this.firstNonInstruction);
+        if (
+          this.deckTransitionArray.includes(this.roomInfo.currentCardIndex + 1)
+        ) {
           destinationCard = null;
-          this.nextDeck()
-        } 
+          this.nextDeck();
+        }
       }
-      
-      if (destinationCard){
+
+      if (destinationCard) {
         roomsCollection.doc(this.roomID).update({
           currentCardIndex: destinationCard,
           showCardBack: false,
@@ -567,7 +644,7 @@ export default {
       });
     },
     nextDeck() {
-      this.$bvModal.hide("modalNextDeckConfirm")	
+      this.$bvModal.hide("modalNextDeckConfirm");
       let newCardIndex = this.roomInfo.currentCardIndex;
       let chapterIndexTracker = this.orderedCards.length;
       console.log("current:", newCardIndex);
@@ -610,11 +687,10 @@ export default {
             this.roomInfo.cardSequence.length - Math.floor(Math.random() * 4);
           break;
         default:
-          if(Number.isInteger(location)) {
-            console.log('last card', location)
-            tempNewLastCardLocation = location
+          if (Number.isInteger(location)) {
+            console.log("last card", location);
+            tempNewLastCardLocation = location;
           }
-
       }
 
       this.roomInfo.cardSequence.splice(
@@ -630,11 +706,10 @@ export default {
         showCardBack: false,
       });
     },
-    flipCard(){
-
+    flipCard() {
       let tempShowCardBack = true;
       if (this.roomInfo.showCardBack) {
-        tempShowCardBack = false
+        tempShowCardBack = false;
       }
 
       roomsCollection.doc(this.roomID).update({
@@ -644,7 +719,7 @@ export default {
     shuffleAndResetGame() {
       console.log("shuffling");
       this.firebaseCacheError = false;
-      this.$bvModal.hide("reshuffleConfirm")	
+      this.$bvModal.hide("reshuffleConfirm");
 
       // reset card count
       roomsCollection.doc(this.roomID).update({
@@ -661,7 +736,7 @@ export default {
       }
 
       // Shuffle deck function
-      var shuffleDeck = function(deck) {
+      var shuffleDeck = function (deck) {
         for (var n = deck.length - 1; n > 0; n--) {
           let j = Math.floor(Math.random() * (n + 1));
           [deck[n], deck[j]] = [deck[j], deck[n]];
@@ -677,27 +752,37 @@ export default {
       }
 
       // check for set last card location
-      let tempLastCardIndex = newCardSequence.length-1
-      let lastLocation = parseFloat(this.customOptions.setLastCardLocation)
+      let tempLastCardIndex = newCardSequence.length - 1;
+      let lastLocation = parseFloat(this.customOptions.setLastCardLocation);
 
-      if (lastLocation){
+      if (lastLocation) {
         if (lastLocation >= 1) {
-          tempLastCardIndex = lastLocation + this.orderedCards.length
-        } else if (lastLocation > 0){
-          let maxLoc = newCardSequence.length
-          let minLoc = newCardSequence.length - Math.floor(this.unorderedDecks[1].length * lastLocation) - 1
-          tempLastCardIndex = Math.floor(Math.random() * (maxLoc-minLoc) + minLoc)
-          console.log('new location:', tempLastCardIndex, maxLoc, minLoc)
+          tempLastCardIndex = lastLocation + this.orderedCards.length;
+        } else if (lastLocation > 0) {
+          let maxLoc = newCardSequence.length;
+          let minLoc =
+            newCardSequence.length -
+            Math.floor(this.unorderedDecks[1].length * lastLocation) -
+            1;
+          tempLastCardIndex = Math.floor(
+            Math.random() * (maxLoc - minLoc) + minLoc
+          );
+          console.log("new location:", tempLastCardIndex, maxLoc, minLoc);
         } else {
-          tempLastCardIndex = newCardSequence.length + lastLocation - 1
+          tempLastCardIndex = newCardSequence.length + lastLocation - 1;
         }
       }
 
       // sync the shuffled array
-      roomsCollection.doc(this.roomID).update({
-        cardSequence: newCardSequence,
-        locationOfLastCard: newCardSequence.length-1,
-      }).then(() => {this.shuffleLastCard(tempLastCardIndex)});
+      roomsCollection
+        .doc(this.roomID)
+        .update({
+          cardSequence: newCardSequence,
+          locationOfLastCard: newCardSequence.length - 1,
+        })
+        .then(() => {
+          this.shuffleLastCard(tempLastCardIndex);
+        });
     },
     syncExtension() {
       roomsCollection.doc(this.roomID).update({
@@ -714,7 +799,8 @@ export default {
       var getURL =
         "https://sheets.googleapis.com/v4/spreadsheets/" +
         sheetID +
-        "?includeGridData=true&ranges=a1:aa100&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+        "?includeGridData=true&ranges=a1:aa100&key=" +
+        process.env.VUE_APP_FIREBASE_API_KEY;
 
       // For the published version - remove if you're hardcoding the data instead of using Google Sheets
       axios
@@ -757,7 +843,7 @@ export default {
                 };
 
                 if (item.values[3] && item.values[3].formattedValue) {
-                  rowInfo.cardBack = item.values[3].formattedValue
+                  rowInfo.cardBack = item.values[3].formattedValue;
                 }
 
                 cleanData.push(rowInfo);
@@ -809,37 +895,41 @@ export default {
           });
 
           // check for next deck transitions
-          if (this.customOptions.cardsDrawnPerDeck){
-            
-            this.deckTransitionArray = []
+          if (this.customOptions.cardsDrawnPerDeck) {
+            this.deckTransitionArray = [];
 
-            let temporaryDeckTransitionArray = this.customOptions.cardsDrawnPerDeck.split(",")
-            let deckTransitionIndexTracking = this.firstNonInstruction
+            let temporaryDeckTransitionArray =
+              this.customOptions.cardsDrawnPerDeck.split(",");
+            let deckTransitionIndexTracking = this.firstNonInstruction;
 
             for (let i = 0; i < temporaryDeckTransitionArray.length; i++) {
-              deckTransitionIndexTracking += this.unorderedDecks[i].length
-              this.deckTransitionArray.push(deckTransitionIndexTracking + parseInt(temporaryDeckTransitionArray[i]))
+              deckTransitionIndexTracking += this.unorderedDecks[i].length;
+              this.deckTransitionArray.push(
+                deckTransitionIndexTracking +
+                  parseInt(temporaryDeckTransitionArray[i])
+              );
             }
           }
 
           console.log("done fetching and cleaning data");
           this.dataReady = true;
 
-          if (location.hostname.toString() !== 'localhost'){
-            this.$mixpanel.track('Visit Game Session', {
-              game_name: this.customOptions.gameTitle ?? 'untitled',
+          if (location.hostname.toString() !== "localhost") {
+            this.$mixpanel.track("Visit Game Session", {
+              game_name: this.customOptions.gameTitle ?? "untitled",
               session_url: location.hostname.toString() + this.$route.fullPath,
-              format: 'Shuffled'
+              format: "Shuffled",
             });
           }
 
           if (this.firebaseReady && this.roomInfo.cardSequence.length < 4) {
             this.shuffleAndResetGame();
-          }
-
-          else if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.firebaseReady){
+          } else if (
+            this.roomInfo.cardSequence.length !== this.gSheet.length &&
+            this.firebaseReady
+          ) {
             this.firebaseCacheError = true;
-          } else if (this.firebaseReady){
+          } else if (this.firebaseReady) {
             this.firebaseCacheError = false;
           }
         })
