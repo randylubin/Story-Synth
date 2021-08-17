@@ -6,7 +6,7 @@
         class="card shadow mb-4"
         style="margin-top: 76px"
       >
-        <div class="card-body">
+        <!-- <div class="card-body">
           <div id="homepage-intro-text" v-if="!$route.params.gSheetID">
             <div class="row mb-4">
               <div class="col-sm text-center">
@@ -26,21 +26,24 @@
 
             <div class="row mb-3">
               <div class="col-sm text-left">
-                <p>Story Synth is a free web platform for making, playing, and sharing storytelling games:</p>
+                <p>
+                  Story Synth is a free web platform for making, playing, and
+                  sharing storytelling games:
+                </p>
                 <ul>
                   <li>
-                    Designing is super easy – just add prompts to Google Sheets and
-                    paste a link on this page
+                    Designing is super easy – just add prompts to Google Sheets
+                    and paste a link on this page
                   </li>
                   <li>
-                    Plenty of formats and extensions for you to customize your game
+                    Plenty of formats and extensions for you to customize your
+                    game
                   </li>
                   <li>
                     Game sessions have real-time multiplayer, perfect for online
                     play
                   </li>
                 </ul>
-                <!--
                 <p>
                   Designing a game in Story Synth is super easy: just add your
                   story prompts to a spreadsheet and then paste the sheet's link
@@ -67,14 +70,13 @@
                     >Formats Page</a
                   >.
                 </p>
-                -->
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
-      <div class="card shadow mb-4">
+      <!-- <div class="card shadow mb-4">
         <div class="card-body">
           <div class="row">
             <div class="col">
@@ -91,9 +93,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="card shadow mb-4">
+      <!-- <div class="card shadow mb-4">
         <div class="card-body">
           <div class="row mb-4">
             <div class="col-sm-12 text-center">
@@ -107,7 +109,11 @@
               </p>
 
               <a href="/Gallery/">
-                <img class="img img-fluid" src="https://diegeticgames.com/uploads/story-synth-game-collage.png" alt="Collage of Story Synth Games">
+                <img
+                  class="img img-fluid"
+                  src="https://diegeticgames.com/uploads/story-synth-game-collage.png"
+                  alt="Collage of Story Synth Games"
+                />
               </a>
 
               <p class="mt-4">Or check out demos of the different formats:</p>
@@ -173,11 +179,15 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
-    <app-gameLauncherSingleGame v-if="launcherOnHomepage" :gameRoute="String(launcherOnHomepage)"></app-gameLauncherSingleGame>
-    <app-gameMaker v-if="!launcherOnHomepage"
+    <app-gameLauncherSingleGame
+      v-if="launcherOnHomepage"
+      :gameRoute="String(launcherOnHomepage)"
+    ></app-gameLauncherSingleGame>
+    <app-gameMaker
+      v-if="!launcherOnHomepage"
       :routeRoomID="$route.params.roomID"
       :routeGSheetID="$route.params.gSheetID"
       :routeGameType="$route.params.gameType"
@@ -187,7 +197,7 @@
 
 <script>
 import GameMaker from "./GameMaker.vue";
-import GameLauncherSingleGame from "./GameLauncherSingleGame.vue"
+import GameLauncherSingleGame from "./GameLauncherSingleGame.vue";
 
 export default {
   name: "app-homepage",
@@ -202,16 +212,16 @@ export default {
   },
   data() {
     return {
-      launcherOnHomepage: false, // if you want the game launcher on the homepage, add in the route up until the roomID e.g. "/Games/Around-The-Realm/"
-    }
+      launcherOnHomepage: "/Games/Arriba-Town/", // if you want the game launcher on the homepage, add in the route up until the roomID e.g. "/Games/Around-The-Realm/"
+    };
   },
-  mounted(){
+  mounted() {
     let body = document.getElementById("app"); // document.body;
     body.classList.remove(body.classList[0]);
 
     let page = document.getElementsByClassName("non-footer-content")[0]; // document.body;
-    page.classList.remove(page.classList[1])
-  }
+    page.classList.remove(page.classList[1]);
+  },
 };
 </script>
 

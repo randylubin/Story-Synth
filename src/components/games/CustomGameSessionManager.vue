@@ -1,135 +1,159 @@
 <template>
   <div class="">
-    <app-arribaTown :roomID="$route.params.roomID" v-if="routeGSheetID == 'Arriba-Town'"></app-arribaTown>
-    <app-aethelredsAcademy :roomID="$route.params.roomID" v-if="routeGSheetID == 'Aethelreds-Academy'"></app-aethelredsAcademy>
-    <app-aroundTheRealm :roomID="$route.params.roomID" v-if="routeGSheetID == 'Around-The-Realm'"></app-aroundTheRealm>
-    <app-clashAtIkara :roomID="$route.params.roomID" v-if="routeGSheetID == 'Clash-At-Ikara'"></app-clashAtIkara> 
-    <app-postWorkParadise :roomID="$route.params.roomID" v-if="routeGSheetID == 'Post-Work-Paradise'"></app-postWorkParadise>
-    <app-raisedByMechs :roomID="$route.params.roomID" v-if="routeGSheetID == 'Raised-By-Mechs'"></app-raisedByMechs>
+    <app-arribaTown
+      :roomID="$route.params.roomID"
+      v-if="routeGSheetID == 'Arriba-Town'"
+    ></app-arribaTown>
+    <app-aethelredsAcademy
+      :roomID="$route.params.roomID"
+      v-if="routeGSheetID == 'Aethelreds-Academy'"
+    ></app-aethelredsAcademy>
+    <app-aroundTheRealm
+      :roomID="$route.params.roomID"
+      v-if="routeGSheetID == 'Around-The-Realm'"
+    ></app-aroundTheRealm>
+    <app-clashAtIkara
+      :roomID="$route.params.roomID"
+      v-if="routeGSheetID == 'Clash-At-Ikara'"
+    ></app-clashAtIkara>
+    <app-postWorkParadise
+      :roomID="$route.params.roomID"
+      v-if="routeGSheetID == 'Post-Work-Paradise'"
+    ></app-postWorkParadise>
+    <app-raisedByMechs
+      :roomID="$route.params.roomID"
+      v-if="routeGSheetID == 'Raised-By-Mechs'"
+    ></app-raisedByMechs>
   </div>
 </template>
 
 <script>
-import ArribaTown from './ArribaTown.vue';
-import AethelredsAcedemy from './AethelredsAcademy.vue';
-import AroundTheRealm from './AroundTheRealm.vue';
-import ClashAtIkara from './ClashAtIkara.vue';
-import PostWorkParadise from './PostWorkParadise.vue';
-import RaisedByMechs from './RaisedByMechs.vue';
+import ArribaTown from "./ArribaTown.vue";
+import AethelredsAcedemy from "./AethelredsAcademy.vue";
+import AroundTheRealm from "./AroundTheRealm.vue";
+import ClashAtIkara from "./ClashAtIkara.vue";
+import PostWorkParadise from "./PostWorkParadise.vue";
+import RaisedByMechs from "./RaisedByMechs.vue";
 
 export default {
-  name: 'app-customGameSession',
+  name: "app-customGameSession",
   components: {
-    'app-arribaTown': ArribaTown,
-    'app-aethelredsAcademy': AethelredsAcedemy,
-    'app-aroundTheRealm': AroundTheRealm,
-    'app-clashAtIkara': ClashAtIkara,
-    'app-postWorkParadise': PostWorkParadise,
-    'app-raisedByMechs': RaisedByMechs,
+    "app-arribaTown": ArribaTown,
+    "app-aethelredsAcademy": AethelredsAcedemy,
+    "app-aroundTheRealm": AroundTheRealm,
+    "app-clashAtIkara": ClashAtIkara,
+    "app-postWorkParadise": PostWorkParadise,
+    "app-raisedByMechs": RaisedByMechs,
   },
   props: {
     routeGSheetID: String,
     routeUserRole: String,
   },
-  data: function() {
+  data: function () {
     return {
       gameMetaData: {
-        'Arriba-Town': {
-          'gameTitle': 'Arriba Town',
-          'gameBlurb': 'Tell silly stories about how aspiring heroes go on unlikely quests to earn dubious certifications in adventuring skills. By Greg and Randy Lubin.',
-          'ogImage': 'https://diegeticgames.com/uploads/aethelreds-logo-square.png'
+        "Arriba-Town": {
+          gameTitle: "Arriba Town",
+          gameBlurb:
+            "A tiny quest to find your path and change your village for the better..",
+          ogImage:
+            "https://amble.studio/wp-content/uploads/2021/08/Arriba-Town.png",
         },
-        'Aethelreds-Academy': {
-          'gameTitle': ' Æthelred\'s Academy for Aspiring Heroes',
-          'gameBlurb': 'Tell silly stories about how aspiring heroes go on unlikely quests to earn dubious certifications in adventuring skills. By Greg and Randy Lubin.',
-          'ogImage': 'https://diegeticgames.com/uploads/aethelreds-logo-square.png'
+        "Aethelreds-Academy": {
+          gameTitle: " Æthelred's Academy for Aspiring Heroes",
+          gameBlurb:
+            "Tell silly stories about how aspiring heroes go on unlikely quests to earn dubious certifications in adventuring skills. By Greg and Randy Lubin.",
+          ogImage:
+            "https://diegeticgames.com/uploads/aethelreds-logo-square.png",
         },
-        'Around-The-Realm': {
-          'gameTitle': 'Around The Realm',
-          'gameBlurb': 'Tell the story of two close companions racing their way around a fantasy world. Nella and Bly wagered that they could travel completely around the realm and return before the summer solstice. However, the lands are full of magic, danger, and adventure – will they make it back in time?',
-          'ogImage': 'https://diegeticgames.com/uploads/around-the-realm-square-unfurl.png', 
+        "Around-The-Realm": {
+          gameTitle: "Around The Realm",
+          gameBlurb:
+            "Tell the story of two close companions racing their way around a fantasy world. Nella and Bly wagered that they could travel completely around the realm and return before the summer solstice. However, the lands are full of magic, danger, and adventure – will they make it back in time?",
+          ogImage:
+            "https://diegeticgames.com/uploads/around-the-realm-square-unfurl.png",
         },
-        'Clash-At-Ikara': {
-          'gameTitle': 'Clash at Ikara',
-          'gameBlurb': 'Tell the story of a group of heroes who have agreed to protect the defenseless community of Ikara from an immenent bandit raid.',
-          'ogImage': 'https://diegeticgames.com/uploads/clash-at-ikara-square.png'
+        "Clash-At-Ikara": {
+          gameTitle: "Clash at Ikara",
+          gameBlurb:
+            "Tell the story of a group of heroes who have agreed to protect the defenseless community of Ikara from an immenent bandit raid.",
+          ogImage:
+            "https://diegeticgames.com/uploads/clash-at-ikara-square.png",
         },
-        'Post-Work-Paradise': {
-          'gameTitle': 'Post-Work Paradise',
-          'gameBlurb': "This game explores what life might be like in a world where work is obsolete. How do people choose to live and spend their time? <br><br> Designed by Randy Lubin of <a target='_blank' href='https://leveragedplay.com'>Leveraged Play</a>. Submitted as part of the <a target='_blank' href='https://postwork.city/'>The Post-Work City</a> open call for visions for a future without work.<br><br>Play involves seeing randomly generated residents of this future city and answering questions about their lives. Character photos are generated by Artifical Intelligence via <a target='_blank' href='https://thispersondoesnotexist.com/'>This Person Does Not Exist</a>."
+        "Post-Work-Paradise": {
+          gameTitle: "Post-Work Paradise",
+          gameBlurb:
+            "This game explores what life might be like in a world where work is obsolete. How do people choose to live and spend their time? <br><br> Designed by Randy Lubin of <a target='_blank' href='https://leveragedplay.com'>Leveraged Play</a>. Submitted as part of the <a target='_blank' href='https://postwork.city/'>The Post-Work City</a> open call for visions for a future without work.<br><br>Play involves seeing randomly generated residents of this future city and answering questions about their lives. Character photos are generated by Artifical Intelligence via <a target='_blank' href='https://thispersondoesnotexist.com/'>This Person Does Not Exist</a>.",
         },
-        'Raised-By-Mechs': {
-          'gameTitle': 'Raised By Mechs',
-          'gameBlurb': 'Tell the story of children being raised by a mech on a new planet. Inspired by Raised by Wolves and For the Queen.',
-          'ogImage': 'https://iili.io/f1zdtn.png'
+        "Raised-By-Mechs": {
+          gameTitle: "Raised By Mechs",
+          gameBlurb:
+            "Tell the story of children being raised by a mech on a new planet. Inspired by Raised by Wolves and For the Queen.",
+          ogImage: "https://iili.io/f1zdtn.png",
         },
-      }
+      },
     };
   },
-  metaInfo () {
+  metaInfo() {
     return {
       title: this.gameMetaData[this.routeGSheetID].gameTitle,
       meta: [
         {
-          property: 'description',
+          property: "description",
           content: this.gameMetaData[this.routeGSheetID].gameBlurb,
-          vmid: 'description'
+          vmid: "description",
         },
         {
-          property: 'og:title',
+          property: "og:title",
           content: this.gameMetaData[this.routeGSheetID].gameTitle,
-          vmid: 'og:title'
+          vmid: "og:title",
         },
         {
-          property: 'og:description',
+          property: "og:description",
           content: this.gameMetaData[this.routeGSheetID].gameBlurb,
-          vmid: 'og:description'
+          vmid: "og:description",
         },
         {
-          property: 'og:image',
+          property: "og:image",
           content: this.gameMetaData[this.routeGSheetID].ogImage,
-          vmid: 'og:image'
+          vmid: "og:image",
         },
         {
-          property: 'og:url',
+          property: "og:url",
           content: location.hostname.toString() + "/#" + this.$route.fullPath,
-          vmid: 'og:url'
+          vmid: "og:url",
         },
         {
-          property: 'twitter:card',
-          content: 'summary',
-          vmid: 'twitter:card'
+          property: "twitter:card",
+          content: "summary",
+          vmid: "twitter:card",
         },
         {
-          property: 'og:site_name',
-          content: 'Story Synth',
-          vmid: 'og:site_name'
+          property: "og:site_name",
+          content: "Story Synth",
+          vmid: "og:site_name",
         },
         {
-          property: 'twitter:image:alt',
+          property: "twitter:image:alt",
           content: this.gameMetaData[this.routeGSheetID].gameTitle + " logo",
-          vmid: 'twitter:image:alt'
-        }
-      ]
-    }
+          vmid: "twitter:image:alt",
+        },
+      ],
+    };
   },
-  mounted(){
-    document.dispatchEvent(new Event("x-app-rendered"))
-    if (location.hostname.toString() !== 'localhost'){
-      this.$mixpanel.track('Visit Game Session', {
+  mounted() {
+    document.dispatchEvent(new Event("x-app-rendered"));
+    if (location.hostname.toString() !== "localhost") {
+      this.$mixpanel.track("Visit Game Session", {
         game_name: this.gameMetaData[this.routeGSheetID].gameTitle,
         session_url: location.hostname.toString() + this.$route.fullPath,
-        format: 'Custom'
+        format: "Custom",
       });
     }
   },
-  methods: {
-
-  }
+  methods: {},
 };
 </script>
 
 <style scoped>
-
-
 </style>

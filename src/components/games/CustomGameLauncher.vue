@@ -317,7 +317,8 @@ export default {
           gameTitle: "Æthelred's Academy for Aspiring Heroes",
           gameBlurb:
             "Tell silly stories about how aspiring heroes go on unlikely quests to earn dubious certifications in adventuring skills. By Greg and Randy Lubin.",
-          ogImage: "https://diegeticgames.com/uploads/aethelreds-logo-square.png",
+          ogImage:
+            "https://diegeticgames.com/uploads/aethelreds-logo-square.png",
         },
         gameRoute: {
           gameTitle: "TK",
@@ -389,17 +390,18 @@ export default {
           gameTitle: "Arriba Town",
           byline: "By Amble Studio",
           gameBlurb:
-            '<div class="text-left" style="white-space:normal">\n<h2>Pitch</h2>\nTell the story of two close companions racing their way around a fantasy world.\n<br><br>\nNella and Bly wagered that they could race completely around the realm and return before the summer solstice. However, the lands are full of magic, danger, and adventure – will they make it back in time?\n<br><br>\n<h2>Info</h2>\n<ul>\n  <li>2+ players</li>\n  <li>All ages</li>\n  <li>30 minutes - 2 hours</li>\n  <li>Genre: Fantasy</li>\n  <li>Tone: exciting adventure</li>\n  <li>Activities: light narration, quick worldbuilding</li>\n</ul>\n</div>',
+            '<div class="text-left" style="white-space:normal">\n<p>A tiny quest to find your path and change your village for the better.\n</p>\n</div>',
           coverImage:
-            "https://diegeticgames.com/uploads/around-the-realm-cover-narrow.png",
+            "https://amble.studio/wp-content/uploads/2021/08/Arriba-Town.png",
           style:
-            '<link href="https://fonts.googleapis.com/css?family=IM+Fell+English|Montserrat" rel="stylesheet">\n\n<style>\n\n#app {Font-Family: \'IM Fell English\', Serif;}\n\n.card-header-text {\n  font-size: 2.5rem;\n  Font-Family: \'IM Fell English\', Serif;\n}\n\n.card {\n  background-image: url(https://diegeticgames.com/uploads/groovepaper.png);\n}\n\n.card-img-bottom {\n  filter: saturate(0.7);\n  object-fit: cover;\n  object-position: top;\n  height: 60px;\n}\n\n.full-page-background {\n  background: rgb(255,255,255);\n  background: linear-gradient(180deg, rgba(30,150,255,1) 0%, rgba(255,255,255,1) 300px, rgba(255,255,255,1) 100%);\n  background-image: url("https://diegeticgames.com/uploads/around-the-realm-background.png");\n  filter: sepia(1) grayscale(0.4) brightness(1);\n}\n\n</style>',
+            "<style>.game-launcher .card-body {background-color: white;}</style>",
+          styleTemplate: "arriba",
         };
         this.dataReady = true;
 
         break;
-        
-        case "Around-The-Realm":
+
+      case "Around-The-Realm":
         //  correctGSheetID = "10dXt64oWecErQ0ooCXa1D9dZXfP4WPO7ujwoFsAUN6k"
         this.customOptions = {
           gameTitle: "Around the Realm",
@@ -464,10 +466,12 @@ export default {
         this.customOptions = {
           gameTitle: "Æthelred's Academy for Aspiring Heroes",
           byline: "By Greg Lubin and Randy Lubin",
-          gameBlurb: '<h2>By Greg Lubin and Randy Lubin</h2><div class="text-left"><p>Tell silly stories about how aspiring heroes accept unlikely quests to earn dubious certificates.</p><p>Æthelred\'s Academy is a non-accredited, for-profit institution. Attendees earn their certifications by finding quest givers, going on quests, and demonstrating competency in their skills.</p><p>Improvise short stories about these aspiring adventures and see if they succeed!</p><h2 class="text-center">Info</h2><ul class="text-left"><li>2+ players</li><li>All ages</li><li>Play time: from 5 minutes to a two year "degree"</li><li>Genre: Fantasy</li><li>Tone: Comedy</li><li>Activity: improvising quest recaps</li></ul><p>This game is free to share and remix under a Creative Commons License: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p><p><i>Icons via Flaticon designers: Freepik, fjstudio, Eucalyp, and Pixel perfect</i></p>',
+          gameBlurb:
+            '<h2>By Greg Lubin and Randy Lubin</h2><div class="text-left"><p>Tell silly stories about how aspiring heroes accept unlikely quests to earn dubious certificates.</p><p>Æthelred\'s Academy is a non-accredited, for-profit institution. Attendees earn their certifications by finding quest givers, going on quests, and demonstrating competency in their skills.</p><p>Improvise short stories about these aspiring adventures and see if they succeed!</p><h2 class="text-center">Info</h2><ul class="text-left"><li>2+ players</li><li>All ages</li><li>Play time: from 5 minutes to a two year "degree"</li><li>Genre: Fantasy</li><li>Tone: Comedy</li><li>Activity: improvising quest recaps</li></ul><p>This game is free to share and remix under a Creative Commons License: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></p><p><i>Icons via Flaticon designers: Freepik, fjstudio, Eucalyp, and Pixel perfect</i></p>',
           coverImage: "https://diegeticgames.com/uploads/aethelreds-logo.png",
-          style: "<style>.game-launcher .card-body {background-color: white;}</style>",
-          styleTemplate: "fantasy"
+          style:
+            "<style>.game-launcher .card-body {background-color: white;}</style>",
+          styleTemplate: "fantasy",
         };
 
         this.dataReady = true;
@@ -482,8 +486,7 @@ export default {
     //this.fetchAndCleanSheetData(correctGSheetID);
 
     // custom style template
-    let styleTemplate =
-      "style-template-" + this.customOptions.styleTemplate;
+    let styleTemplate = "style-template-" + this.customOptions.styleTemplate;
     let body = document.getElementsByClassName("non-footer-content")[0]; // document.body;
     body.classList.add(styleTemplate);
 
@@ -1807,7 +1810,8 @@ export default {
       var getURL =
         "https://sheets.googleapis.com/v4/spreadsheets/" +
         sheetID +
-        "?includeGridData=true&ranges=a1:aa100&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+        "?includeGridData=true&ranges=a1:aa100&key=" +
+        process.env.VUE_APP_FIREBASE_API_KEY;
 
       // For the published version - remove if you're hardcoding the data instead of using Google Sheets
       axios
