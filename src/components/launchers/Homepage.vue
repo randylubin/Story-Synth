@@ -221,6 +221,8 @@ export default {
 
     let page = document.getElementsByClassName("non-footer-content")[0]; // document.body;
     page.classList.remove(page.classList[1]);
+
+    document.dispatchEvent(new Event("x-app-rendered"));
   },
 };
 </script>
