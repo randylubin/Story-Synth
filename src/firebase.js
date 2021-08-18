@@ -1,4 +1,6 @@
-import { initializeApp } from 'firebase/app';
+import {
+  initializeApp
+} from 'firebase/app';
 
 const app = initializeApp({
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
@@ -6,7 +8,8 @@ const app = initializeApp({
   databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
   projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
   storageBucket: "",
-  messagingSenderId: ""
+  messagingSenderId: "",
+  experimentalForceLongPolling: true
 });
 
 export const db = app.firestore();
