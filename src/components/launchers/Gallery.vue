@@ -99,6 +99,13 @@ export default {
             "https://diegeticgames.com/uploads/aethelreds-logo.png",
         },
         {
+          title: "The Umberdred Institute for Emerging Evildoers",
+          credits: "By Amble Studio",
+          blurb: 'Tell silly stories about how aspiring villains accept unlikely quests to earn dubious certifications in evildoing skills.',
+          link: "/Generator/1-yrqoN7ZKeLHg0ynob9ZCpUbr64T24IrpX1RuSFUAwY/",
+          image: "https://img.itch.zone/aW1nLzY3NzQzNTIuanBn/315x250%23c/XQicpj.jpg",
+        },
+        {
           title: "Working For The Corp",
           credits: "By Ken Davidson, with contributions from Jess Meir",
           blurb: 'Play as workers at a cyberpunk megacorp who are tasked with defending key info from runners.  Will you defend The Corp?',
