@@ -24,7 +24,7 @@
           </div>
 
           <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
-          <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
+          <app-shuffled ref="shuffled" :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" :userRole="$route.params.userRole" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
           <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
           <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
           <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="($route.params.gameType=='SlotMachine' || $route.params.gameType=='Composite') && $route.params.roomID"></app-slotMachine>
@@ -56,10 +56,11 @@
   import Footer from './components/layout/Footer.vue'
 
   import Homepage from './components/launchers/Homepage.vue'
+  import Gallery from './components/launchers/Gallery.vue'
+
   import GameLauncher from './components/launchers/GameLauncher.vue'
   import CustomGameLauncher from './components/games/CustomGameLauncher.vue'
-
-  import Gallery from './components/launchers/Gallery.vue'
+  import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
 
   import Timed from './components/formats/Timed.vue'
   import Shuffled from './components/formats/Shuffled.vue'
@@ -70,7 +71,6 @@
   import Generator from './components/formats/Generator.vue'
   import Gridmap from './components/formats/Gridmap.vue'
   import Sandbox from './components/formats/Sandbox.vue'
-  import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
 
   export default {
     name: 'app',
@@ -79,8 +79,10 @@
       'app-roomLink': RoomLink,
       'app-footer': Footer,
       'app-homepage': Homepage,
-      'app-gameLauncher': GameLauncher,
       'app-gallery': Gallery,
+      'app-gameLauncher': GameLauncher,
+      'app-customGameLauncher': CustomGameLauncher,
+      'app-customGameSessionManager': CustomGameSessionManager,
       'app-timed': Timed,
       'app-shuffled': Shuffled,
       'app-monster': Monster,
@@ -90,8 +92,6 @@
       'app-generator': Generator,
       'app-gridmap': Gridmap,
       'app-sandbox': Sandbox,
-      'app-customGameLauncher': CustomGameLauncher,
-      'app-customGameSessionManager': CustomGameSessionManager,
       
     },
     data () {

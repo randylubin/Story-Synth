@@ -43,7 +43,8 @@ Vue.use(VueRouter);
 const routes = [
   { path: '/', component: App },
   { path: '/:gameType/:gSheetID/', component: App},
-  { path: '/:gameType/:gSheetID/:roomID', component: App}
+  { path: '/:gameType/:gSheetID/:roomID', component: App },
+  { path: '/:gameType/:gSheetID/:roomID/:userRole', component: App}
 ]
 
 
@@ -83,7 +84,7 @@ import { rtdbPlugin } from 'vuefire'
 Vue.use(firestorePlugin)
 Vue.use (rtdbPlugin)
 
-new Vue({
+var vm = new Vue({
   el: '#app',
   router,
   render: h => h(App),
@@ -94,3 +95,5 @@ new Vue({
     }
   }
 })
+
+global.vm = vm;
