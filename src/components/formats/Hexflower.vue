@@ -97,10 +97,14 @@
         <div class="game-title-on-card mt-4" v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard">
           <h1>{{customOptions.gameTitle}}</h1>
         </div>
-        <div class="row mt-4" v-if="gSheet[roomInfo.currentLocation].fullContent">
-          <div class="col-sm-12" v-html="gSheet[roomInfo.currentLocation].fullContent">
+
+        <transition name="reroll-full-content" mode="out-in">
+          <div class="row mt-4" v-if="gSheet[roomInfo.currentLocation].fullContent">
+            <div class="col-sm-12" v-html="gSheet[roomInfo.currentLocation].fullContent">
+            </div>
           </div>
-        </div>
+        </transition>
+
         <div class="row">
           <div class="regenerate-button my-4 col-sm-12 justify-content-center">
               <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
@@ -121,7 +125,7 @@
               v-on:click="goToHex(hex.hexID)"
               v-bind:key="hexIndex"
             >
-              <transition name="reroll" mode="out-in">
+              <transition name="reroll-current-hex" mode="out-in">
                 <div 
                   class="hex-tile"
                   :key="hex.hexID"
@@ -450,7 +454,7 @@ $base-color: rgb(33, 33, 33);
   opacity: 0;
 }
 
-// Reroll transition
+// Reroll transition reroll-full-content and reroll-current-hex
 .reroll-enter-active,
 .reroll-leave-active {
   transition: all .5s;
