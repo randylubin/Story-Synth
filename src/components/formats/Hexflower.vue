@@ -121,13 +121,14 @@
             v-bind:class="{'hex-row-even': (hexRowIndex %2 == 0), 'hex-row-odd': (hexRowIndex %2 == 1)}"
           >
             <button
+              class="hex-tile"
               v-for="(hex, hexIndex) in hexRow"
               v-on:click="goToHex(hex.hexID)"
               v-bind:key="hexIndex"
             >
               <transition name="reroll-current-hex" mode="out-in">
                 <div 
-                  class="hex-tile"
+                  class="hex-tile-inner"
                   :key="hex.hexID"
                   v-bind:class="{'hex-tile-active': (hex.hexID == roomInfo.currentLocation)}"
                 >
@@ -260,10 +261,15 @@ export default {
           }
         }
 
-        if (hexIndex == 6){
+        let targetHexID = this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex]-1
+        console.log('trying to move to', targetHexID)
+
+        if (targetHexID == null || targetHexID == -1){
+          this.randomlyMoveOnHexflower()
+        } else if (hexIndex == 6){
           this.goToHex(this.roomInfo.currentLocation)
         } else {
-          this.goToHex(this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex]-1)
+          this.goToHex(targetHexID)
         }
       }
     },
@@ -414,12 +420,19 @@ export default {
 $base-color: rgb(33, 33, 33);
 
 // HEXES
+.hexflower-body {
+  
+}
+
 .hex-row {
   background-color:grey;
+  padding-left: 50px
 }
 
 .hex-row-even {
   background-color: beige;
+  margin-top: -5px;
+  margin-bottom: -5px;
 }
 
 .hex-row-odd {
@@ -428,6 +441,15 @@ $base-color: rgb(33, 33, 33);
 
 .hex-tile {
   color:black;
+  transform: rotate(45deg);
+  width: 40px;
+  height: 40px;
+  margin: 5px 50px -30px 0px;
+
+}
+
+.hex-tile-inner {
+  transform: rotate(-45deg)
 }
 
 .hex-tile-active {
