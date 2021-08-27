@@ -97,14 +97,17 @@
         <div class="game-title-on-card mt-4" v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard">
           <h1>{{customOptions.gameTitle}}</h1>
         </div>
-        <div class="regenerate-button my-4">
-          <b-form inline class="justify-content-center">
-            <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
-              <span>Roll</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
-            </b-button>
-          </b-form>
+        <div class="row mt-4" v-if="gSheet[roomInfo.currentLocation].fullContent">
+          <div class="col-sm-12" v-html="gSheet[roomInfo.currentLocation].fullContent">
+          </div>
         </div>
-
+        <div class="row">
+          <div class="regenerate-button my-4 col-sm-12 justify-content-center">
+              <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
+                <span>Roll</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
+              </b-button>
+          </div>
+        </div>
         
         <div class='hexflower-body'>
           <div
