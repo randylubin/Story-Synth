@@ -113,7 +113,7 @@
           </div>
         </div>
         
-        <div class='hexflower-body'>
+        <div class='hexflower-body' v-bind:class="{'flat-top':customOptions.hexOrientation == 'flatTop'}">
           <div
             class="hex-row"
             v-for="(hexRow, hexRowIndex) in hexMapRows"
@@ -423,6 +423,11 @@ $base-color: rgb(33, 33, 33);
   padding-bottom: 40px;
 }
 
+.flat-top {
+  transform: rotate(90deg);
+  margin-left: -37px;
+}
+
 .hex-row {
   padding-left: 25px
 }
@@ -450,6 +455,10 @@ $base-color: rgb(33, 33, 33);
 
 .hex-tile-inner {
   transform: rotate(-90deg);
+}
+
+.flat-top .hex-tile-inner {
+  transform: rotate(180deg);
 }
 
 .hex-tile-active {
