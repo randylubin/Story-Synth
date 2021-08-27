@@ -106,7 +106,7 @@
         </transition>
 
         <div class="row">
-          <div class="regenerate-button my-4 col-sm-12 justify-content-center">
+          <div class="regenerate-button my-4 col-sm-12 justify-content-center generator">
               <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
                 <span>Roll</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
               </b-button>
@@ -424,7 +424,7 @@ $base-color: rgb(33, 33, 33);
 
 .hex-row {
   background-color:grey;
-  padding-left: 50px
+  padding-left: 25px
 }
 
 .hex-row-even {
