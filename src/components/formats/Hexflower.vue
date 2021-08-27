@@ -419,29 +419,27 @@ $base-color: rgb(33, 33, 33);
 
 // HEXES
 .hexflower-body {
-  
+  padding-bottom: 40px;
 }
 
 .hex-row {
-  background-color:grey;
   padding-left: 25px
 }
 
 .hex-row-even {
-  background-color: #605c5c;
   margin-top: -5px;
   margin-bottom: -5px;
 }
 
 .hex-row-odd {
-  background-color: grey;
+
 }
 
 .hex-tile {
   color:black;
   width: 40px;
-  height: 40px;
-  margin: -7px 26px -6px 0px;
+  height: 46px;
+  margin: -9px 35px -10px 0px;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   transform: rotate(90deg);
   border: 0;
