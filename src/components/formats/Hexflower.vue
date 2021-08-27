@@ -125,6 +125,7 @@
               v-for="(hex, hexIndex) in hexRow"
               v-on:click="goToHex(hex.hexID)"
               v-bind:key="hexIndex"
+              v-bind:style="{backgroundColor: hex.backgroundColor, backgroundImage: hex.backgroundImage}"
             >
               <transition name="reroll-current-hex" mode="out-in">
                 <div 
@@ -335,14 +336,14 @@ export default {
                     summary: item.values[3].formattedValue,
                     fullContent: item.values[4]?.formattedValue,
                     probability: item.values[5]?.formattedValue,
-                    background: item.values[5]?.formattedValue,
+                    background: item.values[6]?.formattedValue,
                   };
 
                   // check for background
-                  if (hexInfo.background?.charAt(0) == "#"){
+                  if (hexInfo.background?.substring(0, 4) !== "http"){
                     hexInfo.backgroundColor = hexInfo.background;
-                  } else if (hexInfo.background?.charAt(0) == "h"){
-                    hexInfo.backgroundImage = hexInfo.background;
+                  } else {
+                    hexInfo.backgroundImage = 'url("'+ hexInfo.background + '")';
                   }
 
                   // organize into rows
@@ -440,6 +441,7 @@ $base-color: rgb(33, 33, 33);
   width: 40px;
   height: 46px;
   margin: -9px 35px -10px 0px;
+  -webkit-clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); /* oh Safari 11 */
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   transform: rotate(90deg);
   border: 0;
