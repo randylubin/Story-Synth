@@ -230,7 +230,6 @@ export default {
   methods: {
     randomlyMoveOnHexflower(){
       let hexID = this.roomInfo.currentLocation
-      console.log(this.gSheet[hexID].probability == undefined)
       if (this.gSheet[hexID].probability == undefined){
         let diceResult = Math.floor(Math.random()*6)
         let newHexID = this.hexNeighborMap[hexID][diceResult]
@@ -262,7 +261,6 @@ export default {
         }
 
         let targetHexID = this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex]-1
-        console.log('trying to move to', targetHexID)
 
         if (targetHexID == null || targetHexID == -1){
           this.randomlyMoveOnHexflower()
