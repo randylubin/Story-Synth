@@ -428,7 +428,7 @@ $base-color: rgb(33, 33, 33);
 }
 
 .hex-row-even {
-  background-color: beige;
+  background-color: #605c5c;
   margin-top: -5px;
   margin-bottom: -5px;
 }
@@ -439,15 +439,17 @@ $base-color: rgb(33, 33, 33);
 
 .hex-tile {
   color:black;
-  transform: rotate(45deg);
   width: 40px;
   height: 40px;
-  margin: 5px 50px -30px 0px;
+  margin: -7px 26px -6px 0px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transform: rotate(90deg);
+  border: 0;
 
 }
 
 .hex-tile-inner {
-  transform: rotate(-45deg)
+  transform: rotate(-90deg);
 }
 
 .hex-tile-active {
