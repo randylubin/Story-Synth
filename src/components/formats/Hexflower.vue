@@ -164,7 +164,7 @@
         </div>
 
         <transition name="reroll-full-content" mode="out-in">
-          <div class="row mt-4 mb-4 p-2" v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent">
+          <div class="row mt-4 mb-4 p-2" v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent && !roomInfo.tempSameHex">
             <div class="col-sm-12" v-html="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent">
             </div>
           </div>
@@ -397,7 +397,7 @@ export default {
         setTimeout(() =>
           roomsCollection.doc(this.roomID).update({
             tempSameHex: false,
-          }), 500
+          }), 200
         )
       } else {
         roomsCollection.doc(this.roomID).update({
