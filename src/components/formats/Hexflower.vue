@@ -835,7 +835,7 @@ $hex-padding: 4px;
 
 .fade-full-content-enter-active,
 .fade-full-content-leave-active {
-  transition: opacity 1s;
+  transition: opacity .3s;
 }
 .fade-full-content-enter, .fade-leave-to {
   opacity: 0;
