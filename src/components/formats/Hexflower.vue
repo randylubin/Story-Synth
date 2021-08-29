@@ -313,9 +313,9 @@ export default {
     hexPosition(col, row) {
 
       // Basic dimensions
-      let hexHeight = 92;
+      let hexHeight = screen.width > 375 ? 92 : 69;
       let hexWidth = Math.floor(hexHeight * 1.1547);
-      let hexPadding = 4;
+      let hexPadding = screen.width > 375 ? 4 : 3;
 
       // Layout
       let offset = [0, 0, -1, 0, -1, 0, -1, 0, 0];
@@ -634,6 +634,10 @@ $hex-padding: 4px;
   // padding-bottom: $hex-height * 5.3;
   height: $hex-height * 5.2;
   width: $hex-height * 5.2;
+  @media (max-width: 375px) {
+    height: $hex-height * 5.2 * .75;
+    width: $hex-height * 5.2 * .75;
+  }
   margin-top: 10px;
   // margin-left: 7.5px;
   color:black;
@@ -658,7 +662,7 @@ $hex-padding: 4px;
 .pointy-top .hex-tile-inner:hover .hex-tile-inner-content {
   transform: scale(1.075) rotate(90deg);
 }
-.pointy-top .hex-tile-inner:hover {
+.pointy-top .hex-tile-inner:hover(.hex-tile-active) {
   filter: contrast(90%) brightness(95%);
 }
 .pointy-top .hex-tile:focus:not(.hex-tile-active) {
@@ -675,6 +679,10 @@ $hex-padding: 4px;
   background: none;
   width: $hex-width;
   height: $hex-height;
+  @media (max-width: 375px) {
+    height: $hex-height * .75;
+    width: $hex-height * .75;
+  }
   border: 0;
   padding: 0;
   -webkit-clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
@@ -687,11 +695,15 @@ $hex-padding: 4px;
   -webkit-clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
   background: white;
-
   position: absolute;
   margin-top: -$hex-height/2;
   height: $hex-height;
   width: $hex-width;
+  @media (max-width: 375px) {
+    margin-top: -$hex-height * .75 / 2;
+    height: $hex-height * .75;
+    width: $hex-height * .75;
+  }
   display: flex;
   align-items: center;
   justify-content: center;  
@@ -701,11 +713,34 @@ $hex-padding: 4px;
 .hex-tile-inner-content {
   transition: all 0.1s;
   padding: $hex-height / 4; 
+  @media (max-width: 375px) {
+    padding: $hex-height * .75 / 4; 
+  }
 }
-.hex-tile-inner-content-xs { font-size: $hex-height / 8; }
-.hex-tile-inner-content-sm { font-size: $hex-height / 6; }
-.hex-tile-inner-content-md { font-size: $hex-height / 4; }
-.hex-tile-inner-content-lg { font-size: $hex-height / 2; }
+.hex-tile-inner-content-xs { 
+  font-size: $hex-height / 8;
+  @media (max-width: 375px) {
+    font-size: $hex-height * .75 / 8;
+  }
+}
+.hex-tile-inner-content-sm { 
+  font-size: $hex-height / 6;
+  @media (max-width: 375px) {
+    font-size: $hex-height * .75 / 6;
+  }
+}
+.hex-tile-inner-content-md {
+  font-size: $hex-height / 4;
+  @media (max-width: 375px) {
+    font-size: $hex-height * .75 / 4;
+  }
+}
+.hex-tile-inner-content-lg {
+  font-size: $hex-height / 2;
+  @media (max-width: 375px) {
+    font-size: $hex-height * .75 / 2;
+  }
+}
 
 .hex-tile:focus {
   outline: transparent;
