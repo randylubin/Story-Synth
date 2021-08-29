@@ -292,51 +292,51 @@ export default {
     },
     randomlyMoveOnHexflower(){
       let hexID = this.roomInfo.currentLocation
+      let probabilityWeights = this.gSheet[hexID].probability
 
-      // Animation
-      // let possibleMoves = this.hexNeighborMap[hexID]
-
-      // Do it!
-      if (this.gSheet[hexID].probability == undefined){
-        let diceResult = Math.floor(Math.random()*6)
-        let newHexID = this.hexNeighborMap[hexID][diceResult]
-        if (newHexID !== null){
-          this.goToHex(newHexID-1);
-        } else {
-          this.randomlyMoveOnHexflower();
-        }
-      } else {
-        let probabilityWeights = this.gSheet[hexID].probability.split(',')
-        let probabilityDistribution = {}
-
-        let hexIndex, probabilitySum = 0
-        for (hexIndex in probabilityWeights){
-          probabilitySum += parseInt(probabilityWeights[hexIndex])
-        }
-        hexIndex = 0
-        for (hexIndex in probabilityWeights){
-          probabilityDistribution[hexIndex] = probabilityWeights[hexIndex] / probabilitySum 
-        }
-
-        let i, sum=0, r=Math.random();
-        for (i in probabilityDistribution) {
-          sum += probabilityDistribution[i];
-          if (r <= sum) {
-            hexIndex = i;   
-            break;
+      if (probabilityWeights == undefined){
+        probabilityWeights = []
+        for (let neighbor = 0; neighbor < this.hexNeighborMap[hexID].length; neighbor++){
+          if (this.hexNeighborMap[hexID][neighbor] != null){
+            probabilityWeights.push(1)
+          } else {
+            probabilityWeights.push(0)
           }
         }
+      } else {
+        probabilityWeights = this.gSheet[hexID].probability.split(',')
+      }
 
-        let targetHexID = this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex]-1
+      let probabilityDistribution = {}
 
-        if (targetHexID == null || targetHexID == -1){
-          this.randomlyMoveOnHexflower()
-        } else if (hexIndex == 6){
-          this.goToHex(this.roomInfo.currentLocation)
-        } else {
-          this.goToHex(targetHexID)
+      let hexIndex, probabilitySum = 0
+      for (hexIndex in probabilityWeights){
+        probabilitySum += parseInt(probabilityWeights[hexIndex])
+      }
+      hexIndex = 0
+      for (hexIndex in probabilityWeights){
+        probabilityDistribution[hexIndex] = probabilityWeights[hexIndex] / probabilitySum 
+      }
+
+      let i, sum=0, r=Math.random();
+      for (i in probabilityDistribution) {
+        sum += probabilityDistribution[i];
+        if (r <= sum) {
+          hexIndex = i;   
+          break;
         }
       }
+
+      let targetHexID = this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex]-1
+
+      if (targetHexID == null || targetHexID == -1){
+        this.randomlyMoveOnHexflower()
+      } else if (hexIndex == 6){
+        this.goToHex(this.roomInfo.currentLocation)
+      } else {
+        this.goToHex(targetHexID)
+      }
+      
     },
     goToHex(hexID){
       if (this.roomInfo.currentLocation == hexID){
