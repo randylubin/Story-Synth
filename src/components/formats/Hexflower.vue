@@ -114,7 +114,8 @@
             class='hexflower-body' 
             v-bind:class="{
               'pointy-top':customOptions.hexOrientation == 'pointyTop',
-              'hex-randomizing': roomInfo.playRandomizerAnimation === true
+              'hex-randomizing': roomInfo.playRandomizerAnimation === true,
+              'hex-resetting': roomInfo.playResetAnimation === true,              
             }"
           >
             <template
@@ -126,13 +127,14 @@
                 v-on:click="goToHex(hex.hexID, false)"
                 v-bind:key="`${hexIndex}_${hexRowIndex}`"
                 v-bind:class="{
-                  'hex-tile-active': (hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex)
+                  'hex-tile-active': (hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex),
+                  'hex-tile-previous-active': (hex.hexID == roomInfo.previousLocation)
                 }"
                 v-bind:style="{
                   transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`                  
                 }"
               >
-                <transition name="reroll-current-hex" mode="out-in">
+                <transition appear name="reroll-current-hex" mode="out-in">
                   <div 
                     class="hex-tile-inner"
                     :key="hex.hexID"
@@ -214,6 +216,7 @@ export default {
     return {
       roomInfo: {
         currentLocation: 0,
+        hexesToAnimate: [],
       },
       dataReady: false,
       firebaseReady: false,
@@ -258,6 +261,7 @@ export default {
           console.log("new room! dataReady", this.dataReady);
 
           roomsCollection.doc(this.roomID).set({
+            hexesToAnimate: [],
             extensionData: this.tempExtensionData,
             currentLocation: 9,
             hexArray: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
@@ -274,9 +278,15 @@ export default {
   },
   watch: {
     roomInfo: function (val) {
-      if (val.playRandomizerAnimation === true) {
+      if (val?.playRandomizerAnimation === true) {
         setTimeout(() => {
             this.roomInfo.playRandomizerAnimation = false;
+          }
+        , 1000)
+      }
+      if (val?.playResetAnimation === true) {
+        setTimeout(() => {
+            this.roomInfo.playResetAnimation = false;
           }
         , 1000)
       }
@@ -389,8 +399,10 @@ export default {
     goToHex(hexID, playRandomizerAnimation = false, hexesToAnimate = []){
       if (this.roomInfo.currentLocation == hexID){
         roomsCollection.doc(this.roomID).update({
+          previousLocation: this.roomInfo.currentLocation,
           currentLocation: hexID,
           playRandomizerAnimation: playRandomizerAnimation,
+          playResetAnimation: false,
           hexesToAnimate: hexesToAnimate,
           tempSameHex: true,
         });
@@ -401,7 +413,9 @@ export default {
         )
       } else {
         roomsCollection.doc(this.roomID).update({
+          previousLocation: this.roomInfo.currentLocation,
           playRandomizerAnimation: playRandomizerAnimation,
+          playResetAnimation: false,
           hexesToAnimate: hexesToAnimate,
           currentLocation: hexID,
         });
@@ -446,6 +460,9 @@ export default {
       }
 
       roomsCollection.doc(this.roomID).update({
+        previousLocation: null,
+        playRandomizerAnimation: false,
+        playResetAnimation: true,
         hexArray: hexIndexList,
         currentLocation: startingHex,
       });
@@ -690,6 +707,7 @@ $hex-padding: 4px;
   filter: contrast(90%) brightness(95%);
 }
 
+
 .hex-tile-active {
   z-index: 1000;
   font-size: bold !important;
@@ -703,7 +721,26 @@ $hex-padding: 4px;
   transform: scale(1.1);
 }
 
-/////////
+/////////////////////////////////////////////
+// Reset Animation
+/////////////////////////////////////////////
+.hex-resetting .hex-tile-inner {
+  transform: rotateY(90deg) !important;
+}
+
+/////////////////////////////////////////////
+// Randomizer Animation
+/////////////////////////////////////////////
+.hex-randomizing .hex-tile-previous-active {
+  filter: drop-shadow(-1px 6px 15px rgba(0, 0, 0, 0.372));
+  -webkit-clip-path: none !important;
+  clip-path: none !important;
+  z-index: 1001;
+}
+.hex-randomizing .hex-tile-previous-active .hex-tile-inner  {
+  transform: scale(1.1);
+}
+
 .hex-randomizing .hex-tile-active,
 .hex-randomizing .hex-tile-active .hex-tile-inner
 {
@@ -752,7 +789,10 @@ $hex-padding: 4px;
 .reroll-enter-active,
 .reroll-leave-active {
   transition: all .5s;
+}
 
+.reroll-current-hex-enter {
+  transform: scale(0);
 }
 
 .reroll-list-enter-active {
