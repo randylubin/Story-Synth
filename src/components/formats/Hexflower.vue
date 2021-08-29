@@ -342,7 +342,7 @@ export default {
         setTimeout(() =>
           roomsCollection.doc(this.roomID).update({
             tempSameHex: false,
-          }), 500
+          }), 200
         )
       } else {
         roomsCollection.doc(this.roomID).update({
