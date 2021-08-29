@@ -216,7 +216,8 @@ export default {
     return {
       roomInfo: {
         currentLocation: 0,
-        hexesToAnimate: [],
+        playRandomizerAnimation: false,
+        hexesToAnimate: []
       },
       dataReady: false,
       firebaseReady: false,
@@ -224,7 +225,7 @@ export default {
       hexMapRows: [[],[],[],[],[],[],[],[],[]],
       hexNeighborMap: [
         [null, null, 2, 4, 1, null],
-        [null, 0, 4, 3, null, null], [null, null, 5, 7, 4, 0],
+        [null, 0, 4, 6, 3, null], [null, null, 5, 7, 4, 0],
         [null,1,6,8,null,null],[0,2,7,9,6,1],[null,null,null,10,7,2],
         [1,4,9,11,8,3],[2,5,10,12,9,4],
         [3,6,11,13,null,null],[4,7,12,14,11,6],[5,null,null,15,12,7],
@@ -264,7 +265,8 @@ export default {
             hexesToAnimate: [],
             extensionData: this.tempExtensionData,
             currentLocation: 9,
-            hexArray: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
+            hexArray: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+            playRandomizerAnimation: false,
           });
 
           if (this.dataReady) {
@@ -546,6 +548,21 @@ export default {
               }
             }
           });
+
+          if (this.customOptions.hexWarp){
+            console.log('warpdrive!')
+            this.hexNeighborMap = [
+              [18, 3, 2, 4, 1, 5],
+              [16, 0, 4, 6, 3, 10], [17, 8, 5, 7, 4, 0],
+              [13,1,6,8,0,15],[0,2,7,9,6,1],[15,13,0,10,7,2],
+              [1,4,9,11,8,3],[2,5,10,12,9,4],
+              [3,6,11,13,2,17],[4,7,12,14,11,6],[5,16,1,15,12,7],
+              [6,9,14,16,13,8],[7,10,15,17,14,9],
+              [8,11,16,3,5,18],[9,12,17,18,16,11],[10,18,3,5,17,12],
+              [11,14,18,1,10,13],[12,15,8,2,18,14],
+              [14,17,13,0,15,16],
+            ]
+          }
 
           if (
             this.firebaseReady &&
