@@ -164,18 +164,24 @@
           </div>
         </div>
 
-        <transition name="reroll-full-content" mode="out-in">
-          <div class="row mt-4 mb-4 p-2" v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent && !roomInfo.tempSameHex">
+        <transition name="fade-full-content" mode="out-in">
+          <div 
+            class="row mt-4 mb-4 p-2" 
+            :key="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent"
+            v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent && !roomInfo.tempSameHex"
+          >
             <div class="col-sm-12" v-html="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent">
             </div>
           </div>
         </transition>
 
       </div>
+      
 
       <div class="lower-text row mt-4" v-if="customOptions.lowerText">
-        <div class="col-sm" v-html="customOptions.lowerText"></div>
+        <div class="col-sm" v-html="customOptions.lowerText"></div>          
       </div>
+
     </div>
 
     <div
@@ -792,6 +798,14 @@ $hex-padding: 4px;
 
 /////////
 
+.fade-full-content-enter-active,
+.fade-full-content-leave-active {
+  transition: opacity 1s;
+}
+.fade-full-content-enter, .fade-leave-to {
+  opacity: 0;
+}
+//
 
 
 .slot-machine {
