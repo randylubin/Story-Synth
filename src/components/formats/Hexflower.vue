@@ -101,7 +101,7 @@
         <div class="row">
           <div class="regenerate-button my-4 col-sm-12 justify-content-center generator">
               <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
-                <span>Move</span> <b-icon class='hexflower-reroll-icon' icon="arrows-move"></b-icon>
+                <span>{{ roomInfo.playRandomizerAnimation ? 'Rolling' : 'Move' }}</span> <b-icon class='hexflower-reroll-icon' icon="arrows-move"></b-icon>
               </b-button>              
               <b-button v-if="customOptions.randomizeHexes" v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
                 <span>Regenerate</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
@@ -112,7 +112,10 @@
         <div class="row justify-content-center">
           <div 
             class='hexflower-body' 
-            v-bind:class="{'pointy-top':customOptions.hexOrientation == 'pointyTop'}"
+            v-bind:class="{
+              'pointy-top':customOptions.hexOrientation == 'pointyTop',
+              'hex-randomizing': roomInfo.playRandomizerAnimation === true
+            }"
           >
             <template
               v-for="(hexRow, hexRowIndex) in updatedHexMapRows"
@@ -120,16 +123,27 @@
               <button
                 class="hex-tile"
                 v-for="(hex, hexIndex) in hexRow"
-                v-on:click="goToHex(hex.hexID)"
+                v-on:click="goToHex(hex.hexID, false)"
                 v-bind:key="`${hexIndex}_${hexRowIndex}`"
-                v-bind:class="{'hex-tile-active': (hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex)}"
-                v-bind:style="{transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`}"
+                v-bind:class="{
+                  'hex-tile-active': (hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex)
+                }"
+                v-bind:style="{
+                  transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`                  
+                }"
               >
                 <transition name="reroll-current-hex" mode="out-in">
                   <div 
                     class="hex-tile-inner"
                     :key="hex.hexID"
-                    v-bind:style="{backgroundColor: hex.backgroundColor, backgroundImage: hex.backgroundImage}"
+                    v-bind:style="{
+                        backgroundColor: hex.backgroundColor, 
+                        backgroundImage: hex.backgroundImage,
+                        animationDelay: `-${(hex.hexID/18)%1}s`
+                    }"
+                    v-bind:class="{
+                      'hex-tile-animate-randomization': (roomInfo.hexesToAnimate.includes(hex.hexID))
+                    }"
                   >
                     <div 
                       class="hex-tile-inner-content"
@@ -206,16 +220,27 @@ export default {
       gSheet: [{ text: "loading" }],
       hexMapRows: [[],[],[],[],[],[],[],[],[]],
       hexNeighborMap: [
-        [null, null, 3, 5, 2, null],
-        [null, 1, 5, 4, null, null], [null, null, 6, 8, 5, 1],
-        [null,2,7,9,null,null],[1,3,8,10,7,2],[null,null,null,11,8,3],
-        [2,5,10,12,9,4],[3,6,11,13,10,5],
-        [4,7,12,14,null,null],[5,8,13,15,12,7],[6,null,null,16,13,8],
-        [7,10,15,17,14,9],[8,11,16,18,15,10],
-        [9,12,17,null,null,null],[10,13,18,19,17,12],[11,null,null,null,18,13],
-        [12,15,19,null,null,14],[13,16,null,null,19,15],
-        [15,18,null,null,null,17],
+        [null, null, 2, 4, 1, null],
+        [null, 0, 4, 3, null, null], [null, null, 5, 7, 4, 0],
+        [null,1,6,8,null,null],[0,2,7,9,6,1],[null,null,null,10,7,2],
+        [1,4,9,11,8,3],[2,5,10,12,9,4],
+        [3,6,11,13,null,null],[4,7,12,14,11,6],[5,null,null,15,12,7],
+        [6,9,14,16,13,8],[7,10,15,17,14,9],
+        [8,11,16,null,null,null],[9,12,17,18,16,11],[10,null,null,null,17,12],
+        [11,14,18,null,null,13],[12,15,null,null,18,14],
+        [14,17,null,null,null,16],
       ],
+      // hexNeighborMap: [
+      //   [null, null, 3, 5, 2, null],
+      //   [null, 1, 5, 4, null, null], [null, null, 6, 8, 5, 1],
+      //   [null,2,7,9,null,null],[1,3,8,10,7,2],[null,null,null,11,8,3],
+      //   [2,5,10,12,9,4],[3,6,11,13,10,5],
+      //   [4,7,12,14,null,null],[5,8,13,15,12,7],[6,null,null,16,13,8],
+      //   [7,10,15,17,14,9],[8,11,16,18,15,10],
+      //   [9,12,17,null,null,null],[10,13,18,19,17,12],[11,null,null,null,18,13],
+      //   [12,15,19,null,null,14],[13,16,null,null,19,15],
+      //   [15,18,null,null,null,17],
+      // ],
       customOptions: {},
       tempExtensionData: { test: null },
       error: false,
@@ -246,6 +271,16 @@ export default {
       .catch((error) => {
         console.log("error in loading: ", error);
       });
+  },
+  watch: {
+    roomInfo: function (val) {
+      if (val.playRandomizerAnimation === true) {
+        setTimeout(() => {
+            this.roomInfo.playRandomizerAnimation = false;
+          }
+        , 1000)
+      }
+    }
   },
   computed: {
     updatedHexMapRows: function() {
@@ -318,6 +353,8 @@ export default {
         probabilityDistribution[hexIndex] = probabilityWeights[hexIndex] / probabilitySum 
       }
 
+      // console.log(this.hexNeighborMap[this.roomInfo.currentLocation], probabilityDistribution)
+
       let i, sum=0, r=Math.random();
       for (i in probabilityDistribution) {
         sum += probabilityDistribution[i];
@@ -327,21 +364,34 @@ export default {
         }
       }
 
-      let targetHexID = this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex]-1
+      let targetHexID = this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex]
+
+      // RANDOMIZER ANIMATION
+      // Compute which hexes to take into account for the animation
+      let hexesToAnimate = this.hexNeighborMap[this.roomInfo.currentLocation].filter((neighbor, index) => {
+        return neighbor !== null && probabilityDistribution[index] !== 0
+      })
+      // Add the current hex if it was specified in the spreadsheet
+      // as a seventh value in the "Probability"
+      if (probabilityDistribution[6] !== undefined &&  probabilityDistribution[6] !== 0) {
+        hexesToAnimate.push(hexID)
+      }
 
       if (targetHexID == null || targetHexID == -1){
         this.randomlyMoveOnHexflower()
       } else if (hexIndex == 6){
-        this.goToHex(this.roomInfo.currentLocation)
+        this.goToHex(this.roomInfo.currentLocation, true, hexesToAnimate)
       } else {
-        this.goToHex(targetHexID)
+        this.goToHex(targetHexID, true, hexesToAnimate)
       }
       
     },
-    goToHex(hexID){
+    goToHex(hexID, playRandomizerAnimation = false, hexesToAnimate = []){
       if (this.roomInfo.currentLocation == hexID){
         roomsCollection.doc(this.roomID).update({
           currentLocation: hexID,
+          playRandomizerAnimation: playRandomizerAnimation,
+          hexesToAnimate: hexesToAnimate,
           tempSameHex: true,
         });
         setTimeout(() =>
@@ -351,6 +401,8 @@ export default {
         )
       } else {
         roomsCollection.doc(this.roomID).update({
+          playRandomizerAnimation: playRandomizerAnimation,
+          hexesToAnimate: hexesToAnimate,
           currentLocation: hexID,
         });
       }
@@ -650,6 +702,32 @@ $hex-padding: 4px;
 .hex-tile-active .hex-tile-inner  {
   transform: scale(1.1);
 }
+
+/////////
+.hex-randomizing .hex-tile-active,
+.hex-randomizing .hex-tile-active .hex-tile-inner
+{
+  transition-delay: 1s;
+}
+.hex-randomizing .hex-tile-animate-randomization {
+  animation-duration: 0.5s;
+  animation-name: tile-randomizing;  
+  animation-iteration-count: infinite;
+}
+@keyframes tile-randomizing {
+  from {
+    filter: contrast(40%) brightness(55%);
+  }
+
+  to {
+    filter: contrast(100%) brightness(100%);
+  }
+}
+
+
+/////////
+
+
 
 .slot-machine {
   margin: auto;
