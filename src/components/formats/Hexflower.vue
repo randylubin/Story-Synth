@@ -93,7 +93,7 @@
         </div>
       </div>
 
-      <div class="mt-4 hexflower-main card shadow mb-4">
+      <div class="mt-4 hexflower-main card shadow mb-4" v-if="firebaseReady && dataReady && !error">
         <div class="game-title-on-card mt-4" v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard">
           <h1>{{customOptions.gameTitle}}</h1>
         </div>
@@ -111,14 +111,14 @@
         
         <div class='hexflower-body' v-bind:class="{'pointy-top':customOptions.hexOrientation == 'pointyTop'}">
           <template
-            v-for="(hexRow, hexRowIndex) in hexMapRows"
+            v-for="(hexRow, hexRowIndex) in updatedHexMapRows"
           >
             <button
               class="hex-tile"
               v-for="(hex, hexIndex) in hexRow"
               v-on:click="goToHex(hex.hexID)"
               v-bind:key="`${hexIndex}_${hexRowIndex}`"
-              v-bind:class="{'hex-tile-active': (hex.hexID == roomInfo.currentLocation)}"
+              v-bind:class="{'hex-tile-active': (hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex)}"
               v-bind:style="{transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`}"
             >
               <transition name="reroll-current-hex" mode="out-in">
@@ -145,8 +145,8 @@
         </div>
 
         <transition name="reroll-full-content" mode="out-in">
-          <div class="row mt-4 mb-4 p-2" v-if="gSheet[roomInfo.currentLocation].fullContent">
-            <div class="col-sm-12" v-html="gSheet[roomInfo.currentLocation].fullContent">
+          <div class="row mt-4 mb-4 p-2" v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent">
+            <div class="col-sm-12" v-html="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent">
             </div>
           </div>
         </transition>
@@ -225,11 +225,12 @@ export default {
       })
       .then(() => {
         if (!this.roomInfo) {
-          console.log("new room!");
+          console.log("new room! dataReady", this.dataReady);
 
           roomsCollection.doc(this.roomID).set({
             extensionData: this.tempExtensionData,
-            currentLocation: 10,
+            currentLocation: 9,
+            hexArray: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]
           });
 
           if (this.dataReady) {
@@ -240,6 +241,22 @@ export default {
       .catch((error) => {
         console.log("error in loading: ", error);
       });
+  },
+  computed: {
+    updatedHexMapRows: function() {
+      let newHexMapRows = JSON.parse(JSON.stringify(this.hexMapRows))
+      if (this.firebaseReady && this.dataReady){
+        let hexIndexTracker = 0;
+          for (let r = 0; r < newHexMapRows.length; r++){
+            for (let c = 0; c < newHexMapRows[r].length; c++){
+              newHexMapRows[r][c] = JSON.parse(JSON.stringify(this.gSheet[this.roomInfo.hexArray[hexIndexTracker]]))
+              newHexMapRows[r][c].hexID = hexIndexTracker
+              hexIndexTracker += 1;
+            }
+          }
+      }
+      return newHexMapRows
+    }
   },
   methods: {
     hexPosition(col, row) {
@@ -312,9 +329,21 @@ export default {
       }
     },
     goToHex(hexID){
-      roomsCollection.doc(this.roomID).update({
-        currentLocation: hexID,
-      });
+      if (this.roomInfo.currentLocation == hexID){
+        roomsCollection.doc(this.roomID).update({
+          currentLocation: hexID,
+          tempSameHex: true,
+        });
+        setTimeout(() =>
+          roomsCollection.doc(this.roomID).update({
+            tempSameHex: false,
+          }), 500
+        )
+      } else {
+        roomsCollection.doc(this.roomID).update({
+          currentLocation: hexID,
+        });
+      }
     },
     regenerateHexes(){
       let startingHex = parseInt(this.customOptions.startingHex) ?? 9
@@ -351,7 +380,7 @@ export default {
       let hexIndexList = [];
 
       for (let hexIndex = 0; hexIndex < newHexArray.length; hexIndex++){
-        hexIndexList = newHexArray[hexIndex].hexID;
+        hexIndexList.push(newHexArray[hexIndex].hexID)
       }
 
       roomsCollection.doc(this.roomID).update({
@@ -386,7 +415,7 @@ export default {
 
           // Transform Sheets API response into cleanData
           gRows.forEach((item, i) => {
-            console.log(i)
+            //console.log(i)
             if (i !== 0 && item.values[0].formattedValue) {
               // Handle options
               if (item.values[0].formattedValue == "option") {
@@ -474,7 +503,7 @@ export default {
             });
           }
 
-          if (this.firebaseReady && this.categoryData) {
+          if (this.firebaseReady && this.dataReady) {
             this.regenerateHexes();
           }
         })
