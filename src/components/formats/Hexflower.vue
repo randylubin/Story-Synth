@@ -108,40 +108,45 @@
               </b-button>
           </div>
         </div>
-        
-        <div class='hexflower-body' v-bind:class="{'pointy-top':customOptions.hexOrientation == 'pointyTop'}">
-          <template
-            v-for="(hexRow, hexRowIndex) in updatedHexMapRows"
+
+        <div class="row justify-content-center">
+          <div 
+            class='hexflower-body' 
+            v-bind:class="{'pointy-top':customOptions.hexOrientation == 'pointyTop'}"
           >
-            <button
-              class="hex-tile"
-              v-for="(hex, hexIndex) in hexRow"
-              v-on:click="goToHex(hex.hexID)"
-              v-bind:key="`${hexIndex}_${hexRowIndex}`"
-              v-bind:class="{'hex-tile-active': (hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex)}"
-              v-bind:style="{transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`}"
+            <template
+              v-for="(hexRow, hexRowIndex) in updatedHexMapRows"
             >
-              <transition name="reroll-current-hex" mode="out-in">
-                <div 
-                  class="hex-tile-inner"
-                  :key="hex.hexID"
-                  v-bind:style="{backgroundColor: hex.backgroundColor, backgroundImage: hex.backgroundImage}"
-                >
+              <button
+                class="hex-tile"
+                v-for="(hex, hexIndex) in hexRow"
+                v-on:click="goToHex(hex.hexID)"
+                v-bind:key="`${hexIndex}_${hexRowIndex}`"
+                v-bind:class="{'hex-tile-active': (hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex)}"
+                v-bind:style="{transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`}"
+              >
+                <transition name="reroll-current-hex" mode="out-in">
                   <div 
-                    class="hex-tile-inner-content"
-                    v-bind:class="{
-                      'hex-tile-inner-content-lg': countGraphemes(hex.summary) == 1,
-                      'hex-tile-inner-content-md': countGraphemes(hex.summary) >= 2 && countGraphemes(hex.summary) < 5,
-                      'hex-tile-inner-content-sm': countGraphemes(hex.summary) >= 5 && countGraphemes(hex.summary) < 25,
-                      'hex-tile-inner-content-xs': countGraphemes(hex.summary) >= 25
-                    }"
+                    class="hex-tile-inner"
+                    :key="hex.hexID"
+                    v-bind:style="{backgroundColor: hex.backgroundColor, backgroundImage: hex.backgroundImage}"
                   >
-                    {{hex.summary}}
+                    <div 
+                      class="hex-tile-inner-content"
+                      v-bind:class="{
+                        'hex-tile-inner-content-lg': countGraphemes(hex.summary) == 1,
+                        'hex-tile-inner-content-md': countGraphemes(hex.summary) >= 2 && countGraphemes(hex.summary) < 5,
+                        'hex-tile-inner-content-sm': countGraphemes(hex.summary) >= 5 && countGraphemes(hex.summary) < 25,
+                        'hex-tile-inner-content-xs': countGraphemes(hex.summary) >= 25
+                      }"
+                    >
+                      {{hex.summary}}
+                    </div>
                   </div>
-                </div>
-              </transition>
-            </button>
-          </template>
+                </transition>
+              </button>
+            </template>
+          </div>
         </div>
 
         <transition name="reroll-full-content" mode="out-in">
@@ -541,7 +546,11 @@ $hex-padding: 4px;
 
 // HEXES
 .hexflower-body {
-  padding-bottom: $hex-height * 5.3;
+  // padding-bottom: $hex-height * 5.3;
+  height: $hex-height * 5.2;
+  width: $hex-height * 5.2;
+  margin-top: 10px;
+  // margin-left: 7.5px;
   color:black;
   display: flex;
   justify-content: center;  
@@ -554,7 +563,7 @@ $hex-padding: 4px;
 }
 
 .pointy-top.hexflower-body {
- transform: translateY(15px) rotate(-90deg) 
+ transform: rotate(-90deg) translate(0px, math.floor($hex-width - $hex-height)/2);
 }
 
 .pointy-top .hex-tile-inner-content {
