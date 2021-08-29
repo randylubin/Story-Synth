@@ -141,7 +141,6 @@
                     v-bind:style="{
                         backgroundColor: hex.backgroundColor, 
                         backgroundImage: hex.backgroundImage,
-                        animationDelay: `-${(hex.hexID/18)%1}s`
                     }"
                     v-bind:class="{
                       'hex-tile-animate-randomization': (roomInfo.hexesToAnimate.includes(hex.hexID))
@@ -284,7 +283,7 @@ export default {
         setTimeout(() => {
             this.roomInfo.playRandomizerAnimation = false;
           }
-        , 1000)
+        , 1500)
       }
       if (val?.playResetAnimation === true) {
         setTimeout(() => {
@@ -744,6 +743,14 @@ $hex-padding: 4px;
 .hex-resetting .hex-tile-inner {
   transform: rotateY(90deg) !important;
 }
+.hex-resetting .hex-tile-inner .hex-tile-inner-content {
+  display: none;
+}
+@for $i from 0 through 17 {
+  .hex-resetting .hex-tile:nth-child(#{$i}) .hex-tile-inner {
+    transition-delay: #{$i/36}s;
+  }
+}
 
 /////////////////////////////////////////////
 // Randomizer Animation
@@ -761,21 +768,25 @@ $hex-padding: 4px;
 .hex-randomizing .hex-tile-active,
 .hex-randomizing .hex-tile-active .hex-tile-inner
 {
-  transition-delay: 1s;
+  transition-delay: 1.5s;
 }
 .hex-randomizing .hex-tile-animate-randomization {
-  animation-duration: 0.5s;
+  animation-duration: 0.75s;
   animation-name: tile-randomizing;  
   animation-iteration-count: infinite;
 }
 @keyframes tile-randomizing {
-  from {
+  0% {
+    filter: contrast(100%) brightness(100%);
+  }
+
+  50% {
     filter: contrast(40%) brightness(55%);
   }
 
-  to {
+  100% {
     filter: contrast(100%) brightness(100%);
-  }
+  }  
 }
 
 
