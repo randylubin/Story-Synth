@@ -15,4 +15,3 @@ firebase-config.js
 *.sln
 .env
 package-lock.json
-package-lock.json
