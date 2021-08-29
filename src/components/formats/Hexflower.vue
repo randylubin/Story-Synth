@@ -544,8 +544,26 @@ $hex-padding: 4px;
 }
 
 .pointy-top {
+  transform: rotate(-90deg);
+  
+}
+
+.pointy-top.hexflower-body {
+ transform: translateY(15px) rotate(-90deg) 
+}
+
+.pointy-top .hex-tile-inner-content {
   transform: rotate(90deg);
-  margin-left: -37px;
+}
+
+.pointy-top .hex-tile-inner:hover .hex-tile-inner-content {
+  transform: scale(1.075) rotate(90deg);
+}
+.pointy-top .hex-tile-inner:hover {
+  filter: contrast(90%) brightness(95%);
+}
+.pointy-top .hex-tile:focus:not(.hex-tile-active) {
+  filter: contrast(90%) brightness(95%);
 }
 
 .hex-tile:first-child {
@@ -594,10 +612,6 @@ $hex-padding: 4px;
   outline: transparent;
   // outline: solid transparent;
   // box-shadow: 0 0 0 1px #fff, 0 0 0 3px #f5a;
-}
-
-.pointy-top .hex-tile-inner {
-  transform: rotate(180deg);
 }
 
 .hex-tile-inner:hover .hex-tile-inner-content {
