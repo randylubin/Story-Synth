@@ -101,11 +101,11 @@
         <div class="row">
           <div class="regenerate-button my-4 col-sm-12 justify-content-center generator">
               <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
-                <span>Generate</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
-              </b-button>
-              <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
-                <span>Move</span> <b-icon class='hexflower-reroll-icon' icon="arrow-right"></b-icon>
+                <span>Move</span> <b-icon class='hexflower-reroll-icon' icon="arrows-move"></b-icon>
               </b-button>              
+              <b-button v-if="customOptions.randomizeHexes" v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
+                <span>Regenerate</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
+              </b-button>
           </div>
         </div>
         
@@ -229,11 +229,11 @@ export default {
 
           roomsCollection.doc(this.roomID).set({
             extensionData: this.tempExtensionData,
-            currentLocation: 0,
+            currentLocation: 10,
           });
 
           if (this.dataReady) {
-            this.shuffleAll();
+            this.regenerateHexes();
           }
         }
       })
@@ -315,6 +315,53 @@ export default {
       roomsCollection.doc(this.roomID).update({
         currentLocation: hexID,
       });
+    },
+    regenerateHexes(){
+      let startingHex = parseInt(this.customOptions.startingHex) ?? 9
+
+      let randomApproach = this.customOptions.randomizeHexes ?? null
+      
+      let newHexArray = []
+      for (let n = 0; n < this.gSheet.length; n++){
+       newHexArray[n] = this.gSheet[n] 
+      }
+
+      if (randomApproach == "randomNoCopies"){
+        for (let n = newHexArray.length - 1; n > 0; n--) {
+          let j = Math.floor(Math.random() * (n + 1));
+          [newHexArray[n], newHexArray[j]] = [newHexArray[j], newHexArray[n]];
+        }
+      } else if (randomApproach == "randomWithCopies") {
+        for (let n = 0; n < this.gSheet.length; n++) {
+          console.log(this.gSheet[n].hexID)
+          let j = Math.floor(Math.random() * this.gSheet.length);
+          newHexArray[n] = this.gSheet[j];
+          console.log(this.gSheet[n].hexID)
+
+          // TODO WHY IS GSHEET CHANGING?!
+        }
+      }
+
+      let hexIndexTracker = 0;
+      for (let r = 0; r < this.hexMapRows.length; r++){
+        for (let c = 0; c < this.hexMapRows[r].length; c++){
+          this.hexMapRows[r][c] = newHexArray[hexIndexTracker]
+          
+          hexIndexTracker += 1;
+        }
+      }
+
+      let hexIndexList = [];
+
+      for (let hexIndex = 0; hexIndex < newHexArray.length; hexIndex++){
+        hexIndexList = newHexArray[hexIndex].hexID;
+      }
+
+      roomsCollection.doc(this.roomID).update({
+        hexArray: hexIndexList,
+        currentLocation: startingHex,
+      });
+
     },
     syncExtension() {
       roomsCollection.doc(this.roomID).update({
@@ -431,7 +478,7 @@ export default {
           }
 
           if (this.firebaseReady && this.categoryData) {
-            this.shuffleAll();
+            this.regenerateHexes();
           }
         })
         .catch((error) => {
@@ -573,9 +620,6 @@ $hex-padding: 4px;
 .reroll-enter-active,
 .reroll-leave-active {
   transition: all .5s;
-
-}
-.reroll-enter, .reroll-leave-to /* .fade-leave-active below version 2.1.8 */ {
 
 }
 
