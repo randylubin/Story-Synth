@@ -98,47 +98,59 @@
           <h1>{{customOptions.gameTitle}}</h1>
         </div>
 
-        <transition name="reroll-full-content" mode="out-in">
-          <div class="row mt-4" v-if="gSheet[roomInfo.currentLocation].fullContent">
-            <div class="col-sm-12" v-html="gSheet[roomInfo.currentLocation].fullContent">
-            </div>
-          </div>
-        </transition>
-
         <div class="row">
           <div class="regenerate-button my-4 col-sm-12 justify-content-center generator">
               <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
-                <span>Roll</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
+                <span>Generate</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
               </b-button>
+              <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
+                <span>Move</span> <b-icon class='hexflower-reroll-icon' icon="arrow-right"></b-icon>
+              </b-button>              
           </div>
         </div>
         
-        <div class='hexflower-body' v-bind:class="{'flat-top':customOptions.hexOrientation == 'flatTop'}">
-          <div
-            class="hex-row"
+        <div class='hexflower-body' v-bind:class="{'pointy-top':customOptions.hexOrientation == 'pointyTop'}">
+          <template
             v-for="(hexRow, hexRowIndex) in hexMapRows"
-            v-bind:key="hexRowIndex"
-            v-bind:class="{'hex-row-even': (hexRowIndex %2 == 0), 'hex-row-odd': (hexRowIndex %2 == 1)}"
           >
             <button
               class="hex-tile"
               v-for="(hex, hexIndex) in hexRow"
               v-on:click="goToHex(hex.hexID)"
-              v-bind:key="hexIndex"
-              v-bind:style="{backgroundColor: hex.backgroundColor, backgroundImage: hex.backgroundImage}"
+              v-bind:key="`${hexIndex}_${hexRowIndex}`"
+              v-bind:class="{'hex-tile-active': (hex.hexID == roomInfo.currentLocation)}"
+              v-bind:style="{transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`}"
             >
               <transition name="reroll-current-hex" mode="out-in">
                 <div 
                   class="hex-tile-inner"
                   :key="hex.hexID"
-                  v-bind:class="{'hex-tile-active': (hex.hexID == roomInfo.currentLocation)}"
+                  v-bind:style="{backgroundColor: hex.backgroundColor, backgroundImage: hex.backgroundImage}"
                 >
-                  {{hex.summary}}
+                  <div 
+                    class="hex-tile-inner-content"
+                    v-bind:class="{
+                      'hex-tile-inner-content-lg': countGraphemes(hex.summary) == 1,
+                      'hex-tile-inner-content-md': countGraphemes(hex.summary) >= 2 && countGraphemes(hex.summary) < 5,
+                      'hex-tile-inner-content-sm': countGraphemes(hex.summary) >= 5 && countGraphemes(hex.summary) < 25,
+                      'hex-tile-inner-content-xs': countGraphemes(hex.summary) >= 25
+                    }"
+                  >
+                    {{hex.summary}}
+                  </div>
                 </div>
               </transition>
             </button>
-          </div>
+          </template>
         </div>
+
+        <transition name="reroll-full-content" mode="out-in">
+          <div class="row mt-4 mb-4 p-2" v-if="gSheet[roomInfo.currentLocation].fullContent">
+            <div class="col-sm-12" v-html="gSheet[roomInfo.currentLocation].fullContent">
+            </div>
+          </div>
+        </transition>
+
       </div>
 
       <div class="lower-text row mt-4" v-if="customOptions.lowerText">
@@ -168,6 +180,7 @@
 import { roomsCollection } from "../../firebase";
 import ExtensionManager from "../extensions/ExtensionManager.vue";
 import axios from "axios";
+import GraphemeSplitter from 'grapheme-splitter';
 
 export default {
   name: "app-hexflower",
@@ -229,6 +242,32 @@ export default {
       });
   },
   methods: {
+    hexPosition(col, row) {
+
+      // Basic dimensions
+      let hexHeight = 92;
+      let hexWidth = Math.floor(hexHeight * 1.1547);
+      let hexPadding = 4;
+
+      // Layout
+      let offset = [0, 0, -1, 0, -1, 0, -1, 0, 0];
+
+      // Offsets
+      let hexSlotOffset = (hexWidth * 1.5 + hexPadding);
+      let oddOffset = (row%2 === 0) ? 0 : -hexWidth * 0.75 - hexPadding/2;      
+
+      let x = col * hexSlotOffset 
+            + oddOffset
+            + offset[row] * hexSlotOffset;
+      
+      let y = row * (hexHeight/2 + hexPadding/2.5);
+
+      return `${x}px, ${y}px`;
+    },
+    countGraphemes(str) {
+      let splitter = new GraphemeSplitter();
+      return splitter.splitGraphemes(str).length;
+    },
     randomlyMoveOnHexflower(){
       let hexID = this.roomInfo.currentLocation
       if (this.gSheet[hexID].probability == undefined){
@@ -415,56 +454,101 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
-
+@use "sass:math";
 $base-color: rgb(33, 33, 33);
+
+$hex-height: 92px; // flat top
+$hex-width: math.floor($hex-height * 1.1547);
+$hex-padding: 4px;
 
 // HEXES
 .hexflower-body {
-  padding-bottom: 40px;
+  padding-bottom: $hex-height * 5.3;
+  color:black;
+  display: flex;
+  justify-content: center;  
+  filter: drop-shadow(0px 0px 1px rgba(50, 50, 0, 0.7));  
 }
 
-.flat-top {
+.pointy-top {
   transform: rotate(90deg);
   margin-left: -37px;
 }
 
-.hex-row {
-  padding-left: 25px
+.hex-tile:first-child {
+  margin-left: 0px !important;
 }
 
-.hex-row-even {
-  margin-top: -5px;
-  margin-bottom: -5px;
-}
-
-.hex-row-odd {
-
-}
-
+// This is just for positioning
 .hex-tile {
-  color:black;
-  width: 40px;
-  height: 46px;
-  margin: -9px 35px -10px 0px;
-  -webkit-clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); /* oh Safari 11 */
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  transform: rotate(90deg);
+  position: absolute;
+  background: none;
+  width: $hex-width;
+  height: $hex-height;
   border: 0;
-
+  padding: 0;
+  -webkit-clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);  
 }
 
+// This is the actual styling
 .hex-tile-inner {
-  transform: rotate(-90deg);
+  transition: all 0.3s;
+  -webkit-clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  background: white;
+
+  position: absolute;
+  margin-top: -$hex-height/2;
+  height: $hex-height;
+  width: $hex-width;
+  display: flex;
+  align-items: center;
+  justify-content: center;  
 }
 
-.flat-top .hex-tile-inner {
+// This is the content
+.hex-tile-inner-content {
+  transition: all 0.1s;
+  padding: $hex-height / 4; 
+}
+.hex-tile-inner-content-xs { font-size: $hex-height / 8; }
+.hex-tile-inner-content-sm { font-size: $hex-height / 6; }
+.hex-tile-inner-content-md { font-size: $hex-height / 4; }
+.hex-tile-inner-content-lg { font-size: $hex-height / 2; }
+
+.hex-tile:focus {
+  outline: transparent;
+  // outline: solid transparent;
+  // box-shadow: 0 0 0 1px #fff, 0 0 0 3px #f5a;
+}
+
+.pointy-top .hex-tile-inner {
   transform: rotate(180deg);
 }
 
-.hex-tile-active {
-  color:red;
+.hex-tile-inner:hover .hex-tile-inner-content {
+  transform: scale(1.075);
+}
+.hex-tile-inner:hover {
+  filter: contrast(90%) brightness(95%);
+}
+.hex-tile:focus:not(.hex-tile-active) {
+  filter: contrast(90%) brightness(95%);
 }
 
+.hex-tile-active {
+  z-index: 1000;
+  font-size: bold !important;
+  filter: drop-shadow(-1px 6px 15px rgba(0, 0, 0, 0.372));
+  pointer-events: none;
+  -webkit-clip-path: none !important;
+  clip-path: none !important;
+}
+
+.hex-tile-active .hex-tile-inner  {
+  transform: scale(1.1);
+}
 
 .slot-machine {
   margin: auto;
