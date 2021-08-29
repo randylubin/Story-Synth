@@ -323,30 +323,27 @@ export default {
       
       let newHexArray = []
       for (let n = 0; n < this.gSheet.length; n++){
-       newHexArray[n] = this.gSheet[n] 
+       newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[n]))
       }
 
       if (randomApproach == "randomNoCopies"){
         for (let n = newHexArray.length - 1; n > 0; n--) {
           let j = Math.floor(Math.random() * (n + 1));
-          [newHexArray[n], newHexArray[j]] = [newHexArray[j], newHexArray[n]];
+          [newHexArray[n], newHexArray[j]] = [JSON.parse(JSON.stringify(newHexArray[j])), JSON.parse(JSON.stringify(newHexArray[n]))];
         }
       } else if (randomApproach == "randomWithCopies") {
         for (let n = 0; n < this.gSheet.length; n++) {
-          console.log(this.gSheet[n].hexID)
           let j = Math.floor(Math.random() * this.gSheet.length);
-          newHexArray[n] = this.gSheet[j];
-          console.log(this.gSheet[n].hexID)
+          newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[j]));
 
-          // TODO WHY IS GSHEET CHANGING?!
         }
       }
 
       let hexIndexTracker = 0;
       for (let r = 0; r < this.hexMapRows.length; r++){
         for (let c = 0; c < this.hexMapRows[r].length; c++){
-          this.hexMapRows[r][c] = newHexArray[hexIndexTracker]
-          
+          this.hexMapRows[r][c] = JSON.parse(JSON.stringify(newHexArray[hexIndexTracker]))
+          this.hexMapRows[r][c].hexID = hexIndexTracker
           hexIndexTracker += 1;
         }
       }
