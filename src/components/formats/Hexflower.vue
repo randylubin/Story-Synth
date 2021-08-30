@@ -103,7 +103,7 @@
               <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
                 <span>{{ roomInfo.playRandomizerAnimation ? 'Rolling' : 'Move' }}</span> <b-icon class='hexflower-reroll-icon' icon="arrows-move"></b-icon>
               </b-button>              
-              <b-button v-if="customOptions.randomizeHexes" v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
+              <b-button v-if="customOptions.randomizeHexes == 'randomWithCopies' || customOptions.randomizeHexes == 'randomNoCopies'" v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
                 <span>Regenerate</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
               </b-button>
           </div>
@@ -154,8 +154,8 @@
                         'hex-tile-inner-content-sm': countGraphemes(hex.summary) >= 5 && countGraphemes(hex.summary) < 25,
                         'hex-tile-inner-content-xs': countGraphemes(hex.summary) >= 25
                       }"
+                      v-html="hex.summary"
                     >
-                      {{hex.summary}}
                     </div>
                   </div>
                 </transition>
@@ -339,8 +339,10 @@ export default {
       return `${x}px, ${y}px`;
     },
     countGraphemes(str) {
-      let splitter = new GraphemeSplitter();
-      return splitter.splitGraphemes(str).length;
+      if (str){
+        let splitter = new GraphemeSplitter();
+        return splitter.splitGraphemes(str).length;
+      }
     },
     randomlyMoveOnHexflower(){
       let hexID = this.roomInfo.currentLocation
