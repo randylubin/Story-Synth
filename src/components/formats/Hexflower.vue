@@ -321,7 +321,7 @@ export default {
       // Basic dimensions
       let hexHeight = screen.width > 375 ? 92 : 69;
       let hexWidth = Math.floor(hexHeight * 1.1547);
-      let hexPadding = screen.width > 375 ? 4 : 3;
+      let hexPadding = 4;
 
       // Layout
       let offset = [0, 0, -1, 0, -1, 0, -1, 0, 0];
@@ -687,7 +687,7 @@ $hex-padding: 4px;
   height: $hex-height;
   @media (max-width: 375px) {
     height: $hex-height * .75;
-    width: $hex-height * .75;
+    width: $hex-width * .75;
   }
   border: 0;
   padding: 0;
@@ -708,7 +708,8 @@ $hex-padding: 4px;
   @media (max-width: 375px) {
     margin-top: -$hex-height * .75 / 2;
     height: $hex-height * .75;
-    width: $hex-height * .75;
+    width: $hex-width * .75 ;
+    background-size: ($hex-width * .75) ($hex-height * .75);
   }
   display: flex;
   align-items: center;
