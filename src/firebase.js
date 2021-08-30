@@ -10,6 +10,7 @@ const app = initializeApp({
 });
 
 export const db = app.firestore();
+// db.settings({ experimentalForceLongPolling: true });
 export const roomsCollection = db.collection('rooms');
 
 export const rtdb = app.database();
