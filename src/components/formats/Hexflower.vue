@@ -443,11 +443,23 @@ export default {
           let j = Math.floor(Math.random() * (n + 1));
           [newHexArray[n], newHexArray[j]] = [JSON.parse(JSON.stringify(newHexArray[j])), JSON.parse(JSON.stringify(newHexArray[n]))];
         }
+        if (this.customOptions.startingHexFixedTile == "TRUE"){
+          let oldIndex = startingHex;
+          for (let h = 0; h < newHexArray.length; h++){
+            if (newHexArray[h].fullContent == this.gSheet[startingHex].fullContent){
+              oldIndex = h;
+            }
+          }
+          [newHexArray[oldIndex], newHexArray[startingHex]] = [newHexArray[startingHex], newHexArray[oldIndex]];
+
+        }
       } else if (randomApproach == "randomWithCopies") {
         for (let n = 0; n < this.gSheet.length; n++) {
           let j = Math.floor(Math.random() * this.gSheet.length);
           newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[j]));
-
+        }
+        if (this.customOptions.startingHexFixedTile == "TRUE"){
+          newHexArray[startingHex] = JSON.parse(JSON.stringify(this.gSheet[startingHex]));
         }
       }
 
@@ -555,7 +567,6 @@ export default {
           });
 
           if (this.customOptions.hexWarp){
-            console.log('warpdrive!')
             this.hexNeighborMap = [
               [18, 3, 2, 4, 1, 5],
               [16, 0, 4, 6, 3, 10], [17, 8, 5, 7, 4, 0],
