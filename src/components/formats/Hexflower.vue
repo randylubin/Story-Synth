@@ -566,7 +566,7 @@ export default {
             }
           });
 
-          if (this.customOptions.hexWarp){
+          if (this.customOptions.hexWarp == "TRUE"){
             this.hexNeighborMap = [
               [18, 3, 2, 4, 1, 5],
               [16, 0, 4, 6, 3, 10], [17, 8, 5, 7, 4, 0],
