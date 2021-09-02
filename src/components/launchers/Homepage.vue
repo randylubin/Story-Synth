@@ -76,25 +76,6 @@
 
       <div class="card shadow mb-4">
         <div class="card-body">
-          <div class="row">
-            <div class="col">
-              <a
-                href="https://itch.io/jam/story-synth-summer-jam"
-                target="_blank"
-              >
-                <b-img
-                  fluid
-                  src="https://diegeticgames.com/uploads/story-synth-summer-jam-website-promo.png"
-                  alt="the logo for the Story Synth Summer Jam with a link to the jam"
-                ></b-img>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card shadow mb-4">
-        <div class="card-body">
           <div class="row mb-4">
             <div class="col-sm-12 text-center">
               <h2>Games and Demos</h2>
