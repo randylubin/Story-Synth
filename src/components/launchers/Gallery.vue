@@ -40,6 +40,20 @@
           </div>
         </div>
       </div>
+
+    </div>
+    <div class="row">
+      <div class="col-xl-8 offset-xl-2 offset-lg-0 col-lg-12 col-md-4 mb-1">
+        <div class="card shadow">
+          <div class="card-body text-center">
+            <h2>Story Synth Summer Jam 2021</h2>
+            <p>Check out the great submissions to the <a href="https://itch.io/jam/story-synth-summer-jam/entries">Story Synth Summer Jam 2021</a></p>
+            <a href="https://itch.io/jam/story-synth-summer-jam/entries">
+              <img src="https://diegeticgames.com/uploads/story-synth-summer-jam-2021-gallery.png" alt="gallery image of game submissions to the story synth summer jam" class="img-fluid">
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
