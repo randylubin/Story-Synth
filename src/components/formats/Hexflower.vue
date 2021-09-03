@@ -168,9 +168,10 @@
 
         <transition name="fade-full-content" mode="out-in"><!--TODO fix this-->
           <div 
-            class="row mt-4 mb-4 p-2" 
+            class="row mt-4 mb-4 p-2 full-content" 
             :key="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent"
             v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent && !roomInfo.tempSameHex"
+            v-bind:class="{'invisible':roomInfo.playRandomizerAnimation}"
           >
             <div class="col-sm-12" v-html="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent">
             </div>
