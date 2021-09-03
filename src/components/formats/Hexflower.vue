@@ -166,7 +166,7 @@
           </div>
         </div>
 
-        <transition name="fade-full-content" mode="out-in">
+        <transition name="fade-full-content" mode="out-in"><!--TODO fix this-->
           <div 
             class="row mt-4 mb-4 p-2" 
             :key="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent"
@@ -297,7 +297,7 @@ export default {
             this.roomInfo.hexesMidreveal = [];
           }
         , 1500)
-      } else {
+      } else if (val?.hexesMidreveal){
         this.roomInfo.hexesMidreveal = [];
       }
       if (val?.playResetAnimation === true) {
@@ -392,7 +392,7 @@ export default {
         }
       }
 
-      let targetHexID = this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex]
+      let targetHexID = this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex] ?? hexIndex
 
       // RANDOMIZER ANIMATION
       // Compute which hexes to take into account for the animation
@@ -426,9 +426,8 @@ export default {
         for (let n = 0; n < this.hexNeighborMap[hexID].length; n++){
           let neighborHex = this.hexNeighborMap[hexID][n]
           if (neighborHex != null){
-            if (this.roomInfo.hexesVisible[neighborHex] != 1){
+            if (this.roomInfo.hexesVisible[neighborHex] == 0){
               hexesMidreveal.push(neighborHex)
-              console.log('midreveal', hexesMidreveal)
               this.roomInfo.hexesVisible[neighborHex] = 1;
             }
           }
@@ -443,6 +442,8 @@ export default {
           playRandomizerAnimation: playRandomizerAnimation,
           playResetAnimation: false,
           hexesToAnimate: hexesToAnimate,
+          hexesVisible: this.roomInfo.hexesVisible,
+          hexesMidreveal: hexesMidreveal,
           tempSameHex: true,
         });
         setTimeout(() =>
