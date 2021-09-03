@@ -128,7 +128,7 @@
                 v-bind:key="`${hexIndex}_${hexRowIndex}`"
                 v-bind:class="{
                   'hex-tile-active': (hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex),
-                  'hex-tile-previous-active': (hex.hexID == roomInfo.previousLocation)
+                  'hex-tile-previous-active': (hex.hexID == roomInfo.previousLocation),
                 }"
                 v-bind:style="{
                   transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`                  
@@ -143,11 +143,13 @@
                         backgroundImage: hex.backgroundImage,
                     }"
                     v-bind:class="{
-                      'hex-tile-animate-randomization': (roomInfo.hexesToAnimate.includes(hex.hexID))
+                      'hex-tile-animate-randomization': (roomInfo.hexesToAnimate.includes(hex.hexID)),
+                      'hex-tile-foggy': (customOptions.fogOfWar && roomInfo.hexesVisible[hex.hexID] == 0)
                     }"
                   >
                     <div 
                       class="hex-tile-inner-content"
+                      v-if="!(customOptions.fogOfWar && roomInfo.hexesVisible[hex.hexID] == 0)"
                       v-bind:class="{
                         'hex-tile-inner-content-lg': countGraphemes(hex.summary) == 1,
                         'hex-tile-inner-content-md': countGraphemes(hex.summary) >= 2 && countGraphemes(hex.summary) < 5,
@@ -222,7 +224,8 @@ export default {
       roomInfo: {
         currentLocation: 0,
         playRandomizerAnimation: false,
-        hexesToAnimate: []
+        hexesToAnimate: [],
+        hexesVisible: [],
       },
       dataReady: false,
       firebaseReady: false,
@@ -406,6 +409,20 @@ export default {
       
     },
     goToHex(hexID, playRandomizerAnimation = false, hexesToAnimate = []){
+      // fog of war
+      if (this.customOptions.fogOfWar == "revealOnMove"){
+        this.roomInfo.hexesVisible[hexID] = 1;
+      } else if (this.customOptions.fogOfWar == "revealNeighbors") {
+        this.roomInfo.hexesVisible[hexID] = 1;
+        for (let n = 0; n < this.hexNeighborMap[hexID].length; n++){
+          let neighborHex = this.hexNeighborMap[hexID][n]
+          if (neighborHex != null){
+            this.roomInfo.hexesVisible[neighborHex] = 1;
+          }
+        }
+      }
+
+      // check if moving to self
       if (this.roomInfo.currentLocation == hexID){
         roomsCollection.doc(this.roomID).update({
           previousLocation: this.roomInfo.currentLocation,
@@ -426,6 +443,7 @@ export default {
           playRandomizerAnimation: playRandomizerAnimation,
           playResetAnimation: false,
           hexesToAnimate: hexesToAnimate,
+          hexesVisible: this.roomInfo.hexesVisible,
           currentLocation: hexID,
         });
       }
@@ -436,8 +454,10 @@ export default {
       let randomApproach = this.customOptions.randomizeHexes ?? null
       
       let newHexArray = []
+      let visibleHexArray = []
       for (let n = 0; n < this.gSheet.length; n++){
        newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[n]))
+       visibleHexArray[n] = 1
       }
 
       if (randomApproach == "randomNoCopies"){
@@ -474,6 +494,14 @@ export default {
         }
       }
 
+      if (this.customOptions.fogOfWar != undefined && this.customOptions.fogOfWar != "FALSE"){
+        for (let h = 0; h < visibleHexArray.length; h++){
+          if (!this.customOptions.initiallyVisible?.includes(h) && h != startingHex){
+            visibleHexArray[h] = 0;
+          }
+        }
+      }
+
       let hexIndexList = [];
 
       for (let hexIndex = 0; hexIndex < newHexArray.length; hexIndex++){
@@ -486,6 +514,7 @@ export default {
         playResetAnimation: true,
         hexArray: hexIndexList,
         currentLocation: startingHex,
+        hexesVisible: visibleHexArray,
       });
 
     },
@@ -560,13 +589,20 @@ export default {
 
                   // organize into rows
                   let hexRowLookup = {0:0,1:1,2:1,3:2,4:2,5:2,6:3,7:3,8:4,9:4,10:4,11:5,12:5,13:6,14:6,15:6,16:7,17:7,18:8}
-                  this.hexMapRows[hexRowLookup[hexInfo.hexID]].push(hexInfo); 
+                  this.hexMapRows[hexRowLookup[hexInfo.hexID]].push(hexInfo);
 
                   cleanData.push(hexInfo);
                 }
               }
             }
           });
+
+          if (this.customOptions.initiallyVisible){
+            this.customOptions.initiallyVisible = this.customOptions.initiallyVisible.split(',')
+            for (let v = 0; v < this.customOptions.initiallyVisible.length; v++){
+              this.customOptions.initiallyVisible[v] = parseInt(this.customOptions.initiallyVisible[v])
+            }
+          }
 
           if (this.customOptions.hexWarp == "TRUE"){
             this.hexNeighborMap = [
@@ -672,6 +708,10 @@ $hex-padding: 4px;
 
 .pointy-top.hexflower-body {
  transform: rotate(-90deg) translate(0px, math.floor($hex-width - $hex-height)/2);
+}
+
+.hex-tile-foggy {
+  background-color: grey !important;
 }
 
 .pointy-top .hex-tile-inner-content {
