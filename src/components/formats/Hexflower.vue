@@ -144,12 +144,12 @@
                     }"
                     v-bind:class="{
                       'hex-tile-animate-randomization': (roomInfo.hexesToAnimate.includes(hex.hexID)),
-                      'hex-tile-foggy': (customOptions.fogOfWar && roomInfo.hexesVisible[hex.hexID] == 0)
+                      'hex-tile-foggy': ((customOptions.fogOfWar && roomInfo.hexesVisible[hex.hexID] == 0) || roomInfo.hexesMidreveal.includes(hex.hexID))
                     }"
                   >
                     <div 
                       class="hex-tile-inner-content"
-                      v-if="!(customOptions.fogOfWar && roomInfo.hexesVisible[hex.hexID] == 0)"
+                      v-if="!((customOptions.fogOfWar && roomInfo.hexesVisible[hex.hexID] == 0) || roomInfo.hexesMidreveal.includes(hex.hexID))"
                       v-bind:class="{
                         'hex-tile-inner-content-lg': countGraphemes(hex.summary) == 1,
                         'hex-tile-inner-content-md': countGraphemes(hex.summary) >= 2 && countGraphemes(hex.summary) < 5,
@@ -226,6 +226,7 @@ export default {
         playRandomizerAnimation: false,
         hexesToAnimate: [],
         hexesVisible: [],
+        hexesMidreveal: [],
       },
       dataReady: false,
       firebaseReady: false,
@@ -275,6 +276,7 @@ export default {
             currentLocation: 9,
             hexArray: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
             hexesVisible: [],
+            hexesMidreveal: [],
             playRandomizerAnimation: false,
           });
 
@@ -292,6 +294,7 @@ export default {
       if (val?.playRandomizerAnimation === true) {
         setTimeout(() => {
             this.roomInfo.playRandomizerAnimation = false;
+            this.roomInfo.hexesMidreveal = [];
           }
         , 1500)
       }
@@ -410,7 +413,9 @@ export default {
       
     },
     goToHex(hexID, playRandomizerAnimation = false, hexesToAnimate = []){
+      
       // fog of war
+      let hexesMidreveal = []
       if (this.customOptions.fogOfWar == "revealOnMove"){
         this.roomInfo.hexesVisible[hexID] = 1;
       } else if (this.customOptions.fogOfWar == "revealNeighbors") {
@@ -418,7 +423,11 @@ export default {
         for (let n = 0; n < this.hexNeighborMap[hexID].length; n++){
           let neighborHex = this.hexNeighborMap[hexID][n]
           if (neighborHex != null){
-            this.roomInfo.hexesVisible[neighborHex] = 1;
+            if (this.roomInfo.hexesVisible[neighborHex] != 1){
+              hexesMidreveal.push(neighborHex)
+              console.log('midreveal', hexesMidreveal)
+              this.roomInfo.hexesVisible[neighborHex] = 1;
+            }
           }
         }
       }
@@ -445,6 +454,7 @@ export default {
           playResetAnimation: false,
           hexesToAnimate: hexesToAnimate,
           hexesVisible: this.roomInfo.hexesVisible,
+          hexesMidreveal: hexesMidreveal,
           currentLocation: hexID,
         });
       }
@@ -713,6 +723,10 @@ $hex-padding: 4px;
 
 .hex-tile-foggy {
   background-color: grey !important;
+}
+
+.hex-tile-foggy .hex-tile-inner-content {
+  visibility: hidden;
 }
 
 .pointy-top .hex-tile-inner-content {
