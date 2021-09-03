@@ -297,6 +297,8 @@ export default {
             this.roomInfo.hexesMidreveal = [];
           }
         , 1500)
+      } else {
+        this.roomInfo.hexesMidreveal = [];
       }
       if (val?.playResetAnimation === true) {
         setTimeout(() => {
@@ -418,6 +420,7 @@ export default {
       let hexesMidreveal = []
       if (this.customOptions.fogOfWar == "revealOnMove"){
         this.roomInfo.hexesVisible[hexID] = 1;
+        hexesMidreveal.push(hexID)
       } else if (this.customOptions.fogOfWar == "revealNeighbors") {
         this.roomInfo.hexesVisible[hexID] = 1;
         for (let n = 0; n < this.hexNeighborMap[hexID].length; n++){
@@ -726,6 +729,7 @@ $hex-padding: 4px;
 }
 
 .hex-tile-foggy .hex-tile-inner-content {
+  background-color: red;
   visibility: hidden;
 }
 
