@@ -9,6 +9,7 @@
           <app-multiEditableLists :multiEditableLists="JSON.parse(extensionData.multiEditableLists)" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['multiEditableLists']"></app-multiEditableLists>
           <app-diceRoller :diceResults="extensionData.diceRoller.split(',')" :diceRollerTitle="extensionData.diceRollerTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['diceRoller']"></app-diceRoller>
           <app-standardDeck :standardDeck="JSON.parse(extensionData.standardDeck)" :standardDeckTitle="extensionData.standardDeckTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['standardDeck']"></app-standardDeck>
+          <app-hexflowerAsExtension :hexflowerAsExtension="Boolean(extensionData.hexflowerAsExtension)" :gSheetForExtension="extensionData.hexflowerAsExtension" :gSheetID="extensionData.hexflowerAsExtension.substring(extensionData.hexflowerAsExtension.indexOf('/d/') + 3, extensionData.hexflowerAsExtension.indexOf('/edit'))" :roomID="$route.params.roomID + '-hexflower-extensions'" v-if="Boolean(extensionData.hexflowerAsExtension)"></app-hexflowerAsExtension>
         </div>
       </div>
   </div>
@@ -22,6 +23,7 @@ import MultiEditableLists from './MultiEditableLists.vue'
 import DiceRoller from './DiceRoller.vue'
 import StaticBox from './StaticBox.vue'
 import StandardDeck from './StandardDeck.vue'
+import Hexflower from '../formats/Hexflower.vue'
 
 export default {
   name: 'app-extensionManager',
@@ -33,6 +35,7 @@ export default {
     'app-staticBox': StaticBox,
     'app-playerTurnOrder': PlayerTurnOrder,
     'app-standardDeck': StandardDeck,
+    'app-hexflowerAsExtension': Hexflower,
   },
   props: {
     extensionData: Object,
