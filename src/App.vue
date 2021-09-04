@@ -24,12 +24,13 @@
           </div>
 
           <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
-          <app-shuffled :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
+          <app-shuffled ref="shuffled" :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" :userRole="$route.params.userRole" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
           <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
           <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
           <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="($route.params.gameType=='SlotMachine' || $route.params.gameType=='Composite') && $route.params.roomID"></app-slotMachine>
           <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
           <app-generator :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Generator' && $route.params.roomID"></app-generator>
+          <app-hexflower :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Hexflower' && $route.params.roomID"></app-hexflower>
           <app-gridmap :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Gridmap' && $route.params.roomID"></app-gridmap>
 
           <app-sandbox :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox' && $route.params.roomID"></app-sandbox>
@@ -56,10 +57,11 @@
   import Footer from './components/layout/Footer.vue'
 
   import Homepage from './components/launchers/Homepage.vue'
+  import Gallery from './components/launchers/Gallery.vue'
+
   import GameLauncher from './components/launchers/GameLauncher.vue'
   import CustomGameLauncher from './components/games/CustomGameLauncher.vue'
-
-  import Gallery from './components/launchers/Gallery.vue'
+  import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
 
   import Timed from './components/formats/Timed.vue'
   import Shuffled from './components/formats/Shuffled.vue'
@@ -69,8 +71,8 @@
   import Phases from './components/formats/Phases.vue'
   import Generator from './components/formats/Generator.vue'
   import Gridmap from './components/formats/Gridmap.vue'
+  import Hexflower from './components/formats/Hexflower.vue'
   import Sandbox from './components/formats/Sandbox.vue'
-  import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
 
   export default {
     name: 'app',
@@ -79,8 +81,10 @@
       'app-roomLink': RoomLink,
       'app-footer': Footer,
       'app-homepage': Homepage,
-      'app-gameLauncher': GameLauncher,
       'app-gallery': Gallery,
+      'app-gameLauncher': GameLauncher,
+      'app-customGameLauncher': CustomGameLauncher,
+      'app-customGameSessionManager': CustomGameSessionManager,
       'app-timed': Timed,
       'app-shuffled': Shuffled,
       'app-monster': Monster,
@@ -89,9 +93,8 @@
       'app-phases': Phases,
       'app-generator': Generator,
       'app-gridmap': Gridmap,
+      'app-hexflower': Hexflower,
       'app-sandbox': Sandbox,
-      'app-customGameLauncher': CustomGameLauncher,
-      'app-customGameSessionManager': CustomGameSessionManager,
       
     },
     data () {

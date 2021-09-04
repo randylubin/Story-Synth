@@ -14,3 +14,4 @@ firebase-config.js
 *.njsproj
 *.sln
 .env
+package-lock.json
