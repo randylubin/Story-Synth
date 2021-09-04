@@ -147,6 +147,10 @@
                 style="width: 4rem; height: 4rem"
                 label="Busy"
               ></b-spinner>
+              <p>
+                If loading lasts more than a few seconds, please reload the
+                page.
+              </p>
             </div>
 
             <div
