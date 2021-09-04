@@ -79,6 +79,7 @@
                     <option>Slot Machine</option>
                     <option>Phases</option>
                     <option>Generator</option>
+                    <option>Hexflower</option>
                   </select>
                 </div>
               </div>
@@ -169,7 +170,9 @@ export default {
       } else if (this.routeGameType == "Phases") {
         this.gameType = "Phases";
       } else if (this.routeGameType == "Generator") {
-        this.gameType = "Generator"
+        this.gameType = "Generator";
+      } else if (this.routeGameType == "Hexflower") {
+        this.gameType = "Hexflower";
       } else {
         this.gameType = "SecretCards";
       }
@@ -196,7 +199,9 @@ export default {
       } else if (gameType == "Phases") {
         newPath += "Phases";
       } else if (gameType == "Generator") {
-        newPath += "Generator"
+        newPath += "Generator";
+      } else if (gameType == "Hexflower") {
+        newPath += "Hexflower";
       } else {
         newPath += "SlotMachine";
       }

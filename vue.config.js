@@ -23,6 +23,7 @@ module.exports = {
         '/Shuffled/1ghm-XOUZlYaOeHcl0zer4KSpCMaoN5u_X7iWmN2TrjY/', // For the Awesome
         '/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/', // This Heart Within Me Burns
         '/Shuffled/1XVd4Kgq3X3utOm25JXOsDbhI_jLjAHX8mGzpiT6Sgho/', // Compersion
+        '/Generator/1-yrqoN7ZKeLHg0ynob9ZCpUbr64T24IrpX1RuSFUAwY/', // Umberdred
       ],
       useRenderEvent: true,
       headless: true,
