@@ -39,7 +39,7 @@
           <div v-if="!$route.params.roomID && $route.params.gSheetID">
             <app-customGameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-customGameLauncher>
           </div>
-          <app-customGameSessionManager :routeGSheetID="$route.params.gSheetID" v-if="$route.params.roomID"></app-customGameSessionManager>
+          <app-customGameSessionManager :routeGSheetID="$route.params.gSheetID" v-if="$route.params.roomID" :userRole="$route.params.userRole"></app-customGameSessionManager>
         </div>
       </div>
       

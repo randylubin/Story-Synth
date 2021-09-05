@@ -2,7 +2,7 @@
   <div
     class="hexflower game-room container"
     v-if="roomInfo"
-    v-bind:class="['style-template-' + customOptions.styleTemplate]"
+    v-bind:class="{'px-0': hexflowerAsExtension, styleTemplate: styleTemplate}"
   >
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
@@ -207,23 +207,24 @@
 
 <script>
 import { roomsCollection } from "../../firebase";
-import ExtensionManager from "../extensions/ExtensionManager.vue";
 import axios from "axios";
 import GraphemeSplitter from 'grapheme-splitter';
 
 export default {
   name: "app-hexflower",
   components: {
-    "app-extensionManager": ExtensionManager,
+    "app-extensionManager": () => import("../extensions/ExtensionManager.vue"),
   },
   props: {
     roomID: String,
     gSheetID: String,
+    hexflowerAsExtension: Boolean,
+    gSheetForExtension: String,
   },
   data: function () {
     return {
       roomInfo: {
-        currentLocation: 0,
+        currentLocation: null,
         playRandomizerAnimation: false,
         hexesToAnimate: [],
         hexesVisible: [],
@@ -255,6 +256,7 @@ export default {
       //   [12,15,19,null,null,14],[13,16,null,null,19,15],
       //   [15,18,null,null,null,17],
       // ],
+      styleTemplate: "",
       customOptions: {},
       tempExtensionData: { test: null },
       error: false,
@@ -654,6 +656,7 @@ export default {
             "style-template-" + this.customOptions.styleTemplate;
           let body = document.getElementById("app"); // document.body;
           body.classList.add(styleTemplate);
+          this.styleTemplate = styleTemplate
 
           // For the published version, set gSheet equal to your converted JSON object
           this.gSheet = cleanData;
@@ -669,7 +672,8 @@ export default {
             });
           }
 
-          if (this.firebaseReady && this.dataReady) {
+          if (this.firebaseReady && this.roomInfo.hexesVisible.length == 0) {
+            console.log('about to regen', this.roomInfo)
             this.regenerateHexes();
           }
         })
