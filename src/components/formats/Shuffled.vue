@@ -43,7 +43,7 @@
               Previous Card
             </button>
             <button
-              class="btn btn-outline-primary"
+              class="btn btn-outline-dark"
               v-on:click="nextCard()"
               :disabled="
                 roomInfo.xCardIsActive ||
