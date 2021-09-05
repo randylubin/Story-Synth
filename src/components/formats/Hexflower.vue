@@ -207,14 +207,13 @@
 
 <script>
 import { roomsCollection } from "../../firebase";
-import ExtensionManager from "../extensions/ExtensionManager.vue";
 import axios from "axios";
 import GraphemeSplitter from 'grapheme-splitter';
 
 export default {
   name: "app-hexflower",
   components: {
-    "app-extensionManager": ExtensionManager,
+    "app-extensionManager": () => import("../extensions/ExtensionManager.vue"),
   },
   props: {
     roomID: String,
