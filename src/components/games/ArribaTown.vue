@@ -33,6 +33,7 @@
       </div>
       -->
 
+      <!-- This div: Previous Card, Pause, and Next Card buttons -->
       <div
         class="row mb-4"
         v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
@@ -48,6 +49,16 @@
             >
               Previous Card
             </button>
+            <b-button
+              variant="outline-dark"
+              v-on:click="xCard()"
+              v-html="
+                customOptions.safetyCardButton
+                  ? customOptions.safetyCardButton
+                  : 'X-Card'
+              "
+              >X-Card</b-button
+            >
             <button
               class="btn btn-outline-primary"
               v-on:click="nextCard()"
@@ -62,6 +73,7 @@
         </transition>
       </div>
 
+      <!-- This div: Instructions progress bar -->
       <div
         class="row mb-4 game-meta"
         v-if="
@@ -80,6 +92,7 @@
         </div>
       </div>
 
+      <!-- This div: Card counter option -->
       <div
         class="row mb-3 game-meta card-counter"
         v-if="
@@ -99,6 +112,7 @@
         </div>
       </div>
 
+      <!-- This div: Card display -->
       <div
         v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]"
         class="mb-4"
@@ -305,6 +319,71 @@
         </transition>
       </div>
 
+      <!-- This div: Extensions -->
+      <div
+        v-if="
+          dataReady &&
+          firebaseReady &&
+          roomInfo &&
+          Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+        ></app-extensionManager>
+      </div>
+      <hr />
+      <!-- This div: Optional modal buttons -->
+      <div class="row">
+        <div
+          class="btn-group col-sm"
+          role="group"
+          aria-label="Extra Info"
+          v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel"
+        >
+          <b-button
+            v-b-modal.modalOne
+            variant="outline-dark"
+            v-if="customOptions.modalOneLabel"
+            >{{ customOptions.modalOneLabel }}</b-button
+          >
+
+          <b-modal
+            id="modalOne"
+            v-bind:title="customOptions.modalOneLabel"
+            hide-footer
+          >
+            <div
+              class="d-block text-left"
+              v-html="customOptions.modalOneText"
+            ></div>
+          </b-modal>
+
+          <b-button
+            v-b-modal.modalTwo
+            variant="outline-dark"
+            v-if="customOptions.modalTwoLabel"
+            >{{ customOptions.modalTwoLabel }}</b-button
+          >
+
+          <b-modal
+            id="modalTwo"
+            v-bind:title="customOptions.modalTwoLabel"
+            hide-footer
+          >
+            <div
+              class="d-block text-left"
+              v-html="customOptions.modalTwoText"
+            ></div>
+          </b-modal>
+        </div>
+      </div>
+      <p></p>
+
+      <!-- This div: Restart, Last Card, Next Deck -->
       <div
         class="btn-container"
         v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
@@ -322,16 +401,7 @@
                 color="rgb(187, 138, 200)"
                 >Restart</b-button
               >
-              <b-button
-                variant="outline-dark"
-                v-on:click="xCard()"
-                v-html="
-                  customOptions.safetyCardButton
-                    ? customOptions.safetyCardButton
-                    : 'X-Card'
-                "
-                >X-Card</b-button
-              >
+
               <b-button
                 v-b-modal.modalNextDeckConfirm
                 variant="outline-dark"
@@ -381,67 +451,7 @@
         </div>
       </div>
 
-      <div
-        v-if="
-          dataReady &&
-          firebaseReady &&
-          roomInfo &&
-          Object.keys(roomInfo.extensionData).length > 1
-        "
-      >
-        <app-extensionManager
-          @sync-extension="syncExtension()"
-          :extensionData="roomInfo.extensionData"
-          :extensionList="tempExtensionData"
-          :roomInfo="roomInfo"
-        ></app-extensionManager>
-      </div>
-
-      <div class="row">
-        <div
-          class="btn-group col-sm"
-          role="group"
-          aria-label="Extra Info"
-          v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel"
-        >
-          <b-button
-            v-b-modal.modalOne
-            variant="outline-dark"
-            v-if="customOptions.modalOneLabel"
-            >{{ customOptions.modalOneLabel }}</b-button
-          >
-
-          <b-modal
-            id="modalOne"
-            v-bind:title="customOptions.modalOneLabel"
-            hide-footer
-          >
-            <div
-              class="d-block text-left"
-              v-html="customOptions.modalOneText"
-            ></div>
-          </b-modal>
-
-          <b-button
-            v-b-modal.modalTwo
-            variant="outline-dark"
-            v-if="customOptions.modalTwoLabel"
-            >{{ customOptions.modalTwoLabel }}</b-button
-          >
-
-          <b-modal
-            id="modalTwo"
-            v-bind:title="customOptions.modalTwoLabel"
-            hide-footer
-          >
-            <div
-              class="d-block text-left"
-              v-html="customOptions.modalTwoText"
-            ></div>
-          </b-modal>
-        </div>
-      </div>
-
+      <!-- Content of modals for restart, next deck -->
       <b-modal id="modalNextDeckConfirm" title="Advance?" hide-footer>
         <p></p>
         <div class="text-center mb-3">
