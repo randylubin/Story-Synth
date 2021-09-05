@@ -98,7 +98,7 @@ export default {
         gameSessionURL: this.currentUrl,
       });
 
-      this.updateUrl()
+      this.updateUrl();
     }
   },
   watch: {
@@ -135,12 +135,25 @@ export default {
   },
   methods: {
     updateUrl() {
-      if (!this.$route.params.userRole){
+      if (!this.$route.params.userRole) {
         this.currentUrl =
           "https://" + location.hostname.toString() + this.$route.fullPath;
       } else {
-        this.currentUrl = "https://" + location.hostname.toString() + '/' + this.$route.params.gameType + '/' + this.$route.params.gSheetID + '/' + this.$route.params.roomID + '/player/'
-        console.log('current URL is now', this.$route.params.userRole, this.currentUrl)
+        this.currentUrl =
+          "https://" +
+          location.hostname.toString() +
+          "/" +
+          this.$route.params.gameType +
+          "/" +
+          this.$route.params.gSheetID +
+          "/" +
+          this.$route.params.roomID +
+          "/player/";
+        console.log(
+          "current URL is now",
+          this.$route.params.userRole,
+          this.currentUrl
+        );
       }
     },
     copyTextToClipboard() {

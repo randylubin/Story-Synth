@@ -3,6 +3,7 @@
     <app-arribaTown
       :roomID="$route.params.roomID"
       v-if="routeGSheetID == 'Arriba-Town'"
+      :userRole="$route.params.userRole"
     ></app-arribaTown>
     <app-aethelredsAcademy
       :roomID="$route.params.roomID"

@@ -396,7 +396,6 @@ export default {
           style:
             "<style>.game-launcher .card-body {background-color: white;}</style>",
           styleTemplate: "arriba",
-          password: "test",
         };
         this.dataReady = true;
 
@@ -518,10 +517,10 @@ export default {
         routeFullPath = routeFullPath.slice(0, -1);
       }
 
-      let tempURL = routeFullPath + "/" + roomID
+      let tempURL = routeFullPath + "/" + roomID;
 
-      if (this.customOptions.facilitatorMode){
-        tempURL += '/facilitator/'
+      if (this.customOptions.facilitatorMode) {
+        tempURL += "/facilitator/";
       }
 
       return tempURL;
