@@ -189,8 +189,14 @@
                     customOptions.cardBackgroundImage &&
                     !customOptions.cardBackgroundImageAlign,
                 }"
-                v-if="!roomInfo.xCardIsActive"
+                v-if="
+                  !roomInfo.xCardIsActive &&
+                  !roomInfo.popCardOneIsActive &&
+                  !roomInfo.popCardTwoIsActive &&
+                  !roomInfo.popCardThreeIsActive
+                "
               >
+                <!--above: must add all Popcards to v-if statement -->
                 <div v-if="!roomInfo.showCardBack">
                   <h1 v-if="!customOptions.hideHeadersOnCards">
                     {{
@@ -283,6 +289,7 @@
             ></b-alert>
 
             <!--displays the X Card if xCardIsActive -->
+            <!--do not add Popcards to v-if statement bc X-Card must always win -->
             <div
               class="card-body align-items-center justify-content-center"
               v-if="roomInfo.xCardIsActive"
@@ -314,6 +321,97 @@
                 >
               </div>
             </div>
+
+            <!--displays Pop Card One if popCardOneIsActive -->
+            <div
+              class="card-body align-items-center justify-content-center"
+              v-if="roomInfo.popCardOneIsActive && !roomInfo.xCardIsActive"
+              v-bind:class="{
+                'card-body': !customOptions.cardBackgroundImage,
+                'card-img-overlay':
+                  customOptions.cardBackgroundImage &&
+                  !customOptions.cardBackgroundImageAlign,
+              }"
+            >
+              <div class="mt-5 pt-5 mb-5">
+                <!--default text if none supplied -->
+                <h1 v-if="!customOptions.popCardOneText">Pop Card One</h1>
+                <!--calls in custom text -->
+                <div
+                  class="safety-card-text"
+                  v-html="customOptions.popCardOneText"
+                  v-if="customOptions.popCardOneText"
+                ></div>
+              </div>
+              <!--'Continue' button is always displayed in X card -->
+              <button
+                class="btn btn-outline-dark mt-5"
+                v-on:click="popCardOne()"
+              >
+                Done
+              </button>
+            </div>
+
+            <!--displays Pop Card Two if popCardTwoIsActive -->
+            <div
+              class="card-body align-items-center justify-content-center"
+              v-if="roomInfo.popCardTwoIsActive && !roomInfo.xCardIsActive"
+              v-bind:class="{
+                'card-body': !customOptions.cardBackgroundImage,
+                'card-img-overlay':
+                  customOptions.cardBackgroundImage &&
+                  !customOptions.cardBackgroundImageAlign,
+              }"
+            >
+              <div class="mt-5 pt-5 mb-5">
+                <!--default text if none supplied -->
+                <h1 v-if="!customOptions.popCardTwoText">Pop Card One</h1>
+                <!--calls in custom text -->
+                <div
+                  class="safety-card-text"
+                  v-html="customOptions.popCardTwoText"
+                  v-if="customOptions.popCardTwoText"
+                ></div>
+              </div>
+              <!--'Continue' button is always displayed in X card -->
+              <button
+                class="btn btn-outline-dark mt-5"
+                v-on:click="popCardTwo()"
+              >
+                Done
+              </button>
+            </div>
+
+            <!--displays Pop Card Three if popCardThreeIsActive -->
+            <div
+              class="card-body align-items-center justify-content-center"
+              v-if="roomInfo.popCardThreeIsActive && !roomInfo.xCardIsActive"
+              v-bind:class="{
+                'card-body': !customOptions.cardBackgroundImage,
+                'card-img-overlay':
+                  customOptions.cardBackgroundImage &&
+                  !customOptions.cardBackgroundImageAlign,
+              }"
+            >
+              <div class="mt-5 pt-5 mb-5">
+                <!--default text if none supplied -->
+                <h1 v-if="!customOptions.popCardThreeText">Pop Card One</h1>
+                <!--calls in custom text -->
+                <div
+                  class="safety-card-text"
+                  v-html="customOptions.popCardThreeText"
+                  v-if="customOptions.popCardThreeText"
+                ></div>
+              </div>
+              <!--'Continue' button is always displayed in X card -->
+              <button
+                class="btn btn-outline-dark mt-5"
+                v-on:click="popCardThree()"
+              >
+                Done
+              </button>
+            </div>
+
             <!-- displays a background image for card, if not first card ??? -->
             <b-card-img
               v-bind:src="customOptions.cardBackgroundImage"
@@ -392,6 +490,72 @@
       </div>
       <p></p>
 
+      <!-- This div: Popcard buttons -->
+      <div
+        class="row mb-4"
+        v-if="
+          (!customOptions.facilitatorMode || userRole == 'facilitator') &&
+          (customOptions.popCardOneLabel ||
+            customOptions.popCardTwoLabel ||
+            customOptions.popCardThreeLabel)
+        "
+      >
+        <transition name="fade">
+          <!-- TODO: what is aria-label and does it need to be changed here? -->
+          <!-- button text is driven by v-html line, not text inside tags -->
+          <div class="btn-group col-sm" role="group" aria-label="Card Controls">
+            <b-button
+              variant="outline-dark"
+              v-if="customOptions.popCardOneLabel"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                roomInfo.popCardTwoIsActive ||
+                popCardThreeIsActive
+              "
+              v-on:click="popCardOne()"
+              v-html="
+                customOptions.popCardOneLabel
+                  ? customOptions.popCardOneLabel
+                  : 'Popcard One'
+              "
+              >Popcard One</b-button
+            >
+            <b-button
+              variant="outline-dark"
+              v-if="customOptions.popCardTwoLabel"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                roomInfo.popCardOneIsActive ||
+                popCardThreeIsActive
+              "
+              v-on:click="popCardTwo()"
+              v-html="
+                customOptions.popCardTwoLabel
+                  ? customOptions.popCardTwoLabel
+                  : 'Popcard Two'
+              "
+              >Popcard Two</b-button
+            >
+            <b-button
+              variant="outline-dark"
+              v-if="customOptions.popCardThreeLabel"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                roomInfo.popCardOneIsActive ||
+                popCardTwoIsActive
+              "
+              v-on:click="popCardThree()"
+              v-html="
+                customOptions.popCardThreeLabel
+                  ? customOptions.popCardThreeLabel
+                  : 'Popcard Three'
+              "
+              >Popcard Three</b-button
+            >
+          </div>
+        </transition>
+      </div>
+      <p></p>
       <!-- This div: Restart, Last Card, Next Deck -->
       <div
         class="btn-container"
@@ -505,7 +669,11 @@ export default {
     return {
       roomInfo: {
         currentCardIndex: 0,
+        // establish card status as a data attribute
         xCardIsActive: false,
+        popCardOneIsActive: false,
+        popCardTwoIsActive: false,
+        popCardThreeIsActive: false,
         cardSequence: [0, 1, 2],
         locationOfLastCard: 0,
       },
@@ -592,7 +760,11 @@ export default {
           roomsCollection.doc(this.roomID).set({
             extensionData: this.tempExtensionData,
             currentCardIndex: 0,
+            // sets a default status for these attributes when room is created ?
             xCardIsActive: false,
+            popCardOneIsActive: false,
+            popCardTwoIsActive: false,
+            popCardThreeIsActive: false,
             cardSequence: [0, 1, 2],
           });
 
@@ -665,6 +837,21 @@ export default {
     xCard() {
       roomsCollection.doc(this.roomID).update({
         xCardIsActive: !this.roomInfo.xCardIsActive,
+      });
+    },
+    popCardOne() {
+      roomsCollection.doc(this.roomID).update({
+        popCardOneIsActive: !this.roomInfo.popCardOneIsActive,
+      });
+    },
+    popCardTwo() {
+      roomsCollection.doc(this.roomID).update({
+        popCardTwoIsActive: !this.roomInfo.popCardTwoIsActive,
+      });
+    },
+    popCardThree() {
+      roomsCollection.doc(this.roomID).update({
+        popCardThreeIsActive: !this.roomInfo.popCardThreeIsActive,
       });
     },
     nextDeck() {
