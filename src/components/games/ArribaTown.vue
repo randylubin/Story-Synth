@@ -125,12 +125,14 @@
                 customOptions.coverImage && roomInfo.currentCardIndex == 0,
             }"
           >
+            <!--shows the cover image if that option is on, card 0 is displayed -->
             <img
               v-bind:src="customOptions.coverImage"
               class="card-img-top"
               style="width: 100%"
               v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0"
             />
+            <!--card background image -->
             <img
               v-bind:src="customOptions.cardBackgroundImage"
               class="card-img-top card-background"
@@ -141,6 +143,7 @@
                 !customOptions.cardBackgroundImageAlign
               "
             />
+            <!--card background image -->
             <b-card-img
               v-bind:src="customOptions.cardBackgroundImage"
               alt="Card Background image"
@@ -150,7 +153,7 @@
                 roomInfo.currentCardIndex != 0
               "
             ></b-card-img>
-
+            <!--loading spinner -->
             <div
               class="card-body text-center"
               v-if="(!dataReady || !firebaseReady) && !error"
@@ -167,6 +170,7 @@
               </p>
             </div>
 
+            <!--main card display -->
             <div
               v-if="!customOptions.coverImage || roomInfo.currentCardIndex != 0"
             >
@@ -278,6 +282,7 @@
               "
             ></b-alert>
 
+            <!--displays the X Card if xCardIsActive -->
             <div
               class="card-body align-items-center justify-content-center"
               v-if="roomInfo.xCardIsActive"
@@ -289,23 +294,27 @@
               }"
             >
               <div class="mt-5 pt-5 mb-5">
+                <!--default text if none supplied -->
                 <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
+                <!--calls in custom text -->
                 <div
                   class="safety-card-text"
                   v-html="customOptions.safetyCardText"
                   v-if="customOptions.safetyCardText"
                 ></div>
               </div>
+              <!--'Continue' button is always displayed in X card -->
               <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">
                 Continue
               </button>
+              <!-- more default text -->
               <div class="" v-if="!customOptions.safetyCardText">
                 <a class="x-card-text" href="http://tinyurl.com/x-card-rpg"
                   >About the X-Card</a
                 >
               </div>
             </div>
-
+            <!-- displays a background image for card, if not first card ??? -->
             <b-card-img
               v-bind:src="customOptions.cardBackgroundImage"
               alt="Card Background image"
@@ -652,6 +661,7 @@ export default {
         showCardBack: false,
       });
     },
+    // toggles xCardIsActive property when called...???
     xCard() {
       roomsCollection.doc(this.roomID).update({
         xCardIsActive: !this.roomInfo.xCardIsActive,
