@@ -30,7 +30,7 @@
       </div>
       -->
 
-      <div class="row mb-4" v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
+      <div class="row mb-4" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
         <transition name="fade">
           <div class="btn-group col-sm" role="group" aria-label="Card Controls">
             <button
@@ -129,6 +129,12 @@
                 style="width: 4rem; height: 4rem;"
                 label="Busy"
               ></b-spinner>
+
+              <div v-if="customOptions.debugLoading == 'TRUE'">
+                <div>Google Sheet ready: {{dataReady}}</div>
+                <div>Firebase ready: {{firebaseReady}}</div>
+                <div>Error: {{error}}</div>
+              </div>
             </div>
 
             <div
@@ -271,7 +277,7 @@
                     roomInfo.currentCardIndex == gSheet.length - 1 ||
                     roomInfo.currentCardIndex == roomInfo.locationOfLastCard
                 "
-                v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator')"
+                v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)"
                 right
               >
                 <b-dropdown-item v-on:click="lastCard()"
