@@ -41,7 +41,11 @@
               class="btn btn-outline-dark"
               v-on:click="previousCard()"
               :disabled="
-                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
+                roomInfo.xCardIsActive ||
+                roomInfo.currentCardIndex == 0 ||
+                roomInfo.popCardOneIsActive ||
+                roomInfo.popCardTwoIsActive ||
+                roomInfo.popCardThreeIsActive
               "
             >
               Previous Card
@@ -61,7 +65,10 @@
               v-on:click="nextCard()"
               :disabled="
                 roomInfo.xCardIsActive ||
-                roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+                roomInfo.currentCardIndex >= roomInfo.locationOfLastCard ||
+                roomInfo.popCardOneIsActive ||
+                roomInfo.popCardTwoIsActive ||
+                roomInfo.popCardThreeIsActive
               "
             >
               Next Card
