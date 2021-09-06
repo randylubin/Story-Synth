@@ -34,10 +34,7 @@
       -->
 
       <!-- This div: Previous Card, Pause, and Next Card buttons -->
-      <div
-        class="row mb-4"
-        v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
-      >
+      <div class="row mb-4">
         <transition name="fade">
           <div class="btn-group col-sm" role="group" aria-label="Card Controls">
             <button
@@ -442,7 +439,7 @@
           :roomInfo="roomInfo"
         ></app-extensionManager>
       </div>
-      <hr />
+      <hr v-if="userRole == 'facilitator'" />
       <!-- This div: Optional modal buttons -->
       <div class="row">
         <div
