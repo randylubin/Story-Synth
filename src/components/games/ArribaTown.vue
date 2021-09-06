@@ -510,7 +510,7 @@
               :disabled="
                 roomInfo.xCardIsActive ||
                 roomInfo.popCardTwoIsActive ||
-                popCardThreeIsActive
+                roomInfo.popCardThreeIsActive
               "
               v-on:click="popCardOne()"
               v-html="
@@ -526,7 +526,7 @@
               :disabled="
                 roomInfo.xCardIsActive ||
                 roomInfo.popCardOneIsActive ||
-                popCardThreeIsActive
+                roomInfo.popCardThreeIsActive
               "
               v-on:click="popCardTwo()"
               v-html="
@@ -542,7 +542,7 @@
               :disabled="
                 roomInfo.xCardIsActive ||
                 roomInfo.popCardOneIsActive ||
-                popCardTwoIsActive
+                roomInfo.popCardTwoIsActive
               "
               v-on:click="popCardThree()"
               v-html="
