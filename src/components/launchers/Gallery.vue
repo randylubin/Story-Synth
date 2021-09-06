@@ -113,10 +113,10 @@ export default {
             "https://diegeticgames.com/uploads/aethelreds-logo.png",
         },
         {
-          title: "The Umberdred Institute for Emerging Evildoers",
+          title: "Umberdred Institute for Emerging Evildoers",
           credits: "By Amble Studio",
           blurb: 'Tell silly stories about how aspiring villains accept unlikely quests to earn dubious certifications in evildoing skills.',
-          link: "/Generator/1-yrqoN7ZKeLHg0ynob9ZCpUbr64T24IrpX1RuSFUAwY/",
+          link: "/Games/Umberdred-Institute/",
           image: "https://img.itch.zone/aW1nLzY3NzQzNTIuanBn/315x250%23c/XQicpj.jpg",
         },
         {
