@@ -396,6 +396,7 @@ export default {
           style:
             "<style>.game-launcher .card-body {background-color: white;}</style>",
           styleTemplate: "arriba",
+          facilitatorMode: "TRUE",
         };
         this.dataReady = true;
 
