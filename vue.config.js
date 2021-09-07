@@ -10,6 +10,7 @@ module.exports = {
         '/Games/Clash-At-Ikara/',
         '/Games/Post-Work-Paradise/',
         '/Games/Raised-By-Mechs/',
+        '/Games/Umberdred-Institute/',
         '/Shuffled/1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w/',
         '/Shuffled/1N2N8URSswhmxLalPOkzi5d4kdeFiGrsobEmM_ojk0ow/',
         '/Timed/1yq2AKwaYL1uZrCnEfwgSpC0SPkQAZqnCdjNxH_pm018/',
