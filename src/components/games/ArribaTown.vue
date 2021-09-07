@@ -572,6 +572,152 @@
         </transition>
       </div>
       <p></p>
+
+      <!-- This div: Chapter nav -->
+      <div
+        class="btn-container"
+        v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+      >
+        <div class="row mb-4">
+          <div class="col-sm">
+            <b-button-group aria-role="Deck control" class="d-flex w-100">
+              <b-button
+                variant="outline-dark"
+                :disabled="
+                  roomInfo.xCardIsActive ||
+                  roomInfo.popCardOneIsActive ||
+                  roomInfo.popCardTwoIsActive ||
+                  roomInfo.popCardThreeIsActive
+                "
+                v-if="
+                  (!customOptions.facilitatorMode ||
+                    userRole == 'facilitator') &&
+                  customOptions.chapterOneFirstCard
+                "
+                color="rgb(187, 138, 200)"
+                v-on:click="goToChapter(customOptions.chapterOneFirstCard)"
+                v-html="
+                  customOptions.chapterOneLabel
+                    ? customOptions.chapterOneLabel
+                    : 'Chapter One'
+                "
+                >Chapter One</b-button
+              >
+              <b-button
+                variant="outline-dark"
+                :disabled="
+                  roomInfo.xCardIsActive ||
+                  roomInfo.popCardOneIsActive ||
+                  roomInfo.popCardTwoIsActive ||
+                  roomInfo.popCardThreeIsActive
+                "
+                v-if="
+                  (!customOptions.facilitatorMode ||
+                    userRole == 'facilitator') &&
+                  customOptions.chapterTwoFirstCard
+                "
+                color="rgb(187, 138, 200)"
+                v-on:click="goToChapter(customOptions.chapterTwoFirstCard)"
+                v-html="
+                  customOptions.chapterTwoLabel
+                    ? customOptions.chapterTwoLabel
+                    : 'Chapter Two'
+                "
+                >Chapter Two</b-button
+              >
+              <b-button
+                variant="outline-dark"
+                :disabled="
+                  roomInfo.xCardIsActive ||
+                  roomInfo.popCardOneIsActive ||
+                  roomInfo.popCardTwoIsActive ||
+                  roomInfo.popCardThreeIsActive
+                "
+                v-if="
+                  (!customOptions.facilitatorMode ||
+                    userRole == 'facilitator') &&
+                  customOptions.chapterThreeFirstCard
+                "
+                color="rgb(187, 138, 200)"
+                v-on:click="goToChapter(customOptions.chapterThreeFirstCard)"
+                v-html="
+                  customOptions.chapterThreeLabel
+                    ? customOptions.chapterThreeLabel
+                    : 'Chapter Three'
+                "
+                >Chapter Three</b-button
+              >
+              <b-button
+                variant="outline-dark"
+                :disabled="
+                  roomInfo.xCardIsActive ||
+                  roomInfo.popCardOneIsActive ||
+                  roomInfo.popCardTwoIsActive ||
+                  roomInfo.popCardThreeIsActive
+                "
+                v-if="
+                  (!customOptions.facilitatorMode ||
+                    userRole == 'facilitator') &&
+                  customOptions.chapterFourFirstCard
+                "
+                color="rgb(187, 138, 200)"
+                v-on:click="goToChapter(customOptions.chapterFourFirstCard)"
+                v-html="
+                  customOptions.chapterFourLabel
+                    ? customOptions.chapterFourLabel
+                    : 'Chapter Four'
+                "
+                >Chapter Four</b-button
+              >
+              <b-button
+                variant="outline-dark"
+                :disabled="
+                  roomInfo.xCardIsActive ||
+                  roomInfo.popCardOneIsActive ||
+                  roomInfo.popCardTwoIsActive ||
+                  roomInfo.popCardThreeIsActive
+                "
+                v-if="
+                  (!customOptions.facilitatorMode ||
+                    userRole == 'facilitator') &&
+                  customOptions.chapterFiveFirstCard
+                "
+                color="rgb(187, 138, 200)"
+                v-on:click="goToChapter(customOptions.chapterFiveFirstCard)"
+                v-html="
+                  customOptions.chapterFiveLabel
+                    ? customOptions.chapterFiveLabel
+                    : 'Chapter Five'
+                "
+                >Chapter Five</b-button
+              >
+              <b-button
+                variant="outline-dark"
+                :disabled="
+                  roomInfo.xCardIsActive ||
+                  roomInfo.popCardOneIsActive ||
+                  roomInfo.popCardTwoIsActive ||
+                  roomInfo.popCardThreeIsActive
+                "
+                v-if="
+                  (!customOptions.facilitatorMode ||
+                    userRole == 'facilitator') &&
+                  customOptions.chapterSixFirstCard
+                "
+                color="rgb(187, 138, 200)"
+                v-on:click="goToChapter(customOptions.chapterSixFirstCard)"
+                v-html="
+                  customOptions.chapterSixLabel
+                    ? customOptions.chapterSixLabel
+                    : 'Chapter Six'
+                "
+                >Chapter Six</b-button
+              >
+            </b-button-group>
+          </div>
+        </div>
+      </div>
+
       <!-- This div: Restart, Last Card, Next Deck -->
       <div
         class="btn-container"
@@ -591,7 +737,7 @@
                 >Restart</b-button
               >
 
-              <b-button
+              <!-- <b-button
                 v-b-modal.modalNextDeckConfirm
                 variant="outline-dark"
                 v-if="
@@ -636,7 +782,7 @@
                 <b-dropdown-item v-on:click="shuffleLastCard('end')"
                   >Shuffle near end</b-dropdown-item
                 >
-              </b-dropdown>
+              </b-dropdown> -->
             </b-button-group>
           </div>
         </div>
@@ -833,6 +979,31 @@ export default {
           this.nextDeck();
         }
       }
+      if (destinationCard) {
+        roomsCollection.doc(this.roomID).update({
+          currentCardIndex: destinationCard,
+          showCardBack: false,
+        });
+      }
+    },
+
+    // special function for all chapter nav buttons, accepts an argument form the button
+    goToChapter(destinationCard) {
+      // make sure there's a deck
+      if (this.roomInfo.cardSequence.length == 1) {
+        this.shuffleAndResetGame();
+      }
+
+      // Don't need this check?
+      // if (this.deckTransitionArray) {
+      //   console.log(this.roomInfo.currentCardIndex, this.firstNonInstruction);
+      //   if (
+      //     this.deckTransitionArray.includes(this.roomInfo.currentCardIndex + 1)
+      //   ) {
+      //     destinationCard = null;
+      //     this.nextDeck();
+      //   }
+      // }
 
       if (destinationCard) {
         roomsCollection.doc(this.roomID).update({
@@ -841,6 +1012,7 @@ export default {
         });
       }
     },
+
     lastCard() {
       if (this.roomInfo.cardSequence.length == 1) {
         this.shuffleAndResetGame();
