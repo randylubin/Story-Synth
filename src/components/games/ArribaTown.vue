@@ -912,8 +912,10 @@ export default {
   },
   mounted() {
     this.fetchAndCleanSheetData(this.gSheetID);
-
-    this.$bind("roomInfo", roomsCollection.doc(this.roomID))
+  },
+  methods: {
+    connectToFirebase(){
+      this.$bind("roomInfo", roomsCollection.doc(this.roomID))
       .then(() => {
         this.firebaseReady = true;
       })
@@ -947,8 +949,7 @@ export default {
       .catch((error) => {
         console.log("error in loading: ", error);
       });
-  },
-  methods: {
+    },
     goToCard(index) {
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: index,
@@ -1315,13 +1316,13 @@ export default {
           console.log("done fetching and cleaning data");
           this.dataReady = true;
 
-          if (location.hostname.toString() !== "localhost") {
-            this.$mixpanel.track("Visit Game Session", {
-              game_name: this.customOptions.gameTitle ?? "untitled",
-              session_url: location.hostname.toString() + this.$route.fullPath,
-              format: "Shuffled",
-            });
-          }
+          // if (location.hostname.toString() !== "localhost") {
+          //   this.$mixpanel.track("Visit Game Session", {
+          //     game_name: this.customOptions.gameTitle ?? "untitled",
+          //     session_url: location.hostname.toString() + this.$route.fullPath,
+          //     format: "Shuffled",
+          //   });
+          // }
 
           if (this.firebaseReady && this.roomInfo.cardSequence.length < 4) {
             this.shuffleAndResetGame();
@@ -1333,6 +1334,8 @@ export default {
           } else if (this.firebaseReady) {
             this.firebaseCacheError = false;
           }
+
+          this.connectToFirebase();
         })
         .catch((error) => {
           this.gSheet = [
