@@ -1007,7 +1007,7 @@ export default {
 
       if (destinationCard) {
         roomsCollection.doc(this.roomID).update({
-          currentCardIndex: destinationCard,
+          currentCardIndex: parseInto(destinationCard),
           showCardBack: false,
         });
       }
