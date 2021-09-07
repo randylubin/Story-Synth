@@ -179,6 +179,11 @@
                 If loading lasts more than a few seconds, please reload the
                 page.
               </p>
+              <div v-if="customOptions.debugLoading == 'TRUE'">
+                <div>Google Sheet ready: {{ dataReady }}</div>
+                <div>Firebase ready: {{ firebaseReady }}</div>
+                <div>Error: {{ error }}</div>
+              </div>
             </div>
 
             <!--main card display -->
