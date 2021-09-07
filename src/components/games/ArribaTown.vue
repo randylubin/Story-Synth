@@ -914,41 +914,41 @@ export default {
     this.fetchAndCleanSheetData(this.gSheetID);
   },
   methods: {
-    connectToFirebase(){
+    connectToFirebase() {
       this.$bind("roomInfo", roomsCollection.doc(this.roomID))
-      .then(() => {
-        this.firebaseReady = true;
-      })
-      .then(() => {
-        if (!this.roomInfo) {
-          console.log("new room!");
+        .then(() => {
+          this.firebaseReady = true;
+        })
+        .then(() => {
+          if (!this.roomInfo) {
+            console.log("new room!");
 
-          roomsCollection.doc(this.roomID).set({
-            extensionData: this.tempExtensionData,
-            currentCardIndex: 0,
-            // sets a default status for these attributes when room is created ?
-            xCardIsActive: false,
-            popCardOneIsActive: false,
-            popCardTwoIsActive: false,
-            popCardThreeIsActive: false,
-            cardSequence: [0, 1, 2],
-          });
+            roomsCollection.doc(this.roomID).set({
+              extensionData: this.tempExtensionData,
+              currentCardIndex: 0,
+              // sets a default status for these attributes when room is created ?
+              xCardIsActive: false,
+              popCardOneIsActive: false,
+              popCardTwoIsActive: false,
+              popCardThreeIsActive: false,
+              cardSequence: [0, 1, 2],
+            });
 
-          if (this.dataReady) {
-            this.shuffleAndResetGame();
+            if (this.dataReady) {
+              this.shuffleAndResetGame();
+            }
+          } else if (
+            this.roomInfo.cardSequence.length !== this.gSheet.length &&
+            this.dataReady
+          ) {
+            this.firebaseCacheError = true;
+          } else if (this.dataReady) {
+            this.firebaseCacheError = false;
           }
-        } else if (
-          this.roomInfo.cardSequence.length !== this.gSheet.length &&
-          this.dataReady
-        ) {
-          this.firebaseCacheError = true;
-        } else if (this.dataReady) {
-          this.firebaseCacheError = false;
-        }
-      })
-      .catch((error) => {
-        console.log("error in loading: ", error);
-      });
+        })
+        .catch((error) => {
+          console.log("error in loading: ", error);
+        });
     },
     goToCard(index) {
       roomsCollection.doc(this.roomID).update({
@@ -1008,7 +1008,7 @@ export default {
 
       if (destinationCard) {
         roomsCollection.doc(this.roomID).update({
-          currentCardIndex: parseInto(destinationCard),
+          currentCardIndex: parseInt(destinationCard),
           showCardBack: false,
         });
       }
