@@ -37,7 +37,7 @@
             </div>
           </div>
 
-          <div class="">
+          <div>
             <div
               class="row mt-4"
               v-if="customOptions.gameTitle && !customOptions.coverImage"
@@ -320,6 +320,11 @@ export default {
           ogImage:
             "https://diegeticgames.com/uploads/aethelreds-logo-square.png",
         },
+        "Umberdred-Institute": {
+          gameTitle: "The Umberdred Institute for Emerging Evildoers",
+          gameBlurb: "Tell silly stories about how aspiring villains accept unlikely quests to earn dubious certifications in evildoing skills. By Amble Studio.",
+          ogImage: "https://diegeticgames.com/uploads/sized-umberdreds-banner-square.png",
+        },
         gameRoute: {
           gameTitle: "TK",
           gameBlurb: "TK",
@@ -474,6 +479,22 @@ export default {
             "<style>.game-launcher .card-body {background-color: white;}</style>",
           styleTemplate: "fantasy",
         };
+
+        this.dataReady = true;
+
+        break;
+      
+      case "Umberdred-Institute":
+        this.customOptions = {
+          gameTitle: "Umberdred Institute",
+          byline: "for emerging evildoers",
+          gameBlurb: '<h2>An <a href="http://amble.studio">Amble Studio</a> remix of "<a href="https://storysynth.org/Games/Aethelreds-Academy/">Aethelred\'s Academy</a>"</h2><div class="text-left"><p>Tell silly stories about how aspiring villains accept unlikely quests to earn dubious certifications in evildoing skills.</p><p>Umberdred\'s is a fully-accredited, private institution dedicated to sowing mayhem around the world. Attendees earn their certifications by going on quests and demonstrating competency in their skills.</p><p>Improvise short stories about these aspiring villains and see if they succeed!</p><h2 class="text-center">Info</h2><ul class="text-left"><li>2+ players</li><li>All ages</li><li>Play time: from 5 minutes to a 5 year Diploma of Evil Studies</li><li>Genre: Fantasy</li><li>Tone: Comedy</li><li>Activity: improvising quest recaps</li></ul>',
+          coverImage: "https://amble.studio/wp-content/uploads/2021/08/UmberdredTitle-1.png",
+          style: "<style>.roomLink-section.d-none.d-sm-block{display:none!important}.pb-5 img{margin-bottom:8%}.col-sm.text-center.game-burb{color:#fff}.card.shadow.mb-4{background:0 0;box-shadow:none!important;border:none}.row.mt-3.pt-4.pb-2.bg-light{background:0 0!important;color:#fff}.body{color:#fff}.generator-cell-label.px-2{width:106%;margin-left:-3%}.generator-cell-one-half .generator-cell-body,.generator-cell-one-third .generator-cell-body{font-size:1.4em!important;font-family:'Architects Daughter';font-weight:400!important}.generator-cell-full .generator-cell-body{font-size:2em!important;font-family:'Architects Daughter';font-weight:400!important}.mt-4.generator-main.card.shadow.mb-4{background:#901c1c91;box-shadow:0 3px 15px #000 inset!important;color:#fff;width:108%;margin-left:-4%;background-image:url(https://amble.studio/wp-content/uploads/2021/08/UmberdredGate.png)!important;background-repeat:no-repeat;background-size:150%;background-position-x:center;background-position-y:-70%}button.btn.btn.btn-dark.mx-2.my-1.btn-secondary{background:#fff;color:#000;font-size:.9em}.generator-cell-body.mb-2{padding:20px}.generator-cell-label{text-transform:uppercase;padding-top:2px;padding-bottom:2px;transition:all .2s;font-size:1.2em!important;font-weight:700!important;background:#000!important;box-shadow:0 0 20px #000!important}.upper-text.row{color:#fff;background:#00000070;margin-top:15%}.game-meta .col-sm h1{margin-top:47%;font-family:'Jim Nightshade',Garamond,sans-serif!important;color:#fff;font-size:90px;width:calc(100vw);margin-left:calc(50% - 50vw);line-height:.9;margin-bottom:20px}.game-meta .col-sm h4{margin-top:-5%;font-family:'Jim Nightshade',Garamond,sans-serif!important;color:#fff;font-size:60px}.game-launcher .full-page-background{background-color:rgb(113 43 108)}.game-launcher .card-body{color:#fff;background:#00000070;margin-top:15%}.full-page-background{background-color:rgb(70 24 66)!important;background-image:url(http://amble.studio/wp-content/uploads/2021/08/Gates.png),url(https://amble.studio/wp-content/uploads/2021/08/UmberdredGate-1-1.png)!important;background-repeat:repeat-y,no-repeat;background-size:contain,70%;background-position-x:center;background-blend-mode:normal!important}.category-label{background-color:#953030;color:#fff}</style>",
+          upperText: '<div class="text-left"><p>Welcome to The Umberdred Insitute for Emerging Evildoers, a fully accredited and for-profit institution.</p><p>The proven Umberdred\'s Process&trade; involves sending Villains on quests where they can demonstrate their mastery of a specific villainous skill.</p><p>In order to receive a certification for a skill, a Villain must return to Umberdred\'s to present the details of their quest to our certification-granting panel (extra credit will be awarded for interfering with the operation of <a href="https://storysynth.org/Games/Aethelreds-Academy/">Æthelred\'s Academy for Aspiring Adventurers</a>). Please note that aspiring Villains will be charged a certification evaluation fee regardless of whether the panel issues a certification. Retrying is permitted, for an additional fee.</p><h2 style="width:100%; text-align:center">Instructions</h2><p>The Umberdred Process&trade; is standardized. Each round will feature a new aspiring Villain trying to get a certification for a skill – choose one player to be the aspiring Villain and another to be the Quest Giver. Any additional players are members of the certification committee.</p><h3 style="width:100%; text-align:center">On Each Round</h3>1) The Villain introduces themselves and which certificate they think they have earned (pick from the options listed).2) The Quest Giver introduces what the quest goal was and add some embellishing details about the challenges involved.3) The Villain tells the committee how they attempted to accomplish the quest in a manner demonstrating the skill up for certification.4) The Quest Giver says how they feel about the outcome of the quest and if the Villain should be certified in the skill.<h3 style="width:100%; text-align:center">Tips</h3><p>Each round should last a few minutes, but feel free to go longer or shorter if that\'s what the players want.</p><p>If the Villain isn\'t sure how to proceed, they can always say <i>"And that\'s when I turned to the Quest Giver for guidance..."</i> the Quest Giver player can then help with the storytelling, sharing what they advised the villain.</p><p>If the Quest Giver wants to complicate the Villain\'s story, they can jump in and say <i>"You wouldn\'t believe what happened next..."</i> and then narrate the next story beat.</p><p>Play as many rounds as you like, with each round featuring a new Villain and Quest Giver. When you are done playing the game, share how you expect Umberdred\'s Academy will rank in this year\'s Nefarious News and World Report\'s survey of accredited, for-profit institutions.</p></div>',
+          license: '<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License.',
+          generatorRowLayout: "1,3,1,1,1",
+        }
 
         this.dataReady = true;
 

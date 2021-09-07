@@ -34,7 +34,14 @@
       -->
 
       <!-- This div: Previous Card, Pause, and Next Card buttons -->
-      <div class="row mb-4">
+      <div
+        class="row mb-4"
+        v-if="
+          !customOptions.hideNavigationButtons ||
+          parseInt(customOptions.hideNavigationButtons) >
+            roomInfo.currentCardIndex
+        "
+      >
         <transition name="fade">
           <div class="btn-group col-sm" role="group" aria-label="Card Controls">
             <button
@@ -609,7 +616,9 @@
                 "
                 v-if="
                   !this.customOptions.showNextDeckButton &&
-                  (!customOptions.facilitatorMode || userRole == 'facilitator')
+                  (!customOptions.facilitatorMode ||
+                    userRole == 'facilitator') &&
+                  !customOptions.hideNavigationButtons
                 "
                 right
               >

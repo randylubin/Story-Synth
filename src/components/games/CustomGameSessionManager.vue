@@ -25,6 +25,10 @@
       :roomID="$route.params.roomID"
       v-if="routeGSheetID == 'Raised-By-Mechs'"
     ></app-raisedByMechs>
+    <app-umberdredInstitute
+      :roomID="$route.params.roomID"
+      v-if="routeGSheetID == 'Umberdred-Institute'"
+    ></app-umberdredInstitute>
   </div>
 </template>
 
@@ -35,6 +39,7 @@ import AroundTheRealm from "./AroundTheRealm.vue";
 import ClashAtIkara from "./ClashAtIkara.vue";
 import PostWorkParadise from "./PostWorkParadise.vue";
 import RaisedByMechs from "./RaisedByMechs.vue";
+import UmberdredInstitute from "./UmberdredInstitute.vue";
 
 export default {
   name: "app-customGameSession",
@@ -45,6 +50,7 @@ export default {
     "app-clashAtIkara": ClashAtIkara,
     "app-postWorkParadise": PostWorkParadise,
     "app-raisedByMechs": RaisedByMechs,
+    "app-umberdredInstitute": UmberdredInstitute,
   },
   props: {
     routeGSheetID: String,
@@ -92,6 +98,13 @@ export default {
             "Tell the story of children being raised by a mech on a new planet. Inspired by Raised by Wolves and For the Queen.",
           ogImage: "https://iili.io/f1zdtn.png",
         },
+      },
+      "Umberdred-Institute": {
+        gameTitle: "The Umberdred Institute for Emerging Evildoers",
+        gameBlurb:
+          "Tell silly stories about how aspiring villains accept unlikely quests to earn dubious certifications in evildoing skills. By Amble Studio.",
+        ogImage:
+          "https://diegeticgames.com/uploads/sized-umberdreds-banner-square.png",
       },
     };
   },

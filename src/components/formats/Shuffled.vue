@@ -35,7 +35,12 @@
 
       <div
         class="row mb-4"
-        v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+        v-if="
+          (!customOptions.facilitatorMode || userRole == 'facilitator') &&
+          (!customOptions.hideNavigationButtons ||
+            parseInt(customOptions.hideNavigationButtons) >
+              roomInfo.currentCardIndex)
+        "
       >
         <transition name="fade">
           <div class="btn-group col-sm" role="group" aria-label="Card Controls">
@@ -147,6 +152,12 @@
                 style="width: 4rem; height: 4rem"
                 label="Busy"
               ></b-spinner>
+
+              <div v-if="customOptions.debugLoading == 'TRUE'">
+                <div>Google Sheet ready: {{ dataReady }}</div>
+                <div>Firebase ready: {{ firebaseReady }}</div>
+                <div>Error: {{ error }}</div>
+              </div>
             </div>
 
             <div
@@ -358,7 +369,9 @@
                 "
                 v-if="
                   !this.customOptions.showNextDeckButton &&
-                  (!customOptions.facilitatorMode || userRole == 'facilitator')
+                  (!customOptions.facilitatorMode ||
+                    userRole == 'facilitator') &&
+                  !customOptions.hideNavigationButtons
                 "
                 right
               >
