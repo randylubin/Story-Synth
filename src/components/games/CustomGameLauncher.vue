@@ -290,9 +290,9 @@ export default {
         "Arriba-Town": {
           gameTitle: "Arriba Town",
           gameBlurb:
-            "Tell the story of two close companions racing their way around a fantasy world. Nella and Bly wagered that they could travel completely around the realm and return before the summer solstice.",
+            "A tiny quest to find your path and change your village for the better.",
           ogImage:
-            "https://diegeticgames.com/uploads/around-the-realm-square-unfurl.png",
+            "https://amble.studio/wp-content/uploads/2021/09/higher-res-banner-750x402-1.png",
         },
         "Around-The-Realm": {
           gameTitle: "Around The Realm",
@@ -406,7 +406,7 @@ export default {
           gameBlurb:
             '<div class="text-left" style="white-space:normal">\n<p>A tiny quest to find your path and change your village for the better.\n</p>\n</div>',
           coverImage:
-            "https://amble.studio/wp-content/uploads/2021/08/Arriba-Town.png",
+            "https://amble.studio/wp-content/uploads/2021/09/higher-res-banner-750x402-1.png",
           style:
             "<style>.game-launcher .card-body {background-color: white;}</style>",
           styleTemplate: "arriba",
