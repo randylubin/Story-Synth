@@ -61,8 +61,15 @@
               style="margin: -1.25rem"
               v-if="customOptions.coverImage"
             >
+              <!--add styles to the cover image here, but it will affect all games-->
+
               <img
-                style="max-width: 100%; max-height: auto"
+                style="
+                  max-width: 100%;
+                  max-height: auto;
+                  display: block;
+                  margin: 0 auto;
+                "
                 v-bind:src="customOptions.coverImage"
                 v-bind:alt="customOptions.gameTitle + ' cover'"
               />
