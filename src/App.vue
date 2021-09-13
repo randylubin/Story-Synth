@@ -31,6 +31,7 @@
           <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
           <app-generator :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Generator' && $route.params.roomID"></app-generator>
           <app-hexflower :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Hexflower' && $route.params.roomID"></app-hexflower>
+          <app-branching ref="branching" :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Branching' && $route.params.roomID"></app-branching>
           <app-gridmap :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Gridmap' && $route.params.roomID"></app-gridmap>
 
           <app-sandbox :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox' && $route.params.roomID"></app-sandbox>
@@ -72,6 +73,7 @@
   import Generator from './components/formats/Generator.vue'
   import Gridmap from './components/formats/Gridmap.vue'
   import Hexflower from './components/formats/Hexflower.vue'
+  import Branching from './components/formats/Branching.vue'
   import Sandbox from './components/formats/Sandbox.vue'
 
   export default {
@@ -94,6 +96,7 @@
       'app-generator': Generator,
       'app-gridmap': Gridmap,
       'app-hexflower': Hexflower,
+      'app-branching': Branching,
       'app-sandbox': Sandbox,
       
     },
