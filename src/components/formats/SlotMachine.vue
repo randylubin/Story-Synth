@@ -19,6 +19,24 @@
       </div>
     </div>
 
+    <div
+        v-if="
+          dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+          :extensionLocation="'upper'"
+          class="extension-upper"
+        ></app-extensionManager>
+      </div>
+
     <div class="row mb-4">
       <transition name="fade">
         <div class="btn-group col-sm" role="group" aria-label="Card Controls">
@@ -99,6 +117,8 @@
           :extensionData="roomInfo.extensionData"
           :extensionList="tempExtensionData"
           :roomInfo="roomInfo"
+          :extensionLocation="'lower'"
+          class="extension-lower"
         ></app-extensionManager>
       </div>
 
