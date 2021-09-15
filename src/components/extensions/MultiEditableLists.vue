@@ -15,8 +15,17 @@
                   <div v-for="(item, itemIndex) in list.value" v-bind:key="itemIndex" class="row">
                     <div class="col-sm justify-content-between d-flex my-1">
                       <span style="min-width:1em"></span>
-                      <div>{{item}}</div>
-                      <button class="btn btn-sm btn-outline-dark m-1" v-on:click="deleteItem(listIndex, itemIndex)">x</button>
+                      <div v-if="itemIndex != currentEditItemIndex || listIndex != currentEditListIndex">{{item}}</div>
+                      <input v-else type="text" v-model="currentEditText" maxlength="50">
+                      <div>
+                        <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="editItem(listIndex, itemIndex)" v-if="currentEditItemIndex != itemIndex || currentEditListIndex != listIndex">
+                          <b-icon-pencil></b-icon-pencil>
+                        </button>
+                        <button v-else class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="saveEditedItem(listIndex, itemIndex)">
+                          <b-icon-check2></b-icon-check2>
+                        </button>
+                        <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="deleteItem(listIndex, itemIndex)"><b-icon-x></b-icon-x></button>
+                      </div>
                     </div>
                   </div>
                   <form>
@@ -41,7 +50,10 @@ export default {
   data: function() {
     return {
       newItemArray: [],
-      error: null
+      error: null,
+      currentEditText: "",
+      currentEditListIndex: null,
+      currentEditItemIndex: null,
     };
   },
   mounted(){
@@ -55,6 +67,20 @@ export default {
       this.newItemArray[listIndex] = null
 
       this.$emit('process-extension-update', ['multiEditableLists',JSON.stringify(tempNewLists)])
+    },
+    editItem(listIndex, index){
+      this.currentEditItemIndex = index;
+      this.currentEditListIndex = listIndex;
+      this.currentEditText = this.multiEditableLists[listIndex].value[index];
+    },
+    saveEditedItem(listIndex, index){
+      this.multiEditableLists[listIndex].value[index] = this.currentEditText
+
+      this.$emit('process-extension-update', ['multiEditableLists',JSON.stringify(this.multiEditableLists)])
+
+      this.currentEditItemIndex = null;
+      this.currentEditListIndex = null;
+      this.currentEditText = "";
     },
     deleteItem(listIndex, itemIndex){
       

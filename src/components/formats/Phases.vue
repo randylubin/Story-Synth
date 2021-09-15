@@ -17,6 +17,24 @@
         </div>
       </div>
 
+      <div
+        v-if="
+          dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+          :extensionLocation="'upper'"
+          class="extension-upper"
+        ></app-extensionManager>
+      </div>
+
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Card Controls">
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous Card</button>
@@ -149,6 +167,24 @@
         </div>
       </div>
       
+      <div
+        v-if="
+          dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+          :extensionLocation="'lower'"
+          class="extension-lower"
+        ></app-extensionManager>
+      </div>
+
     </div>
   </div>
 </template>
@@ -156,9 +192,13 @@
 <script>
 import { roomsCollection } from '../../firebase';
 import axios from 'axios'
+import ExtensionManager from "../extensions/ExtensionManager.vue";
 
 export default {
   name: 'app-phases',
+  components: {
+    "app-extensionManager": ExtensionManager,
+  },
   props: {
     roomID: String,
     gSheetID: String
@@ -177,6 +217,7 @@ export default {
       customOptions: {},
       dataReady: false,
       firebaseReady: false,
+      tempExtensionData: { test: null },
       gSheet: [{text:"loading"}],
       numberOfPhases: 0,
       phaseNames: [],
@@ -199,7 +240,7 @@ export default {
         if (!this.roomInfo){
           console.log("new room!")
 
-          roomsCollection.doc(this.roomID).set({currentCardIndex:0, xCardIsActive: false, cardSequence:[0,1,2], currentPhase: 0, skipToEnding: false, lastSeenRound: 0, lastSeenPhase: 0})
+          roomsCollection.doc(this.roomID).set({currentCardIndex:0, xCardIsActive: false,extensionData: this.tempExtensionData, cardSequence:[0,1,2], currentPhase: 0, skipToEnding: false, lastSeenRound: 0, lastSeenPhase: 0})
 
           if(this.dataReady){this.shuffle();}
         }
@@ -345,6 +386,11 @@ export default {
       })
 
     },
+    syncExtension() {
+      roomsCollection.doc(this.roomID).update({
+        extensionData: this.roomInfo.extensionData,
+      });
+    },
     fetchAndCleanSheetData(sheetID){
 
       // Remove for published version
@@ -384,6 +430,18 @@ export default {
               } else if (item.values[1].formattedValue == "showPastPrompts") {
                 this.customOptions.showPastPrompts = this.customOptions.showPastPrompts.split(',')
               }
+            }
+
+            // Handle extensions
+            if (item.values[0].formattedValue == "extension") {
+              this.tempExtensionData[item.values[1].formattedValue] =
+                item.values[2].formattedValue;
+
+              console.log(
+                "extension -",
+                item.values[1].formattedValue,
+                item.values[2].formattedValue
+              );
             }
 
             // Get count of instruction cards

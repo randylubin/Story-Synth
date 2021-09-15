@@ -19,6 +19,24 @@
       </div>
     </div>
 
+    <div
+        v-if="
+          dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+          :extensionLocation="'upper'"
+          class="extension-upper"
+        ></app-extensionManager>
+      </div>
+
     <div class="btn-container" style>
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
@@ -149,6 +167,24 @@
       </b-modal>
 
     </div>
+    
+    <div
+        v-if="
+          dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+          :extensionLocation="'lower'"
+          class="extension-lower"
+        ></app-extensionManager>
+      </div>
 
   </div>
 </template>
@@ -156,9 +192,13 @@
 <script>
 import { roomsCollection } from '../../firebase';
 import axios from 'axios'
+import ExtensionManager from "../extensions/ExtensionManager.vue";
 
 export default {
   name: 'app-monster',
+  components: {
+    "app-extensionManager": ExtensionManager,
+  },
   props: {
     roomID: String,
     gSheetID: String
@@ -175,6 +215,7 @@ export default {
       },
       dataReady: false,
       firebaseReady: false,
+      tempExtensionData: { test: null },
       gSheet: [{text:"loading"}],
       orderedCards: [],
       unorderedCards: [],
@@ -196,7 +237,7 @@ export default {
         if (!this.roomInfo){
           console.log("new room!")
 
-          roomsCollection.doc(this.roomID).set({currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
+          roomsCollection.doc(this.roomID).set({currentCardIndex:0,extensionData: this.tempExtensionData,xCardIsActive: false, cardSequence:[0,1,2]})
         }
       })
       .catch((error) => {
@@ -281,6 +322,11 @@ export default {
         }
       }
     },
+    syncExtension() {
+      roomsCollection.doc(this.roomID).update({
+        extensionData: this.roomInfo.extensionData,
+      });
+    },
     fetchAndCleanSheetData(sheetID){
       if (!sheetID || sheetID == 'demo') {
         sheetID = '1NgNHy7Qe1R8KhGR2cOmJwL2aOl2tocBemW2HIAKjrvI'
@@ -303,7 +349,20 @@ export default {
               console.log(item.values[2].formattedValue)
             }
 
-            if (item.values[0].formattedValue !== "option"){
+            // Handle extensions
+            if (item.values[0].formattedValue == "extension") {
+              this.tempExtensionData[item.values[1].formattedValue] =
+                item.values[2].formattedValue;
+
+              console.log(
+                "extension -",
+                item.values[1].formattedValue,
+                item.values[2].formattedValue
+              );
+            }
+
+            if (item.values[0].formattedValue !== "option" &&
+                item.values[0].formattedValue !== "extension"){
 
               var rowInfo = {
                 ordered: item.values[0].formattedValue,
