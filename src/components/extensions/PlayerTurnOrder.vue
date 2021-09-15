@@ -11,12 +11,23 @@
                 <div v-for="(player, index) in playerTurnOrder.players" v-bind:key="index">
                   <div class="justify-content-between d-flex">
                     <span></span>
-                    <span v-bind:class="{'font-weight-bold': (index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length)}" style="cursor:pointer" v-on:click="makeActivePlayer(index)">
+                    <span v-bind:class="{'font-weight-bold': (index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length)}" style="cursor:pointer" v-on:click="makeActivePlayer(index)" v-if="index != currentEditIndex">
                       <span v-if="index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length"> –</span>
                       {{player}}
                       <span v-if="index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length">– </span>
                     </span>
-                    <button class="btn btn-sm btn-outline-dark m-1" v-on:click="deletePlayer(index)">X</button>
+                    
+                    <input v-else type="text" v-model="currentEditText" maxlength="50">
+
+                    <div>
+                      <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="editPlayer(index)" v-if="currentEditIndex !== index">
+                        <b-icon-pencil></b-icon-pencil>
+                      </button>
+                      <button v-else class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="saveEditedPlayer(index)">
+                        <b-icon-check2></b-icon-check2>
+                      </button>
+                      <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="deletePlayer(index)"><b-icon-x></b-icon-x></button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -46,6 +57,8 @@ export default {
     return {
       error: null,
       newPlayer: "",
+      currentEditIndex: null,
+      currentEditText: "",
     };
   },
   mounted(){
@@ -67,6 +80,9 @@ export default {
       tempNewPlayerList.length == 0 ? tempNewPlayerList = [] : tempNewPlayerList.splice(index, 1)
       this.playerTurnOrder.players = tempNewPlayerList
       this.$emit('process-extension-update', ['playerTurnOrder',JSON.stringify(this.playerTurnOrder)])
+      
+      this.currentEditIndex = null
+      this.currentEditText = ""
     },
     makeActivePlayer(index){
       console.log('index',index)
@@ -75,6 +91,18 @@ export default {
       console.log('offest', this.currentCardIndex % this.playerTurnOrder.players.length)
       this.playerTurnOrder.activePlayerOffset = index - (this.currentCardIndex % this.playerTurnOrder.players.length)
       this.$emit('process-extension-update', ['playerTurnOrder',JSON.stringify(this.playerTurnOrder)])
+    },
+    editPlayer(index){
+      this.currentEditIndex = index;
+      this.currentEditText = this.playerTurnOrder.players[index]
+    },
+    saveEditedPlayer(index){
+      this.playerTurnOrder.players[index] = this.currentEditText
+
+      this.$emit('process-extension-update', ['playerTurnOrder',JSON.stringify(this.playerTurnOrder)])
+
+      this.currentEditIndex = null
+      this.currentEditText = ""
     },
     previousTurn(){
       this.playerTurnOrder.currentTurn = (this.playerTurnOrder.currentTurn - 1) % this.playerTurnOrder.length
