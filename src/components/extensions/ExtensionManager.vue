@@ -11,6 +11,7 @@
           <app-diceRoller :diceResults="extensionData.diceRoller.split(',')" :diceRollerTitle="extensionData.diceRollerTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['diceRoller'] && ((!extensionList.diceRollerLocation && extensionLocation == 'lower') || (extensionList.diceRollerLocation == extensionLocation))"></app-diceRoller>
           <app-standardDeck :standardDeck="JSON.parse(extensionData.standardDeck)" :standardDeckTitle="extensionData.standardDeckTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['standardDeck'] && ((!extensionList.standardDeckLocation && extensionLocation == 'lower') || (extensionList.standardDeckLocation == extensionLocation))"></app-standardDeck>
           <app-journal :journalEntries="JSON.parse(extensionData.journalEntries)" :journalUpperText="extensionData.journalUpperText" @process-extension-update="processExtensionUpdate($event)" v-if="(extensionList['journalEntries'] || extensionList.journalUpperText) && ((!extensionList.journalEntiresLocation && extensionLocation == 'lower') || (extensionList.journalEntriesLocation == extensionLocation))"></app-journal>
+          <app-currentPlayerHeader :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :currentPlayerHeader="extensionList.currentPlayerHeader" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['currentPlayerHeader'] && extensionList['playerTurnOrder'] && extensionLocation == 'upper'"></app-currentPlayerHeader>
         </div>
       </div>
   </div>
@@ -18,6 +19,7 @@
 
 <script>
 import PlayerTurnOrder from './PlayerTurnOrder'
+import CurrentPlayerHeader from './CurrentPlayerHeader.vue'
 import PlusMinus from './PlusMinus.vue'
 import EditableList from './EditableList.vue'
 import MultiEditableLists from './MultiEditableLists.vue'
@@ -36,6 +38,7 @@ export default {
     'app-diceRoller': DiceRoller,
     'app-staticBox': StaticBox,
     'app-playerTurnOrder': PlayerTurnOrder,
+    'app-currentPlayerHeader': CurrentPlayerHeader,
     'app-standardDeck': StandardDeck,
     'app-journal': Journal,
     'app-hexflowerAsExtension': Hexflower,
