@@ -465,6 +465,14 @@ export default {
   },
   methods: {
     goToCard(cardKey, stateUpdate){
+      console.log('goto inputs:', cardKey, stateUpdate)
+      if (cardKey == 'null'){
+        cardKey = null;
+      }
+      if (stateUpdate == 'null'){
+        stateUpdate = null;
+      }
+
       let newCardHistory = this.roomInfo.cardHistory
       let nextKey = cardKey ?? newCardHistory.at(-1)
       let indexOfNextCard = this.listOfCardKeys.indexOf(nextKey)
@@ -574,49 +582,76 @@ export default {
       });
     },
     parseBodyText(rawText){
-      // for card link
-      let gotoLinkRE = /#\[[^\]]*\]\([^)]*\)/g
-      // for state update
-      let stateLinkRE = /\^\[[^\]]*\]\{[^}]*\}/g
+      // // for card link
+      // let gotoLinkRE = /#\[[^\]]*\]\([^)]*\)#/g
+      // // for state update
+      // let stateLinkRE = /#\[[^\]]*\]\{[^}]*\}#/g
       // for combined
-      let combinedLinkRE = /&\[[^\]]*\]\([^)]*\)\{[^}]*\}/g
+      //let combinedLinkRE = /#\[[^\]]*\]\([^)]*\)\{[^}]*\}#/g
+      let combinedLinkRE = /##[[({].*##/g
 
-      let gotoLinkExpander = function(match){
-        let shortLink = match
+      // let gotoLinkExpander = function(match){
+      //   let shortLink = match
 
-        let linkText = shortLink?.substring(shortLink.indexOf('[')+1,shortLink.indexOf(']('))
-        let cardKey = shortLink?.substring(shortLink.indexOf('](')+2, shortLink.length-1)
+      //   let linkText = shortLink?.substring(shortLink.indexOf('[')+1,shortLink.indexOf(']('))
+      //   let cardKey = shortLink?.substring(shortLink.indexOf('](')+2, shortLink.length-2)
 
-        let fullLink = '<a href="#!" class="link-goToCard" onclick="vm.$children[0].$refs.branching.goToCard(\''+ cardKey + '\', null)">' + linkText + '</a>' 
+      //   let fullLink = '<a href="#!" class="link-goToCard" onclick="vm.$children[0].$refs.branching.goToCard(\''+ cardKey + '\', null)">' + linkText + '</a>' 
 
-        return fullLink
-      }
+      //   return fullLink
+      // }
 
-      let stateLinkExpander = function(match){
-        let shortLink = match
+      // let stateLinkExpander = function(match){
+      //   let shortLink = match
 
-        let linkText = shortLink?.substring(shortLink.indexOf('[')+1,shortLink.indexOf(']{'))
-        let stateObject = shortLink?.substring(shortLink.indexOf(']{')+2, shortLink.length-1)
+      //   let linkText = shortLink?.substring(shortLink.indexOf('[')+1,shortLink.indexOf(']{'))
+      //   let stateObject = shortLink?.substring(shortLink.indexOf(']{')+2, shortLink.length-1)
 
-        let fullLink = '<a href="#!" class="link-updateState" onclick="vm.$children[0].$refs.branching.goToCard(null,\''+ stateObject + '\')">' + linkText + '</a>' 
+      //   let fullLink = '<a href="#!" class="link-updateState" onclick="vm.$children[0].$refs.branching.goToCard(null,\''+ stateObject + '\')">' + linkText + '</a>' 
 
-        return fullLink
-      }
+      //   return fullLink
+      // }
 
       let combinedLinkExpander = function(match){
         let shortLink = match
+        let fullLink = ""
         console.log('matched combined update:', match)
 
-        let linkText = shortLink?.substring(shortLink.indexOf('[')+1,shortLink.indexOf(']('))
-        let cardKey = shortLink?.substring(shortLink.indexOf('](')+2, shortLink.indexOf('){'))
-        let stateObject = shortLink?.substring(shortLink.indexOf('){')+2, shortLink.length-1)
+        // Check for text
+        let linkText = null;
+        if (shortLink.indexOf('#[') != -1){
+          linkText = shortLink?.substring(shortLink.indexOf('#[')+2,shortLink.indexOf(']#'))
+        }
 
-        let fullLink = '<a href="#!" class="link-updateState" onclick="vm.$children[0].$refs.branching.goToCard(\''+ cardKey +'\',\''+ stateObject + '\')">' + linkText + '</a>' 
+        // Check for link key
+        let cardKey = null;
+        if (shortLink.indexOf('#(') != -1){
+          cardKey = shortLink?.substring(shortLink.indexOf('#(')+2, shortLink.indexOf(')#'))
+        }
+
+        // Check for state update
+        let stateObject = null;
+        if (shortLink.indexOf('#{') != -1){
+          stateObject = shortLink?.substring(shortLink.indexOf('#{')+2, shortLink.length-3)
+        }
+
+        // build the link
+        if (linkText && (stateObject || cardKey)){
+          fullLink = '<a href="#!" class="link-updateState" onclick="vm.$children[0].$refs.branching.goToCard(\''
+
+          fullLink += cardKey
+          fullLink += '\',\''
+          fullLink += stateObject
+          fullLink += '\')">'
+          fullLink += linkText
+
+          fullLink += '</a>'
+        }
 
         return fullLink
       }
 
-      let parsedText = rawText.replaceAll(gotoLinkRE, gotoLinkExpander).replaceAll(stateLinkRE, stateLinkExpander).replaceAll(combinedLinkRE, combinedLinkExpander)
+      let parsedText = rawText.replaceAll(combinedLinkRE, combinedLinkExpander)
       
       return parsedText
     },
