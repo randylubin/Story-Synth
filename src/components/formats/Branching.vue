@@ -587,7 +587,7 @@ export default {
       // // for state update
       // let stateLinkRE = /#\[[^\]]*\]\{[^}]*\}#/g
       // for combined
-      //let combinedLinkRE = /#\[[^\]]*\]\([^)]*\)\{[^}]*\}#/g
+      // OLD let combinedLinkRE = /#\[[^\]]*\]\([^)]*\)\{[^}]*\}#/g
       let combinedLinkRE = /##[[({].*##/g
 
       // let gotoLinkExpander = function(match){
@@ -651,7 +651,19 @@ export default {
         return fullLink
       }
 
-      let parsedText = rawText.replaceAll(combinedLinkRE, combinedLinkExpander)
+      // let variableLookupRE = /&<[^>]*>/g 
+
+      // let variableReplacer = function(match){
+      //   let variableName = match;
+      //   let variableValue = ""
+      //   let gameVars = JSON.parse(this.roomInfo?.gameVariables)
+
+      //   variableValue = gameVars[variableName];
+
+      //   return variableValue
+      // }
+
+      let parsedText = rawText.replaceAll(combinedLinkRE, combinedLinkExpander)//.replaceAll(variableLookupRE, variableReplacer)
       
       return parsedText
     },
