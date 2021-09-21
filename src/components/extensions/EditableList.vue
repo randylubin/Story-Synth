@@ -84,6 +84,8 @@ export default {
       
       var tempNewList = this.editableList
       tempNewList.length == 0 ? tempNewList = ['EMPTY'] : tempNewList.splice(index, 1)
+      this.currentEditIndex = null
+      this.currentEditText = ""
 
       this.$emit('process-extension-update', ['editableList',tempNewList.toString()])
     }

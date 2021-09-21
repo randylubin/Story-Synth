@@ -88,9 +88,10 @@ export default {
       
       let tempNewLists = this.multiEditableLists
 
-      console.log(tempNewLists)
-
       tempNewLists[listIndex].length == 0 ? tempNewLists[listIndex] = [] : tempNewLists[listIndex].value.splice(itemIndex, 1)
+      this.currentEditItemIndex = null;
+      this.currentEditListIndex = null;
+      this.currentEditText = "";
 
       this.$emit('process-extension-update', ['multiEditableLists',JSON.stringify(tempNewLists)])
     }
