@@ -173,6 +173,11 @@
 </script>
 
 <style lang="scss">
+
+  a {
+    color: #0071EB;
+  }
+
   html {
     height: 100%;
   }
