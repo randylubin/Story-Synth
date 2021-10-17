@@ -1,6 +1,6 @@
 <template>
   <div class="roomLink-section">
-    <div class="container game-room" v-if="$route.params.roomID">
+    <div class="container room-link" v-if="$route.params.roomID">
       <div class="row mb-4">
         <div class="col">
           <div class="input-group">
@@ -154,6 +154,11 @@ export default {
 </script>
 
 <style scoped>
+.room-link {
+  text-align: center;
+  max-width:600px;
+}
+
 .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
