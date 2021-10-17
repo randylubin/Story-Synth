@@ -13,13 +13,13 @@
       >
         <div class="row text-center" v-if="customOptions.gameTitle">
           <div class="col-sm">
-            <h1>{{ customOptions.gameTitle }}</h1>
+            <h1 class="game-title">{{ customOptions.gameTitle }}</h1>
           </div>
         </div>
 
         <div class="row text-center" v-if="customOptions.byline">
           <div class="col-sm">
-            <h4>{{ customOptions.byline }}</h4>
+            <h4 class="game-byline">{{ customOptions.byline }}</h4>
           </div>
         </div>
       </div>
@@ -52,7 +52,7 @@
         <transition name="fade">
           <div class="btn-group col-sm" role="group" aria-label="Card Controls">
             <button
-              class="btn btn-outline-dark"
+              class="btn btn-outline-dark control-button-previous-card"
               v-on:click="previousCard()"
               :disabled="
                 roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
@@ -61,7 +61,7 @@
               Previous Card
             </button>
             <button
-              class="btn btn-outline-dark"
+              class="btn btn-outline-dark control-button-next-card"
               v-on:click="nextCard()"
               :disabled="
                 roomInfo.xCardIsActive ||
@@ -261,6 +261,7 @@
               >
               <b-button
                 variant="outline-dark"
+                class="control-button-safety-card"
                 v-on:click="xCard()"
                 v-html="
                   customOptions.safetyCardButton
@@ -272,6 +273,7 @@
               <b-button
                 v-b-modal.modalNextDeckConfirm
                 variant="outline-dark"
+                class="control-button-next-deck"
                 
                 v-if="this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator')"
                 :disabled="
@@ -289,6 +291,7 @@
               <b-dropdown
                 variant="outline-dark"
                 id="dropdown-1"
+                class="control-button-last-card"
                 v-bind:text="customOptions.lastCardLabel"
                 :disabled="
                   roomInfo.xCardIsActive ||
