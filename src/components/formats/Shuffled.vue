@@ -247,73 +247,69 @@
 
 
       <div class="after-game-card">
-        <div class="btn-container" v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
-          <div class="row mb-4">
-            <div class="col-sm">
-              <b-button-group aria-role="Deck control" class="d-flex w-100">
-                <b-button
-                  v-b-modal.reshuffleConfirm
-                  variant="outline-dark"
-                  :disabled="roomInfo.xCardIsActive"
-                  v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
-                  color="rgb(187, 138, 200)"
-                  >Restart</b-button
-                >
-                <b-button
-                  variant="outline-dark"
-                  class="control-button-safety-card"
-                  v-on:click="xCard()"
-                  v-html="
-                    customOptions.safetyCardButton
-                      ? customOptions.safetyCardButton
-                      : 'X-Card'
-                  "
-                  >X-Card</b-button
-                >
-                <b-button
-                  v-b-modal.modalNextDeckConfirm
-                  variant="outline-dark"
-                  class="control-button-next-deck"
-                  
-                  v-if="this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator')"
-                  :disabled="
-                    roomInfo.xCardIsActive ||
-                      roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
-                  "
-                  v-html="
-                    customOptions.showNextDeckButton
-                      ? customOptions.showNextDeckButton
-                      : 'Next Deck'
-                  "
-                >
-                  Next Deck
-                </b-button>
-                <b-dropdown
-                  variant="outline-dark"
-                  id="dropdown-1"
-                  class="control-button-last-card"
-                  v-bind:text="customOptions.lastCardLabel"
-                  :disabled="
-                    roomInfo.xCardIsActive ||
-                      roomInfo.currentCardIndex == gSheet.length - 1 ||
-                      roomInfo.currentCardIndex == roomInfo.locationOfLastCard
-                  "
-                  v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)"
-                  right
-                >
-                  <b-dropdown-item v-on:click="lastCard()"
-                    >Go to {{customOptions.lastCardLabel}}</b-dropdown-item
-                  >
-                  <b-dropdown-item v-on:click="shuffleLastCard('center')"
-                    >Shuffle near middle</b-dropdown-item
-                  >
-                  <b-dropdown-item v-on:click="shuffleLastCard('end')"
-                    >Shuffle near end</b-dropdown-item
-                  >
-                </b-dropdown>
-              </b-button-group>
-            </div>
-          </div>
+        <div v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
+          <b-button-group aria-role="Deck control" class="d-flex">
+            <b-button
+              v-b-modal.reshuffleConfirm
+              variant="outline-dark"
+              :disabled="roomInfo.xCardIsActive"
+              v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+              color="rgb(187, 138, 200)"
+              >Restart</b-button
+            >
+            <b-button
+              variant="outline-dark"
+              class="control-button-safety-card"
+              v-on:click="xCard()"
+              v-html="
+                customOptions.safetyCardButton
+                  ? customOptions.safetyCardButton
+                  : 'X-Card'
+              "
+              >X-Card</b-button
+            >
+            <b-button
+              v-b-modal.modalNextDeckConfirm
+              variant="outline-dark"
+              class="control-button-next-deck"
+              
+              v-if="this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator')"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+              "
+              v-html="
+                customOptions.showNextDeckButton
+                  ? customOptions.showNextDeckButton
+                  : 'Next Deck'
+              "
+            >
+              Next Deck
+            </b-button>
+            <b-dropdown
+              variant="outline-dark"
+              id="dropdown-1"
+              class="control-button-last-card"
+              v-bind:text="customOptions.lastCardLabel"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex == gSheet.length - 1 ||
+                  roomInfo.currentCardIndex == roomInfo.locationOfLastCard
+              "
+              v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)"
+              right
+            >
+              <b-dropdown-item v-on:click="lastCard()"
+                >Go to {{customOptions.lastCardLabel}}</b-dropdown-item
+              >
+              <b-dropdown-item v-on:click="shuffleLastCard('center')"
+                >Shuffle near middle</b-dropdown-item
+              >
+              <b-dropdown-item v-on:click="shuffleLastCard('end')"
+                >Shuffle near end</b-dropdown-item
+              >
+            </b-dropdown>
+          </b-button-group>
         </div>
         
         <div
