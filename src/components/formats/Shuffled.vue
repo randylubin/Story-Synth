@@ -49,7 +49,7 @@
           ></app-extensionManager>
         </div>
 
-        <div class="row card-navigation-buttons mb-4" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
+        <div class="row card-navigation-buttons card-nav-above mb-4" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
           <transition name="fade">
             <div class="btn-group col-sm" role="group" aria-label="Card Controls">
               <button
@@ -247,10 +247,11 @@
 
 
       <div class="after-game-card">
-        <div v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
-          <b-button-group aria-role="Deck control" class="d-flex">
+        <b-button-toolbar class="justify-content-between lower-buttons" v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
+          <b-button-group class="game-meta-buttons" aria-role="Deck control" v-bind:class="{'d-flex w-100': !customOptions.lowerCardNavOnMobile}">
             <b-button
               v-b-modal.reshuffleConfirm
+              class="control-button-restart"
               variant="outline-dark"
               :disabled="roomInfo.xCardIsActive"
               v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
@@ -310,7 +311,28 @@
               >
             </b-dropdown>
           </b-button-group>
-        </div>
+          <b-button-group class="btn-group card-navigation-buttons card-nav-below" role="group" aria-label="Card Controls" v-if="customOptions.lowerCardNavOnMobile">
+            <b-button
+              class="btn btn-outline-dark control-button-previous-card"
+              v-on:click="previousCard()"
+              :disabled="
+                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
+              "
+            >
+              &lsaquo;
+            </b-button>
+            <b-button
+              class="btn btn-outline-dark control-button-next-card"
+              v-on:click="nextCard()"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+              "
+            >
+              &rsaquo;
+            </b-button>
+          </b-button-group>
+        </b-button-toolbar>
         
         <div
           v-if="
