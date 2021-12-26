@@ -109,6 +109,7 @@
           }"
           v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]"
         >
+          <!-- card images -->
           <img
             v-bind:src="customOptions.coverImage"
             class="card-img-top"
@@ -136,6 +137,8 @@
             "
           ></b-card-img>
 
+
+          <!-- Loading Visual -->
           <div
             class="card-body text-center"
             v-if="(!dataReady || !firebaseReady) && !error"
@@ -154,6 +157,7 @@
             </div>
           </div>
 
+          <!-- Main Game Cards -->
           <div
             v-if="!customOptions.coverImage || roomInfo.currentCardIndex != 0"
             v-bind:class="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
@@ -163,7 +167,6 @@
               class="card-body justify-content-center d-flex align-items-center mt-4"
               style="white-space: pre-line"
               v-bind:class="{
-                'card-body': !customOptions.cardBackgroundImage,
                 'card-img-overlay':
                   customOptions.cardBackgroundImage &&
                   !customOptions.cardBackgroundImageAlign,
@@ -205,6 +208,7 @@
           </div>
           <b-alert show class="mx-3" v-html="customOptions.lastCardReminderText" variant="info" v-if="customOptions.lastCardReminderText && customOptions.lastCardReminderFrequency && roomInfo.currentCardIndex > firstNonInstruction && ((roomInfo.currentCardIndex - firstNonInstruction) % customOptions.lastCardReminderFrequency == customOptions.lastCardReminderFrequency - 1)"></b-alert>
 
+          <!-- Safety Card -->
           <div
             class="card-body align-items-center justify-content-center"
             v-if="roomInfo.xCardIsActive"
@@ -233,6 +237,7 @@
             </div>
           </div>
 
+          <!-- Card Image, Bottom -->
           <b-card-img
             v-bind:src="customOptions.cardBackgroundImage"
             alt="Card Background image"
