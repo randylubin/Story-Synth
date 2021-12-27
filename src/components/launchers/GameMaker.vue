@@ -104,7 +104,7 @@
             <!-- end of format and sheet fields -->
 
             <!-- For the published version, replace gameType with the specific game type in quotes. Example "Shuffled"  -->
-            <div class="row mb-4">
+            <div class="row mb-2">
               <div class="col-sm text-center">
                 <router-link
                   :to="{ path: '/' + formatToURL(gameType, gSheetID) }"
@@ -112,7 +112,7 @@
                   <button
                     :disabled="!gSheetID"
                     type="button"
-                    class="btn btn-dark"
+                    class="btn btn-dark btn-lg"
                   >
                     Create game
                   </button>

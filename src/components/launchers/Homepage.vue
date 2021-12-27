@@ -1,15 +1,15 @@
 <template>
   <div class="homepage">
     <div class="container">
-      <div class="homepage-header row" style="margin-top: 76px">
+      <div class="homepage-header row padding-after-navbar mb-4">
         <div class="col-sm text-center">
-          <h1>Story Synth</h1>
+          <h1 class='display-4'>Story Synth</h1>
           <h2>Make, play, and share storytelling games</h2>
         </div>
       </div>
 
-      <div class="homepage-gif row">
-        <div class="embed-responsive embed-responsive-16by9 mb-3">
+      <div class="homepage-gif row rounded-m clipped mb-4">
+        <div class="embed-responsive embed-responsive-16by9">
           <video class="embed-responsive-item" autoplay loop controls muted>
             <source
               src="https://diegeticgames.com/uploads/story-synth-teaser.mp4"
@@ -19,30 +19,31 @@
         </div>
       </div>
 
-      <div class="homepage-about ">
+      <div class="homepage-about mb-5">
         <div class="row">
-          <h3 class="col-sm">
+          <h3 class="col-sm mb-4">
             Story Synth is a free web platform for making, playing, and sharing storytelling games with nothing but Google Sheets and your creativity!
           </h3>
         </div>
         <div class="row">
           <div class="col-4 d-flex flex-column">
             Designing is easy! Just add prompts to Google Sheets and paste the sheet link here
-            <img class="img img-fluid mt-auto" src="/img/connection.svg" alt="">
+            <img class="img img-fluid mt-auto px-3 py-1" src="/img/connection.svg" alt="">
           </div>
           <div class="col-4 d-flex flex-column">
             Plenty of formats and extensions for you to customize your game
-            <img class="img img-fluid mt-auto" src="/img/connection.svg" alt="">
+            <img class="img img-fluid mt-auto px-3 py-1" src="/img/connection.svg" alt="">
           </div>
           <div class="col-4 d-flex flex-column">
             Game sessions have realtime multiplayer, perfect for online play
-            <img class="img img-fluid mt-auto" src="/img/connection.svg" alt="">
+            <img class="img img-fluid mt-auto px-3 py-1" src="/img/connection.svg" alt="">
           </div>
         </div>
       </div>
 
-      <div class="homepage-play">
-        <h2 class="text-center">Play an existing game</h2>
+      <!-- Section: play -->
+      <div class="homepage-play mb-5">
+        <h2 class="text-center mb-3">Play an existing game</h2>
 
         <div class="row">
           <div class="offset-lg-0 col-lg-12 col-md-4 mb-1">
@@ -108,7 +109,7 @@
 
         <div class="row">
           <div class="col-sm">
-            <a href="/Gallery" class="btn ">See all games</a>
+            <a href="/Gallery" class="btn py-3 px-4 btn-lg">See all games</a>
           </div>
         </div>
       </div>
@@ -157,16 +158,17 @@
 
         <div class="row">
           <div class="col-sm">
-            <a html="https://docs.storysynth.org/guide/design.html" class="btn mt-3 mb-5">More templates</a>
+            <a html="https://docs.storysynth.org/guide/design.html" class="btn mt-3 mb-5 py-3 px-4 btn-lg">More templates</a>
           </div>
         </div>
 
       </div>
 
-      <div class="homepage-test">
+      <!-- Section: test -->
+      <div class="homepage-test mb-5">
         <div class="row">
           <div class="col-12">
-            <h2>Test your game</h2>
+            <h2 class='mb-3'>Test your game</h2>
           </div>  
         </div>
         <div class="row">
@@ -182,10 +184,11 @@
       
       </div>
 
-      <div class="homepage-publish">
+      <!-- Section: publish -->
+      <div class="homepage-publish mb-5">
         <div class="row">
           <div class="col-12">
-            <h2>Publish your game</h2>
+            <h2 class="mb-3">Publish your game</h2>
           </div>  
         </div>
         <div class="row">
@@ -193,7 +196,7 @@
             <p>When you’re ready, fill out <a href="#">this form</a> to add your game to the gallery!</p>
           </div>
           <a href="/Gallery/">
-            <img class="img img-fluid" src="https://diegeticgames.com/uploads/story-synth-game-collage.png" alt="Collage of Story Synth Games">
+            <img class="img img-fluid rounded-m clipped" src="https://diegeticgames.com/uploads/story-synth-game-collage.png" alt="Collage of Story Synth Games">
           </a>
         </div>
       

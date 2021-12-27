@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row my-4 pt-5">
+    <div class="row mb-4 padding-after-navbar">
       <div class="col-sm text-center">
         <h1 class="mb-3">Games Gallery</h1>
         <p>Check out these great games playable on Story Synth!</p>

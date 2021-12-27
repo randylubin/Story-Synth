@@ -2,9 +2,9 @@
   <div id="app">
     <!-- <router-view></router-view>-->
     <div v-if="$route.path !== '/about'">
-      <div class="navbar">
-        <app-header class=""></app-header>
-      </div>
+      
+      <app-header class=""></app-header>
+      
       <div class="non-footer-content">
         
         <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
@@ -243,6 +243,13 @@
     
   }
 
+  .padding-after-navbar {
+    padding-top: 124px;
+  }
+  .navbar {
+    backdrop-filter: blur(10px);
+    width: 100%;
+  }
   ul.navbar-nav {
     list-style-type: none;
   }
@@ -264,6 +271,27 @@
 
   .non-footer-content {
     padding-bottom: 3rem;
+  }
+
+  // common styles
+  :root {
+    --ds-rounding: 14px;
+  }  
+  .rounded-m {
+    border-radius: var(--ds-rounding);
+  }
+  .clipped {
+    overflow: hidden;
+  }
+
+  .card {
+    border-radius: var(--ds-rounding);
+    overflow: hidden;
+  }
+  .card-img {
+    border-radius: 0;
+    // border-bottom-left-radius: calc(var(--ds-rounding) - 1px);
+    // border-top-left-radius: calc(var(--ds-rounding) - 1px);
   }
 
 </style>
