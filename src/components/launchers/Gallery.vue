@@ -43,7 +43,7 @@
 
     </div>
     <div class="row">
-      <div class="col-xl-8 offset-xl-2 offset-lg-0 col-lg-12 col-md-4 mb-1">
+      <div class="col-xl-8 offset-xl-2 offset-lg-0 col-lg-12 col-sm-12 mb-1">
         <div class="card shadow">
           <div class="card-body text-center">
             <h2>Story Synth Summer Jam 2021</h2>

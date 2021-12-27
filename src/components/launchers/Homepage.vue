@@ -45,7 +45,7 @@
         <h2 class="text-center">Play an existing game</h2>
 
         <div class="row">
-          <div class="col-12">
+          <div class="offset-lg-0 col-lg-12 col-md-4 mb-1">
             <div class="card shadow mb-2">
               <div class="row no-gutters">
                 <div class="col-lg-4">
@@ -64,10 +64,8 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="row">
-          <div class="col-12">
+        
+          <div class="offset-lg-0 col-lg-12 col-md-4 mb-1">
             <div class="card shadow mb-2">
               <div class="row no-gutters">
                 <div class="col-lg-4">
@@ -86,10 +84,8 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="row">
-          <div class="col-12">
+        
+          <div class="offset-lg-0 col-lg-12 col-md-4 mb-1">
             <div class="card shadow mb-2">
               <div class="row no-gutters">
                 <div class="col-lg-4">
