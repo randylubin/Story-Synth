@@ -1,6 +1,6 @@
 <template>
   <div class="game-maker">
-    <div class="container">
+    <div class="">
       <div v-if="!$route.params.gameType" class="card shadow mb-4">
         <div class="card-body">
           <!-- Take in game title, byline, and blurb from query params -->
@@ -49,20 +49,9 @@
           </div>
           <!-- End query param section -->
 
-          <div class="row my-4">
-            <div class="col-sm text-center">
-              <h2>Create a Game</h2>
-            </div>
-          </div>
-
           <form>
             <!-- Remove for published version. Comment out the format selection and gSheetID field. Make sure to hard code the gSheetID in the game's .vue file. -->
             <div v-if="!routeGSheetID">
-              <div class="row">
-                <div class="col">
-                  <p>Get started by pasting your Google Sheet link below. Check out the <a href="https://docs.storysynth.org/guide/#overview">Story Synth Guide</a> to learn more.</p>
-                </div>
-              </div>
               <div class="row mb-4">
                 <div class="col-sm">
                   Game Format
@@ -125,7 +114,7 @@
                     type="button"
                     class="btn btn-dark"
                   >
-                    Create Game
+                    Create game
                   </button>
                 </router-link>
               </div>
@@ -231,8 +220,8 @@ export default {
 
 <style scoped>
 .game-maker {
-  max-width: 600px;
-  margin: auto;
+  
+  width: 100%;
 }
 
 li {

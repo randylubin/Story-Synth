@@ -1,6 +1,8 @@
 body {
-    background-color: var(--light);
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    color:   #000d1b;
-    padding-bottom: 50px;
+  background-color: var(--light);
+  /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */
+  @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+  font-family: "Poppins", sans-serif;
+  color: #000d1b;
+  padding-bottom: 50px;
 }

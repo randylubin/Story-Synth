@@ -272,8 +272,7 @@
                   ? customOptions.safetyCardButton
                   : 'X-Card'
               "
-              >X-Card</b-button
-            >
+              ></b-button>
             <b-button
               v-b-modal.modalNextDeckConfirm
               variant="outline-dark"
@@ -289,9 +288,7 @@
                   ? customOptions.showNextDeckButton
                   : 'Next Deck'
               "
-            >
-              Next Deck
-            </b-button>
+            ></b-button>
             <b-dropdown
               variant="outline-dark"
               id="dropdown-1"

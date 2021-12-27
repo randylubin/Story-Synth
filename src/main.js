@@ -18,6 +18,8 @@ Vue.use(IconsPlugin)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+import './assets/styleTemplates/homepage.scss'
+
 import './assets/styleTemplates/light.scss'
 import './assets/styleTemplates/dark.scss'
 import './assets/styleTemplates/cyberpunk.scss'

@@ -32,8 +32,8 @@
                   {{ game.credits }}
                 </h6>
                 <div class="card-text">{{ game.blurb }}</div>
-                <b-button v-bind:href="game.link" variant="dark" class="mt-auto align-self-end stretched-link"
-                  >Play</b-button
+                <a v-bind:href="game.link" class="btn mt-auto align-self-start stretched-link"
+                  >Play game</a
                 >
               </div>
             </div>
@@ -207,6 +207,10 @@ export default {
       }
     },
     mounted(){
+      let body = document.getElementById("app"); // document.body;
+      body.classList.remove(body.classList[0]);
+      body.setAttribute("id","style-template-homepage");
+
       document.dispatchEvent(new Event("x-app-rendered"));
       if (location.hostname.toString() !== 'localhost'){
           this.$mixpanel.track('Visited Gallery');

@@ -1,0 +1,67 @@
+#style-template-homepage {
+  @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+  $dark-blue: #323c69;
+  $light-blue: #d9fcfd;
+
+  background: linear-gradient(181.34deg, #f9edb7 1.25%, #ecb472 98.85%);
+  color: $dark-blue;
+  text-align: center;
+
+  // blue gradient background: linear-gradient(259.21deg, #3156B5 8.81%, #323C69 116.74%);
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Poppins", sans-serif;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  a {
+    color: white;
+    :hover {
+      text-decoration: underline;
+    }
+  }
+
+  button,
+  a.btn {
+    font-weight: bold;
+
+    background: $dark-blue;
+    color: $light-blue;
+    cursor: pointer;
+  }
+
+  .card {
+    text-align: left;
+
+    a.btn {
+      background: $light-blue;
+      font-weight: bold;
+      color: $dark-blue;
+      font-family: "Poppins", sans-serif;
+      cursor: pointer;
+
+      :hover {
+        // todo
+        color: red;
+      }
+    }
+  }
+
+  .navbar {
+    background-color: transparent !important;
+  }
+  .navbar-brand,
+  .nav-item,
+  .nav-link {
+    color: $dark-blue !important;
+    font-family: "Poppins", sans-serif !important;
+
+    :hover {
+      text-decoration: underline !important;
+    }
+  }
+}
