@@ -273,7 +273,7 @@
     padding-bottom: 3rem;
   }
 
-  // common styles
+  // Utility classes  
   :root {
     --ds-rounding: 14px;
   }  
@@ -283,15 +283,12 @@
   .clipped {
     overflow: hidden;
   }
-
   .card {
     border-radius: var(--ds-rounding);
     overflow: hidden;
   }
   .card-img {
     border-radius: 0;
-    // border-bottom-left-radius: calc(var(--ds-rounding) - 1px);
-    // border-top-left-radius: calc(var(--ds-rounding) - 1px);
   }
 
 </style>
