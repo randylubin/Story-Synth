@@ -26,17 +26,17 @@
           </h3>
         </div>
         <div class="row">
-          <div class="col-4 d-flex flex-column">
+          <div class="col-md-4 col-sm-12 d-flex flex-column">
             Designing is easy! Just add prompts to Google Sheets and paste the sheet link here
-            <img class="img img-fluid mt-auto px-3 py-1" src="/img/connection.svg" alt="">
+            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
           </div>
-          <div class="col-4 d-flex flex-column">
+          <div class="col-md-4 col-sm-12 d-flex flex-column">
             Plenty of formats and extensions for you to customize your game
-            <img class="img img-fluid mt-auto px-3 py-1" src="/img/connection.svg" alt="">
+            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
           </div>
-          <div class="col-4 d-flex flex-column">
+          <div class="col-md-4 col-sm-12 d-flex flex-column">
             Game sessions have realtime multiplayer, perfect for online play
-            <img class="img img-fluid mt-auto px-3 py-1" src="/img/connection.svg" alt="">
+            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
           </div>
         </div>
       </div>
