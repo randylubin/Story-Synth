@@ -19,24 +19,27 @@
         </div>
       </div>
 
-      <div class="homepage-about mb-5">
-        <div class="row">
+      <div class="homepage-about margin-between-sections">
+        <div class="row margin-between-sections">
           <h3 class="col-sm mb-4">
             Story Synth is a free web platform for making, playing, and sharing storytelling games with nothing but Google Sheets and your creativity!
           </h3>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 d-flex flex-column">
-            Designing is easy! Just add prompts to Google Sheets and paste the sheet link here
-            <!-- icon by Becris https://thenounproject.com/icon/analysis-1018335/ -->
-            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px; transform: translateY(1.5%);" src="/img/combine.svg" alt="">
-          </div>
-          <div class="col-md-4 col-sm-12 d-flex flex-column">
-            Plenty of formats and extensions for you to customize your game
+            <h3>Easy to start</h3>
+            Tons of templates, formats, and extensions for you to customize your game
             <!-- Formats by Bart van der Griendt from NounProject.com https://thenounproject.com/icon/formats-687218/ -->
             <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px; transform:scale(0.9);" src="/img/options.svg" alt="">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
+            <h3>Design in Sheets</h3>
+            Because it's powered by a Google Sheet, designing is easy and tweaking is effortless! 
+            <!-- icon by Becris https://thenounproject.com/icon/analysis-1018335/ -->
+            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px; transform: translateY(1.5%);" src="/img/combine.svg" alt="">
+          </div>
+          <div class="col-md-4 col-sm-12 d-flex flex-column">
+            <h3>Multiplayer</h3>
             Game sessions have realtime multiplayer, perfect for online play
             <!-- icon by Iconathon https://thenounproject.com/icon/networking-2909312/-->
             <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
@@ -45,8 +48,8 @@
       </div>
 
       <!-- Section: play -->
-      <div class="homepage-play mb-5">
-        <h2 class="text-center mb-3">Play an existing game</h2>
+      <div class="homepage-play margin-between-sections">
+        <h2 class="text-center mb-4">Play an existing game</h2>
 
         <div class="row">
           <div class="offset-lg-0 col-lg-12 col-md-4 mb-1">
@@ -113,14 +116,15 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row mt-3">
           <div class="col-sm">
-            <a href="/Gallery" class="btn py-3 px-4 btn-lg">See all games</a>
+            <a href="/Gallery" class="btn py-3 px-4 btn-lg">See all games</a>            
           </div>
         </div>
       </div>
 
-      <div class="homepage-create">
+      <!-- Section: create -->
+      <div class="homepage-create margin-between-sections">
         <div class="row">
           <div class="col-12">
             <h2>Create a new game</h2>
@@ -162,16 +166,17 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row mt-3">
           <div class="col-sm">
-            <a html="https://docs.storysynth.org/guide/design.html" class="btn mt-3 mb-5 py-3 px-4 btn-lg">More templates</a>
+            <a href="https://docs.storysynth.org/guide/design.html" class="btn mb-5 py-3 px-4 btn-lg">More templates</a>
+            <a href="https://docs.storysynth.org/guide/" class="btn ml-2 mb-5 py-3 px-4 btn-lg">Learn how to make your first game</a>
           </div>
         </div>
 
       </div>
 
       <!-- Section: test -->
-      <div class="homepage-test mb-5">
+      <div class="homepage-test margin-between-sections">
         <div class="row">
           <div class="col-12">
             <h2 class='mb-3'>Test your game</h2>
@@ -191,7 +196,7 @@
       </div>
 
       <!-- Section: publish -->
-      <div class="homepage-publish mb-5">
+      <div class="homepage-publish margin-between-sections">
         <div class="row">
           <div class="col-12">
             <h2 class="mb-3">Publish your game</h2>

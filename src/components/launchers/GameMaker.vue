@@ -55,10 +55,11 @@
               <div class="row mb-4">
                 <div class="col-sm">
                   Game Format
-                  <select
+                  <b-form-select
                     v-model="gameType"
                     class="custom-select"
                     title="Game Format"
+                    size="lg" 
                   >
                     <option disabled value="">Please select one</option>
                     <option>Shuffled</option>
@@ -69,7 +70,7 @@
                     <option>Phases</option>
                     <option>Generator</option>
                     <option>Hexflower</option>
-                  </select>
+                  </b-form-select>
                 </div>
               </div>
 
@@ -92,11 +93,12 @@
                     />
                   </svg>
 
-                  <input
+                  <b-form-input
                     v-model="gSheetID"
                     class="form-control"
                     placeholder="Google Sheet Public Link"
                     title="Google Sheet Public Link"
+                    size="lg" 
                   />
                 </div>
               </div>

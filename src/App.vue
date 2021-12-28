@@ -243,6 +243,11 @@
     
   }
 
+
+  .margin-between-sections {
+    margin-bottom: 116px;
+  }
+
   .padding-after-navbar {
     padding-top: 124px;
   }
