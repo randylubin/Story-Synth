@@ -217,7 +217,7 @@
                     ? customOptions.safetyCardButton
                     : 'X-Card'
                 "
-                >X-Card</b-button
+                ></b-button
               >
               <b-button
                 v-b-modal.modalNextDeckConfirm
@@ -234,7 +234,7 @@
                     : 'Next Deck'
                 "
               >
-                Next Deck
+                
               </b-button>
               <b-dropdown
                 variant="outline-dark"
@@ -629,7 +629,7 @@ export default {
                     ["extension","playerTurnOrder","{}"  ],
                     ["option","hideTitleInSession","TRUE"  ],
                     ["option","instructionsProgressBar","6"  ],
-                    ["option","style","<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\">\n<link href=\"https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap\" rel=\"stylesheet\">\n\n<style>\n\nh1, h2 { font-family: 'Kelly Slab', sans-serif; }\n\n.full-page-background {\n\nbackground: #23074d;  /* fallback for old browsers */\nbackground: -webkit-linear-gradient(to top, #cc5333, #23074d);  /* Chrome 10-25, Safari 5.1-6 */\nbackground: linear-gradient(to top, #cc5333, #23074d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */\n\n}\n\n.game-meta {\n color: white;\n}\n\n.card {\n    background: url(https://www.toptal.com/designers/subtlepatterns/patterns/handmadepaper.png);\n    border: 0px;\n}\n\n\n</style>"  ],
+                    ["option","style","<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\">\n<link href=\"https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap\" rel=\"stylesheet\">\n\n<style>\n\nh1, h2 { font-family: 'Kelly Slab', sans-serif; }\n\n.full-page-background {\n\nbackground: #23074d;  /* fallback for old browsers */\nbackground: -webkit-linear-gradient(to top, #cc5333, #23074d);  /* Chrome 10-25, Safari 5.1-6 */\nbackground: linear-gradient(to top, #cc5333, #23074d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */\n\n}\n\n.game-meta {\n color: white;\n}\n\n.card {\n    background: url(/img/paper.png);\n    border: 0px;\n}\n\n\n</style>"  ],
                     ["0","Clash at Ikara","One player should hit NEXT CARD and then players should take turns reading each card aloud.\n<style> .main-card {filter:invert()}</style>"  ],
                     ["0","The Pitch","Play as a group of heroes who have agreed to protect the defenseless community of Ikara from an imminent bandit raid.\n\nOne player should hit NEXT CARD and then players should take turns reading each card aloud."  ],
                     ["0","Safety","If you need to pause the game for any reason, especially if you want to discuss, edit, or reverse any content decisions, just click the X-Card button."  ],

@@ -420,7 +420,7 @@ export default {
           coverImage:
             "https://diegeticgames.com/uploads/clash-at-ikara-cover.png",
           style:
-            '<link rel="preconnect" href="https://fonts.gstatic.com"><link href="https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap" rel="stylesheet"><style> h1, h2 { font-family: "Kelly Slab", sans-serif; } .card {border:0px;} .full-page-background {background: #23074d;  /* fallback for old browsers */background: -webkit-linear-gradient(to top, #cc5333, #23074d);  /* Chrome 10-25, Safari 5.1-6 */background: linear-gradient(to top, #cc5333, #23074d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */} .game-meta { color: white; } .card { background: url(https://www.toptal.com/designers/subtlepatterns/patterns/handmadepaper.png); } } </style>',
+            '<link rel="preconnect" href="https://fonts.gstatic.com"><link href="https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap" rel="stylesheet"><style> h1, h2 { font-family: "Kelly Slab", sans-serif; } .card {border:0px;} .full-page-background {background: #23074d;  /* fallback for old browsers */background: -webkit-linear-gradient(to top, #cc5333, #23074d);  /* Chrome 10-25, Safari 5.1-6 */background: linear-gradient(to top, #cc5333, #23074d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */} .game-meta { color: white; } .card { background: url(/img/paper.png); } } </style>',
         };
 
         this.dataReady = true;
