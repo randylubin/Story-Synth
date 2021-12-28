@@ -34,7 +34,7 @@
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             Plenty of formats and extensions for you to customize your game
             <!-- Formats by Bart van der Griendt from NounProject.com https://thenounproject.com/icon/formats-687218/ -->
-            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/options.svg" alt="">
+            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 210px;" src="/img/options.svg" alt="">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             Game sessions have realtime multiplayer, perfect for online play

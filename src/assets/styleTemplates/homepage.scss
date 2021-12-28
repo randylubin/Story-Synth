@@ -20,7 +20,7 @@
 
   a {
     color: #003daf;
-    :hover {
+    &:hover {
       text-decoration: underline;
     }
   }
@@ -28,10 +28,17 @@
   button,
   a.btn {
     font-weight: bold;
-
     background: $dark-blue;
     color: $light-blue;
     cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      background-color: darken($dark-blue, 8%);
+    }
+    &:active {
+      background-color: darken($dark-blue, 20%);
+    }
   }
 
   .card {
@@ -43,10 +50,13 @@
       color: $dark-blue;
       font-family: "Poppins", sans-serif;
       cursor: pointer;
+      text-decoration: none;
 
-      :hover {
-        // todo
-        color: red;
+      &:hover {
+        background-color: darken($light-blue, 8%);
+      }
+      &:active {
+        background-color: darken($light-blue, 20%);
       }
     }
   }
