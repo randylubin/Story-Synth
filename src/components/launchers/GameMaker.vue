@@ -52,9 +52,12 @@
           <form>
             <!-- Remove for published version. Comment out the format selection and gSheetID field. Make sure to hard code the gSheetID in the game's .vue file. -->
             <div v-if="!routeGSheetID">
+              <div class="row mb-3 mx-auto">
+                <h3>Upload your game</h3>
+              </div>
               <div class="row mb-4">
                 <div class="col-sm">
-                  Game Format
+                  Select your game format
                   <select
                     v-model="gameType"
                     class="custom-select"
@@ -75,7 +78,7 @@
 
               <div class="row mb-4">
                 <div class="col-sm">
-                  Google Sheet Public Link
+                  Paste your Google Sheet public link
                   <svg
                     v-b-tooltip.hover
                     title="Paste in the entire URL link to your publicly shared Google Sheet that contains the game data"
@@ -114,7 +117,7 @@
                     type="button"
                     class="btn btn-dark btn-lg"
                   >
-                    Create game
+                    Upload game
                   </button>
                 </router-link>
               </div>

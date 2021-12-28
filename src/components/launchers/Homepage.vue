@@ -174,12 +174,12 @@
       <div class="homepage-test mb-5">
         <div class="row">
           <div class="col-12">
-            <h2 class='mb-3'>Test your game</h2>
+            <h2 class='mb-3'>Get a playable link</h2>
           </div>  
         </div>
         <div class="row">
           <div class="col-12">
-            <p>Publish your game to Storysynth at a secret but shareable link</p>
+            <p>Upload your game to Storysynth at a secret but shareable link.</p>
           </div>
           <app-gameMaker v-if="!launcherOnHomepage"
           :routeRoomID="$route.params.roomID"
