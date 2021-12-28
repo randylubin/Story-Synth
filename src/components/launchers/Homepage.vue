@@ -28,14 +28,17 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             Designing is easy! Just add prompts to Google Sheets and paste the sheet link here
-            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
+            <!-- icon by Becris https://thenounproject.com/icon/analysis-1018335/ -->
+            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/combine.svg" alt="">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             Plenty of formats and extensions for you to customize your game
-            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
+            <!-- Formats by Bart van der Griendt from NounProject.com https://thenounproject.com/icon/formats-687218/ -->
+            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/options.svg" alt="">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             Game sessions have realtime multiplayer, perfect for online play
+            <!-- icon by Iconathon https://thenounproject.com/icon/networking-2909312/-->
             <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
           </div>
         </div>
@@ -51,7 +54,8 @@
               <div class="row no-gutters">
                 <div class="col-lg-4">
                   <a href="/Games/Around-The-Realm">
-                    <img src="https://img.itch.zone/aW1nLzQ4MzI3NjAucG5n/315x250%23cb/Kb6Vr8.png" alt="Around the Realm logo" class="card-img">
+                    <img src="https://img.itch.zone/aW1nLzQ4MzI3NjAucG5n/315x250%23cb/Kb6Vr8.png" 
+                    alt="Around the Realm logo" class="card-img">
                   </a>
                 </div>
                 <div class="col-lg-8">
@@ -70,16 +74,17 @@
             <div class="card shadow mb-2">
               <div class="row no-gutters">
                 <div class="col-lg-4">
-                  <a href="/Games/Around-The-Realm">
-                    <img src="https://img.itch.zone/aW1nLzQ4MzI3NjAucG5n/315x250%23cb/Kb6Vr8.png" alt="Around the Realm logo" class="card-img">
+                  <a href="/Games/Raised-By-Mechs/">
+                    <img src="https://iili.io/f1F7F1.png" 
+                    alt="Raised by Mechs logo" class="card-img">
                   </a>
                 </div>
                 <div class="col-lg-8">
                   <div class="card-body d-flex flex-column h-100">
-                    <h5 class="card-title">Around the Realm</h5>
-                    <h6 class="card-subtitle text-muted mb-2">By Randy Lubin</h6>
-                    <div class="card-text">Tell the story of two companions racing around a fantasy world in order to win a wager.</div>
-                    <a href="/Games/Around-The-Realm" target="_self" class="btn mt-auto align-self-start stretched-link ">Play game</a>
+                    <h5 class="card-title">Raised by Mechs</h5>
+                    <h6 class="card-subtitle text-muted mb-2">By Raph D'Amico</h6>
+                    <div class="card-text">Tell the story of a group of children raised by their mech mother.</div>
+                    <a href="/Games/Raised-By-Mechs/" target="_self" class="btn mt-auto align-self-start stretched-link ">Play game</a>
                   </div>
                 </div>
               </div>
@@ -90,16 +95,17 @@
             <div class="card shadow mb-2">
               <div class="row no-gutters">
                 <div class="col-lg-4">
-                  <a href="/Games/Around-The-Realm">
-                    <img src="https://img.itch.zone/aW1nLzQ4MzI3NjAucG5n/315x250%23cb/Kb6Vr8.png" alt="Around the Realm logo" class="card-img">
+                  <a href="/Games/Umberdred-Institute/">
+                    <img src="https://img.itch.zone/aW1nLzY3NzQzNTIuanBn/315x250%23c/XQicpj.jpg" 
+                    alt="Umberdred Institute for Emerging Evildoers logo" class="card-img">
                   </a>
                 </div>
                 <div class="col-lg-8">
                   <div class="card-body d-flex flex-column h-100">
-                    <h5 class="card-title">Around the Realm</h5>
-                    <h6 class="card-subtitle text-muted mb-2">By Randy Lubin</h6>
-                    <div class="card-text">Tell the story of two companions racing around a fantasy world in order to win a wager.</div>
-                    <a href="/Games/Around-The-Realm" target="_self" class="btn mt-auto align-self-start stretched-link ">Play game</a>
+                    <h5 class="card-title">Umberdred Institute for Emerging Evildoers</h5>
+                    <h6 class="card-subtitle text-muted mb-2">By Amble Studio</h6>
+                    <div class="card-text">Tell silly stories about how aspiring villains accept unlikely quests to earn dubious certifications in evildoing skills.</div>
+                    <a href="/Games/Umberdred-Institute/" target="_self" class="btn mt-auto align-self-start stretched-link ">Play game</a>
                   </div>
                 </div>
               </div>
@@ -129,7 +135,7 @@
         <div class="row">
           <div class="col-md-4">
             <div class="card">
-              <img src="/img/connection.svg" alt="" class="card-img-top">
+              <img src="/img/shuffled-thumbnail.png" alt="a thumbnail of the shuffled format" class="card-img-top">
               <div class="card-body">
                 <h3 class="card-title">Shuffled</h3>
                 <a href="/Shuffled/1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w" class="btn btn-block">View demo</a>
@@ -138,7 +144,7 @@
           </div>
           <div class="col-md-4">
             <div class="card">
-              <img src="/img/connection.svg" alt="" class="card-img-top">
+              <img src="/img/generator-thumbnail.png" alt="a thumbnail of the generator format" class="card-img-top">
               <div class="card-body">
                 <h3 class="card-title">Generator</h3>
                 <a href="/Generator/1F0g3rVHxRA7O0rRMIQSsLCepJStxBO6pa7QJUNJb3K0/" class="btn btn-block">View demo</a>
@@ -147,7 +153,7 @@
           </div>
           <div class="col-md-4">
             <div class="card">
-              <img src="/img/connection.svg" alt="" class="card-img-top">
+              <img src="/img/hexflower-thumbnail.png" alt="a thumbnail of the hexflower format" class="card-img-top">
               <div class="card-body">
                 <h3 class="card-title">Hexflower</h3>
                 <a href="/Hexflower/1wLDboZZBfBwMKswMYcRIXxz6DxRZJyAa6KPW6TvR-dM/" class="btn btn-block">View demo</a>
@@ -193,10 +199,10 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <p>When you’re ready, fill out <a href="#">this form</a> to add your game to the gallery!</p>
+            <p>When you’re ready, fill out <a href="https://forms.gle/CizjsyFsR6sVCYEX7">this form</a> to add your game to the gallery!</p>
           </div>
           <a href="/Gallery/">
-            <img class="img img-fluid rounded-m clipped" src="https://diegeticgames.com/uploads/story-synth-game-collage.png" alt="Collage of Story Synth Games">
+            <img class="img img-fluid rounded-m clipped" src="/img/story-synth-gallery-banner.png" alt="Collage of Story Synth Games">
           </a>
         </div>
       
@@ -208,7 +214,7 @@
     <app-gameLauncherSingleGame v-if="launcherOnHomepage" :gameRoute="String(launcherOnHomepage)"></app-gameLauncherSingleGame>
   
     <div class="homepage-made-by">
-      Story Synth is made by <a href="https://randylubin.com">Randy Lubin</a> and he loves hearing about your games!
+      Story Synth is made and by <a href="https://randylubin.com">Randy Lubin</a> with the help of an awesome community!
     </div>
 
   </div>
