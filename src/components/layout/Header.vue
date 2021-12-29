@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="md" type="dark" variant="dark" fixed="top" v-if="!$route.params.roomID">
+  <b-navbar toggleable="md" type="dark" variant="dark" fixed="top" v-if="!$route.params.roomID" :class="{'shadow scrolledNavbar': scrollPosition > 100}">
     <b-navbar-brand href="/">Story Synth</b-navbar-brand>
     <b-navbar-toggle target="navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     </b-navbar-toggle>
@@ -20,5 +20,21 @@
 
 export default {
   name: 'app-header',
+  data () {
+    return {
+      scrollPosition: null
+    }
+  },
+  methods: {
+    updateScroll() {
+      this.scrollPosition = window.scrollY
+    }
+  },
+  mounted() {
+    window.addEventListener('scroll', this.updateScroll);
+  },
+  destroy() {
+    window.removeEventListener('scroll', this.updateScroll)
+  }
 }
 </script>

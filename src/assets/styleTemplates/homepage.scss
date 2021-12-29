@@ -81,7 +81,7 @@
     }
   }
 
-  .navbar {
+  .navbar:not(.scrolledNavbar) {
     background-color: transparent !important;
   }
   .navbar-brand,
@@ -92,6 +92,34 @@
 
     :hover {
       text-decoration: underline !important;
+    }
+  }
+
+  .navbar.scrolledNavbar {
+    background-color: $dark-blue !important;
+    animation: navbarFade 0.5s forwards;
+  }
+
+  @keyframes navbarFade {
+    0% {
+      background-color: transparent !important;
+    }
+
+    100% {
+      background-color: $dark-blue !important;
+    }
+  }
+
+  .scrolledNavbar {
+    .navbar-brand,
+    .nav-item,
+    .nav-link {
+      color: $light-blue !important;
+      font-family: "Poppins", sans-serif !important;
+
+      :hover {
+        text-decoration: underline !important;
+      }
     }
   }
 }
