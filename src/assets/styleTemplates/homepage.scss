@@ -81,6 +81,10 @@
     }
   }
 
+
+  .navbar {
+    transition: all 0.2s;
+  }
   .navbar:not(.scrolledNavbar) {
     background-color: transparent !important;
   }
@@ -97,18 +101,18 @@
 
   .navbar.scrolledNavbar {
     background-color: $dark-blue !important;
-    animation: navbarFade 0.5s forwards;
+    // animation: navbarFade 0.5s forwards;
   }
 
-  @keyframes navbarFade {
-    0% {
-      background-color: transparent !important;
-    }
+  // @keyframes navbarFade {
+  //   0% {
+  //     background-color: transparent !important;
+  //   }
 
-    100% {
-      background-color: $dark-blue !important;
-    }
-  }
+  //   100% {
+  //     background-color: $dark-blue !important;
+  //   }
+  // }
 
   .scrolledNavbar {
     .navbar-brand,
