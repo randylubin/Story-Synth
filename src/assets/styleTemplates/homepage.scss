@@ -37,11 +37,27 @@
     cursor: pointer;
     text-decoration: none;
 
-    &:hover {
+    &:hover:not(.button-light) {
       background-color: darken($dark-blue, 8%);
     }
     &:active {
       background-color: darken($dark-blue, 20%);
+    }
+  }
+
+  .button-light {
+    background: $light-blue;
+    font-weight: bold;
+    color: $dark-blue;
+    font-family: "Poppins", sans-serif;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover:enabled {
+      background-color: darken($light-blue, 8%);
+    }
+    &:active:enabled {
+      background-color: darken($light-blue, 20%);
     }
   }
 

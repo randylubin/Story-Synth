@@ -117,7 +117,7 @@
                   <button
                     :disabled="!gSheetID"
                     type="button"
-                    class="btn btn-dark btn-lg"
+                    class="btn btn-lg button-light"
                   >
                     Upload game
                   </button>
