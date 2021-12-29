@@ -248,10 +248,7 @@ export default {
   mounted(){
     let body = document.getElementById("app"); // document.body;
     body.classList.remove(body.classList[0]);
-    body.setAttribute("id","style-template-homepage");
-
-    let page = document.getElementsByClassName("non-footer-content")[0]; // document.body;
-    page.classList.remove(page.classList[1])
+    body.classList.add("style-template-homepage");
 
     document.dispatchEvent(new Event("x-app-rendered"));
   }

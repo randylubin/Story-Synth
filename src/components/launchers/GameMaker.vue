@@ -57,7 +57,7 @@
               </div>
               <div class="row mb-4">
                 <div class="col-sm">
-                  Game Format
+                  Select your game format
                   <b-form-select
                     v-model="gameType"
                     class="custom-select"

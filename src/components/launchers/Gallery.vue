@@ -209,7 +209,7 @@ export default {
     mounted(){
       let body = document.getElementById("app"); // document.body;
       body.classList.remove(body.classList[0]);
-      body.setAttribute("id","style-template-homepage");
+      body.classList.add("style-template-homepage");
 
       document.dispatchEvent(new Event("x-app-rendered"));
       if (location.hostname.toString() !== 'localhost'){

@@ -199,11 +199,14 @@
   }
 
   #app {
+    padding-top: 20px;
+  }
+
+  .app-main {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #000d1b;
-    padding-top: 20px;
     
     position: relative;
     min-height: 100vh;
@@ -264,7 +267,7 @@
     margin: 0 10px;
   }
 
-  #app .shadow {
+  .app-main .shadow {
     box-shadow:
       0 1px 1px hsl(0deg 0% 0% / 0.075),
       0 2px 2px hsl(0deg 0% 0% / 0.075),
