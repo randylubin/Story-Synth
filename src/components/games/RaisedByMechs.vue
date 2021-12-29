@@ -24,7 +24,101 @@
       </div>
 
 
-      <!-- PROTOTYPE Moved to top  -->
+
+
+      <div
+        v-if="
+          dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+        ></app-extensionManager>
+      </div>
+
+      <!-- <div class="row mb-4">
+        <transition name="fade">
+          <div class="btn-group col-sm" role="group" aria-label="Card Controls">
+            <button
+              class="btn btn-outline-dark"
+              v-on:click="previousCard()"
+              :disabled="
+                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
+              "
+            >
+              Previous Card
+            </button>
+            <button
+              class="btn btn-outline-primary"
+              v-on:click="nextCard()"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+              "
+            >
+              Next Card
+            </button>
+          </div>
+        </transition>
+      </div> -->
+
+
+      <!-- PROTOTYPE Fab buttons -->
+      <transition name="fade">
+        <div class="fab-buttons" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
+            <button
+              class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card"
+              v-on:click="previousCard()"
+              :disabled="
+                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
+              "
+            >
+              <!-- Previous Card -->
+              <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
+              <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+            </button>
+            <button
+              class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card"
+              v-on:click="nextCard()"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+              "
+            >
+              <!-- Next Card -->
+              <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
+              <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>              
+            </button>
+        </div>        
+      </transition>
+      <!-- END PROTOTYPE Fab buttons -->
+      
+
+      <div
+        class="row mb-4 game-meta"
+        v-if="
+          customOptions.instructionsProgressBar &&
+            roomInfo.currentCardIndex < firstNonInstruction &&
+            roomInfo.currentCardIndex != 0
+        "
+      >
+        <div class="col-sm">
+          <h2>Instructions</h2>
+          <b-progress
+            :value="roomInfo.currentCardIndex"
+            :max="firstNonInstruction - 1"
+            variant="dark"
+          ></b-progress>
+        </div>
+      </div>
+
+            <!-- PROTOTYPE Moved to top  -->
        <div class="btn-container" style>
         <div class="row mb-4">
           <div class="col-sm">
@@ -89,96 +183,6 @@
         </div>
       </div>
       <!-- END PROTOTYPE Moved to top  -->
-
-      <div
-        v-if="
-          dataReady &&
-            firebaseReady &&
-            roomInfo &&
-            Object.keys(roomInfo.extensionData).length > 1
-        "
-      >
-        <app-extensionManager
-          @sync-extension="syncExtension()"
-          :extensionData="roomInfo.extensionData"
-          :extensionList="tempExtensionData"
-          :roomInfo="roomInfo"
-        ></app-extensionManager>
-      </div>
-
-      <!-- <div class="row mb-4">
-        <transition name="fade">
-          <div class="btn-group col-sm" role="group" aria-label="Card Controls">
-            <button
-              class="btn btn-outline-dark"
-              v-on:click="previousCard()"
-              :disabled="
-                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
-              "
-            >
-              Previous Card
-            </button>
-            <button
-              class="btn btn-outline-primary"
-              v-on:click="nextCard()"
-              :disabled="
-                roomInfo.xCardIsActive ||
-                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
-              "
-            >
-              Next Card
-            </button>
-          </div>
-        </transition>
-      </div> -->
-
-
-      <!-- PROTOTYPE Fab buttons -->
-      <transition name="fade">
-        <div class="fab-buttons" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
-            <button
-              class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card"
-              v-on:click="previousCard()"
-              :disabled="
-                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
-              "
-            >
-              <!-- Previous Card -->
-              <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
-            </button>
-            <button
-              class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card"
-              v-on:click="nextCard()"
-              :disabled="
-                roomInfo.xCardIsActive ||
-                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
-              "
-            >
-              <!-- Next Card -->
-              <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>
-            </button>
-        </div>        
-      </transition>
-      <!-- END PROTOTYPE Fab buttons -->
-
-
-      <div
-        class="row mb-4 game-meta"
-        v-if="
-          customOptions.instructionsProgressBar &&
-            roomInfo.currentCardIndex < firstNonInstruction &&
-            roomInfo.currentCardIndex != 0
-        "
-      >
-        <div class="col-sm">
-          <h2>Instructions</h2>
-          <b-progress
-            :value="roomInfo.currentCardIndex"
-            :max="firstNonInstruction - 1"
-            variant="dark"
-          ></b-progress>
-        </div>
-      </div>
 
       <div
         v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]"
