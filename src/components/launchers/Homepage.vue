@@ -22,25 +22,25 @@
       <div class="homepage-about margin-between-sections">
         <div class="row margin-between-sections">
           <h3 class="col-sm mb-4">
-            Story Synth is a free web platform for making, playing, and sharing storytelling games with nothing but Google Sheets and your creativity!
+            Story Synth is a free web platform for making, playing, and sharing storytelling games. Just design in Google Sheets and publish here!
           </h3>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Easy to start</h3>
-            <div>Tons of templates, formats, and extensions for you to customize your game</div>
+            <div>Tons of templates, formats, and extensions to jump start your game design</div>
             <!-- Formats by Bart van der Griendt from NounProject.com https://thenounproject.com/icon/formats-687218/ -->
             <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform:scale(0.9);" src="/img/options.svg" alt="">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Design in Sheets</h3>
-            <div>Because it's powered by a Google Sheet, designing is easy and tweaking is effortless!</div>
+            <div>Because it's powered by a Google Sheet, designing is quick and iteration is instantaneous</div>
             <!-- icon by Becris https://thenounproject.com/icon/analysis-1018335/ -->
-            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform: translateY(1.5%);" src="/img/combine.svg" alt="">
+            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform: translateY(1.5%);" src="/img/sheet-to-synth.svg" alt="">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Multiplayer</h3>
-            <div>Game sessions have realtime multiplayer, perfect for online play</div>
+            <div>Game sessions have realtime multiplayer, perfect for online playtesting and publishing</div>
             <!-- icon by Iconathon https://thenounproject.com/icon/networking-2909312/-->
             <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
           </div>
