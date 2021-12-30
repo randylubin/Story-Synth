@@ -28,21 +28,21 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Easy to start</h3>
-            Tons of templates, formats, and extensions for you to customize your game
+            <div>Tons of templates, formats, and extensions for you to customize your game</div>
             <!-- Formats by Bart van der Griendt from NounProject.com https://thenounproject.com/icon/formats-687218/ -->
-            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px; transform:scale(0.9);" src="/img/options.svg" alt="">
+            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform:scale(0.9);" src="/img/options.svg" alt="">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Design in Sheets</h3>
-            Because it's powered by a Google Sheet, designing is easy and tweaking is effortless! 
+            <div>Because it's powered by a Google Sheet, designing is easy and tweaking is effortless!</div>
             <!-- icon by Becris https://thenounproject.com/icon/analysis-1018335/ -->
-            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px; transform: translateY(1.5%);" src="/img/combine.svg" alt="">
+            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform: translateY(1.5%);" src="/img/combine.svg" alt="">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Multiplayer</h3>
-            Game sessions have realtime multiplayer, perfect for online play
+            <div>Game sessions have realtime multiplayer, perfect for online play</div>
             <!-- icon by Iconathon https://thenounproject.com/icon/networking-2909312/-->
-            <img class="img img-fluid mt-auto m-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
+            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
           </div>
         </div>
       </div>
@@ -52,8 +52,8 @@
         <h2 class="text-center mb-4">Play an existing game</h2>
 
         <div class="row">
-          <div class="offset-lg-0 col-lg-12 col-md-4 mb-1">
-            <div class="card shadow mb-2">
+          <div class="offset-lg-0 col-lg-12 col-md-4 mb-2 d-flex flex-column">
+            <div class="card shadow h-100">
               <div class="row no-gutters">
                 <div class="col-lg-4">
                   <a href="/Games/Around-The-Realm">
@@ -73,8 +73,8 @@
             </div>
           </div>
         
-          <div class="offset-lg-0 col-lg-12 col-md-4 mb-1">
-            <div class="card shadow mb-2">
+          <div class="offset-lg-0 col-lg-12 col-md-4 mb-2">
+            <div class="card shadow h-100">
               <div class="row no-gutters">
                 <div class="col-lg-4">
                   <a href="/Games/Raised-By-Mechs/">
@@ -94,8 +94,8 @@
             </div>
           </div>
         
-          <div class="offset-lg-0 col-lg-12 col-md-4 mb-1">
-            <div class="card shadow mb-2">
+          <div class="offset-lg-0 col-lg-12 col-md-4 mb-2">
+            <div class="card shadow h-100">
               <div class="row no-gutters">
                 <div class="col-lg-4">
                   <a href="/Games/Umberdred-Institute/">

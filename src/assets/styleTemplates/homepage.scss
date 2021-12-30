@@ -43,6 +43,9 @@
     &:active {
       background-color: darken($dark-blue, 20%);
     }
+    &:disabled {
+      cursor: default;
+    }
   }
 
   .button-light {
@@ -80,7 +83,6 @@
       }
     }
   }
-
 
   .navbar {
     transition: all 0.2s;
