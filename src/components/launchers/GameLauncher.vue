@@ -2,8 +2,10 @@
   <div class="game-launcher">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
-    <div class="container">
-      <div class="card shadow mb-4" style="margin-top: 76px">
+    <div class="container" style="margin-top: 76px">
+      <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by a <a :href="customOptions.demoInfo" target="_blank">Google Sheet</a>, click to view the spreadsheet behind this game. Make a copy and start editing to design your own game!</b-alert>
+
+      <div class="card shadow mb-4">
         <div class="card-body text-center" v-if="!dataReady && !error">
           <h1 class="m-5">Loading game...</h1>
           <b-spinner
