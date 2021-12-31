@@ -3,7 +3,7 @@
     <div class="container">
       <div class="homepage-header row padding-after-navbar mb-4">
         <div class="col-sm text-center">
-          <h1 class='display-4'>Story Synth</h1>
+          <h1><img src="/img/story-synth-logotype.svg" alt="Story Synth Logo"></h1>
           <h2>Make, play, and share storytelling games</h2>
         </div>
       </div>
