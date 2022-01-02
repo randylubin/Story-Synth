@@ -1,6 +1,16 @@
 <template>
   <div class="roomLink-section">
     <div class="room-link flex-row d-flex" v-if="$route.params.roomID">
+      <transition name="bounce" mode="out-in">
+        <div
+          v-if="roomInfo"
+          :key="Object.keys(roomInfo).length"
+          class="pt-2 px-2 game-meta"
+        >
+          {{ Object.keys(roomInfo).length }} 👀
+        </div>
+      </transition>
+
       <button
         class="btn btn-secondary ml-auto"
         @click="$bvToast.show('copyToast')"
@@ -20,15 +30,6 @@
       </b-toast>
 
 
-      <transition name="bounce" mode="out-in">
-        <div
-          v-if="roomInfo"
-          :key="Object.keys(roomInfo).length"
-          class="pt-2 pl-2 game-meta"
-        >
-          {{ Object.keys(roomInfo).length }} 👀
-        </div>
-      </transition>
 
     </div>
     </div>
@@ -51,6 +52,7 @@ export default {
       gSheetID: null,
       currentUrl: location.hostname.toString() + "/" + this.$route.fullPath,
       roomInfo: {},
+      context: null,
     };
   },
   firebase: {
@@ -122,14 +124,15 @@ export default {
           "https://" + location.hostname.toString() + this.$route.fullPath;
       } else {
         this.currentUrl = "https://" + location.hostname.toString() + '/' + this.$route.params.gameType + '/' + this.$route.params.gSheetID + '/' + this.$route.params.roomID + '/player/'
-        console.log('current URL is now', this.$route.params.userRole, this.currentUrl)
       }
+      console.log('current URL is now', this.$route.params.userRole, this.currentUrl)
     },
     copyTextToClipboard() {
-      var copyText = document.getElementById("urlForCopying");
-      copyText.select();
-      copyText.setSelectionRange(0, 99999);
-      document.execCommand("copy");
+      navigator.clipboard.writeText(this.currentUrl).then(function() {
+        console.log('copied url')
+      }, function() {
+        console.log('copy failed')
+      });
     },
   },
 };

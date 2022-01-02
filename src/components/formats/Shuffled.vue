@@ -15,7 +15,12 @@
         hide-footer
       >
         <div class="row menu-row">
-          <app-roomLink class="" :routeRoomID="$route.params.roomID"></app-roomLink>
+          <b-button
+          v-on:click="copyLinkToClipboard()"
+          @click="$bvToast.show('copyToast')"
+          >
+            <b-icon-link45deg></b-icon-link45deg> Copy URL 
+          </b-button>
         </div>
         <div class="row menu-row">
           <b-button
@@ -882,6 +887,15 @@ export default {
       roomsCollection.doc(this.roomID).update({
         extensionData: this.roomInfo.extensionData,
       });
+    },
+    copyLinkToClipboard(){
+      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      navigator.clipboard.writeText(currentUrl).then(function() {
+        console.log('copied url')
+      }, function() {
+        console.log('copy failed')
+      });
+      this.$bvModal.hide("menuModal");
     },
     fetchAndCleanSheetData(sheetID) {
       // Remove for published version
