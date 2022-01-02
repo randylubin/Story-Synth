@@ -3,7 +3,7 @@
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
     <b-alert show class="" variant="danger" v-if="firebaseCacheError">Warning: the length of the deck has changed since this room was first created. Click Restart to resync card data.</b-alert>
-    <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by a <a :href="customOptions.demoInfo" target="_blank">Google Sheet</a>, click to view the spreadsheet behind this game. Make a copy and start editing to design your own game!</b-alert>
+    <b-alert show class="text-left" variant="info" v-if="customOptions.demoInfo">This demo is powered by a <a :href="customOptions.demoInfo" target="_blank">Google Sheet</a>, click to view the spreadsheet behind this game. Make a copy and start editing to design your own game!</b-alert>
     <div class="" v-if="roomInfo">
       <div class="before-game-card">
         <div
