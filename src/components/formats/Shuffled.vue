@@ -6,6 +6,7 @@
     <!-- Menu Bar -->
     <div class="menu-bar mb-4 d-flex">
       <button class="btn btn-dark mr-auto" v-b-modal.menuModal><b-icon-list></b-icon-list> Menu</button>
+      <div v-if="customOptions.gameTitle" class="mx-auto text-center">{{customOptions.gameTitle}}</div>
       <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
       
       <b-modal
@@ -97,10 +98,10 @@
     </div>
 
     <b-alert show class="" variant="danger" v-if="firebaseCacheError">Warning: the length of the deck has changed since this room was first created. Click Restart to resync card data.</b-alert>
-    <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by a <a :href="customOptions.demoInfo" target="_blank">Google Sheet</a>, click to view the spreadsheet behind this game. Make a copy and start editing to design your own game!</b-alert>
+    <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy they sheet and start editing it to design your own game!</b-alert>
     <div class="" v-if="roomInfo">
       <div class="before-game-card">
-        <div
+        <!-- <div
           class="mb-4 game-meta d-none d-sm-block"
           v-if="
             !customOptions.hideTitleInSession &&
@@ -118,7 +119,7 @@
               <h4 class="game-byline">{{ customOptions.byline }}</h4>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- TODO: Facilitator Notes
         <div class="facilitator-panel" v-if="userRole == 'facilitator' && customOptions.facilitatorMode">
@@ -199,24 +200,6 @@
       </transition>
       <!-- END PROTOTYPE Fab buttons -->
 
-        <div
-          class="row mb-4 game-meta"
-          v-if="
-            customOptions.instructionsProgressBar &&
-              roomInfo.currentCardIndex < firstNonInstruction &&
-              roomInfo.currentCardIndex != 0
-          "
-        >
-          <div class="col-sm">
-            <h2>Instructions</h2>
-            <b-progress
-              :value="roomInfo.currentCardIndex"
-              :max="firstNonInstruction - 1"
-              variant="dark"
-            ></b-progress>
-          </div>
-        </div>
-
         <div class="row mb-3 game-meta card-counter" v-if="customOptions.displayCardCount && customOptions.displayCardCount - 1 <= roomInfo.currentCardIndex && roomInfo.currentCardIndex < roomInfo.locationOfLastCard">
           <div class="col-sm">
             <h2><span v-if="customOptions.displayCardCountLabel">{{customOptions.displayCardCountLabel}}</span><span v-else>Cards seen:</span> {{roomInfo.currentCardIndex - customOptions.displayCardCount + 1}}</h2>
@@ -278,6 +261,24 @@
               <div>Google Sheet ready: {{dataReady}}</div>
               <div>Firebase ready: {{firebaseReady}}</div>
               <div>Error: {{error}}</div>
+            </div>
+          </div>
+
+          <div
+            class="row mt-4 mx-4 game-meta"
+            v-if="
+              customOptions.instructionsProgressBar &&
+                roomInfo.currentCardIndex < firstNonInstruction &&
+                roomInfo.currentCardIndex != 0
+            "
+          >
+            <div class="col-sm">
+              <h3>Instructions</h3>
+              <b-progress
+                :value="roomInfo.currentCardIndex"
+                :max="firstNonInstruction - 1"
+                variant="dark"
+              ></b-progress>
             </div>
           </div>
 
