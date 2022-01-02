@@ -132,7 +132,7 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <p>Copy one of these templates and use it as a base for your game</p>
+            <p>Story Synth has many formats and templates. Check out these demos and copy a template to it as the basis for your game</p>
           </div>
         </div>
 
