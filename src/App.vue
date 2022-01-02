@@ -41,7 +41,7 @@
         </div>
       </div>
       
-      <app-footer v-if="$route.params.roomID"></app-footer>
+      <!-- <app-footer v-if="$route.params.roomID"></app-footer> -->
     </div>
   </div>
 </template>
@@ -51,7 +51,7 @@
 
   // Remove for published version any components you aren't using
   import Header from './components/layout/Header.vue'
-  import Footer from './components/layout/Footer.vue'
+  // import Footer from './components/layout/Footer.vue'
 
   import Homepage from './components/launchers/Homepage.vue'
   import Gallery from './components/launchers/Gallery.vue'
@@ -75,7 +75,7 @@
     name: 'app',
     components: { // Remove unused components from the published version
       'app-header': Header,
-      'app-footer': Footer,
+      // 'app-footer': Footer,
       'app-homepage': Homepage,
       'app-gallery': Gallery,
       'app-gameLauncher': GameLauncher,

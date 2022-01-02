@@ -78,7 +78,7 @@
             right
           >Last Card</b-button>
         </div>
-        <div class="row menu-">
+        <div class="row menu-row">
           <b-collapse
             id="last-card-menu"
           >
@@ -98,6 +98,9 @@
               >
             </div>
           </b-collapse>
+        </div>
+        <div class="row menu-row">
+          <a href="https://storysynth.org">Powered by Story Synth</a>
         </div>
       </b-modal>
     </div>
