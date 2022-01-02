@@ -73,7 +73,7 @@
       <transition name="fade">
         <div class="fab-buttons" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
             <button
-              class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card"
+              class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
               v-on:click="previousCard()"
               :disabled="
                 roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
@@ -84,7 +84,7 @@
               <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
             </button>
             <button
-              class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card"
+              class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow"
               v-on:click="nextCard()"
               :disabled="
                 roomInfo.xCardIsActive ||
@@ -138,7 +138,7 @@
                     ? customOptions.safetyCardButton
                     : 'X-Card'
                 "
-                >X-Card</b-button
+                ></b-button
               >
               <b-button
                 variant="outline-dark"
@@ -154,7 +154,6 @@
                     : 'Next Deck'
                 "
               >
-                Next Deck
               </b-button>
               <b-dropdown
                 variant="outline-dark"

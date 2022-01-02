@@ -7,8 +7,6 @@
       
       <div class="non-footer-content">
         
-        <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
-        
         <div v-if="$route.fullPath == '/'">
           <app-homepage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-homepage>
         </div>
@@ -53,7 +51,6 @@
 
   // Remove for published version any components you aren't using
   import Header from './components/layout/Header.vue'
-  import RoomLink from './components/layout/RoomLink.vue'
   import Footer from './components/layout/Footer.vue'
 
   import Homepage from './components/launchers/Homepage.vue'
@@ -78,7 +75,6 @@
     name: 'app',
     components: { // Remove unused components from the published version
       'app-header': Header,
-      'app-roomLink': RoomLink,
       'app-footer': Footer,
       'app-homepage': Homepage,
       'app-gallery': Gallery,

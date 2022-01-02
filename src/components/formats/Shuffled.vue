@@ -2,6 +2,100 @@
   <div class="shuffled game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar mb-4 d-flex">
+      <button class="btn btn-dark mr-auto" v-b-modal.menuModal><b-icon-list></b-icon-list> Menu</button>
+      <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
+      
+      <b-modal
+        id="menuModal"
+        title="Menu"
+        hide-footer
+      >
+        <div class="row menu-row">
+          <app-roomLink class="" :routeRoomID="$route.params.roomID"></app-roomLink>
+        </div>
+        <div class="row menu-row">
+          <b-button
+            v-b-modal.reshuffleConfirm
+            class="control-button-restart"
+            variant="outline-dark"
+            :disabled="roomInfo.xCardIsActive"
+            v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+            color="rgb(187, 138, 200)"
+            >Restart</b-button
+          >
+        </div>
+        <div class="row menu-row">
+          <b-button
+            variant="outline-dark"
+            class="control-button-safety-card"
+            v-on:click="xCard();"
+            v-html="
+              customOptions.safetyCardButton
+                ? customOptions.safetyCardButton
+                : 'X-Card'
+            "
+            ></b-button>
+        </div>
+        <div class="row menu-row">
+          <b-button
+            v-b-modal.modalNextDeckConfirm
+            variant="outline-dark"
+            class="control-button-next-deck"
+            
+            v-if="this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator')"
+            :disabled="
+              roomInfo.xCardIsActive ||
+                roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+            "
+            v-html="
+              customOptions.showNextDeckButton
+                ? customOptions.showNextDeckButton
+                : 'Next Deck'
+            "
+          ></b-button>
+        </div>
+        <div class="row menu-row">
+          <b-button
+            variant="outline-dark"
+            v-b-toggle.last-card-menu
+            class="control-button-last-card"
+            v-bind:text="customOptions.lastCardLabel ? customOptions.lastCardLabel : 'Last Card'"
+            :disabled="
+              roomInfo.xCardIsActive ||
+                roomInfo.currentCardIndex == gSheet.length - 1 ||
+                roomInfo.currentCardIndex == roomInfo.locationOfLastCard
+            "
+            v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)"
+            right
+          >Last Card</b-button>
+        </div>
+        <div class="row menu-">
+          <b-collapse
+            id="last-card-menu"
+          >
+            <div class="row last-card-menu-row">
+              <b-button v-on:click="lastCard()"
+                >Go to {{customOptions.lastCardLabel}}</b-button
+              >
+            </div>
+            <div class="row last-card-menu-row">
+              <b-button v-on:click="shuffleLastCard('center')"
+                >Shuffle near middle</b-button
+              >
+            </div>
+            <div class="row last-card-menu-row">
+              <b-button v-on:click="shuffleLastCard('end')"
+                >Shuffle near end</b-button
+              >
+            </div>
+          </b-collapse>
+        </div>
+      </b-modal>
+    </div>
+
     <b-alert show class="" variant="danger" v-if="firebaseCacheError">Warning: the length of the deck has changed since this room was first created. Click Restart to resync card data.</b-alert>
     <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by a <a :href="customOptions.demoInfo" target="_blank">Google Sheet</a>, click to view the spreadsheet behind this game. Make a copy and start editing to design your own game!</b-alert>
     <div class="" v-if="roomInfo">
@@ -50,7 +144,7 @@
           ></app-extensionManager>
         </div>
 
-        <div class="row card-navigation-buttons card-nav-above mb-4" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
+        <!-- <div class="row card-navigation-buttons card-nav-above mb-4" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
           <transition name="fade">
             <div class="btn-group col-sm" role="group" aria-label="Card Controls">
               <button
@@ -74,7 +168,36 @@
               </button>
             </div>
           </transition>
-        </div>
+        </div> -->
+
+        <transition name="fade">
+        <div class="fab-buttons" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
+            <button
+              class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
+              v-on:click="previousCard()"
+              :disabled="
+                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
+              "
+            >
+              <!-- Previous Card -->
+              <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
+              <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+            </button>
+            <button
+              class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow"
+              v-on:click="nextCard()"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+              "
+            >
+              <!-- Next Card -->
+              <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
+              <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>              
+            </button>
+        </div>        
+      </transition>
+      <!-- END PROTOTYPE Fab buttons -->
 
         <div
           class="row mb-4 game-meta"
@@ -253,7 +376,7 @@
 
 
       <div class="after-game-card">
-        <b-button-toolbar class="justify-content-between lower-buttons" v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
+        <!-- <b-button-toolbar class="justify-content-between lower-buttons" v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
           <b-button-group class="game-meta-buttons" aria-role="Deck control" v-bind:class="{'d-flex w-100': !customOptions.lowerCardNavOnMobile}">
             <b-button
               v-b-modal.reshuffleConfirm
@@ -335,7 +458,7 @@
               &rsaquo;
             </b-button>
           </b-button-group>
-        </b-button-toolbar>
+        </b-button-toolbar> -->
         
         <div
           v-if="
@@ -444,11 +567,13 @@
 import { roomsCollection } from "../../firebase";
 import axios from "axios";
 import ExtensionManager from "../extensions/ExtensionManager.vue";
+import RoomLink from '../layout/RoomLink.vue';
 
 export default {
   name: "app-shuffled",
   components: {
     "app-extensionManager": ExtensionManager,
+    'app-roomLink': RoomLink,
   },
   props: {
     roomID: String,
@@ -616,6 +741,7 @@ export default {
       roomsCollection.doc(this.roomID).update({
         xCardIsActive: !this.roomInfo.xCardIsActive,
       });
+      this.$bvModal.hide("menuModal");
     },
     nextDeck() {
       this.$bvModal.hide("modalNextDeckConfirm")	
@@ -695,7 +821,8 @@ export default {
     shuffleAndResetGame() {
       console.log("shuffling");
       this.firebaseCacheError = false;
-      this.$bvModal.hide("reshuffleConfirm")	
+      this.$bvModal.hide("reshuffleConfirm")
+      this.$bvModal.hide("menuModal")	
 
       // reset card count
       roomsCollection.doc(this.roomID).update({
@@ -916,7 +1043,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
-<style scoped>
+<style lang="scss" scoped>
 .shuffled {
   margin: auto;
   padding-top: 1em;
@@ -963,4 +1090,54 @@ export default {
   margin: 0;
   z-index: -1;
 }
+
+.btn-fab svg {
+  transition: transform 0.2s;
+}
+.btn-fab:hover svg {
+  transform: scale(1.1);
+}
+@media (max-width: 576px) {
+  .fab-buttons {
+    position: fixed;
+    width: 100%;
+    z-index: 100000;
+    bottom: 60px;
+  }
+  .btn-fab {
+    --fab-diameter: 90px;  
+    border-radius: var(--fab-diameter); 
+    width: var(--fab-diameter); 
+    height: var(--fab-diameter); 
+    
+    &.btn-fab-left {
+    }
+    &.btn-fab-right {
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  }
+}
+@media (min-width: 576px) {
+  .fab-buttons {
+    position: relative;
+    width: 100%;
+  }
+  .btn-fab {
+    --fab-diameter: 90px;  
+    border-radius: var(--fab-diameter); 
+    width: var(--fab-diameter); 
+    height: var(--fab-diameter); 
+    margin-top: 120px;
+    position: absolute;
+    
+    &.btn-fab-left {
+      left: calc(-20px - var(--fab-diameter));
+    }
+    &.btn-fab-right {
+      right: calc(-20px - var(--fab-diameter));
+    }
+  }
+}
+
 </style>

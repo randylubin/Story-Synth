@@ -1,55 +1,37 @@
 <template>
   <div class="roomLink-section">
-    <div class="container room-link" v-if="$route.params.roomID">
-      <div class="row mb-4">
-        <div class="col">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <button
-                class="btn btn-dark"
-                @click="$bvToast.show('copyToast')"
-                v-on:click="copyTextToClipboard()"
-                type="button"
-              >
-                🔗
-              </button>
-            </div>
-            <input
-              style="cursor: pointer"
-              @click="$bvToast.show('copyToast')"
-              v-on:click="copyTextToClipboard()"
-              id="urlForCopying"
-              type="text"
-              class="form-control"
-              :value="currentUrl"
-              title="the page url, readonly"
-              readonly="readonly"
-            />
+    <div class="room-link flex-row d-flex" v-if="$route.params.roomID">
+      <button
+        class="btn btn-secondary ml-auto"
+        @click="$bvToast.show('copyToast')"
+        v-on:click="copyTextToClipboard()"
+        type="button"
+      >
+        <b-icon-link45deg></b-icon-link45deg> Copy URL
+      </button>
 
-            <b-toast
-              variant="success"
-              id="copyToast"
-              auto-hide-delay="1000"
-              no-close-button
-            >
-              Link copied to clipboard
-            </b-toast>
-          </div>
+      <b-toast
+        variant="success"
+        id="copyToast"
+        auto-hide-delay="1000"
+        no-close-button
+      >
+        Link copied to clipboard
+      </b-toast>
+
+
+      <transition name="bounce" mode="out-in">
+        <div
+          v-if="roomInfo"
+          :key="Object.keys(roomInfo).length"
+          class="pt-2 pl-2 game-meta"
+        >
+          {{ Object.keys(roomInfo).length }} 👀
         </div>
-        <div class="col-3">
-          <transition name="bounce" mode="out-in">
-            <p
-              v-if="roomInfo"
-              :key="Object.keys(roomInfo).length"
-              class="pt-2 game-meta"
-            >
-              {{ Object.keys(roomInfo).length }} 👀
-            </p>
-          </transition>
-        </div>
-      </div>
+      </transition>
+
     </div>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -155,8 +137,7 @@ export default {
 
 <style scoped>
 .room-link {
-  text-align: center;
-  max-width:600px;
+
 }
 
 .bounce-enter-active {
