@@ -1102,9 +1102,17 @@ export default {
 .btn-fab svg {
   transition: transform 0.2s;
 }
-.btn-fab:hover svg {
+.btn-fab:hover:not([disabled="disabled"]) svg {
   transform: scale(1.1);
 }
+.btn-fab[disabled="disabled"] {
+  background: white;
+
+  svg{
+    color: var(--secondary);
+  }
+}
+
 @media (max-width: 576px) {
   .fab-buttons {
     position: fixed;
