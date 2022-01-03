@@ -23,9 +23,6 @@
         </div>
       </div>
 
-
-
-
       <div
         v-if="
           dataReady &&
@@ -42,7 +39,7 @@
         ></app-extensionManager>
       </div>
 
-      <!-- <div class="row mb-4">
+      <div class="row mb-4">
         <transition name="fade">
           <div class="btn-group col-sm" role="group" aria-label="Card Controls">
             <button
@@ -66,39 +63,7 @@
             </button>
           </div>
         </transition>
-      </div> -->
-
-
-      <!-- PROTOTYPE Fab buttons -->
-      <transition name="fade">
-        <div class="fab-buttons" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
-            <button
-              class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
-              v-on:click="previousCard()"
-              :disabled="
-                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
-              "
-            >
-              <!-- Previous Card -->
-              <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
-              <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
-            </button>
-            <button
-              class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow"
-              v-on:click="nextCard()"
-              :disabled="
-                roomInfo.xCardIsActive ||
-                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
-              "
-            >
-              <!-- Next Card -->
-              <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
-              <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>              
-            </button>
-        </div>        
-      </transition>
-      <!-- END PROTOTYPE Fab buttons -->
-      
+      </div>
 
       <div
         class="row mb-4 game-meta"
@@ -117,71 +82,6 @@
           ></b-progress>
         </div>
       </div>
-
-            <!-- PROTOTYPE Moved to top  -->
-       <div class="btn-container" style>
-        <div class="row mb-4">
-          <div class="col-sm">
-            <b-button-group aria-role="Deck control" class="d-flex w-100">
-              <b-button
-                variant="outline-dark"
-                :disabled="roomInfo.xCardIsActive"
-                v-on:click="shuffleAndResetGame()"
-                color="rgb(187, 138, 200)"
-                >Re-shuffle</b-button
-              >
-              <b-button
-                variant="outline-dark"
-                v-on:click="xCard()"
-                v-html="
-                  customOptions.safetyCardButton
-                    ? customOptions.safetyCardButton
-                    : 'X-Card'
-                "
-                ></b-button
-              >
-              <b-button
-                variant="outline-dark"
-                v-on:click="nextDeck()"
-                v-if="this.customOptions.showNextDeckButton"
-                :disabled="
-                  roomInfo.xCardIsActive ||
-                    roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
-                "
-                v-html="
-                  customOptions.showNextDeckButton
-                    ? customOptions.showNextDeckButton
-                    : 'Next Deck'
-                "
-              >
-              </b-button>
-              <b-dropdown
-                variant="outline-dark"
-                id="dropdown-1"
-                v-bind:text="customOptions.lastCardLabel"
-                :disabled="
-                  roomInfo.xCardIsActive ||
-                    roomInfo.currentCardIndex == gSheet.length - 1 ||
-                    roomInfo.currentCardIndex == roomInfo.locationOfLastCard
-                "
-                v-if="!this.customOptions.showNextDeckButton"
-                right
-              >
-                <b-dropdown-item v-on:click="lastCard()"
-                  >Go to {{customOptions.lastCardLabel}}</b-dropdown-item
-                >
-                <b-dropdown-item v-on:click="shuffleLastCard('center')"
-                  >Shuffle near middle</b-dropdown-item
-                >
-                <b-dropdown-item v-on:click="shuffleLastCard('end')"
-                  >Shuffle near end</b-dropdown-item
-                >
-              </b-dropdown>
-            </b-button-group>
-          </div>
-        </div>
-      </div>
-      <!-- END PROTOTYPE Moved to top  -->
 
       <div
         v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]"
@@ -310,7 +210,7 @@
 
 
 
-      <!-- <div class="btn-container" style>
+      <div class="btn-container" style>
         <div class="row mb-4">
           <div class="col-sm">
             <b-button-group aria-role="Deck control" class="d-flex w-100">
@@ -329,7 +229,7 @@
                     ? customOptions.safetyCardButton
                     : 'X-Card'
                 "
-                >X-Card</b-button
+                ></b-button
               >
               <b-button
                 variant="outline-dark"
@@ -345,7 +245,7 @@
                     : 'Next Deck'
                 "
               >
-                Next Deck
+                
               </b-button>
               <b-dropdown
                 variant="outline-dark"
@@ -372,7 +272,7 @@
             </b-button-group>
           </div>
         </div>
-      </div> -->
+      </div>
       
 
       <div class="row">
@@ -798,7 +698,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
-<style lang="scss" scoped>
+<style scoped>
 .shuffled {
   margin: auto;
   padding-top: 1em;
@@ -845,56 +745,4 @@ export default {
   margin: 0;
   z-index: -1;
 }
-
-
-.btn-fab svg {
-  transition: transform 0.2s;
-}
-.btn-fab:hover svg {
-  transform: scale(1.1);
-}
-@media (max-width: 576px) {
-  .fab-buttons {
-    position: fixed;
-    width: 100%;
-    z-index: 100000;
-    bottom: 60px;
-  }
-  .btn-fab {
-    --fab-diameter: 90px;  
-    border-radius: var(--fab-diameter); 
-    width: var(--fab-diameter); 
-    height: var(--fab-diameter); 
-    
-    &.btn-fab-left {
-    }
-    &.btn-fab-right {
-      margin-left: 20px;
-      margin-right: 20px;
-    }
-  }
-}
-@media (min-width: 576px) {
-  .fab-buttons {
-    position: relative;
-    width: 100%;
-  }
-  .btn-fab {
-    --fab-diameter: 90px;  
-    border-radius: var(--fab-diameter); 
-    width: var(--fab-diameter); 
-    height: var(--fab-diameter); 
-    margin-top: 120px;
-    position: absolute;
-    
-    &.btn-fab-left {
-      left: calc(-20px - var(--fab-diameter));
-    }
-    &.btn-fab-right {
-      right: calc(-20px - var(--fab-diameter));
-    }
-  }
-}
-
-
 </style>
