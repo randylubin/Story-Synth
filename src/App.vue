@@ -291,4 +291,72 @@
     border-radius: 0;
   }
 
+.btn-fab {
+  border-width: 0;
+}
+.btn-fab:not(:hover) {
+  background: white;
+}
+.btn-fab svg {
+  transition: transform 0.2s;
+}
+.btn-fab:hover:not([disabled="disabled"]) svg {
+  transform: scale(1.1);
+}
+.btn-fab[disabled="disabled"] {
+  background: white;
+
+  svg{
+    color: var(--secondary);
+  }
+}
+
+@media (max-width: 800px) {
+  .fab-buttons {
+    position: fixed;
+    width: calc(100vw - 30px);
+    z-index: 100000;
+    bottom: 48px;
+  }
+  .btn-fab {
+    --fab-diameter: 90px;  
+    --fab-spacing: 28px;  
+    border-radius: var(--fab-diameter); 
+    width: var(--fab-diameter); 
+    height: var(--fab-diameter); 
+    
+    &.btn-fab-left {
+    }
+    &.btn-fab-right {
+      margin-left: var(--fab-spacing);
+    }
+  }
+}
+@media (min-width: 800px) {
+  .fab-buttons {
+    position: relative;
+    width: 100%;
+  }
+  .btn-fab {
+    --fab-diameter: 90px;  
+    border-radius: var(--fab-diameter); 
+    width: var(--fab-diameter); 
+    height: var(--fab-diameter); 
+    margin-top: 120px;
+    position: absolute;
+    
+    &.btn-fab-left {
+      left: calc(-20px - var(--fab-diameter));
+    }
+    &.btn-fab-right {
+      right: calc(-20px - var(--fab-diameter));
+    }
+  }
+}
+
+.menu-row {
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
 </style>

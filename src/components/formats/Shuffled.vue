@@ -49,7 +49,7 @@
           </div>
           <div class="row menu-row">
             <b-button
-              v-b-modal.modalNextDeckConfirm
+              v-on:click="nextDeck()"
               variant="outline-dark"
               class="control-button-next-deck btn-lg btn-block"
               
@@ -65,25 +65,28 @@
               "
             ></b-button>
           </div>
-          <hr class='mb-4'/>
-          <h6 class='text-center'>{{customOptions.lastCardLabel}} Options</h6>
-          <div class="row menu-row">
+          <div v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)"
+>
+            <hr class='mb-4'/>
+            <h6 class='text-center'>{{customOptions.lastCardLabel}} Options</h6>
+            <div class="row menu-row">
 
-            <b-button class="btn-block" v-on:click="lastCard()">
-              Go to {{customOptions.lastCardLabel}}
-            </b-button>
-            
-            <b-button class="btn-block" v-on:click="shuffleLastCard('center')">
-              Shuffle near middle
-            </b-button>
-            
-            <b-button class="btn-block" v-on:click="shuffleLastCard('end')">
-              Shuffle near end
-            </b-button>
-                
-          </div>
-          <div class="row menu-row mt-4">
-            <a href="https://storysynth.org">Powered by Story Synth</a>
+              <b-button class="btn-block" v-on:click="lastCard()">
+                Go to {{customOptions.lastCardLabel}}
+              </b-button>
+              
+              <b-button class="btn-block" v-on:click="shuffleLastCard('center')">
+                Shuffle near middle
+              </b-button>
+              
+              <b-button class="btn-block" v-on:click="shuffleLastCard('end')">
+                Shuffle near end
+              </b-button>
+                  
+            </div>
+            <div class="row menu-row mt-4">
+              <a href="https://storysynth.org">Powered by Story Synth</a>
+            </div>
           </div>
         </b-container>
       </b-modal>
@@ -739,7 +742,8 @@ export default {
       this.$bvModal.hide("menuModal");
     },
     nextDeck() {
-      this.$bvModal.hide("modalNextDeckConfirm")	
+      this.$bvModal.hide("modalNextDeckConfirm")
+      this.$bvModal.hide("menuModal");	
       let newCardIndex = this.roomInfo.currentCardIndex;
       let chapterIndexTracker = this.orderedCards.length;
       console.log("current:", newCardIndex);
@@ -1093,74 +1097,6 @@ export default {
   right: 0;
   margin: 0;
   z-index: -1;
-}
-
-.btn-fab {
-  border-width: 0;
-}
-.btn-fab:not(:hover) {
-  background: white;
-}
-.btn-fab svg {
-  transition: transform 0.2s;
-}
-.btn-fab:hover:not([disabled="disabled"]) svg {
-  transform: scale(1.1);
-}
-.btn-fab[disabled="disabled"] {
-  background: white;
-
-  svg{
-    color: var(--secondary);
-  }
-}
-
-@media (max-width: 800px) {
-  .fab-buttons {
-    position: fixed;
-    width: calc(100vw - 30px);
-    z-index: 100000;
-    bottom: 48px;
-  }
-  .btn-fab {
-    --fab-diameter: 90px;  
-    --fab-spacing: 28px;  
-    border-radius: var(--fab-diameter); 
-    width: var(--fab-diameter); 
-    height: var(--fab-diameter); 
-    
-    &.btn-fab-left {
-    }
-    &.btn-fab-right {
-      margin-left: var(--fab-spacing);
-    }
-  }
-}
-@media (min-width: 800px) {
-  .fab-buttons {
-    position: relative;
-    width: 100%;
-  }
-  .btn-fab {
-    --fab-diameter: 90px;  
-    border-radius: var(--fab-diameter); 
-    width: var(--fab-diameter); 
-    height: var(--fab-diameter); 
-    margin-top: 120px;
-    position: absolute;
-    
-    &.btn-fab-left {
-      left: calc(-20px - var(--fab-diameter));
-    }
-    &.btn-fab-right {
-      right: calc(-20px - var(--fab-diameter));
-    }
-  }
-}
-
-.menu-row {
-  justify-content: center;
-  margin-bottom: 10px;
 }
 
 </style>
