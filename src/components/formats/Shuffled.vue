@@ -164,7 +164,7 @@
         </div> -->
 
         <transition name="fade">
-        <div class="fab-buttons" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
+        <div class="fab-buttons container" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
             <button
               class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
               v-on:click="previousCard()"
@@ -1113,7 +1113,7 @@ export default {
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 800px) {
   .fab-buttons {
     position: fixed;
     width: calc(100vw - 30px);
@@ -1134,7 +1134,7 @@ export default {
     }
   }
 }
-@media (min-width: 576px) {
+@media (min-width: 800px) {
   .fab-buttons {
     position: relative;
     width: 100%;
