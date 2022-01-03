@@ -12,7 +12,7 @@
       </transition>
 
       <button
-        class="btn btn-secondary ml-auto"
+        class="btn btn-outline-dark ml-auto border-0"
         @click="$bvToast.show('copyToast')"
         v-on:click="copyTextToClipboard()"
         type="button"

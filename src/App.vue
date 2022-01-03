@@ -178,9 +178,10 @@
     height: 100%;
   }
 
-  .btn-outline-dark:not(:hover), .btn-outline-primary:not(:hover) {
-    background-color:white;
-  }
+  // PROBABLY ADDED BY RAPH
+  // .btn-outline-dark:not(:hover), .btn-outline-primary:not(:hover) {
+    // background-color:white;
+  // }
 
   .message{
     font-size: 2em;
@@ -273,7 +274,7 @@
   }
 
   .non-footer-content {
-    padding-bottom: 3rem;
+    padding-bottom: 8.5rem;
   }
 
   // Utility classes  
