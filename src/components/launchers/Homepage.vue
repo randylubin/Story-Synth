@@ -132,12 +132,12 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <p>Copy one of these templates and use it as a base for your game</p>
+            <p>Story Synth has many formats and templates. Check out these demos and copy a template to it as the basis for your game</p>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-4 mb-2">
             <div class="card">
               <img src="/img/shuffled-thumbnail.png" alt="a thumbnail of the shuffled format" class="card-img-top">
               <div class="card-body">
@@ -146,7 +146,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 mb-2">
             <div class="card">
               <img src="/img/generator-thumbnail.png" alt="a thumbnail of the generator format" class="card-img-top">
               <div class="card-body">
@@ -155,7 +155,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4 mb-2">
             <div class="card">
               <img src="/img/hexflower-thumbnail.png" alt="a thumbnail of the hexflower format" class="card-img-top">
               <div class="card-body">
