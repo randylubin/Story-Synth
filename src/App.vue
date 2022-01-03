@@ -178,10 +178,13 @@
     height: 100%;
   }
 
-  // PROBABLY ADDED BY RAPH
-  // .btn-outline-dark:not(:hover), .btn-outline-primary:not(:hover) {
-    // background-color:white;
-  // }
+  .btn-outline-dark:not(:hover), .btn-outline-primary:not(:hover) {
+    background-color:white;
+  }
+
+  .menu-bar .btn-outline-dark:not(:hover), .menu-bar .btn-outline-primary:not(:hover) {
+    background-color: transparent;
+  }
 
   .message{
     font-size: 2em;

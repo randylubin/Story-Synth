@@ -18,7 +18,7 @@
           <div class="row menu-row">
             <b-button
               class="border-0 btn-lg btn-block"
-              v-on:click="copyLinkToClipboard()"
+              v-on:click="copyLinkToClipboard(); closeMenu();"
               @click="$bvToast.show('copyToast')"
             >
               <b-icon-link45deg></b-icon-link45deg> Copy URL 
@@ -27,6 +27,7 @@
           <div class="row menu-row">
             <b-button
               v-b-modal.reshuffleConfirm
+              v-on:click="closeMenu();"
               class="control-button-restart btn-lg btn-block"
               variant="outline-dark"
               :disabled="roomInfo.xCardIsActive"
@@ -39,7 +40,7 @@
             <b-button
               variant="outline-dark"
               class="control-button-safety-card btn-lg btn-block"
-              v-on:click="xCard();"
+              v-on:click="xCard(); closeMenu();"
               v-html="
                 customOptions.safetyCardButton
                   ? customOptions.safetyCardButton
@@ -49,7 +50,7 @@
           </div>
           <div class="row menu-row">
             <b-button
-              v-on:click="nextDeck()"
+              v-on:click="nextDeck(); closeMenu();"
               variant="outline-dark"
               class="control-button-next-deck btn-lg btn-block"
               
@@ -71,24 +72,61 @@
             <h6 class='text-center'>{{customOptions.lastCardLabel}} Options</h6>
             <div class="row menu-row">
 
-              <b-button class="btn-block" v-on:click="lastCard()">
+              <b-button class="btn-block" v-on:click="lastCard(); closeMenu();"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex == gSheet.length - 1 ||
+                  roomInfo.currentCardIndex == roomInfo.locationOfLastCard
+              "
+              >
                 Go to {{customOptions.lastCardLabel}}
               </b-button>
               
-              <b-button class="btn-block" v-on:click="shuffleLastCard('center')">
+              <b-button class="btn-block" v-on:click="shuffleLastCard('center'); closeMenu();"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex == gSheet.length - 1 ||
+                  roomInfo.currentCardIndex == roomInfo.locationOfLastCard
+              "
+              >
                 Shuffle near middle
               </b-button>
               
-              <b-button class="btn-block" v-on:click="shuffleLastCard('end')">
+              <b-button class="btn-block" v-on:click="shuffleLastCard('end'); closeMenu();"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex == gSheet.length - 1 ||
+                  roomInfo.currentCardIndex == roomInfo.locationOfLastCard
+              ">
                 Shuffle near end
               </b-button>
                   
             </div>
-            <div class="row menu-row mt-4">
-              <a href="https://storysynth.org">Powered by Story Synth</a>
-            </div>
           </div>
         </b-container>
+        <div class="" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+          <hr class='mb-4'/>
+          <b-button
+            v-b-modal.modalOne
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalOneLabel"
+          >
+            {{ customOptions.modalOneLabel }}
+          </b-button>
+          <b-button
+            v-b-modal.modalTwo
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalTwoLabel"
+            >{{ customOptions.modalTwoLabel }}</b-button
+          >
+        </div>
+        <div class="row menu-row mt-4">
+          <a href="https://storysynth.org" target="_blank">Powered by Story Synth</a>
+        </div>
       </b-modal>
     </div>
 
@@ -476,50 +514,30 @@
           ></app-extensionManager>
         </div>
 
-        <div class="row">
+        
+
+        <b-modal
+          id="modalOne"
+          v-bind:title="customOptions.modalOneLabel"
+          hide-footer
+        >
           <div
-            class="btn-group col-sm"
-            role="group"
-            aria-label="Extra Info"
-            v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel"
-          >
-            <b-button
-              v-b-modal.modalOne
-              variant="outline-dark"
-              v-if="customOptions.modalOneLabel"
-              >{{ customOptions.modalOneLabel }}</b-button
-            >
+            class="d-block text-left"
+            v-html="customOptions.modalOneText"
+          ></div>
+        </b-modal>
 
-            <b-modal
-              id="modalOne"
-              v-bind:title="customOptions.modalOneLabel"
-              hide-footer
-            >
-              <div
-                class="d-block text-left"
-                v-html="customOptions.modalOneText"
-              ></div>
-            </b-modal>
+        <b-modal
+          id="modalTwo"
+          v-bind:title="customOptions.modalTwoLabel"
+          hide-footer
+        >
+          <div
+            class="d-block text-left"
+            v-html="customOptions.modalTwoText"
+          ></div>
+        </b-modal>
 
-            <b-button
-              v-b-modal.modalTwo
-              variant="outline-dark"
-              v-if="customOptions.modalTwoLabel"
-              >{{ customOptions.modalTwoLabel }}</b-button
-            >
-
-            <b-modal
-              id="modalTwo"
-              v-bind:title="customOptions.modalTwoLabel"
-              hide-footer
-            >
-              <div
-                class="d-block text-left"
-                v-html="customOptions.modalTwoText"
-              ></div>
-            </b-modal>
-          </div>
-        </div>
 
         <b-modal
           id="modalNextDeckConfirm"
@@ -726,6 +744,7 @@ export default {
       }
     },
     lastCard() {
+
       if (this.roomInfo.cardSequence.length == 1) {
         this.shuffleAndResetGame();
       }
@@ -739,11 +758,12 @@ export default {
       roomsCollection.doc(this.roomID).update({
         xCardIsActive: !this.roomInfo.xCardIsActive,
       });
+    },
+    closeMenu(){
       this.$bvModal.hide("menuModal");
     },
     nextDeck() {
       this.$bvModal.hide("modalNextDeckConfirm")
-      this.$bvModal.hide("menuModal");	
       let newCardIndex = this.roomInfo.currentCardIndex;
       let chapterIndexTracker = this.orderedCards.length;
       console.log("current:", newCardIndex);
@@ -766,6 +786,7 @@ export default {
       });
     },
     shuffleLastCard(location) {
+
       var tempLastCardIndex = this.roomInfo.cardSequence.splice(
         this.roomInfo.locationOfLastCard,
         1
@@ -888,7 +909,6 @@ export default {
       }, function() {
         console.log('copy failed')
       });
-      this.$bvModal.hide("menuModal");
     },
     fetchAndCleanSheetData(sheetID) {
       // Remove for published version
