@@ -3,7 +3,93 @@
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
 
-    <div class="game-meta">
+    <!-- Menu Bar -->
+    <div class="menu-bar mb-4 d-flex align-items-center">
+      <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal><b-icon-list></b-icon-list> Menu</button>
+      <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
+      <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
+      
+      <b-modal
+        id="menuModal"
+        :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'" 
+        hide-footer
+      >  
+        <b-container>
+          <div class="row menu-row">
+            <b-button
+              class="border-0 btn-lg btn-block"
+              v-on:click="copyLinkToClipboard(); closeMenu();"
+              @click="$bvToast.show('copyToast')"
+            >
+              <b-icon-link45deg></b-icon-link45deg> Copy URL 
+            </b-button>
+          </div>
+          <div class="row menu-row">
+            <b-button
+              v-b-modal.reshuffleConfirm
+              v-on:click="closeMenu();"
+              class="control-button-restart btn-lg btn-block"
+              variant="outline-dark"
+              :disabled="roomInfo.xCardIsActive"
+              v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+              color="rgb(187, 138, 200)"
+              >Reshuffle</b-button
+            >
+          </div>
+          <div class="row menu-row">
+            <b-button
+              variant="outline-dark"
+              class="control-button-safety-card btn-lg btn-block"
+              v-on:click="xCard(); closeMenu();"
+              v-html="
+                customOptions.safetyCardButton
+                  ? customOptions.safetyCardButton
+                  : 'X-Card'
+              "
+              ></b-button>
+          </div>
+          <div class="row menu-row">
+            <b-button
+              variant="outline-dark"
+              class="btn-lg btn-block"
+              :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive"
+              v-on:click="lastCard(); closeMenu();"  
+            >
+              Last Card
+            </b-button>
+          </div>
+        
+        </b-container>
+
+        <div class="" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+          <hr class='mb-4'/>
+          <b-button
+            v-b-modal.modalOne
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalOneLabel"
+          >
+            {{ customOptions.modalOneLabel }}
+          </b-button>
+          <b-button
+            v-b-modal.modalTwo
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalTwoLabel"
+            >{{ customOptions.modalTwoLabel }}</b-button
+          >
+        </div>
+        <div class="row menu-row mt-4">
+          <a href="https://storysynth.org" target="_blank">Powered by Story Synth</a>
+        </div>
+      </b-modal>
+    </div>
+
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+
+    <!-- <div class="game-meta">
       <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
         <div class="row text-center" v-if="customOptions.gameTitle">
           <div class="col-sm">
@@ -17,7 +103,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div
         v-if="
@@ -37,7 +123,36 @@
         ></app-extensionManager>
       </div>
 
-    <div class="row mb-4">
+      <transition name="fade">
+        <div class="fab-buttons container" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
+            <button
+              class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
+              v-on:click="previousCard()"
+              v-b-tooltip.hover title="Previous Card"
+              :disabled="
+                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
+              "
+            >
+              <!-- Previous Card -->
+              <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
+              <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+            </button>
+            <button
+              class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow"
+              v-b-tooltip.hover title="Next Card"
+              v-on:click="nextCard()"
+              :disabled="
+                roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1
+              "
+            >
+              <!-- Next Card -->
+              <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
+              <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>              
+            </button>
+        </div>        
+      </transition>
+
+    <!-- <div class="row mb-4">
       <transition name="fade">
         <div class="btn-group col-sm" role="group" aria-label="Card Controls">
 
@@ -45,14 +160,7 @@
           <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1">Next Card</button>
         </div>
       </transition>
-    </div>
-
-    <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
-      <div class="col-sm">
-        <h2>Instructions</h2>
-        <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction - 1" variant="dark"></b-progress>
-      </div>
-    </div>
+    </div> -->
 
     <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
       <transition name="fade">
@@ -64,8 +172,15 @@
             <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
           </div>
 
-          <div class="card-body justify-content-center mt-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
-            
+          <div class="card-body justify-content-center mt-2" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
+            <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
+              <div class="col-sm">
+                <h2>Instructions</h2>
+                <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction - 1" variant="dark"></b-progress>
+              </div>
+            </div>
+
+
             <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
               <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
               <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
@@ -94,15 +209,15 @@
       </transition>
     </div>
 
-    <div class="btn-container" style>
+    <!-- <div class="btn-container" style>
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
           <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
-          <b-button variant="outline-dark" v-on:click="xCard()" v-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'">X-Card</b-button>
+          <b-button variant="outline-dark" v-on:click="xCard()" v-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'"></b-button>
           <button class="btn btn-outline-dark" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Last Card</button>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div
         v-if="
@@ -122,9 +237,26 @@
         ></app-extensionManager>
       </div>
 
+      <b-modal
+        id="reshuffleConfirm"
+        title="Restart and Reshuffle"
+        hide-footer
+      >
+        <p>Do you want to reshuffle all of the prompts and restart the game?</p>
+        <div
+          class="text-center mb-3"
+        >
+          <b-button
+            variant="dark"
+            v-on:click="shuffle();"
+            >Restart and Reshuffle</b-button
+          >
+        </div>
+      </b-modal>
+
     <div class="row">
         <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
-          <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
+          <!-- <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button> -->
 
           <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
             <div class="d-block text-left" v-html="customOptions.modalOneText">
@@ -132,7 +264,7 @@
             </div>
           </b-modal>
 
-          <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button>
+          <!-- <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button> -->
 
           <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
             <div class="d-block text-left" v-html="customOptions.modalTwoText">
@@ -148,11 +280,13 @@
 import { roomsCollection } from '../../firebase';
 import ExtensionManager from "../extensions/ExtensionManager.vue";
 import axios from 'axios'
+import RoomLink from '../layout/RoomLink.vue';
 
 export default {
   name: 'app-slotMachine',
   components: {
     "app-extensionManager": ExtensionManager,
+    'app-roomLink': RoomLink,
   },
   props: {
     roomID: String,
@@ -199,6 +333,17 @@ export default {
       })
   },
   methods: {
+    closeMenu(){
+      this.$bvModal.hide("menuModal");
+    },
+    copyLinkToClipboard(){
+      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      navigator.clipboard.writeText(currentUrl).then(function() {
+        console.log('copied url')
+      }, function() {
+        console.log('copy failed')
+      });
+    },
     previousCard(){
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: this.roomInfo.currentCardIndex -= 1
@@ -227,6 +372,7 @@ export default {
       })
     },
     shuffle(){
+      this.$bvModal.hide('reshuffleConfirm')
 
       // reset card count
       roomsCollection.doc(this.roomID).update({

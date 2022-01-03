@@ -7,6 +7,56 @@
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
 
+    <!-- Menu Bar -->
+    <div class="menu-bar mb-4 d-flex align-items-center">
+      <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal><b-icon-list></b-icon-list> Menu</button>
+      <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
+      <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
+      
+      <b-modal
+        id="menuModal"
+        :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'" 
+        hide-footer
+      >  
+        <b-container>
+          <div class="row menu-row">
+            <b-button
+              class="border-0 btn-lg btn-block"
+              v-on:click="copyLinkToClipboard(); closeMenu();"
+              @click="$bvToast.show('copyToast')"
+            >
+              <b-icon-link45deg></b-icon-link45deg> Copy URL 
+            </b-button>
+          </div>
+        </b-container>
+        <div class="" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+          <hr class='mb-4'/>
+          <b-button
+            v-b-modal.modalOne
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalOneLabel"
+          >
+            {{ customOptions.modalOneLabel }}
+          </b-button>
+          <b-button
+            v-b-modal.modalTwo
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalTwoLabel"
+            >{{ customOptions.modalTwoLabel }}</b-button
+          >
+        </div>
+        <div class="row menu-row mt-4">
+          <a href="https://storysynth.org" target="_blank">Powered by Story Synth</a>
+        </div>
+      </b-modal>
+    </div>
+
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+
     <div class="game-meta">
       <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
         <div class="row text-center" v-if="customOptions.gameTitle">
@@ -56,12 +106,12 @@
         aria-label="Extra Info"
         v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel"
       >
-        <b-button
+        <!-- <b-button
           v-b-modal.modalOne
           variant="outline-dark"
           v-if="customOptions.modalOneLabel"
           >{{ customOptions.modalOneLabel }}</b-button
-        >
+        > -->
 
         <b-modal
           id="modalOne"
@@ -75,12 +125,12 @@
           ></div>
         </b-modal>
 
-        <b-button
+        <!-- <b-button
           v-b-modal.modalTwo
           variant="outline-dark"
           v-if="customOptions.modalTwoLabel"
           >{{ customOptions.modalTwoLabel }}</b-button
-        >
+        > -->
 
         <b-modal
           id="modalTwo"
@@ -229,11 +279,13 @@
 import { roomsCollection } from "../../firebase";
 import axios from "axios";
 import GraphemeSplitter from 'grapheme-splitter';
+import RoomLink from '../layout/RoomLink.vue';
 
 export default {
   name: "app-hexflower",
   components: {
     "app-extensionManager": () => import("../extensions/ExtensionManager.vue"),
+    'app-roomLink': RoomLink,
   },
   props: {
     roomID: String,
@@ -348,6 +400,17 @@ export default {
     }
   },
   methods: {
+    closeMenu(){
+      this.$bvModal.hide("menuModal");
+    },
+    copyLinkToClipboard(){
+      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      navigator.clipboard.writeText(currentUrl).then(function() {
+        console.log('copied url')
+      }, function() {
+        console.log('copy failed')
+      });
+    },
     hexPosition(col, row) {
 
       // Basic dimensions
@@ -723,6 +786,10 @@ $base-color: rgb(33, 33, 33);
 $hex-height: 92px; // flat top
 $hex-width: math.floor($hex-height * 1.1547);
 $hex-padding: 4px;
+
+.hexflower {
+  padding-top: 20px;
+}
 
 // HEXES
 .hexflower-body {

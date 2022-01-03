@@ -2,6 +2,13 @@
   <div class="secretCards game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar mb-4 d-flex align-items-right">
+      <app-roomLink class="ml-auto d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
+    </div>
+
+
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
         <div class="col-sm">
@@ -15,6 +22,7 @@
         </div>
       </div>
     </div>
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
 
     <div>
       <div class="card shadow" v-if="(!dataReady || !firebaseReady) && !error">
@@ -33,7 +41,7 @@
         </div>
         <div class="row">
           <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
-            <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>
+            <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>
           </div>
         </div>
       </div>
@@ -50,7 +58,7 @@
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length-2">
+          <button class="btn btn-outline-dark" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length-2">
             <span v-if="roomInfo.currentCardIndex == 0">Start</span>
             <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
           </button>
@@ -156,9 +164,13 @@
 <script>
 import { roomsCollection } from '../../firebase';
 import axios from 'axios'
+import RoomLink from '../layout/RoomLink.vue';
 
 export default {
   name: 'app-secretCards',
+  components:{
+    'app-roomLink': RoomLink,
+  },
   props: {
     roomID: String,
     gSheetID: String
@@ -206,6 +218,17 @@ export default {
       })
   },
   methods: {
+    closeMenu(){
+      this.$bvModal.hide("menuModal");
+    },
+    copyLinkToClipboard(){
+      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      navigator.clipboard.writeText(currentUrl).then(function() {
+        console.log('copied url')
+      }, function() {
+        console.log('copy failed')
+      });
+    },
     previousCard(){
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: this.roomInfo.currentCardIndex -= 1

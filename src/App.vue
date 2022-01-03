@@ -41,7 +41,7 @@
         </div>
       </div>
       
-      <app-footer v-if="$route.params.roomID && !['Shuffled'].includes($route.params.gameType)"></app-footer>
+      <app-footer v-if="$route.params.roomID && !['Shuffled', 'Monster', 'Hexflower', 'Generator', 'SlotMachine', 'Phases'].includes($route.params.gameType)"></app-footer>
     </div>
   </div>
 </template>
@@ -276,6 +276,12 @@
     padding-bottom: 8.5rem;
   }
 
+  .demoInfo {
+    a {
+      color: black;
+    }
+  }
+
   // Utility classes  
   :root {
     --ds-rounding: 14px;
@@ -328,8 +334,10 @@
     width: var(--fab-diameter); 
     height: var(--fab-diameter); 
     
-    &.btn-fab-left {
-    }
+    // &.btn-fab-left {
+    // 
+    // }
+
     &.btn-fab-right {
       margin-left: var(--fab-spacing);
     }
@@ -360,6 +368,17 @@
 .menu-row {
   justify-content: center;
   margin-bottom: 10px;
+}
+
+.demoInfo, .alert-info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    text-shadow: none !important;
+
+    a {
+      color: #0071EB !important;
+    }
 }
 
 </style>

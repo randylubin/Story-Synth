@@ -66,8 +66,7 @@
               "
             ></b-button>
           </div>
-          <div v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)"
->
+          <div v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)">
             <hr class='mb-4'/>
             <h6 class='text-center'>{{customOptions.lastCardLabel}} Options</h6>
             <div class="row menu-row">
@@ -131,7 +130,7 @@
     </div>
 
     <b-alert show class="" variant="danger" v-if="firebaseCacheError">Warning: the length of the deck has changed since this room was first created. Click Restart to resync card data.</b-alert>
-    <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
     <div class="" v-if="roomInfo">
       <div class="before-game-card">
         <!-- <div
@@ -762,6 +761,14 @@ export default {
     closeMenu(){
       this.$bvModal.hide("menuModal");
     },
+    copyLinkToClipboard(){
+      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      navigator.clipboard.writeText(currentUrl).then(function() {
+        console.log('copied url')
+      }, function() {
+        console.log('copy failed')
+      });
+    },
     nextDeck() {
       this.$bvModal.hide("modalNextDeckConfirm")
       let newCardIndex = this.roomInfo.currentCardIndex;
@@ -900,14 +907,6 @@ export default {
     syncExtension() {
       roomsCollection.doc(this.roomID).update({
         extensionData: this.roomInfo.extensionData,
-      });
-    },
-    copyLinkToClipboard(){
-      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
-      navigator.clipboard.writeText(currentUrl).then(function() {
-        console.log('copied url')
-      }, function() {
-        console.log('copy failed')
       });
     },
     fetchAndCleanSheetData(sheetID) {

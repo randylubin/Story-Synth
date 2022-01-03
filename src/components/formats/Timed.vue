@@ -2,8 +2,10 @@
   <div class="container game-room">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
-
-    <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+    
+    <div class="menu-bar mb-4 d-flex align-items-right">
+      <app-roomLink class="ml-auto d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
+    </div>
 
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
@@ -18,6 +20,8 @@
         </div>
       </div>
     </div>
+    
+    <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
 
     <div class="card shadow" v-if="(!dataReady || !firebaseReady) && !error">
       <div class="card-body text-center">
@@ -86,9 +90,13 @@
 <script>
 import { roomsCollection } from '../../firebase';
 import axios from 'axios'
+import RoomLink from '../layout/RoomLink.vue';
 
 export default {
   name: 'app-timed',
+  components:{
+    'app-roomLink': RoomLink,
+  },
   props: {
     roomID: String,
     gSheetID: String

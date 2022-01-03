@@ -2,8 +2,70 @@
   <div class="monster game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+    
+    <!-- Menu Bar -->
+    <div class="menu-bar mb-4 d-flex align-items-center">
+      <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal><b-icon-list></b-icon-list> Menu</button>
+      <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
+      <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
+      
+      <b-modal
+        id="menuModal"
+        :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'" 
+        hide-footer
+      >  
+        <b-container>
+          <div class="row menu-row">
+            <b-button
+              class="border-0 btn-lg btn-block"
+              v-on:click="copyLinkToClipboard(); closeMenu();"
+              @click="$bvToast.show('copyToast')"
+            >
+              <b-icon-link45deg></b-icon-link45deg> Copy URL 
+            </b-button>
+          </div>
+          <div class="row menu-row">
+            <b-button
+              variant="outline-dark"
+              class="control-button-safety-card btn-lg btn-block"
+              v-on:click="xCard(); closeMenu();"
+              v-html="
+                customOptions.safetyCardButton
+                    ? customOptions.safetyCardButton
+                    : 'Pause'
+              "
+              ></b-button>
+          </div>
+        </b-container>
+        <div class="" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+          <hr class='mb-4'/>
+          <b-button
+            v-b-modal.modalOne
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalOneLabel"
+          >
+            {{ customOptions.modalOneLabel }}
+          </b-button>
+          <b-button
+            v-b-modal.modalTwo
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalTwoLabel"
+            >{{ customOptions.modalTwoLabel }}</b-button
+          >
+        </div>
+        <div class="row menu-row mt-4">
+          <a href="https://storysynth.org" target="_blank">Powered by Story Synth</a>
+        </div>
+      </b-modal>
+    </div>
+    
+    <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
 
-    <div class="game-meta">
+    <!-- <div class="game-meta">
       <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
         <div class="row text-center" v-if="customOptions.gameTitle">
           <div class="col-sm">
@@ -17,7 +79,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div
         v-if="
@@ -37,7 +99,7 @@
         ></app-extensionManager>
       </div>
 
-    <div class="btn-container" style>
+    <!-- <div class="btn-container" style>
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
@@ -45,21 +107,41 @@
                   customOptions.safetyCardButton
                     ? customOptions.safetyCardButton
                     : 'Pause'
-                " v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
+                " v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0"></button>
           <button class="btn btn-outline-dark" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
             <span v-if="roomInfo.currentCardIndex == 0">Start</span>
             <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex <= customOptions.instructionsProgressBar && roomInfo.currentCardIndex != 0">
-      <div class="col-sm">
-        <h2>Instructions</h2>
-        <b-progress :value="roomInfo.currentCardIndex" :max="customOptions.instructionsProgressBar" variant="dark"></b-progress>
-      </div>
-    </div>
+    <transition name="fade">
+      <div class="fab-buttons container" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
+          <button
+            class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
+            v-on:click="previousCard()"
+            v-b-tooltip.hover title="Previous Card"
+            :disabled="
+              roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
+            "
+          >
+            <!-- Previous Card -->
+            <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
+            <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+          </button>
+          <button
+            class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow"
+            v-b-tooltip.hover title="Next Card"
+            v-on:click="nextCard()"
+            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered"
+          >
+            <!-- Next Card -->
+            <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
+            <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>              
+          </button>
+      </div>        
+    </transition>
 
     <!--<h1 class="">{{roomInfo.roundTitle}}</h1>-->
     <h3 class="mb-4">{{roomInfo.roundInfo}} <span class="">{{roomInfo.roundProgress}}</span></h3>
@@ -67,7 +149,7 @@
 
     <div v-if="roomInfo.xCardIsActive" class="mb-4">
       <transition name="fade">
-        <div class="card d-flex align-items-center shadow">
+        <div class="card d-flex align-items-center shadow pt-4">
           <div class="card-title">
             <h1 v-if="!customOptions.safetyCardText">Pause</h1>
           </div>
@@ -82,7 +164,7 @@
             v-if="customOptions.safetyCardText"
           ></div>
 
-          <button class="btn btn-outline-dark mb-5" style="width:100px;" type="button" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Continue</button>
+          <button class="btn btn-outline-dark mb-5" style="width:100px;" type="button" v-on:click="xCard()">Continue</button>
         </div>
       </transition>
     </div>
@@ -97,13 +179,19 @@
       </div>
 
       <div v-for="(row, index) in gSheet" v-bind:key="index">
-        <transition name="fade">
+        <transition name="">
           <div class="row mb-4" v-if="row.ordered == roomInfo.currentCardIndex">
             <div class="col-sm">
               <div class="card shadow img-fluid" v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}" v-on:click="updateClickedCard(index)" style="cursor:pointer">
                 <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%" v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
                 <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
                 <div class="card-body" v-if="!customOptions.coverImage || index != 0" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
+                    <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex <= customOptions.instructionsProgressBar && roomInfo.currentCardIndex != 0">
+                      <div class="col-sm">
+                        <h2>Instructions</h2>
+                        <b-progress :value="roomInfo.currentCardIndex" :max="customOptions.instructionsProgressBar" variant="dark"></b-progress>
+                      </div>
+                    </div>
                     <div class="card-title" style="white-space: pre-line" v-if="!row.subtitle">
                       <div v-if="index == 0">
                         <h1 class="mt-4">{{row.archetype}}</h1>
@@ -128,11 +216,9 @@
 
                       <h5>{{row.characterQuestion}}</h5>
                       <div v-html="row.characterDetail">
-                        {{row.characterDetail}}
                       </div>
                       <h5 class="mt-4">{{row.keyQuestion}}</h5>
                       <div v-html="row.keyDetails">
-                        {{row.keyDetails}}
                       </div>
                     </div>
 
@@ -151,15 +237,12 @@
     </div>
 
     <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
-      <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
 
       <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
         <div class="d-block text-left" v-html="customOptions.modalOneText">
           
         </div>
       </b-modal>
-
-      <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button>
 
       <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
         <div class="d-block text-left" v-html="customOptions.modalTwoText">
@@ -193,11 +276,13 @@
 import { roomsCollection } from '../../firebase';
 import axios from 'axios'
 import ExtensionManager from "../extensions/ExtensionManager.vue";
+import RoomLink from '../layout/RoomLink.vue';
 
 export default {
   name: 'app-monster',
   components: {
     "app-extensionManager": ExtensionManager,
+    'app-roomLink': RoomLink,
   },
   props: {
     roomID: String,
@@ -245,6 +330,17 @@ export default {
       })
   },
   methods: {
+    closeMenu(){
+      this.$bvModal.hide("menuModal");
+    },
+    copyLinkToClipboard(){
+      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      navigator.clipboard.writeText(currentUrl).then(function() {
+        console.log('copied url')
+      }, function() {
+        console.log('copy failed')
+      });
+    },
     previousCard(){
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: this.roomInfo.currentCardIndex -= 1
