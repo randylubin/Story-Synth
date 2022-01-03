@@ -24,10 +24,10 @@
                         <b-icon-pencil></b-icon-pencil>
                       </button>
                       <div v-else>
-                      <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="saveEditedPlayer(index)">
-                        <b-icon-check2></b-icon-check2>
-                      </button>
-                      <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="deletePlayer(index)"><b-icon-trash></b-icon-trash></button>
+                        <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="deletePlayer(index)"><b-icon-trash></b-icon-trash></button>
+                        <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="saveEditedPlayer(index)">
+                          <b-icon-check2></b-icon-check2>
+                        </button>
                       </div>
                     </div>
                   </div>
