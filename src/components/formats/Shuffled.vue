@@ -66,7 +66,7 @@
             ></b-button>
           </div>
           <hr class='mb-4'/>
-          <h6 class='text-center'>Last card</h6>
+          <h6 class='text-center'>{{customOptions.lastCardLabel}} Options</h6>
           <div class="row menu-row">
 
             <b-button class="btn-block" v-on:click="lastCard()">

@@ -1717,6 +1717,7 @@ export default {
 .game-launcher {
   max-width: 600px;
   margin: auto;
+  padding-top: 20px;
 }
 
 .full-page-background {

@@ -195,10 +195,6 @@
     opacity: 0;
   }
 
-  #app {
-    padding-top: 20px;
-  }
-
   .app-main {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
