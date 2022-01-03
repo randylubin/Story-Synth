@@ -168,6 +168,7 @@
             <button
               class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
               v-on:click="previousCard()"
+              v-b-tooltip.hover title="Previous Card"
               :disabled="
                 roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
               "
@@ -178,6 +179,7 @@
             </button>
             <button
               class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow"
+              v-b-tooltip.hover title="Next Card"
               v-on:click="nextCard()"
               :disabled="
                 roomInfo.xCardIsActive ||
