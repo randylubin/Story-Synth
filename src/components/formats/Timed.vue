@@ -3,6 +3,8 @@
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
 
+    <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
         <div class="col-sm">
@@ -27,7 +29,7 @@
     <div v-if="timerSynced">
       <div v-if="!playerSelected" class="row my-4">
         <div class="btn-group col-sm" role="group" aria-label="Role Controls">
-          <button type="button" class="btn btn-outline-primary" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>
+          <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>
         </div>
       </div>
       <div class="player-label text-center row my-4" v-if="playerSelected">
@@ -37,11 +39,11 @@
         </div>
       </div>
 
-    <div class="timer-box game-room mb-4 shadow">
+    <div class="timer-box mb-4 pt-4">
+      <span class="time">{{ time }}</span>
       <div class="btn-container px-1">
 
 
-          <span class="time">{{ time }}</span>
 
           <div v-if="playerSelected" class="row mb-4">
             <div class="btn-group col-sm-6 offset-sm-3" role="group" aria-label="Timer Controls">
@@ -310,6 +312,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this.roomInfo component only -->
 
 <style scoped>
+
+  .game-room {
+    padding-top: 20px;
+  }
   .time {
     font-size: 4em;
   }
