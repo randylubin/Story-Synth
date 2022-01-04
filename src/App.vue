@@ -41,7 +41,7 @@
         </div>
       </div>
       
-      <app-footer v-if="$route.params.roomID && !['Shuffled', 'Monster', 'Hexflower', 'Generator', 'SlotMachine', 'Phases'].includes($route.params.gameType)"></app-footer>
+      <app-footer v-if="$route.params.roomID && ['Timed', 'SecretCards'].includes($route.params.gameType)"></app-footer>
     </div>
   </div>
 </template>

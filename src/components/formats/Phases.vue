@@ -270,14 +270,14 @@
       </div> 
 
       <div v-if="Array.isArray(customOptions.showPastPrompts) && roomInfo.currentCardIndex >= firstNonInstruction">
-        <div class="row mt-5">
-          <div class="col-sm game-meta">
-            <h2 v-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'"></h2>
-          </div>
-        </div>
 
         <div class="itinerary mb-5 card d-flex shadow"> <!-- style="display: flex; flex-direction: column-reverse;-->
           <div class="card-body justify-content-center">
+            <div class="row my-2">
+              <div class="col-sm game-meta">
+                <h2 v-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'"></h2>
+              </div>
+            </div>
             <div class="row">
               <div class="col-sm" v-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null">
               </div>

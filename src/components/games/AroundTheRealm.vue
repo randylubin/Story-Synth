@@ -2,8 +2,101 @@
   <div class="phases">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+
     <div class="game-room container" v-if="roomInfo">
-      <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
+      
+      <!-- Menu Bar -->
+      <div class="menu-bar mb-4 d-flex align-items-center">
+        <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal><b-icon-list></b-icon-list> Menu</button>
+        <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
+        <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
+        
+        <b-modal
+          id="menuModal"
+          :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'" 
+          hide-footer
+        >  
+          <b-container>
+            <div class="row menu-row">
+              <b-button
+                class="border-0 btn-lg btn-block"
+                v-on:click="copyLinkToClipboard(); closeMenu();"
+                @click="$bvToast.show('copyToast')"
+              >
+                <b-icon-link45deg></b-icon-link45deg> Copy URL 
+              </b-button>
+            </div>
+            <div class="row menu-row">
+              <b-button
+                v-b-modal.reshuffleConfirm
+                v-on:click="closeMenu();"
+                class="control-button-restart btn-lg btn-block"
+                variant="outline-dark"
+                :disabled="roomInfo.xCardIsActive"
+                v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
+                color="rgb(187, 138, 200)"
+                >Restart</b-button
+              >
+            </div>
+            <div class="row menu-row">
+              <b-button
+                variant="outline-dark"
+                class="control-button-safety-card btn-lg btn-block"
+                v-on:click="xCard(); closeMenu();"
+                v-html="
+                  customOptions.safetyCardButton
+                    ? customOptions.safetyCardButton
+                    : 'X-Card'
+                "
+                ></b-button>
+            </div>
+            <div class="row menu-row" v-if="roomInfo.currentCardIndex < firstNonInstruction">
+              <b-button
+                variant="outline-dark"
+                class="btn-lg btn-block"
+                v-on:click="skipInstructions(); closeMenu();" 
+                >
+                  Skip Instructions
+                </b-button>
+            </div>
+            <div class="row menu-row" v-if="roomInfo.currentCardIndex >= firstNonInstruction">
+              <b-button
+                variant="outline-dark"
+                class="btn-lg btn-block"
+                :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive" v-on:click="ending(); closeMenu();">
+                Ending
+              </b-button>
+            </div>
+          </b-container>
+          <div class="" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+            <hr class='mb-4'/>
+            <b-button
+              v-b-modal.modalOne
+              v-on:click="closeMenu();"
+              variant="outline-dark"
+              class="btn-block btn-lg"
+              v-if="customOptions.modalOneLabel"
+            >
+              {{ customOptions.modalOneLabel }}
+            </b-button>
+            <b-button
+              v-b-modal.modalTwo
+              v-on:click="closeMenu();"
+              variant="outline-dark"
+              class="btn-block btn-lg"
+              v-if="customOptions.modalTwoLabel"
+              >{{ customOptions.modalTwoLabel }}</b-button
+            >
+          </div>
+          <div class="row menu-row mt-4">
+            <a href="https://storysynth.org" target="_blank">Powered by Story Synth</a>
+          </div>
+        </b-modal>
+      </div>
+    
+      <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+      
+      <!-- <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
         <div class="row text-center" v-if="customOptions.gameTitle">
           <div class="col-sm">
             <h1>{{customOptions.gameTitle}}</h1>
@@ -15,21 +108,40 @@
             <h4>{{customOptions.byline}}</h4>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="row mb-4">
+      <!-- <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Card Controls">
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous Card</button>
           <button class="btn btn-outline-primary" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)">Next Card</button>
         </div>
-      </div>
+      </div> -->
 
-      <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < 16 && roomInfo.currentCardIndex != 0">
-        <div class="col-sm">
-          <h2>Instructions</h2>
-          <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction -1" variant="dark"></b-progress>
-        </div>
-      </div>
+      <transition name="fade">
+        <div class="fab-buttons container" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
+            <button
+              class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
+              v-on:click="previousCard()"
+              v-b-tooltip.hover title="Previous Card"
+              :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0"
+            >
+              <!-- Previous Card -->
+              <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
+              <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+            </button>
+            <button
+              class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow"
+              v-b-tooltip.hover title="Next Card"
+              v-on:click="nextCard()"
+              :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)"
+            >
+              <!-- Next Card -->
+              <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
+              <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>              
+            </button>
+        </div>        
+      </transition>
+
 
 
       <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
@@ -47,6 +159,12 @@
 
 
             <div class="card-body justify-content-center mt-4 mx-4" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive && dataReady && firebaseReady && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': (customOptions.cardBackgroundImage && (!customOptions.cardBackgroundImageAlign))}">
+              <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
+                <div class="col-sm">
+                  <h2>Instructions</h2>
+                  <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction -1" variant="dark"></b-progress>
+                </div>
+              </div>
               
               <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
                 <h2 class="card-header-text">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h2>
@@ -86,20 +204,37 @@
         
       </div>
 
-      <div class="btn-container" style>
+      <!-- <div class="btn-container" style>
         <div class="row mb-4">
           <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
             <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
-            <b-button variant="outline-dark" v-on:click="xCard()" v-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'">X-Card</b-button>
+            <b-button variant="outline-dark" v-on:click="xCard()" v-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'"></b-button>
             <button class="btn btn-outline-dark" v-on:click="skipInstructions()" v-if="roomInfo.currentCardIndex < firstNonInstruction">Skip Instructions</button>
             <button class="btn btn-outline-dark" v-if="roomInfo.currentCardIndex >= firstNonInstruction" :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive" v-on:click="ending()">Ending</button>
           </div>
         </div>
-      </div>
+      </div> -->
+
+      <b-modal
+        id="reshuffleConfirm"
+        title="Restart and Reshuffle"
+        hide-footer
+      >
+        <p>Do you want to reshuffle all of the prompts and restart the game?</p>
+        <div
+          class="text-center mb-3"
+        >
+          <b-button
+            variant="dark"
+            v-on:click="shuffle();"
+            >Restart and Reshuffle</b-button
+          >
+        </div>
+      </b-modal>
 
       <div class="row">
         <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
-          <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button>
+          <!-- <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button> -->
 
           <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
             <div class="d-block text-left" v-html="customOptions.modalOneText">
@@ -107,7 +242,7 @@
             </div>
           </b-modal>
 
-          <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button>
+          <!-- <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button> -->
 
           <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
             <div class="d-block text-left" v-html="customOptions.modalTwoText">
@@ -117,17 +252,16 @@
       </div> 
 
       <div v-if="Array.isArray(customOptions.showPastPrompts) && roomInfo.currentCardIndex >= firstNonInstruction">
-        <div class="row mt-5">
-          <div class="col-sm game-meta">
-            <h2 v-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'"></h2>
-          </div>
-        </div>
 
         <div class="itinerary mb-5 card d-flex shadow"> <!-- style="display: flex; flex-direction: column-reverse;-->
           <div class="card-body justify-content-center">
-            <div class="row">
-              <div class="col-sm" v-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null">
+            <div class="row my-2">
+              <div class="col-sm game-meta">
+                <h2 v-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'"></h2>
               </div>
+            </div>
+            <div class="row">
+              <div class="col-sm" v-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null"></div>
             </div>
             <div v-for="(round, roundIndex) in roomInfo.cardSequence" v-bind:key="roundIndex">
               <div v-if="Object.prototype.toString.call(round) === '[object Object]' && phaseData.length>0 && roundIndex <= roomInfo.currentCardIndex">
@@ -149,17 +283,22 @@
         </div>
       </div>
       
+
     </div>
   </div>
 </template>
 
 <script>
 import { roomsCollection } from '../../firebase';
+import RoomLink from '../layout/RoomLink.vue';
 
 export default {
   name: 'app-phases',
   props: {
     roomID: String,
+  },
+  components: {
+    'app-roomLink': RoomLink,
   },
   data: function(){
     return {
@@ -254,6 +393,17 @@ export default {
     }
   },
   methods: {
+    closeMenu(){
+      this.$bvModal.hide("menuModal");
+    },
+    copyLinkToClipboard(){
+      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      navigator.clipboard.writeText(currentUrl).then(function() {
+        console.log('copied url')
+      }, function() {
+        console.log('copy failed')
+      });
+    },
     previousCard(){
       if (Number.isInteger(this.roomInfo.cardSequence[this.roomInfo.currentCardIndex])){
         if (this.roomInfo.cardSequence[this.roomInfo.currentCardIndex] >= this.phaseData[0].length){
