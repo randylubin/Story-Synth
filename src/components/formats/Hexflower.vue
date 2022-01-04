@@ -8,7 +8,7 @@
     <div v-html="customOptions.style"></div>
 
     <!-- Menu Bar -->
-    <div class="menu-bar mb-4 d-flex align-items-center">
+    <div class="menu-bar mb-4 d-flex align-items-center" v-if="!hexflowerAsExtension">
       <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal><b-icon-list></b-icon-list> Menu</button>
       <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
       <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
