@@ -33,6 +33,18 @@
     }
   }
 
+  .menu-bar .btn {
+    color: white !important;
+    &:hover {
+      background-color: #343a40 !important;
+    }
+  }
+
+  .progress {
+    padding: 1px 1px;
+    padding-left: 2px;
+  }
+
   .generator-cell-label {
     background: none !important;
     color: rgba(255, 255, 255, 0.7) !important;
