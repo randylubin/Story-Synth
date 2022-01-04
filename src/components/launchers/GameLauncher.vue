@@ -221,7 +221,7 @@
             </div>
           </div>
 
-          <div class="row mt-3 pt-4 pb-2 bg-light" v-if="customOptions.license">
+          <div class="row mt-3 pt-4 pb-2" v-if="customOptions.license">
             <div
               class="col-sm-6 mb-4 text-center"
               v-if="!customOptions.license.includes('NoDerivatives')"
