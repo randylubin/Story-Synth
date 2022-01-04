@@ -240,173 +240,177 @@
         </div>
       </div>
 
-      <transition name="fade">
-        <div
-          class="card main-card d-flex shadow img-fluid mb-4"
-          v-bind:class="{
-            'bg-transparent':
-              customOptions.coverImage && roomInfo.currentCardIndex == 0,
-          }"
-          v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]"
-        >
-          <!-- card images -->
-          <img
-            v-bind:src="customOptions.coverImage"
-            class="card-img-top"
-            style="width:100%"
-            v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0"
-          />
-          <img
-            v-bind:src="customOptions.cardBackgroundImage"
-            class="card-img-top card-background"
-            style="width:100%"
-            v-if="
-              customOptions.cardBackgroundImage &&
-                (!customOptions.coverImage ||
-                  roomInfo.currentCardIndex != 0) &&
-                !customOptions.cardBackgroundImageAlign
-            "
-          />
-          <b-card-img
-            v-bind:src="customOptions.cardBackgroundImage"
-            alt="Card Background image"
-            top
-            v-if="
-              customOptions.cardBackgroundImageAlign == 'top' &&
-                roomInfo.currentCardIndex != 0
-            "
-          ></b-card-img>
 
+      <div v-for="(card, cardIndex) in roomInfo.cardSequence" v-bind:key="cardIndex">
 
-          <!-- Loading Visual -->
+        <transition name="fade out-in">
           <div
-            class="card-body text-center"
-            v-if="(!dataReady || !firebaseReady) && !error"
+            class="card main-card d-flex shadow img-fluid mb-4"
+            v-bind:class="{
+              'bg-transparent':
+                customOptions.coverImage && cardIndex == 0,
+            }"
+            v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] && cardIndex == roomInfo.currentCardIndex"
           >
-            <h1 class="m-5">Loading</h1>
-            <b-spinner
-              class="m-5"
-              style="width: 4rem; height: 4rem;"
-              label="Busy"
-            ></b-spinner>
+            <!-- card images -->
+            <img
+              v-bind:src="customOptions.coverImage"
+              class="card-img-top"
+              style="width:100%"
+              v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0"
+            />
+            <img
+              v-bind:src="customOptions.cardBackgroundImage"
+              class="card-img-top card-background"
+              style="width:100%"
+              v-if="
+                customOptions.cardBackgroundImage &&
+                  (!customOptions.coverImage ||
+                    roomInfo.currentCardIndex != 0) &&
+                  !customOptions.cardBackgroundImageAlign
+              "
+            />
+            <b-card-img
+              v-bind:src="customOptions.cardBackgroundImage"
+              alt="Card Background image"
+              top
+              v-if="
+                customOptions.cardBackgroundImageAlign == 'top' &&
+                  roomInfo.currentCardIndex != 0
+              "
+            ></b-card-img>
 
-            <div v-if="customOptions.debugLoading == 'TRUE'">
-              <div>Google Sheet ready: {{dataReady}}</div>
-              <div>Firebase ready: {{firebaseReady}}</div>
-              <div>Error: {{error}}</div>
-            </div>
-          </div>
 
-          <div
-            class="row mt-4 mx-4 game-meta"
-            v-if="
-              customOptions.instructionsProgressBar &&
-                roomInfo.currentCardIndex < firstNonInstruction &&
-                roomInfo.currentCardIndex != 0
-            "
-          >
-            <div class="col-sm">
-              <h3>Instructions</h3>
-              <b-progress
-                :value="roomInfo.currentCardIndex"
-                :max="firstNonInstruction - 1"
-                variant="dark"
-              ></b-progress>
-            </div>
-          </div>
-
-          <!-- Main Game Cards -->
-          <div
-            v-if="!customOptions.coverImage || roomInfo.currentCardIndex != 0"
-            v-bind:class="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
-                      .deckNumberClass"
-          >
+            <!-- Loading Visual -->
             <div
-              class="card-body justify-content-center d-flex align-items-center mt-4"
-              style="white-space: pre-line"
+              class="card-body text-center"
+              v-if="(!dataReady || !firebaseReady) && !error"
+            >
+              <h1 class="m-5">Loading</h1>
+              <b-spinner
+                class="m-5"
+                style="width: 4rem; height: 4rem;"
+                label="Busy"
+              ></b-spinner>
+
+              <div v-if="customOptions.debugLoading == 'TRUE'">
+                <div>Google Sheet ready: {{dataReady}}</div>
+                <div>Firebase ready: {{firebaseReady}}</div>
+                <div>Error: {{error}}</div>
+              </div>
+            </div>
+
+            <div
+              class="row mt-4 mx-4 game-meta"
+              v-if="
+                customOptions.instructionsProgressBar &&
+                  roomInfo.currentCardIndex < firstNonInstruction &&
+                  roomInfo.currentCardIndex != 0
+              "
+            >
+              <div class="col-sm">
+                <h3>Instructions</h3>
+                <b-progress
+                  :value="roomInfo.currentCardIndex"
+                  :max="firstNonInstruction - 1"
+                  variant="dark"
+                ></b-progress>
+              </div>
+            </div>
+
+            <!-- Main Game Cards -->
+            <div
+              v-if="!customOptions.coverImage || roomInfo.currentCardIndex != 0"
+              v-bind:class="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
+                        .deckNumberClass"
+            >
+              <div
+                class="card-body justify-content-center d-flex align-items-center mt-4"
+                style="white-space: pre-line"
+                v-bind:class="{
+                  'card-img-overlay':
+                    customOptions.cardBackgroundImage &&
+                    !customOptions.cardBackgroundImageAlign,
+                }"
+                v-if="!roomInfo.xCardIsActive"
+              >
+                <div v-if="!roomInfo.showCardBack">
+                  <h1 v-if="!customOptions.hideHeadersOnCards">
+                    {{
+                      gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
+                        .headerText
+                    }}
+                  </h1>
+                  <p
+                    class="mt-4 mb-4"
+                    v-html="
+                      gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
+                        .bodyText
+                    "
+                  ></p>
+                  <button class="btn btn-outline-dark" v-on:click="flipCard()" v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack && customOptions.reversableCards">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                      <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                      <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                    </svg>
+                  </button>
+                </div>
+                <div v-else>
+                  <div class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack">
+                  </div> 
+                  <button class="btn btn-outline-dark" v-on:click="flipCard()" v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack && customOptions.reversableCards">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                      <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                      <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <b-alert show class="mx-3" v-html="customOptions.lastCardReminderText" variant="info" v-if="customOptions.lastCardReminderText && customOptions.lastCardReminderFrequency && roomInfo.currentCardIndex > firstNonInstruction && ((roomInfo.currentCardIndex - firstNonInstruction) % customOptions.lastCardReminderFrequency == customOptions.lastCardReminderFrequency - 1)"></b-alert>
+
+            <!-- Safety Card -->
+            <div
+              class="card-body align-items-center justify-content-center"
+              v-if="roomInfo.xCardIsActive"
               v-bind:class="{
+                'card-body': !customOptions.cardBackgroundImage,
                 'card-img-overlay':
                   customOptions.cardBackgroundImage &&
                   !customOptions.cardBackgroundImageAlign,
               }"
-              v-if="!roomInfo.xCardIsActive"
             >
-              <div v-if="!roomInfo.showCardBack">
-                <h1 v-if="!customOptions.hideHeadersOnCards">
-                  {{
-                    gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
-                      .headerText
-                  }}
-                </h1>
-                <p
-                  class="mt-4 mb-4"
-                  v-html="
-                    gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
-                      .bodyText
-                  "
-                ></p>
-                <button class="btn btn-outline-dark" v-on:click="flipCard()" v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack && customOptions.reversableCards">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
-                  </svg>
-                </button>
+              <div class="mt-5 pt-5 mb-5">
+                <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
+                <div
+                  class="safety-card-text"
+                  v-html="customOptions.safetyCardText"
+                  v-if="customOptions.safetyCardText"
+                ></div>
               </div>
-              <div v-else>
-                <div class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack">
-                </div> 
-                <button class="btn btn-outline-dark" v-on:click="flipCard()" v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack && customOptions.reversableCards">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
-                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
-                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
-                  </svg>
-                </button>
+              <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">
+                Continue
+              </button>
+              <div class="" v-if="!customOptions.safetyCardText">
+                <a class="x-card-text" href="http://tinyurl.com/x-card-rpg"
+                  >About the X-Card</a
+                >
               </div>
             </div>
-          </div>
-          <b-alert show class="mx-3" v-html="customOptions.lastCardReminderText" variant="info" v-if="customOptions.lastCardReminderText && customOptions.lastCardReminderFrequency && roomInfo.currentCardIndex > firstNonInstruction && ((roomInfo.currentCardIndex - firstNonInstruction) % customOptions.lastCardReminderFrequency == customOptions.lastCardReminderFrequency - 1)"></b-alert>
 
-          <!-- Safety Card -->
-          <div
-            class="card-body align-items-center justify-content-center"
-            v-if="roomInfo.xCardIsActive"
-            v-bind:class="{
-              'card-body': !customOptions.cardBackgroundImage,
-              'card-img-overlay':
-                customOptions.cardBackgroundImage &&
-                !customOptions.cardBackgroundImageAlign,
-            }"
-          >
-            <div class="mt-5 pt-5 mb-5">
-              <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
-              <div
-                class="safety-card-text"
-                v-html="customOptions.safetyCardText"
-                v-if="customOptions.safetyCardText"
-              ></div>
-            </div>
-            <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">
-              Continue
-            </button>
-            <div class="" v-if="!customOptions.safetyCardText">
-              <a class="x-card-text" href="http://tinyurl.com/x-card-rpg"
-                >About the X-Card</a
-              >
-            </div>
+            <!-- Card Image, Bottom -->
+            <b-card-img
+              v-bind:src="customOptions.cardBackgroundImage"
+              alt="Card Background image"
+              bottom
+              v-if="
+                customOptions.cardBackgroundImageAlign == 'bottom' &&
+                  roomInfo.currentCardIndex != 0
+              "
+            ></b-card-img>
           </div>
-
-          <!-- Card Image, Bottom -->
-          <b-card-img
-            v-bind:src="customOptions.cardBackgroundImage"
-            alt="Card Background image"
-            bottom
-            v-if="
-              customOptions.cardBackgroundImageAlign == 'bottom' &&
-                roomInfo.currentCardIndex != 0
-            "
-          ></b-card-img>
-        </div>
-      </transition>
+        </transition>
+      </div>
 
 
       <div class="after-game-card">
