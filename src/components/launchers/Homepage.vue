@@ -28,21 +28,20 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Easy to start</h3>
-            <div>Tons of templates, formats, and extensions to jump start your game design</div>
+            <div>Jump start your design with dozens of templates, formats, and extensions</div>
             <!-- Formats by Bart van der Griendt from NounProject.com https://thenounproject.com/icon/formats-687218/ -->
-            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform:scale(0.9);" src="/img/options.svg" alt="">
+            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform:scale(0.9);" src="/img/options.svg" alt="an icon of several pages, representing different formats and templates">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Design in Sheets</h3>
-            <div>Because it's powered by a Google Sheet, designing is quick and iteration is instantaneous</div>
-            <!-- icon by Becris https://thenounproject.com/icon/analysis-1018335/ -->
-            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform: translateY(1.5%);" src="/img/sheet-to-synth.svg" alt="">
+            <div>Your content lives in Google Sheets, so designing is quick and iteration is instantaneous</div>
+            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform: translateY(1.5%);" src="/img/sheet-to-synth.svg" alt="an icon of a sheet turning into a Story Synth session">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Multiplayer</h3>
             <div>Game sessions have realtime multiplayer, perfect for online playtesting and publishing</div>
             <!-- icon by Iconathon https://thenounproject.com/icon/networking-2909312/-->
-            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="">
+            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="an icon of people connected around the globe, signifying the realtime multiplayer of Story Synth">
           </div>
         </div>
       </div>
