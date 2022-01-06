@@ -2,7 +2,7 @@
   <div class="mb-4 editable-list">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow">
+          <div class="card d-flex shadow extension-card">
             <div class="card-body">
               <h2 v-html="editableListTitle" v-if="editableListTitle != undefined"></h2>
               <h2 v-else>List</h2>
@@ -12,10 +12,10 @@
                   <div class="row editable-list-row" v-if="item && (item != 'EMPTY')">
                     <div class="col-sm justify-content-between d-flex my-1">
                       <span style="min-width:1em"></span>
-                      <div v-if="index != currentEditIndex">{{item}}</div>
+                      <div class="my-auto" v-if="index != currentEditIndex">{{item}}</div>
                       <input v-else type="text" v-model="currentEditText" maxlength="50">
                       <div>
-                        <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="editItem(index)" v-if="currentEditIndex !== index">
+                        <button class="btn btn-sm btn-outline-dark m-1 px-1 edit-button" v-on:click="editItem(index)" v-if="currentEditIndex !== index">
                           <b-icon-pencil></b-icon-pencil>
                         </button>
                         <div v-else>

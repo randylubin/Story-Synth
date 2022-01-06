@@ -2,7 +2,7 @@
   <div class="mb-4 multi-editable-lists">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow">
+          <div class="card d-flex shadow extension-card">
             <div class="card-body">
 
               <div v-if="multiEditableLists != []">
@@ -15,10 +15,10 @@
                   <div v-for="(item, itemIndex) in list.value" v-bind:key="itemIndex" class="row">
                     <div class="col-sm justify-content-between d-flex my-1">
                       <span style="min-width:1em"></span>
-                      <div v-if="itemIndex != currentEditItemIndex || listIndex != currentEditListIndex">{{item}}</div>
+                      <div class="my-auto" v-if="itemIndex != currentEditItemIndex || listIndex != currentEditListIndex">{{item}}</div>
                       <input v-else type="text" v-model="currentEditText" maxlength="50">
                       <div>
-                        <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="editItem(listIndex, itemIndex)" v-if="currentEditItemIndex != itemIndex || currentEditListIndex != listIndex">
+                        <button class="btn btn-sm btn-outline-dark m-1 px-1 edit-button" v-on:click="editItem(listIndex, itemIndex)" v-if="currentEditItemIndex != itemIndex || currentEditListIndex != listIndex">
                           <b-icon-pencil></b-icon-pencil>
                         </button>
                         <div v-else>

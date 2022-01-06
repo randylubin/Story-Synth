@@ -2,7 +2,7 @@
   <div class="mb-4 player-turn-order" v-if="isNaN(playerTurnOrderFirstVisible) || (playerTurnOrderFirstVisible <= currentCardIndex)">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow">
+          <div class="card d-flex shadow extension-card">
             <div class="card-body">
               <h2 v-html="playerTurnOrderHeader" v-if="playerTurnOrderHeader != undefined"></h2>
               <h2 v-else>Player Turn Order</h2>
@@ -11,7 +11,7 @@
                 <div v-for="(player, index) in playerTurnOrder.players" v-bind:key="index">
                   <div class="justify-content-between d-flex">
                     <span></span>
-                    <span v-bind:class="{'font-weight-bold': (index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length)}" style="cursor:pointer" v-on:click="makeActivePlayer(index)" v-if="index != currentEditIndex">
+                    <span class="my-auto" v-bind:class="{'font-weight-bold': (index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length)}" style="cursor:pointer" v-on:click="makeActivePlayer(index)" v-if="index != currentEditIndex">
                       <span v-if="index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length"> –</span>
                       {{player}}
                       <span v-if="index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length">– </span>
@@ -20,7 +20,7 @@
                     <input v-else type="text" v-model="currentEditText" maxlength="50">
 
                     <div>
-                      <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="editPlayer(index)" v-if="currentEditIndex !== index">
+                      <button class="btn btn-sm btn-outline-dark m-1 px-1 edit-button" v-on:click="editPlayer(index)" v-if="currentEditIndex !== index">
                         <b-icon-pencil></b-icon-pencil>
                       </button>
                       <div v-else>

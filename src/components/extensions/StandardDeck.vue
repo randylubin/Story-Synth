@@ -2,7 +2,7 @@
   <div class="mb-4 standard-deck">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow">
+          <div class="card d-flex shadow extension-card">
             <div class="card-body">
               <h2 v-html="standardDeckTitle" v-if="standardDeckTitle != undefined"></h2>
               <h2 v-else>Standard Deck</h2>

@@ -2,7 +2,7 @@
   <div class="mb-4 plus-minus">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow">
+          <div class="card d-flex shadow extension-card">
             <div class="card-body">
               <h2 v-html="plusMinusTitle" v-if="plusMinusTitle != undefined"></h2>
               <h2 v-else>Key Stats</h2>
@@ -12,7 +12,7 @@
                   <button class="btn btn-sm btn-outline-dark" v-on:click="changeVariable(index, (variable.value - 1))">-</button>
                 
                 
-                  <div>{{variable.name}}: {{variable.value}}</div>
+                  <div class="my-auto">{{variable.name}}: {{variable.value}}</div>
                 
                 
                   <button class="btn btn-sm btn-outline-dark" v-on:click="changeVariable(index, (variable.value + 1))">+</button>

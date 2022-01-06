@@ -2,7 +2,7 @@
   <div class="mb-4 journal-extension">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow">
+          <div class="card d-flex shadow extension-card">
             <div class="card-body">
               <div v-html="journalUpperText" v-if="journalUpperText != undefined"></div>
               <h2 v-else>Journal Entries</h2>
@@ -16,13 +16,13 @@
                 <div v-for="(entry, index) in journalEntries.slice().reverse()" v-bind:key="index">
                   <div class="row journal-list-row" v-if="entry && (entry != 'EMPTY')">
                     <div class="col-sm-12 my-1 card px-0">
-                      <div class=" journal-entry justify-content-between d-flex">
-                        <div class="card-body text-left journal-entry-inner">
-                          <div class="" v-html="entry" v-if="index != currentEditIndex"></div>
+                      <div class="journal-entry justify-content-between d-flex">
+                        <div class="card-body text-left ">
+                          <div class="journal-entry-inner" v-html="entry" v-if="index != currentEditIndex"></div>
                           <textarea v-else class="form-control" type="text" v-model="currentEditText" maxlength="250" rows="5"></textarea>
                         </div>
                         <div v-if="currentEditIndex !== index">
-                          <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="editItem(index)">
+                          <button class="btn btn-sm btn-outline-dark m-1 px-1 edit-button" v-on:click="editItem(index)">
                             <b-icon-pencil></b-icon-pencil>
                           </button>
                         </div>
@@ -106,6 +106,8 @@ export default {
 
 .card .journal-entry-inner {
   white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-all;
 }
 
 .delete-button {
