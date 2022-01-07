@@ -14,8 +14,12 @@
         <div v-if="$route.fullPath == '/Gallery/'">
           <app-gallery></app-gallery>
         </div>
+
+        <div v-if="$route.fullPath == '/Formats/'">
+          <app-formatsAndExtensions></app-formatsAndExtensions>
+        </div>
         
-        <div v-if="!['Games', 'Gallery'].includes($route.params.gameType)">
+        <div v-if="!['Games', 'Gallery', 'Formats'].includes($route.params.gameType)">
           <!--For published version, remove any components you aren't using -->
           <div v-if="!$route.params.roomID && $route.params.gSheetID">
             <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameLauncher>
@@ -55,6 +59,7 @@
 
   import Homepage from './components/launchers/Homepage.vue'
   import Gallery from './components/launchers/Gallery.vue'
+  import FormatsAndExtensionsOverview from './components/launchers/FormatsAndExtensionsOverview.vue'
 
   import GameLauncher from './components/launchers/GameLauncher.vue'
   import CustomGameLauncher from './components/games/CustomGameLauncher.vue'
@@ -78,6 +83,7 @@
       'app-footer': Footer,
       'app-homepage': Homepage,
       'app-gallery': Gallery,
+      'app-formatsAndExtensions': FormatsAndExtensionsOverview,
       'app-gameLauncher': GameLauncher,
       'app-customGameLauncher': CustomGameLauncher,
       'app-customGameSessionManager': CustomGameSessionManager,
@@ -282,6 +288,7 @@
       ;
 
     border: 0px;
+    border-radius: 5px;
   }
 
   .non-footer-content {

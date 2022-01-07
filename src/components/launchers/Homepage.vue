@@ -167,7 +167,7 @@
 
         <div class="row mt-3">
           <div class="col-sm">
-            <a href="https://docs.storysynth.org/guide/design.html" class="btn mb-5 py-3 px-4 btn-lg">More templates</a>
+            <a href="/Formats/" class="btn mb-5 py-3 px-4 btn-lg">More templates</a>
             <a href="https://docs.storysynth.org/guide/" class="btn ml-2 mb-5 py-3 px-4 btn-lg">Learn how to make your first game</a>
           </div>
         </div>
