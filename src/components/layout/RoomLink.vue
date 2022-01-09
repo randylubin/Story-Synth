@@ -66,7 +66,7 @@ export default {
         "/" +
         Math.trunc(Math.random() * 100000).toString();
 
-      var userRef = rtdb.ref(tempUserRef);
+      let userRef = rtdb.ref(tempUserRef);
 
       amOnline.on("value", function (snapshot) {
         if (snapshot.val()) {

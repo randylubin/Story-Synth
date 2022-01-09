@@ -4,7 +4,7 @@
     <div v-html="customOptions.style"></div>
     
     <div class="menu-bar mb-4 d-flex align-items-right">
-      <app-roomLink class="ml-auto d-none d-sm-block" :routeRoomID="$route.params.roomID"></app-roomLink>
+      <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID" v-if="dataReady && firebaseReady"></app-roomLink>
     </div>
 
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
