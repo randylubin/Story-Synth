@@ -5,7 +5,8 @@
         <div
           v-if="roomInfo"
           :key="Object.keys(roomInfo).length"
-          class="pt-2 px-2 game-meta"
+          class="pt-2 px-2 game-meta live-player-counter"
+          v-bind:style="{color: color}"
         >
           {{ Object.keys(roomInfo).length }} 👀
         </div>
@@ -16,6 +17,7 @@
         @click="$bvToast.show('copyToast')"
         v-on:click="copyTextToClipboard()"
         type="button"
+        v-bind:style="{color: color}"
       >
         <b-icon-link45deg></b-icon-link45deg> Copy URL
       </button>
@@ -44,6 +46,7 @@ export default {
   name: "app-roomLink",
   props: {
     routeRoomID: String,
+    color: String,
   },
   data() {
     return {
@@ -143,6 +146,9 @@ export default {
 
 }
 
+.live-player-counter {
+  color: #343a40
+}
 .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
