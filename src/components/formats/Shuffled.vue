@@ -243,7 +243,7 @@
 
       <div v-for="(card, cardIndex) in roomInfo.cardSequence" v-bind:key="cardIndex">
 
-        <transition name="fade out-in">
+        <!-- <transition name="fade out-in"> -->
           <div
             class="card main-card d-flex shadow img-fluid mb-4"
             v-bind:class="{
@@ -409,7 +409,7 @@
               "
             ></b-card-img>
           </div>
-        </transition>
+        <!-- </transition> -->
       </div>
 
 
