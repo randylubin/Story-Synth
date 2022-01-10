@@ -274,11 +274,13 @@
       0 2px 2px hsl(0deg 0% 0% / 0.075),
       0 4px 4px hsl(0deg 0% 0% / 0.075),
       0 8px 8px hsl(0deg 0% 0% / 0.075),
-      0 16px 16px hsl(0deg 0% 0% / 0.075),
-      0 0 2px 2px hsl(0deg 0% 0% / 0.02) !important
+      0 16px 16px hsl(0deg 0% 0% / 0.075) !important
     ;
   }
 
+  .extension h2 {
+    font-size: 1.5rem;
+  }
   // .extension .extension-card {
   //   box-shadow:
   //     inset 0 1px 1px hsl(0deg 0% 0% / 0.075),
@@ -320,8 +322,16 @@
     border-radius: 0;
   }
 
-.btn-fab {
+.btn-fab.shadow {
   border-width: 0;
+  box-shadow:
+      0 1px 1px hsl(0deg 0% 0% / 0.075),
+      0 2px 2px hsl(0deg 0% 0% / 0.075),
+      0 4px 4px hsl(0deg 0% 0% / 0.075),
+      0 8px 8px hsl(0deg 0% 0% / 0.075),
+      0 16px 16px hsl(0deg 0% 0% / 0.075),
+      0 0px 5px hsl(0deg 0% 0% / .15) !important
+    ;
 }
 .btn-fab:not(:hover) {
   background: white;
