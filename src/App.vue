@@ -279,18 +279,18 @@
     ;
   }
 
-  .extension .extension-card {
-    box-shadow:
-      inset 0 1px 1px hsl(0deg 0% 0% / 0.075),
-      inset 0 2px 2px hsl(0deg 0% 0% / 0.075),
-      inset 0 4px 4px hsl(0deg 0% 0% / 0.075),
-      inset 0 8px 8px hsl(0deg 0% 0% / 0.075),
-      inset 0 16px 16px hsl(0deg 0% 0% / 0.075) !important
-      ;
+  // .extension .extension-card {
+  //   box-shadow:
+  //     inset 0 1px 1px hsl(0deg 0% 0% / 0.075),
+  //     inset 0 2px 2px hsl(0deg 0% 0% / 0.075),
+  //     inset 0 4px 4px hsl(0deg 0% 0% / 0.075),
+  //     inset 0 8px 8px hsl(0deg 0% 0% / 0.075),
+  //     inset 0 16px 16px hsl(0deg 0% 0% / 0.075) !important
+  //     ;
 
-    border: 0px;
-    border-radius: 5px;
-  }
+  //   border: 0px;
+  //   border-radius: 5px;
+  // }
 
   .non-footer-content {
     padding-bottom: 8.5rem;

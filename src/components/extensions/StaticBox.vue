@@ -2,7 +2,7 @@
   <div class="mb-4 static-box">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow extension-card">
+          <div class="card d-flex extension-card">
             <div class="card-body" v-html="staticBoxContent">
             </div>
           </div>

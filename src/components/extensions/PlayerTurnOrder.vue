@@ -2,7 +2,7 @@
   <div class="mb-4 player-turn-order" v-if="isNaN(playerTurnOrderFirstVisible) || (playerTurnOrderFirstVisible <= currentCardIndex)">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow extension-card">
+          <div class="card d-flex extension-card">
             <div class="card-body">
               <h2 v-html="playerTurnOrderHeader" v-if="playerTurnOrderHeader != undefined"></h2>
               <h2 v-else>Player Turn Order</h2>

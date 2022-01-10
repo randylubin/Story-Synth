@@ -2,7 +2,7 @@
   <div class="mb-4 journal-extension">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow extension-card">
+          <div class="card d-flex extension-card">
             <div class="card-body">
               <div v-html="journalUpperText" v-if="journalUpperText != undefined"></div>
               <h2 v-else>Journal Entries</h2>

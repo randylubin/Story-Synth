@@ -2,7 +2,7 @@
   <div class="mb-4 multi-editable-lists">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow extension-card">
+          <div class="card d-flex extension-card">
             <div class="card-body">
 
               <div v-if="multiEditableLists != []">

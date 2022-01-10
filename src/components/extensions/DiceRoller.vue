@@ -2,7 +2,7 @@
   <div class="mb-4 dice-roller">
       <div class="row">
         <div class="col-sm">
-          <div class="card d-flex shadow extension-card">
+          <div class="card d-flex extension-card">
             <div class="card-body">
               <h2 v-html="diceRollerTitle" v-if="diceRollerTitle != undefined"></h2>
               <h2 v-else>Dice Roller</h2>
