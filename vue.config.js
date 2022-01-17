@@ -5,6 +5,8 @@ module.exports = {
       renderRoutes: [
         '/',
         '/Gallery/',
+        '/Upload/',
+        '/Formats/',
         '/Games/Aethelreds-Academy/',
         '/Games/Around-The-Realm/',
         '/Games/Clash-At-Ikara/',

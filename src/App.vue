@@ -18,8 +18,12 @@
         <div v-if="$route.fullPath == '/Formats/'">
           <app-formatsAndExtensions></app-formatsAndExtensions>
         </div>
+
+        <div v-if="$route.fullPath == '/Upload/'">
+          <app-uploadPage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-uploadPage>
+        </div>
         
-        <div v-if="!['Games', 'Gallery', 'Formats'].includes($route.params.gameType)">
+        <div v-if="!['Games', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
           <!--For published version, remove any components you aren't using -->
           <div v-if="!$route.params.roomID && $route.params.gSheetID">
             <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameLauncher>
@@ -61,6 +65,7 @@
   import Gallery from './components/launchers/Gallery.vue'
   import FormatsAndExtensionsOverview from './components/launchers/FormatsAndExtensionsOverview.vue'
 
+  import UploadPage from './components/launchers/UploadPage.vue'
   import GameLauncher from './components/launchers/GameLauncher.vue'
   import CustomGameLauncher from './components/games/CustomGameLauncher.vue'
   import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
@@ -84,6 +89,7 @@
       'app-homepage': Homepage,
       'app-gallery': Gallery,
       'app-formatsAndExtensions': FormatsAndExtensionsOverview,
+      'app-uploadPage': UploadPage,
       'app-gameLauncher': GameLauncher,
       'app-customGameLauncher': CustomGameLauncher,
       'app-customGameSessionManager': CustomGameSessionManager,
@@ -281,18 +287,6 @@
   .extension h2 {
     font-size: 1.5rem;
   }
-  // .extension .extension-card {
-  //   box-shadow:
-  //     inset 0 1px 1px hsl(0deg 0% 0% / 0.075),
-  //     inset 0 2px 2px hsl(0deg 0% 0% / 0.075),
-  //     inset 0 4px 4px hsl(0deg 0% 0% / 0.075),
-  //     inset 0 8px 8px hsl(0deg 0% 0% / 0.075),
-  //     inset 0 16px 16px hsl(0deg 0% 0% / 0.075) !important
-  //     ;
-
-  //   border: 0px;
-  //   border-radius: 5px;
-  // }
 
   .non-footer-content {
     padding-bottom: 8.5rem;

@@ -8,6 +8,7 @@
       <b-navbar-nav>
           <b-nav-item href="https://docs.storysynth.org/guide">About</b-nav-item>
           <b-nav-item href="/Gallery/">Gallery</b-nav-item>
+          <b-nav-item href="/Upload/">Upload</b-nav-item>
           <b-nav-item href="https://docs.storysynth.org/guide/design.html">Guide</b-nav-item>
           <b-nav-item href="https://docs.storysynth.org/press/">Press</b-nav-item>
       </b-navbar-nav>
