@@ -2,35 +2,30 @@
   <div class="container">
     <div class="row padding-after-navbar">
       <div class="col text-left">
-        <h1 class="mb-3">Microgrant Program</h1>
-        <div class="card card-body shadow">
-          <p>Story Synth offers many ways for you to customize your design:</p>
-          <ul>
-            <li>Formats: several distinct game structures for different types of play</li>
-            <li>Extensions: additional functionality to support your game</li>
-            <li>Custom Options: ways to tweak the formats to suit your vision</li>
-          </ul>
-          <p>For detailed information on all of the above, visit the <a href="https://docs.storysynth.org/guide/formats.html" target="_blank">Story Synth Documentation</a>. If you have a request for a new format, extension, or custom option, send an email to <a href="mailto:suggestions@storysynth.org">suggestions@storysynth.org</a>.</p>
+        <h2 class="mb-3">Microgrant Program</h2>
+        <p>We're thrilled to announce that you can now apply for a grant to build a Story Synth game. The grant program is run by Big Bad Con and funded by Grant for the Web. Learn more on <a href="https://www.bigbadcon.com/story-synth-microgrants/">Big Bad Con's site</a>.</p>
+        <div class="card shadow">
+          <a href="https://www.bigbadcon.com/story-synth-microgrants/">
+            <img class="img img-fluid" src="/img/microgrant-banner.png" alt="microgrant banner - click it to learn more and apply">
+          </a>
         </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col">
-        <h2>About the Microgrants</h2>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
         <div class="card card-body shadow">
-          <h3>Shuffled</h3>
-          <img src="/img/ikara-thumbnail.png" class="rounded mx-auto d-block format-thumbnail" alt="thumbnail of the shuffled format">
+          <h3>Program Details</h3>
           <div>
-            <p class="format-line">In this format, players draw a series of card prompts from one or more decks. The order of cards for the first deck is always the same, which makes it a fit for instructions. Subsequent decks are randomized within each deck (e.g. you'll randomly draw through all of deck B before moving to deck C).</p>
-            <p class="format-line">Inspired by <a href="https://www.evilhat.com/home/for-the-queen/">For the Queen</a> and <a href="https://buriedwithoutceremony.com/the-quiet-year">The Quiet Year</a>.</p>
-            <p class="format-line">Templates: <a href="https://docs.google.com/spreadsheets/d/1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w/edit?usp=sharing">Simple Deck</a>, <a href="https://docs.google.com/spreadsheets/d/1N2N8URSswhmxLalPOkzi5d4kdeFiGrsobEmM_ojk0ow/edit?usp=sharing">Multi-deck</a></p>
-            <p class="format-line">Example Games: <a href="https://storysynth.org/Games/Clash-At-Ikara/">Clash at Ikara</a> and <a href="https://storysynth.org/Games/Raised-By-Mechs/">Raised by Mechs</a></p>
+            <p>The microgrants are for designers from marginalized backgrounds to create new games on Story Synth that take advantage of web monetization.</p>
+
+            <p>The microgrants come with the following:</p>
+            <ul>              
+              <li>$300 to each grant recipient (up to 100 recipients) to create a game in a 6 month window</li>
+              <li>Administrative support from the Big Bad Con grants administrators</li>
+              <li>Story Synth technical and design support from Randy Lubin</li>
+            </ul>
+            <p>The microgrant program is being run by the wonderful folks at Big Bad Con. Learn more about the application process and apply on <a href="https://www.bigbadcon.com/story-synth-microgrants/">Big Bad Con's site</a>.</p>
           </div>
         </div>
       </div>
@@ -39,11 +34,15 @@
     <div class="row">
       <div class="col">
         <div class="card card-body shadow">
-          <h3>Generator</h3>
-          <img src="/img/generator-thumbnail.png" class="rounded mx-auto d-block format-thumbnail" alt="thumbnail of the generator format">
-          <p>This format shows randomly selected options from different categories over a customized layout of rows and columns. Players can regenerate (i.e. reroll) the entire page of selections or just individual categories.</p>
-          <p>Template: <a href="https://docs.google.com/spreadsheets/d/1F0g3rVHxRA7O0rRMIQSsLCepJStxBO6pa7QJUNJb3K0/edit?usp=sharing">Generator Template</a></p>
-          <p>Example Games: <a href="https://storysynth.org/Games/Aethelreds-Academy">Aethelred's Academy</a> and <a href="https://storysynth.org/Games/Umberdred-Institute/">Umberdred Institute</a></p> 
+          <h3>More About Web Monetization</h3>
+
+          <p>The funds for this program are provided by <a href="https://www.grantfortheweb.org/">Grant for the Web</a>, a non-profit seeking to boost open, fair, and inclusive standards and innovation in <a href="https://webmonetization.org/">Web Monetization</a> - how content creators earn income online.</p>
+
+          <p>The Web Monetization standard allows sites to know if a site visitor is sending micropayments and the site can then enable content or functionality for that user. An early example of this is <a href="https://coil.com/">Coil</a>, a browser extension where a user can subscribe for $5.00 per month and that money is shared among the sites that the user visits, based on time spent.</p>
+
+          <p>In addition to the $300 grant award, you will also receive proceeds generated by your game through micropayments. They may be just pennies here and there, but as more people play they will add up.</p>
+
+          <p>Story Synth currenty has a basic implementation of web monetization via the monetization <a href="https://docs.storysynth.org/guide/options.html">custom option</a>. Over the next few months, we'll be adding new monetization related functionality to Story Synth, including the ability to restrict some or all of your game to groups of players using web monetization. Stay tuned for more details.</p>
         </div>
       </div>
     </div>
