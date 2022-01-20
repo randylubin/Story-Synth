@@ -81,7 +81,7 @@ export default {
             },
             {
               property: "og:image",
-              content: "https://diegeticgames.com/uploads/gallery-collage-unfurl.png",
+              content: "https://www.bigbadcon.com/story-synth-microgrants/",
               vmid: "og:image",
             },
             {
@@ -101,7 +101,7 @@ export default {
             },
             {
               property: "twitter:image:alt",
-              content: "The logos of several games in the Story Synth Gallery",
+              content: "a banner announcing the big bad con story synth microprogram",
               vmid: "twitter:image:alt",
             },
           ],

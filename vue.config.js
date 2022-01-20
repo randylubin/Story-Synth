@@ -7,6 +7,7 @@ module.exports = {
         '/Gallery/',
         '/Upload/',
         '/Formats/',
+        '/Grants/',
         '/Games/Aethelreds-Academy/',
         '/Games/Around-The-Realm/',
         '/Games/Clash-At-Ikara/',
