@@ -7,7 +7,7 @@
     <div class="menu-bar mb-4 d-flex align-items-center">
       <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal v-bind:style="{color: customOptions.menuColor}"><b-icon-list></b-icon-list> Menu</button>
       <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
-      <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID" :color="customOptions.menuColor" v-if="dataReady && firebaseReady"></app-roomLink>
+      <app-roomLink class="d-none d-sm-block" :monetizedByUser="monetizedByUser" @roomMonetized="updateRoomMonetization" :routeRoomID="$route.params.roomID" :color="customOptions.menuColor" v-if="dataReady && firebaseReady"></app-roomLink>
       
       <b-modal
         id="menuModal"
@@ -578,6 +578,9 @@
 
       </div>
     </div>
+    <div v-if="customOptions.wallet">
+      <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" href="wallet" v-on:monetization="alert('money money')">
+    </div>
   </div>
 </template>
 
@@ -620,6 +623,8 @@ export default {
         lastCardLabel: "Last Card"
       },
       deckTransitionArray: null,
+      monetizedByUser: false,
+      roomMonetized: null,
       error: false,
     };
   },
@@ -676,6 +681,10 @@ export default {
     };
   },
   mounted() {
+    document.monetization?.addEventListener('monetizationstart', () => {
+      this.monetizationStarted()
+    })
+
     this.fetchAndCleanSheetData(this.gSheetID);
 
     this.$bind("roomInfo", roomsCollection.doc(this.roomID))
@@ -709,6 +718,14 @@ export default {
       });
   },
   methods: {
+    monetizationStarted() {
+      console.log('monetizing')
+      this.monetizedByUser = true;
+    },
+    updateRoomMonetization(monetizationValue){
+      this.roomMonetized = monetizationValue;
+      console.log("room is now monetizied")
+    },
     goToCard(index){
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: (index),
@@ -977,6 +994,11 @@ export default {
               }
             }
           });
+
+          // monetization
+          if (this.customOptions.wallet){
+            this.customOptions.wallet = this.customOptions.wallet.split(',')
+          }
 
           // apply custom style to body
           let styleTemplate =

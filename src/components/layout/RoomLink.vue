@@ -11,6 +11,15 @@
           {{ Object.keys(roomInfo).length }} 👀
         </div>
       </transition>
+      <transition name="bounce" mode="out-in">
+        <div       
+          v-if="atLeastOneMonetizedUser"
+          class="pt-2 px-2 game-meta live-player-counter"
+          v-bind:style="{color: color}"
+        >
+          $$$
+        </div>
+      </transition>
 
       <button
         class="btn btn-outline-dark ml-auto border-0"
@@ -47,6 +56,7 @@ export default {
   props: {
     routeRoomID: String,
     color: String,
+    monetizedByUser: Boolean,
   },
   data() {
     return {
@@ -56,25 +66,27 @@ export default {
       currentUrl: location.hostname.toString() + "/" + this.$route.fullPath,
       roomInfo: {},
       context: null,
+      userID: null,
+      atLeastOneMonetizedUser: false,
     };
   },
   firebase: {
     roomInfo: rtdb.ref("documents"),
   },
   mounted() {
-    if (this.routeRoomID) {
-      var tempUserRef =
+    if (this.routeRoomID  && !this.userID) {
+      this.userID =
         "rooms/" +
         this.routeRoomID +
         "/" +
         Math.trunc(Math.random() * 100000).toString();
 
-      let userRef = rtdb.ref(tempUserRef);
+      let userRef = rtdb.ref(this.userID);
 
       amOnline.on("value", function (snapshot) {
         if (snapshot.val()) {
           userRef.onDisconnect().remove();
-          userRef.set(true);
+          userRef.set({here:true});
         }
       });
 
@@ -88,21 +100,44 @@ export default {
       this.updateUrl()
     }
   },
+  computed: {
+    stringyRoomInfo: function() {
+      return JSON.stringify(this.roomInfo);
+    }
+  },
   watch: {
+    monetizedByUser: function(){
+      var userRef = rtdb.ref(this.userID)
+      let selfMonetized = this.monetizedByUser ?? false
+      amOnline.on("value", function (snapshot) {
+        if (snapshot.val()) {
+          userRef.onDisconnect().remove();
+          userRef.set({here:true, monetized: selfMonetized});
+        }
+      });
+    },
+    stringyRoomInfo: function(){
+      for (const user in this.roomInfo){
+        if (this.roomInfo[user].monetized){
+          this.atLeastOneMonetizedUser = true; // currently set to be a one way switch – if you shared this room with a monetized user, then you can keep playing if they leave
+          this.$emit('roomMonetized', true)
+        }
+      }
+    },
     $route() {
-      if (this.routeRoomID) {
-        var tempUserRef =
+      if (this.routeRoomID && !this.userID) {
+        this.userID =
           "rooms/" +
           this.routeRoomID +
           "/" +
           Math.trunc(Math.random() * 1000).toString();
 
-        var userRef = rtdb.ref(tempUserRef);
+        var userRef = rtdb.ref(this.userID);
 
         amOnline.on("value", function (snapshot) {
           if (snapshot.val()) {
             userRef.onDisconnect().remove();
-            userRef.set(true);
+            userRef.set({here:true});
           }
         });
 

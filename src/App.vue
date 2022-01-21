@@ -50,6 +50,7 @@
       </div>
       
       <app-footer v-if="$route.params.roomID && ['Timed', 'SecretCards'].includes($route.params.gameType)"></app-footer>
+      <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx">
     </div>
   </div>
 </template>
