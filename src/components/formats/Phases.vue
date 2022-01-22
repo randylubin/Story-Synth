@@ -391,7 +391,7 @@ export default {
       this.$bvModal.hide("menuModal");
     },
     copyLinkToClipboard(){
-      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      let currentUrl = location.hostname.toString() + this.$route.fullPath
       navigator.clipboard.writeText(currentUrl).then(function() {
         console.log('copied url')
       }, function() {
