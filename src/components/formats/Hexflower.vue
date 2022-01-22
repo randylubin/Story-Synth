@@ -690,7 +690,9 @@ export default {
 
                   // organize into rows
                   let hexRowLookup = {0:0,1:1,2:1,3:2,4:2,5:2,6:3,7:3,8:4,9:4,10:4,11:5,12:5,13:6,14:6,15:6,16:7,17:7,18:8}
-                  this.hexMapRows[hexRowLookup[hexInfo.hexID]].push(hexInfo);
+                  if (this.hexMapRows[hexRowLookup[hexInfo.hexID]]){
+                    this.hexMapRows[hexRowLookup[hexInfo.hexID]].push(hexInfo);
+                  }
 
                   cleanData.push(hexInfo);
                 }
