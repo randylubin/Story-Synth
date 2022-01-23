@@ -66,7 +66,18 @@
               "
             ></b-button>
           </div>
-          <div v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)">
+          <div v-if="customOptions.treatLastCardAsLastDeck" :disabled="roomInfo.currentCardIndex >= roomInfo.locationOfLastCard" class="row menu-row">
+            <b-button variant="outline-dark" class="control-button-last-deck btn-lg btn-block" v-on:click="lastCard(); closeMenu();"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex == gSheet.length - 1 ||
+                  roomInfo.currentCardIndex == roomInfo.locationOfLastCard
+              "
+              >
+                Go to {{customOptions.lastCardLabel}}
+              </b-button>
+          </div>
+          <div v-if="!customOptions.treatLastCardAsLastDeck && !this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)">
             <hr class='mb-4'/>
             <h6 class='text-center'>{{customOptions.lastCardLabel}} Options</h6>
             <div class="row menu-row">
@@ -223,7 +234,8 @@
               v-on:click="nextCard()"
               :disabled="
                 roomInfo.xCardIsActive ||
-                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+                roomInfo.currentCardIndex >= roomInfo.locationOfLastCard ||
+                (customOptions.treatLastCardAsLastDeck && this.roomInfo.cardSequence.indexOf(this.unorderedDecks[this.unorderedDecks.length-1][0]) == this.roomInfo.currentCardIndex)
               "
             >
               <!-- Next Card -->
@@ -753,7 +765,7 @@ export default {
 
       let tempLastCardLocation = this.roomInfo.locationOfLastCard
 
-      if (this.unorderedDecks.length > 1){
+      if (this.customOptions.treatLastCardAsLastDeck){
         tempLastCardLocation = this.roomInfo.cardSequence.indexOf(this.unorderedDecks[this.unorderedDecks.length-1][0])
       } 
 
