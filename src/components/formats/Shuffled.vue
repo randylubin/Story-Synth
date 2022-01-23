@@ -751,10 +751,18 @@ export default {
         this.shuffleAndResetGame();
       }
 
+      let tempLastCardLocation = this.roomInfo.locationOfLastCard
+
+      if (this.unorderedDecks.length > 1){
+        tempLastCardLocation = this.roomInfo.cardSequence.indexOf(this.unorderedDecks[this.unorderedDecks.length-1][0])
+      } 
+
       roomsCollection.doc(this.roomID).update({
-        currentCardIndex: this.roomInfo.locationOfLastCard,
+        currentCardIndex: tempLastCardLocation,
+        locationOfLastCard: tempLastCardLocation,
         showCardBack: false,
       });
+    
     },
     xCard() {
       roomsCollection.doc(this.roomID).update({
