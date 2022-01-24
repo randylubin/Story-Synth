@@ -11,19 +11,23 @@
           <app-homepage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-homepage>
         </div>
 
+        <div v-if="$route.fullPath == '/Formats/'">
+          <app-formatsAndExtensions></app-formatsAndExtensions>
+        </div>
+
         <div v-if="$route.fullPath == '/Gallery/'">
           <app-gallery></app-gallery>
         </div>
 
-        <div v-if="$route.fullPath == '/Formats/'">
-          <app-formatsAndExtensions></app-formatsAndExtensions>
+        <div v-if="$route.fullPath == '/Grants/'">
+          <app-grants></app-grants>
         </div>
 
         <div v-if="$route.fullPath == '/Upload/'">
           <app-uploadPage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-uploadPage>
         </div>
         
-        <div v-if="!['Games', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
+        <div v-if="!['Games', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
           <!--For published version, remove any components you aren't using -->
           <div v-if="!$route.params.roomID && $route.params.gSheetID">
             <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameLauncher>
@@ -61,9 +65,10 @@
   import Header from './components/layout/Header.vue'
   import Footer from './components/layout/Footer.vue'
 
-  import Homepage from './components/launchers/Homepage.vue'
-  import Gallery from './components/launchers/Gallery.vue'
-  import FormatsAndExtensionsOverview from './components/launchers/FormatsAndExtensionsOverview.vue'
+  import Homepage from './components/other/Homepage.vue'
+  import Gallery from './components/other/Gallery.vue'
+  import FormatsAndExtensionsOverview from './components/other/FormatsAndExtensionsOverview.vue'
+  import Grants from './components/other/Grants.vue'
 
   import UploadPage from './components/launchers/UploadPage.vue'
   import GameLauncher from './components/launchers/GameLauncher.vue'
@@ -86,13 +91,17 @@
     components: { // Remove unused components from the published version
       'app-header': Header,
       'app-footer': Footer,
+
       'app-homepage': Homepage,
+      'app-grants': Grants,
       'app-gallery': Gallery,
       'app-formatsAndExtensions': FormatsAndExtensionsOverview,
+
       'app-uploadPage': UploadPage,
       'app-gameLauncher': GameLauncher,
       'app-customGameLauncher': CustomGameLauncher,
       'app-customGameSessionManager': CustomGameSessionManager,
+
       'app-timed': Timed,
       'app-shuffled': Shuffled,
       'app-monster': Monster,
