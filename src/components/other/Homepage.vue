@@ -12,7 +12,7 @@
         <div class="embed-responsive embed-responsive-16by9">
           <video class="embed-responsive-item" autoplay loop controls muted>
             <source
-              src="/img/story-synth-teaser.mp4"
+              src="https://diegeticgames.com/uploads/story-synth-teaser.mp4"
               type="video/mp4"
             />
           </video>

@@ -8,12 +8,22 @@ import Vue from 'vue'
 import VueMeta from 'vue-meta'
 Vue.use(VueMeta);
 
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BootstrapVue, BIcon, BIconPencil, BIconTrash, BIconCheck2, BIconList, BIconLink45deg, BIconArrowClockwise, BIconArrowsMove, BIconChevronLeft, BIconCardHeading, BIconChevronRight} from 'bootstrap-vue'
 
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
-Vue.use(IconsPlugin)
+Vue.component('BIcon', BIcon)
+Vue.component('BIconPencil', BIconPencil)
+Vue.component('BIconTrash', BIconTrash)
+Vue.component('BIconCheck2', BIconCheck2)
+Vue.component('BIconList', BIconList)
+Vue.component('BIconLink45deg', BIconLink45deg)
+Vue.component('BIconArrowClockwise', BIconArrowClockwise)
+Vue.component('BIconArrowsMove', BIconArrowsMove)
+Vue.component('BIconChevronLeft', BIconChevronLeft)
+Vue.component('BIconChevronRight', BIconChevronRight)
+Vue.component('BIconCardHeading', BIconCardHeading)
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
