@@ -119,14 +119,14 @@ export default {
           link: "/Games/Umberdred-Institute/",
           image: "https://img.itch.zone/aW1nLzY3NzQzNTIuanBn/315x250%23c/XQicpj.jpg",
         },
-        {
-          title: "Working For The Corp",
-          credits: "By Ken Davidson, with contributions from Jess Meir",
-          blurb: 'Play as workers at a cyberpunk megacorp who are tasked with defending key info from runners.  Will you defend The Corp?',
-          link: "/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA",
-          image:
-            "https://iili.io/f1Kl07.md.png",
-        },
+        // {
+        //   title: "Working For The Corp",
+        //   credits: "By Ken Davidson",
+        //   blurb: 'Play as workers at a cyberpunk megacorp who are tasked with defending key info from runners.  Will you defend The Corp?',
+        //   link: "/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA",
+        //   image:
+        //     "https://iili.io/f1Kl07.md.png",
+        // },
         {
           title: 'Compersion',
           credits: 'By Justin Ford',
