@@ -816,7 +816,7 @@ $hex-padding: 4px;
 }
 
 .pointy-top.hexflower-body {
- transform: rotate(-90deg) translate(0px, math.floor($hex-width - $hex-height)/2);
+ transform: rotate(-90deg) translate(0px, math.floor($hex-width - $hex-height)*0.5);
 }
 
 .hex-tile-foggy {
@@ -869,11 +869,11 @@ $hex-padding: 4px;
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
   background: white;
   position: absolute;
-  margin-top: -$hex-height/2;
+  margin-top: -$hex-height * 0.5;
   height: $hex-height;
   width: $hex-width;
   @media (max-width: 375px) {
-    margin-top: -$hex-height * .75 / 2;
+    margin-top: -$hex-height * .75 * 0.5;
     height: $hex-height * .75;
     width: $hex-width * .75 ;
     background-size: ($hex-width * .75) ($hex-height * .75);
@@ -886,33 +886,33 @@ $hex-padding: 4px;
 // This is the content
 .hex-tile-inner-content {
   transition: all 0.1s;
-  padding: $hex-height / 4; 
+  padding: $hex-height * 0.25; 
   @media (max-width: 375px) {
-    padding: $hex-height * .75 / 4; 
+    padding: $hex-height * .75 * 0.25; 
   }
 }
 .hex-tile-inner-content-xs { 
-  font-size: $hex-height / 8;
+  font-size: $hex-height * 0.125;
   @media (max-width: 375px) {
-    font-size: $hex-height * .75 / 8;
+    font-size: $hex-height * .75 * 0.125;
   }
 }
 .hex-tile-inner-content-sm { 
-  font-size: $hex-height / 6;
+  font-size: calc($hex-height / 6);
   @media (max-width: 375px) {
-    font-size: $hex-height * .75 / 6;
+    font-size: calc($hex-height * .75 / 6);
   }
 }
 .hex-tile-inner-content-md {
-  font-size: $hex-height / 4;
+  font-size: $hex-height * 0.25;
   @media (max-width: 375px) {
-    font-size: $hex-height * .75 / 4;
+    font-size: $hex-height * .75 * 0.25;
   }
 }
 .hex-tile-inner-content-lg {
-  font-size: $hex-height / 2;
+  font-size: $hex-height * 0.5;
   @media (max-width: 375px) {
-    font-size: $hex-height * .75 / 2;
+    font-size: $hex-height * .75 * 0.5;
   }
 }
 
@@ -957,7 +957,7 @@ $hex-padding: 4px;
 }
 @for $i from 0 through 17 {
   .hex-resetting .hex-tile:nth-child(#{$i}) .hex-tile-inner {
-    transition-delay: #{$i/36}s;
+    transition-delay: #{$i * 0.0277778}s;
   }
 }
 
