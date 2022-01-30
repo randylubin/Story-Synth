@@ -1004,6 +1004,12 @@ export default {
           let body = document.getElementById("app"); // document.body;
           body.classList.add(styleTemplate);
 
+          if (this.customOptions.style){
+            if (this.customOptions.style.substring(0,7) != "<style>"){
+              this.customOptions.style = "<style>" + this.customOptions.style + "</style>"
+            }
+          }
+
           if (
             this.firebaseReady &&
             Object.keys(this.tempExtensionData).length > 1
