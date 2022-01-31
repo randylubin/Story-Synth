@@ -259,6 +259,7 @@
 
 <script>
 import axios from "axios";
+import VanityLookup from "./VanityLookup.js";
 
 export default {
   name: "app-gameLauncher",
@@ -281,6 +282,7 @@ export default {
         wallet: undefined,
         revShare: 0.2,
       },
+      vanityLookup: VanityLookup,
     };
   },
   metaInfo() {
@@ -363,7 +365,11 @@ export default {
         routeFullPath = routeFullPath.slice(0, -1);
       }
 
-      let tempURL = routeFullPath + "/" + roomID
+      let tempURL = routeFullPath.slice(0,routeFullPath.lastIndexOf("/"))
+
+      let sheetID = this.vanityLookup[this.routeGSheetID] ? this.vanityLookup[this.routeGSheetID] : this.routeGSheetID;
+
+      tempURL = tempURL + "/" + sheetID + "/" + roomID
 
       if (this.customOptions.facilitatorMode){
         tempURL += '/facilitator/'
@@ -1652,6 +1658,11 @@ export default {
         wordList[Math.floor(Math.random() * wordList.length)];
     },
     fetchAndCleanSheetData(sheetID) {
+      if (this.vanityLookup[sheetID]) {
+        sheetID = this.vanityLookup[sheetID];
+      }
+
+
       // Remove for published version
       if (!sheetID || sheetID == "demo") {
         sheetID = "1HataDfV2lrA4hfzmLgDjXH09dEMLQV6OT10tVH9G52A";
