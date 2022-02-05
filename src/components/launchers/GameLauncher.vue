@@ -1705,6 +1705,12 @@ export default {
           let body = document.getElementsByClassName("non-footer-content")[0]; // document.body;
           body.classList.add(styleTemplate);
 
+          if (this.customOptions.style){
+            if (this.customOptions.style.substring(0,7) != "<style>"){
+              this.customOptions.style = "<style>" + this.customOptions.style + "</style>"
+            }
+          }
+
           if (location.hostname.toString() !== "localhost") {
             this.$mixpanel.track("Visit Game Launcher", {
               game_name: this.customOptions.gameTitle ?? "untitled",
