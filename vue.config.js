@@ -22,14 +22,13 @@ module.exports = {
         '/Phases/1HataDfV2lrA4hfzmLgDjXH09dEMLQV6OT10tVH9G52A/',
         '/SecretCards/1JwMF02DSxNKtjHp6u-wyznSs-iEG_3DpOobgc17I16o/',
         '/Shuffled/1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc/', // Reunion
-        //'/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA/', // working for the corp
-        // '/Shuffled/1ghm-XOUZlYaOeHcl0zer4KSpCMaoN5u_X7iWmN2TrjY/', // For the Awesome
         '/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/', // This Heart Within Me Burns
-        '/Shuffled/1XVd4Kgq3X3utOm25JXOsDbhI_jLjAHX8mGzpiT6Sgho/', // Compersion
+        // '/Shuffled/1XVd4Kgq3X3utOm25JXOsDbhI_jLjAHX8mGzpiT6Sgho/', // Compersion
       ],
       useRenderEvent: true,
       headless: true,
-      onlyProduction: true
+      onlyProduction: true,
+      // maxConcurrentRoutes: 1,
     }
   }
 }

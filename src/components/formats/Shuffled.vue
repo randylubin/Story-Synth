@@ -907,15 +907,16 @@ export default {
       // check for set last card location
       let tempLastCardIndex = newCardSequence.length-1
       let lastLocation = parseFloat(this.customOptions.setLastCardLocation)
+      let lengthOfUnorderedDecks = [].concat.apply([], this.unorderedDecks).length
 
       if (lastLocation){
         if (lastLocation >= 1) {
           tempLastCardIndex = lastLocation + this.orderedCards.length
         } else if (lastLocation > 0){
           let maxLoc = newCardSequence.length
-          let minLoc = newCardSequence.length - Math.floor(this.unorderedDecks[1].length * lastLocation) - 1
+          let minLoc = newCardSequence.length - Math.floor(lengthOfUnorderedDecks * lastLocation) - 1
           tempLastCardIndex = Math.floor(Math.random() * (maxLoc-minLoc) + minLoc)
-          console.log('new location:', tempLastCardIndex, maxLoc, minLoc)
+          console.log('new location:', tempLastCardIndex, maxLoc, minLoc, lengthOfUnorderedDecks, this.orderedCards.length)
         } else {
           tempLastCardIndex = newCardSequence.length + lastLocation - 1
         }
