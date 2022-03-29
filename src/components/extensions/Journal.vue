@@ -4,7 +4,7 @@
         <div class="col-sm">
           <div class="card d-flex extension-card">
             <div class="card-body">
-              <div v-html="journalUpperText" v-if="journalUpperText != undefined"></div>
+              <h2 v-html="journalUpperText" v-if="journalUpperText != undefined"></h2>
               <h2 v-else>Journal Entries</h2>
 
               <form>
