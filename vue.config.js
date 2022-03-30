@@ -23,7 +23,7 @@ module.exports = {
         '/SecretCards/1JwMF02DSxNKtjHp6u-wyznSs-iEG_3DpOobgc17I16o/',
         '/Shuffled/1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc/', // Reunion
         '/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/', // This Heart Within Me Burns
-        // '/Shuffled/1XVd4Kgq3X3utOm25JXOsDbhI_jLjAHX8mGzpiT6Sgho/', // Compersion
+        '/Shuffled/12dLB630MtjpJGDwEEwD0lvOzMUoACfzgqHQLgTLYTGc/', // Compersion
       ],
       useRenderEvent: true,
       headless: true,
