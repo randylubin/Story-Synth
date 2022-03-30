@@ -442,12 +442,18 @@ export default {
       let lastSeenRound = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenRound : this.roomInfo.currentCardIndex
       let lastSeenPhase = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenPhase : this.roomInfo.currentPhase
 
-      roomsCollection.doc(this.roomID).update({
-        currentCardIndex: this.roomInfo.currentCardIndex,
-        lastSeenRound: lastSeenRound,
-        currentPhase: this.roomInfo.currentPhase,
-        lastSeenPhase: lastSeenPhase,
-      })
+      // numberOfRounds
+      if ((this.roomInfo.currentCardIndex >= this.endingIndex) || !this.customOptions.numberOfRounds || parseInt(this.customOptions.numberOfRounds) > this.roomInfo.currentCardIndex - this.firstNonInstruction){
+        roomsCollection.doc(this.roomID).update({
+          currentCardIndex: this.roomInfo.currentCardIndex,
+          lastSeenRound: lastSeenRound,
+          currentPhase: this.roomInfo.currentPhase,
+          lastSeenPhase: lastSeenPhase,
+        })
+      } else {
+        this.ending()
+      }
+
     },
     skipInstructions(){
       roomsCollection.doc(this.roomID).update({
@@ -480,7 +486,9 @@ export default {
       // reset card count
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: 0,
-        currentPhase: 0
+        currentPhase: 0,
+        lastSeenPhase: 0,
+        lastSeenRound: 0
       })
 
       // Create a ordered array
