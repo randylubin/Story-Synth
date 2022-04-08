@@ -611,6 +611,12 @@ export default {
             }
           });
 
+          // check for empty cols
+          this.categoryData = this.categoryData.filter(col => col != undefined && col.length != 0)
+          this.categoryLabels = this.categoryLabels.filter(col => col != undefined && col.length != 0)
+          this.numberOfCategories = this.categoryData.length
+          this.generatorRowLayout = this.generatorLayout.filter(row => row > this.numberOfCategories)
+
           if (
             this.firebaseReady &&
             Object.keys(this.tempExtensionData).length > 1
