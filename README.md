@@ -80,7 +80,7 @@ service cloud.firestore {
 
 Install the [Firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) tool, if you haven't yet, and log in with the same account that you created the project with.
 
-Then, update the project with your Firebase credentials by adding them to a new .env file in the root folder of Story Synth. You need to add your your firebase api key, database url and project ID, replacing TODO in the following:
+Then, update the project with your Firebase credentials by adding them to a new file that you name ".env" and create in the root folder of Story Synth (the same folder with the file '.gitignore'. You need to add your your firebase api key, database url and project ID, replacing TODO in the following:
 
 ```
 VUE_APP_FIREBASE_API_KEY=TODO
