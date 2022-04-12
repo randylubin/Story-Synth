@@ -41,6 +41,7 @@ Make sure you have [Node.js and npm](https://www.npmjs.com/get-npm) installed lo
 ```
 npm install
 ```
+NOTE: you need to have a version of Node,js that is earlier than 17, as the latest versions of Node have a bug. (I'm currently using v16.14.0)
 
 DO NOT run `npm audit fix --force` as it will break dependencies.
 
