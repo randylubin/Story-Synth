@@ -629,6 +629,12 @@ export default {
       totalDecks: 0,
       unorderedDecks: {},
       customOptions: {
+        gameTitle: undefined,
+        byline: undefined,
+        gameBlurb: undefined,
+        password: undefined,
+        wallet: undefined,
+        revShare: 0.2,
         lastCardLabel: "Last Card"
       },
       deckTransitionArray: null,

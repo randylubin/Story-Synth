@@ -4,7 +4,7 @@
       <div class="col-sm text-center">
         <h1 class="mb-3">Games Gallery</h1>
         <p>Check out these great games playable on Story Synth!</p>
-        <p>Want your game added to the gallery? Email <a href="mailto:gallery@storysynth.org">gallery@storysynth.org</a></p>
+        <p>Want your game added to the gallery? Fill out the <a href="https://forms.gle/CizjsyFsR6sVCYEX7">submit to gallery form</a> to add your game!</p>
       </div>
     </div>
 
@@ -142,14 +142,14 @@ export default {
           image:
             "https://diegeticgames.com/uploads/monster-game-cover-v2.png",
         },        
-        /*{
-          title: 'TK',
-          credits: 'TK',
-          blurb: 'TK',
-          link: 'TK',
-          image: 'TK'
-        },
         {
+          title: 'Generational: A Story about Stories',
+          credits: 'By ProperNerdy',
+          blurb: 'Generational is an improvisational and collaborative way to tell a story that spans the history of an entire world.',
+          link: 'https://prprnrdy.com/gensynth',
+          image: 'https://img.itch.zone/aW1nLzYxNTIwODMucG5n/347x500/tDio8p.png'
+        },
+        /*{
           title: 'TK',
           credits: 'TK',
           blurb: 'TK',

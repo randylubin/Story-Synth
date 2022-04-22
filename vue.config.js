@@ -24,6 +24,7 @@ module.exports = {
         '/Shuffled/1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc/', // Reunion
         '/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/', // This Heart Within Me Burns
         '/Shuffled/12dLB630MtjpJGDwEEwD0lvOzMUoACfzgqHQLgTLYTGc/', // Compersion
+        '/Shuffled/1p3DrsORsL69s3Iqr8SlpS_G1jy--sAWDPbBBSy6pnZk/', // Generational
       ],
       useRenderEvent: true,
       headless: true,
