@@ -2,13 +2,13 @@
   <div
     class="generator game-room container"
     v-if="roomInfo"
-    v-bind:class="['style-template-' + customOptions.styleTemplate]"
+    v-bind:class="{'px-0': generatorAsExtension, styleTemplate: styleTemplate}"
   >
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
 
     <!-- Menu Bar -->
-    <div class="menu-bar mb-4 d-flex align-items-center">
+    <div class="menu-bar mb-4 d-flex align-items-center" v-if="!generatorAsExtension">
       <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal v-bind:style="{color: customOptions.menuColor}"><b-icon-list></b-icon-list> Menu</button>
       <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
       <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID" :color="customOptions.menuColor" v-if="dataReady && firebaseReady"></app-roomLink>
@@ -355,6 +355,7 @@ export default {
   props: {
     roomID: String,
     gSheetID: String,
+    generatorAsExtension: Boolean,
   },
   data: function () {
     return {
@@ -370,6 +371,7 @@ export default {
       categoryLabels: [],
       categoryData: [],
       customOptions: {},
+      styleTemplate: "",
       tempExtensionData: { test: null },
       error: false,
     };

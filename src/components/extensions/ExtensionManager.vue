@@ -7,6 +7,11 @@
             :gSheetForExtension="extensionData.hexflowerAsExtension"
             :gSheetID="extensionData.hexflowerAsExtension.substring(extensionData.hexflowerAsExtension.indexOf('/d/') + 3, extensionData.hexflowerAsExtension.indexOf('/edit'))"
             :roomID="$route.params.roomID + '-hexflower-extensions'" v-if="Boolean(extensionData.hexflowerAsExtension) && ((!extensionList.hexflowerAsExtensionLocation && extensionLocation == 'lower') || (extensionList.hexflowerAsExtensionLocation == extensionLocation))"></app-hexflowerAsExtension>
+          <app-generatorAsExtension class="extension"
+            :generatorAsExtension="Boolean(extensionData.generatorAsExtension)"
+            :gSheetForExtension="extensionData.generatorAsExtension"
+            :gSheetID="extensionData.generatorAsExtension.substring(extensionData.generatorAsExtension.indexOf('/d/') + 3, extensionData.generatorAsExtension.indexOf('/edit'))"
+            :roomID="$route.params.roomID + '-generator-extensions'" v-if="Boolean(extensionData.generatorAsExtension) && ((!extensionList.generatorAsExtensionLocation && extensionLocation == 'lower') || (extensionList.generatorAsExtensionLocation == extensionLocation))"></app-generatorAsExtension>
           <app-staticBox class="extension" :staticBoxContent="extensionData.staticBoxContent" v-if="extensionData.staticBoxContent && ((!extensionList.staticBoxLocation && extensionLocation == 'lower') || (extensionList.staticBoxLocation == extensionLocation))"></app-staticBox>
           <app-playerTurnOrder class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :playerTurnOrderHeader="extensionData.playerTurnOrderHeader" :playerTurnOrderButtonLabel="extensionData.playerTurnOrderButtonLabel" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['playerTurnOrder'] && ((!extensionList.playerTurnOrderLocation && extensionLocation == 'lower') || (extensionList.playerTurnOrderLocation == extensionLocation))"></app-playerTurnOrder>
           <app-plusMinus class="extension" :plusMinus="JSON.parse(extensionData.plusMinus)" :plusMinusTitle="extensionData.plusMinusTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['plusMinus'] && ((!extensionList.plusMinusLocation && extensionLocation == 'lower') || (extensionList.plusMinusLocation == extensionLocation))"></app-plusMinus>
@@ -43,6 +48,7 @@ import StaticBox from './StaticBox.vue'
 import StandardDeck from './StandardDeck.vue'
 import Journal from './Journal.vue'
 import Hexflower from '../formats/Hexflower.vue'
+import Generator from '../formats/Generator.vue'
 
 export default {
   name: 'app-extensionManager',
@@ -57,6 +63,7 @@ export default {
     'app-standardDeck': StandardDeck,
     'app-journal': Journal,
     'app-hexflowerAsExtension': Hexflower,
+    'app-generatorAsExtension': Generator,
   },
   props: {
     extensionData: Object,
