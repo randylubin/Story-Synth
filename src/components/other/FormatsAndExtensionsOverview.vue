@@ -173,7 +173,7 @@ export default {
             },
             {
               property: "og:title",
-              content: "Story Synth Gallery",
+              content: "Story Synth Formats and Extensions",
               vmid: "og:title",
             },
             {

@@ -8,7 +8,7 @@
         </div>
       </div>
 
-      <div class="homepage-gif row rounded-m clipped mb-4">
+      <div class="homepage-gif row rounded-m clipped mb-4 shadow">
         <div class="embed-responsive embed-responsive-16by9">
           <video class="embed-responsive-item" autoplay loop controls muted>
             <source
@@ -122,6 +122,30 @@
         </div>
       </div>
 
+      <!-- Section: grant -->
+      <div class="margin-between-sections">
+        <div class="row">
+          <div class="col-12">
+            <h2>Grant Program</h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <p>Apply for a grant to make a game with Story Synth. This microgrant program is run by Big Bad Con and funded by Grant for the Web. <a href="/Grants/">Learn more and apply</a>.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 mb-2">
+            <div class="card shadow">
+              <a href="/Grants/">
+                <img class="img img-fluid" src="/img/microgrant-banner.png" alt="microgrant banner - click it to learn more and apply">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Section: create -->
       <div class="homepage-create margin-between-sections">
         <div class="row">
@@ -137,7 +161,7 @@
 
         <div class="row">
           <div class="col-md-4 mb-2">
-            <div class="card">
+            <div class="card shadow">
               <img src="/img/shuffled-thumbnail.png" alt="a thumbnail of the shuffled format" class="card-img-top">
               <div class="card-body">
                 <h3 class="card-title">Shuffled</h3>
@@ -146,7 +170,7 @@
             </div>
           </div>
           <div class="col-md-4 mb-2">
-            <div class="card">
+            <div class="card shadow">
               <img src="/img/generator-thumbnail.png" alt="a thumbnail of the generator format" class="card-img-top">
               <div class="card-body">
                 <h3 class="card-title">Generator</h3>
@@ -155,7 +179,7 @@
             </div>
           </div>
           <div class="col-md-4 mb-2">
-            <div class="card">
+            <div class="card shadow">
               <img src="/img/hexflower-thumbnail.png" alt="a thumbnail of the hexflower format" class="card-img-top">
               <div class="card-body">
                 <h3 class="card-title">Hexflower</h3>
@@ -205,9 +229,11 @@
           <div class="col-12">
             <p>When you’re ready, fill out <a href="https://forms.gle/CizjsyFsR6sVCYEX7">this form</a> to add your game to the gallery!</p>
           </div>
-          <a href="/Gallery/">
-            <img class="img img-fluid rounded-m clipped" src="/img/story-synth-gallery-banner.png" alt="Collage of Story Synth Games">
-          </a>
+          <div class="card shadow">
+            <a href="/Gallery/">
+              <img class="img img-fluid rounded-m clipped" src="/img/story-synth-gallery-banner.png" alt="Collage of Story Synth Games">
+            </a>
+          </div>
         </div>
       
       </div>
@@ -225,8 +251,8 @@
 </template>
 
 <script>
-import GameMaker from "./GameMaker.vue";
-import GameLauncherSingleGame from "./GameLauncherSingleGame.vue"
+import GameMaker from "../launchers/GameMaker.vue";
+import GameLauncherSingleGame from "../launchers/GameLauncherSingleGame.vue"
 
 export default {
   name: "app-homepage",

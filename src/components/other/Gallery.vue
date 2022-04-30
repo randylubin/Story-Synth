@@ -4,7 +4,7 @@
       <div class="col-sm text-center">
         <h1 class="mb-3">Games Gallery</h1>
         <p>Check out these great games playable on Story Synth!</p>
-        <p>Want your game added to the gallery? Email <a href="mailto:gallery@storysynth.org">gallery@storysynth.org</a></p>
+        <p>Want your game added to the gallery? Fill out the <a href="https://forms.gle/CizjsyFsR6sVCYEX7">submit to gallery form</a> to add your game!</p>
       </div>
     </div>
 
@@ -119,19 +119,19 @@ export default {
           link: "/Games/Umberdred-Institute/",
           image: "https://img.itch.zone/aW1nLzY3NzQzNTIuanBn/315x250%23c/XQicpj.jpg",
         },
-        {
-          title: "Working For The Corp",
-          credits: "By Ken Davidson, with contributions from Jess Meir",
-          blurb: 'Play as workers at a cyberpunk megacorp who are tasked with defending key info from runners.  Will you defend The Corp?',
-          link: "/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA",
-          image:
-            "https://iili.io/f1Kl07.md.png",
-        },
+        // {
+        //   title: "Working For The Corp",
+        //   credits: "By Ken Davidson",
+        //   blurb: 'Play as workers at a cyberpunk megacorp who are tasked with defending key info from runners.  Will you defend The Corp?',
+        //   link: "/Shuffled/16jKRcMytaNLTdqHGWE00dFVaaihzD38ga1hTm1wr-iA",
+        //   image:
+        //     "https://iili.io/f1Kl07.md.png",
+        // },
         {
           title: 'Compersion',
           credits: 'By Justin Ford',
           blurb: 'Explore the excitement and intrigue of a polyamorous romance with the Queen in this GM-less game for 2-6 players.',
-          link: 'https://storysynth.org/Shuffled/1XVd4Kgq3X3utOm25JXOsDbhI_jLjAHX8mGzpiT6Sgho/',
+          link: '/Shuffled/12dLB630MtjpJGDwEEwD0lvOzMUoACfzgqHQLgTLYTGc/',
           image: 'https://iili.io/RuxtON.png'
         },
         {
@@ -142,14 +142,14 @@ export default {
           image:
             "https://diegeticgames.com/uploads/monster-game-cover-v2.png",
         },        
-        /*{
-          title: 'TK',
-          credits: 'TK',
-          blurb: 'TK',
-          link: 'TK',
-          image: 'TK'
-        },
         {
+          title: 'Generational: A Story about Stories',
+          credits: 'By ProperNerdy',
+          blurb: 'Generational is an improvisational and collaborative way to tell a story that spans the history of an entire world.',
+          link: 'https://prprnrdy.com/gensynth',
+          image: 'https://img.itch.zone/aW1nLzYxNTIwODMucG5n/347x500/tDio8p.png'
+        },
+        /*{
           title: 'TK',
           credits: 'TK',
           blurb: 'TK',

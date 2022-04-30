@@ -41,6 +41,7 @@ Make sure you have [Node.js and npm](https://www.npmjs.com/get-npm) installed lo
 ```
 npm install
 ```
+NOTE: you need to have a version of Node,js that is earlier than 17, as the latest versions of Node have a bug. (I'm currently using v16.14.0)
 
 DO NOT run `npm audit fix --force` as it will break dependencies.
 
@@ -79,7 +80,7 @@ service cloud.firestore {
 
 Install the [Firebase CLI](https://firebase.google.com/docs/cli#install_the_firebase_cli) tool, if you haven't yet, and log in with the same account that you created the project with.
 
-Then, update the project with your Firebase credentials by adding them to a new .env file in the root folder of Story Synth. You need to add your your firebase api key, database url and project ID, replacing TODO in the following:
+Then, update the project with your Firebase credentials by adding them to a new file that you name ".env" and create in the root folder of Story Synth (the same folder with the file '.gitignore'. You need to add your your firebase api key, database url and project ID, replacing TODO in the following:
 
 ```
 VUE_APP_FIREBASE_API_KEY=TODO

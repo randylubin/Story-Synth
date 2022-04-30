@@ -404,7 +404,7 @@ export default {
       this.$bvModal.hide("menuModal");
     },
     copyLinkToClipboard(){
-      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      let currentUrl = location.hostname.toString() + this.$route.fullPath
       navigator.clipboard.writeText(currentUrl).then(function() {
         console.log('copied url')
       }, function() {
@@ -634,7 +634,7 @@ export default {
       var getURL =
         "https://sheets.googleapis.com/v4/spreadsheets/" +
         sheetID +
-        "?includeGridData=true&ranges=a1:aa100&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+        "?includeGridData=true&ranges=a1:aa400&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
 
       // For the published version - remove if you're hardcoding the data instead of using Google Sheets
       axios
@@ -690,7 +690,9 @@ export default {
 
                   // organize into rows
                   let hexRowLookup = {0:0,1:1,2:1,3:2,4:2,5:2,6:3,7:3,8:4,9:4,10:4,11:5,12:5,13:6,14:6,15:6,16:7,17:7,18:8}
-                  this.hexMapRows[hexRowLookup[hexInfo.hexID]].push(hexInfo);
+                  if (this.hexMapRows[hexRowLookup[hexInfo.hexID]]){
+                    this.hexMapRows[hexRowLookup[hexInfo.hexID]].push(hexInfo);
+                  }
 
                   cleanData.push(hexInfo);
                 }
@@ -814,7 +816,7 @@ $hex-padding: 4px;
 }
 
 .pointy-top.hexflower-body {
- transform: rotate(-90deg) translate(0px, math.floor($hex-width - $hex-height)/2);
+ transform: rotate(-90deg) translate(0px, math.floor($hex-width - $hex-height)*0.5);
 }
 
 .hex-tile-foggy {
@@ -867,11 +869,11 @@ $hex-padding: 4px;
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
   background: white;
   position: absolute;
-  margin-top: -$hex-height/2;
+  margin-top: -$hex-height * 0.5;
   height: $hex-height;
   width: $hex-width;
   @media (max-width: 375px) {
-    margin-top: -$hex-height * .75 / 2;
+    margin-top: -$hex-height * .75 * 0.5;
     height: $hex-height * .75;
     width: $hex-width * .75 ;
     background-size: ($hex-width * .75) ($hex-height * .75);
@@ -884,33 +886,33 @@ $hex-padding: 4px;
 // This is the content
 .hex-tile-inner-content {
   transition: all 0.1s;
-  padding: $hex-height / 4; 
+  padding: $hex-height * 0.25; 
   @media (max-width: 375px) {
-    padding: $hex-height * .75 / 4; 
+    padding: $hex-height * .75 * 0.25; 
   }
 }
 .hex-tile-inner-content-xs { 
-  font-size: $hex-height / 8;
+  font-size: $hex-height * 0.125;
   @media (max-width: 375px) {
-    font-size: $hex-height * .75 / 8;
+    font-size: $hex-height * .75 * 0.125;
   }
 }
 .hex-tile-inner-content-sm { 
-  font-size: $hex-height / 6;
+  font-size: calc($hex-height / 6);
   @media (max-width: 375px) {
-    font-size: $hex-height * .75 / 6;
+    font-size: calc($hex-height * .75 / 6);
   }
 }
 .hex-tile-inner-content-md {
-  font-size: $hex-height / 4;
+  font-size: $hex-height * 0.25;
   @media (max-width: 375px) {
-    font-size: $hex-height * .75 / 4;
+    font-size: $hex-height * .75 * 0.25;
   }
 }
 .hex-tile-inner-content-lg {
-  font-size: $hex-height / 2;
+  font-size: $hex-height * 0.5;
   @media (max-width: 375px) {
-    font-size: $hex-height * .75 / 2;
+    font-size: $hex-height * .75 * 0.5;
   }
 }
 
@@ -955,7 +957,7 @@ $hex-padding: 4px;
 }
 @for $i from 0 through 17 {
   .hex-resetting .hex-tile:nth-child(#{$i}) .hex-tile-inner {
-    transition-delay: #{$i/36}s;
+    transition-delay: #{$i * 0.0277778}s;
   }
 }
 

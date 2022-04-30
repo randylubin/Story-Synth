@@ -222,7 +222,7 @@ export default {
       this.$bvModal.hide("menuModal");
     },
     copyLinkToClipboard(){
-      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      let currentUrl = location.hostname.toString() + this.$route.fullPath
       navigator.clipboard.writeText(currentUrl).then(function() {
         console.log('copied url')
       }, function() {
@@ -307,7 +307,7 @@ export default {
         sheetID = '1JwMF02DSxNKtjHp6u-wyznSs-iEG_3DpOobgc17I16o'
       }
 
-      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa100&key=' + process.env.VUE_APP_FIREBASE_API_KEY
+      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa400&key=' + process.env.VUE_APP_FIREBASE_API_KEY
 
       axios.get(getURL)
       .then(response => {

@@ -391,7 +391,7 @@ export default {
       this.$bvModal.hide("menuModal");
     },
     copyLinkToClipboard(){
-      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      let currentUrl = location.hostname.toString() + this.$route.fullPath
       navigator.clipboard.writeText(currentUrl).then(function() {
         console.log('copied url')
       }, function() {
@@ -442,12 +442,18 @@ export default {
       let lastSeenRound = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenRound : this.roomInfo.currentCardIndex
       let lastSeenPhase = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenPhase : this.roomInfo.currentPhase
 
-      roomsCollection.doc(this.roomID).update({
-        currentCardIndex: this.roomInfo.currentCardIndex,
-        lastSeenRound: lastSeenRound,
-        currentPhase: this.roomInfo.currentPhase,
-        lastSeenPhase: lastSeenPhase,
-      })
+      // numberOfRounds
+      if ((this.roomInfo.currentCardIndex >= this.endingIndex) || !this.customOptions.numberOfRounds || parseInt(this.customOptions.numberOfRounds) > this.roomInfo.currentCardIndex - this.firstNonInstruction){
+        roomsCollection.doc(this.roomID).update({
+          currentCardIndex: this.roomInfo.currentCardIndex,
+          lastSeenRound: lastSeenRound,
+          currentPhase: this.roomInfo.currentPhase,
+          lastSeenPhase: lastSeenPhase,
+        })
+      } else {
+        this.ending()
+      }
+
     },
     skipInstructions(){
       roomsCollection.doc(this.roomID).update({
@@ -480,7 +486,9 @@ export default {
       // reset card count
       roomsCollection.doc(this.roomID).update({
         currentCardIndex: 0,
-        currentPhase: 0
+        currentPhase: 0,
+        lastSeenPhase: 0,
+        lastSeenRound: 0
       })
 
       // Create a ordered array
@@ -548,7 +556,7 @@ export default {
       }
 
       // For published version, set getURL equal to the url of your spreadsheet
-      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa100&key='  + process.env.VUE_APP_FIREBASE_API_KEY
+      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa400&key='  + process.env.VUE_APP_FIREBASE_API_KEY
 
 
       // For the published version - remove if you're hardcoding the data instead of using Google Sheets

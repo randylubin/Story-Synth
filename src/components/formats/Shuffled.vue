@@ -66,7 +66,18 @@
               "
             ></b-button>
           </div>
-          <div v-if="!this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)">
+          <div v-if="customOptions.treatLastCardAsLastDeck" :disabled="roomInfo.currentCardIndex >= roomInfo.locationOfLastCard" class="row menu-row">
+            <b-button variant="outline-dark" class="control-button-last-deck btn-lg btn-block" v-on:click="lastCard(); closeMenu();"
+              :disabled="
+                roomInfo.xCardIsActive ||
+                  roomInfo.currentCardIndex == gSheet.length - 1 ||
+                  roomInfo.currentCardIndex == roomInfo.locationOfLastCard
+              "
+              >
+                Go to {{customOptions.lastCardLabel}}
+              </b-button>
+          </div>
+          <div v-if="!customOptions.treatLastCardAsLastDeck && !this.customOptions.showNextDeckButton && (!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons)">
             <hr class='mb-4'/>
             <h6 class='text-center'>{{customOptions.lastCardLabel}} Options</h6>
             <div class="row menu-row">
@@ -223,7 +234,8 @@
               v-on:click="nextCard()"
               :disabled="
                 roomInfo.xCardIsActive ||
-                  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+                roomInfo.currentCardIndex >= roomInfo.locationOfLastCard ||
+                (customOptions.treatLastCardAsLastDeck && this.roomInfo.cardSequence.indexOf(this.unorderedDecks[this.unorderedDecks.length-1][0]) == this.roomInfo.currentCardIndex)
               "
             >
               <!-- Next Card -->
@@ -620,6 +632,12 @@ export default {
       totalDecks: 0,
       unorderedDecks: {},
       customOptions: {
+        gameTitle: undefined,
+        byline: undefined,
+        gameBlurb: undefined,
+        password: undefined,
+        wallet: undefined,
+        revShare: 0.2,
         lastCardLabel: "Last Card"
       },
       deckTransitionArray: null,
@@ -768,10 +786,18 @@ export default {
         this.shuffleAndResetGame();
       }
 
+      let tempLastCardLocation = this.roomInfo.locationOfLastCard
+
+      if (this.customOptions.treatLastCardAsLastDeck){
+        tempLastCardLocation = this.roomInfo.cardSequence.indexOf(this.unorderedDecks[this.unorderedDecks.length-1][0])
+      } 
+
       roomsCollection.doc(this.roomID).update({
-        currentCardIndex: this.roomInfo.locationOfLastCard,
+        currentCardIndex: tempLastCardLocation,
+        locationOfLastCard: tempLastCardLocation,
         showCardBack: false,
       });
+    
     },
     xCard() {
       roomsCollection.doc(this.roomID).update({
@@ -782,7 +808,7 @@ export default {
       this.$bvModal.hide("menuModal");
     },
     copyLinkToClipboard(){
-      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
+      let currentUrl = location.hostname.toString() + this.$route.fullPath
       navigator.clipboard.writeText(currentUrl).then(function() {
         console.log('copied url')
       }, function() {
@@ -904,15 +930,16 @@ export default {
       // check for set last card location
       let tempLastCardIndex = newCardSequence.length-1
       let lastLocation = parseFloat(this.customOptions.setLastCardLocation)
+      let lengthOfUnorderedDecks = [].concat.apply([], this.unorderedDecks).length
 
       if (lastLocation){
         if (lastLocation >= 1) {
           tempLastCardIndex = lastLocation + this.orderedCards.length
         } else if (lastLocation > 0){
           let maxLoc = newCardSequence.length
-          let minLoc = newCardSequence.length - Math.floor(this.unorderedDecks[1].length * lastLocation) - 1
-          tempLastCardIndex = Math.floor(Math.random() * (maxLoc-minLoc) + minLoc)
-          console.log('new location:', tempLastCardIndex, maxLoc, minLoc)
+          let minLoc = newCardSequence.length - Math.floor(lengthOfUnorderedDecks * lastLocation) - 1
+          tempLastCardIndex = Math.floor((Math.random() * (maxLoc-minLoc)) + minLoc)
+          console.log('new location:', tempLastCardIndex, maxLoc, minLoc, lengthOfUnorderedDecks, this.orderedCards.length)
         } else {
           tempLastCardIndex = newCardSequence.length + lastLocation - 1
         }
@@ -939,7 +966,7 @@ export default {
       var getURL =
         "https://sheets.googleapis.com/v4/spreadsheets/" +
         sheetID +
-        "?includeGridData=true&ranges=a1:aa100&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+        "?includeGridData=true&ranges=a1:aa400&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
 
       // For the published version - remove if you're hardcoding the data instead of using Google Sheets
       axios
@@ -1005,6 +1032,12 @@ export default {
             "style-template-" + this.customOptions.styleTemplate;
           let body = document.getElementById("app"); // document.body;
           body.classList.add(styleTemplate);
+
+          if (this.customOptions.style){
+            if (this.customOptions.style.substring(0,7) != "<style>"){
+              this.customOptions.style = "<style>" + this.customOptions.style + "</style>"
+            }
+          }
 
           if (
             this.firebaseReady &&
