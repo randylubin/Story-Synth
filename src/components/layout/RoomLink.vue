@@ -8,7 +8,7 @@
           class="pt-2 px-2 game-meta live-player-counter"
           v-bind:style="{color: color}"
         >
-          {{ Object.keys(roomInfo).length }} 👀
+          {{ Object.keys(roomInfo).length }} <b-icon-people></b-icon-people>
         </div>
       </transition>
       <transition name="bounce" mode="out-in">
@@ -17,7 +17,7 @@
           class="pt-2 px-2 game-meta live-player-counter"
           v-bind:style="{color: color}"
         >
-          $$$
+          <b-icon-coin alt="web monetization active"></b-icon-coin>
         </div>
       </transition>
 

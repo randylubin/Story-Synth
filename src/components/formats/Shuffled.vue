@@ -2,6 +2,25 @@
   <div class="shuffled game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+    <div v-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
+    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
+      <b-alert show variant="light" v-html="customOptions.monetizationMessage"></b-alert>
+    </div>
+    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
+      <template #overlay>
+        <div class="text-center">
+          <div v-html="customOptions.monetizationPaywall"></div>
+          <div class="mt-4">
+            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
+            <b-spinner
+                class="m-5"
+                style="width: 4rem; height: 4rem;"
+                label="Busy"
+              ></b-spinner>
+          </div>
+        </div>
+      </template>  
+    </b-overlay> 
 
     <!-- Menu Bar -->
     <div class="menu-bar mb-4 d-flex align-items-center">
