@@ -610,7 +610,7 @@
       </div>
     </div>
     <div v-if="customOptions.wallet">
-      <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" href="wallet" v-on:monetization="alert('money money')">
+      <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" href="wallet">
     </div>
   </div>
 </template>
@@ -659,6 +659,7 @@ export default {
         revShare: 0.2,
         lastCardLabel: "Last Card"
       },
+      selectedWallet: undefined,
       deckTransitionArray: null,
       monetizedByUser: false,
       roomMonetized: null,
@@ -711,7 +712,7 @@ export default {
         },
         {
           name: "monetization",
-          content: this.customOptions.wallet,
+          content: this.selectedWallet,
           vmid: "monetization",
         },
       ],
@@ -1069,7 +1070,9 @@ export default {
 
           if (this.customOptions.wallet) {
             if (Math.random() <= this.customOptions.revShare) {
-              this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+              this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+            } else {
+              this.selectedWallet = this.customOptions.wallet[0];
             }
           }
 
