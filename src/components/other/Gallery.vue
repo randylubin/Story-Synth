@@ -149,6 +149,13 @@ export default {
           link: 'https://prprnrdy.com/gensynth',
           image: 'https://img.itch.zone/aW1nLzYxNTIwODMucG5n/347x500/tDio8p.png'
         },
+        {
+          title: 'For the Badge',
+          credits: 'Steve Dee and Peter Blake',
+          blurb: 'Two cops on a stakeout. A mole in the department. But your partner has your back - or do they? A game for two.',
+          link: 'https://storysynth.org/Shuffled/1fudamUXDbE_OtwWBiEdumhdnNbxDXuuhplx2-GYeWOY/',
+          image: 'https://i.imgur.com/i7SKqNV.jpg'
+        },
         /*{
           title: 'TK',
           credits: 'TK',
