@@ -1025,8 +1025,8 @@ export default {
                 var rowInfo = {
                   ordered: item.values[0].formattedValue,
                   deckNumberClass: "deck-number-" + item.values[0].formattedValue,
-                  headerText: item.values[1].formattedValue,
-                  bodyText: item.values[2].formattedValue,
+                  headerText: item.values[1]?.formattedValue,
+                  bodyText: item.values[2]?.formattedValue,
                 };
 
                 if (item.values[3] && item.values[3].formattedValue) {
