@@ -118,7 +118,7 @@ export default {
     },
     stringyRoomInfo: function(){
       for (const user in this.roomInfo){
-        if (this.roomInfo[user].monetized){
+        if (this.roomInfo[user].monetized || this.monetizedByUser){
           this.atLeastOneMonetizedUser = true; // currently set to be a one way switch – if you shared this room with a monetized user, then you can keep playing if they leave
           this.$emit('roomMonetized', true)
         }

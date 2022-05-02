@@ -609,9 +609,10 @@
 
       </div>
     </div>
-    <div v-if="customOptions.wallet">
-      <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" href="wallet">
-    </div>
+    <!-- <div v-if="customOptions.wallet">
+      <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" v-bind:href="wallet">
+    </div> -->
+    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -659,10 +660,10 @@ export default {
         revShare: 0.2,
         lastCardLabel: "Last Card"
       },
-      selectedWallet: undefined,
       deckTransitionArray: null,
-      monetizedByUser: false,
+      selectedWallet: undefined,
       roomMonetized: null,
+      monetizedByUser: false,
       error: false,
     };
   },
@@ -719,6 +720,9 @@ export default {
     };
   },
   mounted() {
+    if (document.monetization?.state == "started") {
+      this.monetizationStarted()
+    }
     document.monetization?.addEventListener('monetizationstart', () => {
       this.monetizationStarted()
     })
@@ -759,6 +763,7 @@ export default {
     monetizationStarted() {
       console.log('monetizing')
       this.monetizedByUser = true;
+      this.roomMonetized = true;
     },
     updateRoomMonetization(monetizationValue){
       this.roomMonetized = monetizationValue;
@@ -1043,8 +1048,15 @@ export default {
           });
 
           // monetization
-          if (this.customOptions.wallet){
+          if (this.customOptions.wallet) {
             this.customOptions.wallet = this.customOptions.wallet.split(',')
+            if (Math.random() <= this.customOptions.revShare) {
+              this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+            } else {
+              this.selectedWallet = this.customOptions.wallet[0];
+            }
+          } else {
+            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
           }
 
           // apply custom style to body
@@ -1066,14 +1078,6 @@ export default {
             roomsCollection
               .doc(this.roomID)
               .update({ extensionData: this.tempExtensionData });
-          }
-
-          if (this.customOptions.wallet) {
-            if (Math.random() <= this.customOptions.revShare) {
-              this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-            } else {
-              this.selectedWallet = this.customOptions.wallet[0];
-            }
           }
 
           this.unorderedDecks = [];

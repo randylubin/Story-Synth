@@ -2,9 +2,28 @@
   <div class="container game-room">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+    <div v-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
+    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
+      <b-alert show variant="light" v-html="customOptions.monetizationMessage"></b-alert>
+    </div>
+    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
+      <template #overlay>
+        <div class="text-center">
+          <div v-html="customOptions.monetizationPaywall"></div>
+          <div class="mt-4">
+            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
+            <b-spinner
+                class="m-5"
+                style="width: 4rem; height: 4rem;"
+                label="Busy"
+              ></b-spinner>
+          </div>
+        </div>
+      </template>  
+    </b-overlay> 
     
     <div class="menu-bar mb-4 d-flex align-items-right">
-      <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID" v-if="dataReady && firebaseReady"></app-roomLink>
+      <app-roomLink class="d-none d-sm-block" :monetizedByUser="monetizedByUser" @roomMonetized="updateRoomMonetization" :routeRoomID="$route.params.roomID" :color="customOptions.menuColor" v-if="dataReady && firebaseReady"></app-roomLink>
     </div>
 
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
@@ -80,7 +99,7 @@
       </div>
     </div>
 
-
+    <link v-bind:href="selectedWallet">
   </div>
     <!-- Timer code remixed from https://codepen.io/raphael_octau by raphael_octau -->
 
@@ -117,13 +136,82 @@ export default {
       playerSelected: null,
       playerArray: [],
       gSheet: [],
-      customOptions: {},
+      customOptions: {
+        gameTitle: undefined,
+        byline: undefined,
+        gameBlurb: undefined,
+        password: undefined,
+        wallet: undefined,
+        revShare: 0.2,
+      },
       dataReady: false,
       firebaseReady: false,
+      selectedWallet: undefined,
+      roomMonetized: null,
+      monetizedByUser: false,
       error: false,
     }
   },
+  metaInfo() {
+    return {
+      title: this.customOptions.gameTitle,
+      meta: [
+        {
+          property: "description",
+          content: this.customOptions.gameBlurb,
+          vmid: "description",
+        },
+        {
+          property: "og:title",
+          content: this.customOptions.gameTitle,
+          vmid: "og:title",
+        },
+        {
+          property: "og:description",
+          content: this.customOptions.gameBlurb,
+          vmid: "og:description",
+        },
+        {
+          property: "og:image",
+          content: this.customOptions.ogImageSquare,
+          vmid: "og:image",
+        },
+        {
+          property: "og:url",
+          content: "https://storysynth.org/#" + this.$route.fullPath,
+          vmid: "og:url",
+        },
+        {
+          property: "twitter:card",
+          content: "summary",
+          vmid: "twitter:card",
+        },
+        {
+          property: "og:site_name",
+          content: "Story Synth",
+          vmid: "og:site_name",
+        },
+        {
+          property: "twitter:image:alt",
+          content: this.customOptions.gameTitle + " logo",
+          vmid: "twitter:image:alt",
+        },
+        {
+          name: "monetization",
+          content: this.selectedWallet,
+          vmid: "monetization",
+        },
+      ],
+    };
+  },
   mounted(){
+    if (document.monetization?.state == "started") {
+      this.monetizationStarted()
+    }
+    document.monetization?.addEventListener('monetizationstart', () => {
+      this.monetizationStarted()
+    })
+
     this.fetchAndCleanSheetData(this.gSheetID);
     this.$bind("roomInfo", roomsCollection.doc(this.roomID))
       .then(() => {
@@ -161,6 +249,14 @@ export default {
     }
   },
   methods: {
+    monetizationStarted() {
+      console.log('monetizing')
+      this.monetizedByUser = true;
+    },
+    updateRoomMonetization(monetizationValue){
+      this.roomMonetized = monetizationValue;
+      console.log("room is now monetizied")
+    },
     start() {
       if(this.roomInfo.running) return;
 
@@ -287,6 +383,18 @@ export default {
             cleanData.push(rowInfo)
           }
         });
+
+        // monetization
+        if (this.customOptions.wallet) {
+          this.customOptions.wallet = this.customOptions.wallet.split(',')
+          if (Math.random() <= this.customOptions.revShare) {
+            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+          } else {
+            this.selectedWallet = this.customOptions.wallet[0];
+          }
+        } else {
+          this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+        }
 
         // apply custom style to body
         let styleTemplate =

@@ -2,6 +2,25 @@
   <div class="phases">
     <div class="full-page-background"></div>
     <div v-html="customOptions.style"></div>
+    <div v-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
+    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
+      <b-alert show variant="light" v-html="customOptions.monetizationMessage"></b-alert>
+    </div>
+    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
+      <template #overlay>
+        <div class="text-center">
+          <div v-html="customOptions.monetizationPaywall"></div>
+          <div class="mt-4">
+            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
+            <b-spinner
+                class="m-5"
+                style="width: 4rem; height: 4rem;"
+                label="Busy"
+              ></b-spinner>
+          </div>
+        </div>
+      </template>  
+    </b-overlay> 
 
     <div class="game-room container" v-if="roomInfo">
       
@@ -9,7 +28,7 @@
       <div class="menu-bar mb-4 d-flex align-items-center">
         <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal v-bind:style="{color: customOptions.menuColor}"><b-icon-list></b-icon-list> Menu</button>
         <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
-        <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID" :color="customOptions.menuColor" v-if="dataReady && firebaseReady"></app-roomLink>
+        <app-roomLink class="d-none d-sm-block" :monetizedByUser="monetizedByUser" @roomMonetized="updateRoomMonetization" :routeRoomID="$route.params.roomID" :color="customOptions.menuColor" v-if="dataReady && firebaseReady"></app-roomLink>
         
         <b-modal
           id="menuModal"
@@ -321,6 +340,8 @@
       </div>
 
     </div>
+
+    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -351,7 +372,14 @@ export default {
         lastSeenRound: 0,
         lastSeenPhase: 0, 
       },
-      customOptions: {},
+      customOptions: {
+        gameTitle: undefined,
+        byline: undefined,
+        gameBlurb: undefined,
+        password: undefined,
+        wallet: undefined,
+        revShare: 0.2,
+      },
       dataReady: false,
       firebaseReady: false,
       tempExtensionData: { test: null },
@@ -363,10 +391,72 @@ export default {
       unorderedCards: [],
       firstNonInstruction: 0,
       endingIndex: 0,
+      selectedWallet: undefined,
+      roomMonetized: null,
+      monetizedByUser: false,
       error: false,
     }
   },
+  metaInfo() {
+    return {
+      title: this.customOptions.gameTitle,
+      meta: [
+        {
+          property: "description",
+          content: this.customOptions.gameBlurb,
+          vmid: "description",
+        },
+        {
+          property: "og:title",
+          content: this.customOptions.gameTitle,
+          vmid: "og:title",
+        },
+        {
+          property: "og:description",
+          content: this.customOptions.gameBlurb,
+          vmid: "og:description",
+        },
+        {
+          property: "og:image",
+          content: this.customOptions.ogImageSquare,
+          vmid: "og:image",
+        },
+        {
+          property: "og:url",
+          content: "https://storysynth.org/#" + this.$route.fullPath,
+          vmid: "og:url",
+        },
+        {
+          property: "twitter:card",
+          content: "summary",
+          vmid: "twitter:card",
+        },
+        {
+          property: "og:site_name",
+          content: "Story Synth",
+          vmid: "og:site_name",
+        },
+        {
+          property: "twitter:image:alt",
+          content: this.customOptions.gameTitle + " logo",
+          vmid: "twitter:image:alt",
+        },
+        {
+          name: "monetization",
+          content: this.selectedWallet,
+          vmid: "monetization",
+        },
+      ],
+    };
+  },
   mounted(){
+    if (document.monetization?.state == "started") {
+      this.monetizationStarted()
+    }
+    document.monetization?.addEventListener('monetizationstart', () => {
+      this.monetizationStarted()
+    })
+
     this.fetchAndCleanSheetData(this.gSheetID);
 
     this.$bind('roomInfo', roomsCollection.doc(this.roomID))
@@ -387,6 +477,14 @@ export default {
       })
   },
   methods: {
+    monetizationStarted() {
+      console.log('monetizing')
+      this.monetizedByUser = true;
+    },
+    updateRoomMonetization(monetizationValue){
+      this.roomMonetized = monetizationValue;
+      console.log("room is now monetizied")
+    },
     closeMenu(){
       this.$bvModal.hide("menuModal");
     },
@@ -630,6 +728,18 @@ export default {
         });
 
         this.endingIndex = newEndingIndex;
+
+        // monetization
+        if (this.customOptions.wallet) {
+          this.customOptions.wallet = this.customOptions.wallet.split(',')
+          if (Math.random() <= this.customOptions.revShare) {
+            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+          } else {
+            this.selectedWallet = this.customOptions.wallet[0];
+          }
+        } else {
+          this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+        }
 
         // apply custom style to body
         let styleTemplate =

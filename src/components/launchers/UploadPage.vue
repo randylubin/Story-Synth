@@ -79,6 +79,11 @@ export default {
       body.classList.remove(body.classList[0]);
       body.classList.add("style-template-homepage");
 
+      body = document.getElementsByClassName("non-footer-content")[0]
+      if (body.classList.length > 0){
+        body.classList.remove(body.classList[1])
+      }
+
       document.dispatchEvent(new Event("x-app-rendered"));
       if (location.hostname.toString() !== 'localhost'){
           this.$mixpanel.track('Visited Uploader');

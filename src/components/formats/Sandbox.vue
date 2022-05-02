@@ -1,17 +1,38 @@
 <template>
   <div class="container game-room sandbox">
-      <div class="full-page-background"></div>
-      <div v-html="customOptions.style"></div>
-
-      <div class="row">
-        <div class="col-sm">
-          <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
-          <h1 class="game-meta">Sandbox</h1>
-          <div v-if="dataReady && firebaseReady && roomInfo && Object.keys(roomInfo.extensionData).length > 1">
-            <app-extensionManager @sync-extension="syncExtension()" :extensionData="roomInfo.extensionData" :extensionList="tempExtensionData" :roomInfo="roomInfo"></app-extensionManager>
+    <div class="full-page-background"></div>
+    <div v-html="customOptions.style"></div>
+    <div v-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
+    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
+      <b-alert show variant="light" v-html="customOptions.monetizationMessage"></b-alert>
+    </div>
+    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
+      <template #overlay>
+        <div class="text-center">
+          <div v-html="customOptions.monetizationPaywall"></div>
+          <div class="mt-4">
+            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
+            <b-spinner
+                class="m-5"
+                style="width: 4rem; height: 4rem;"
+                label="Busy"
+              ></b-spinner>
           </div>
         </div>
+      </template>  
+    </b-overlay> 
+
+    <div class="row">
+      <div class="col-sm">
+        <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+        <h1 class="game-meta">Sandbox</h1>
+        <div v-if="dataReady && firebaseReady && roomInfo && Object.keys(roomInfo.extensionData).length > 1">
+          <app-extensionManager @sync-extension="syncExtension()" :extensionData="roomInfo.extensionData" :extensionList="tempExtensionData" :roomInfo="roomInfo"></app-extensionManager>
+        </div>
       </div>
+    </div>
+
+    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -32,7 +53,12 @@ export default {
   data: function() {
     return {
       customOptions: {
-
+        gameTitle: undefined,
+        byline: undefined,
+        gameBlurb: undefined,
+        password: undefined,
+        wallet: undefined,
+        revShare: 0.2,
       },
       roomInfo: {
 
@@ -40,61 +66,71 @@ export default {
       tempExtensionData: {test:null},
       dataReady: false,
       firebaseReady: false,
+      selectedWallet: undefined,
+      roomMonetized: null,
+      monetizedByUser: false,
     };
   },
-  metaInfo () {
+  metaInfo() {
     return {
       title: this.customOptions.gameTitle,
       meta: [
         {
-          property: 'description',
+          property: "description",
           content: this.customOptions.gameBlurb,
-          vmid: 'description'
+          vmid: "description",
         },
         {
-          property: 'og:title',
+          property: "og:title",
           content: this.customOptions.gameTitle,
-          vmid: 'og:title'
+          vmid: "og:title",
         },
         {
-          property: 'og:description',
+          property: "og:description",
           content: this.customOptions.gameBlurb,
-          vmid: 'og:description'
+          vmid: "og:description",
         },
         {
-          property: 'og:image',
+          property: "og:image",
           content: this.customOptions.ogImageSquare,
-          vmid: 'og:image'
+          vmid: "og:image",
         },
         {
-          property: 'og:url',
-          content: location.hostname.toString() + "/#" + this.$route.fullPath,
-          vmid: 'og:url'
+          property: "og:url",
+          content: "https://storysynth.org/#" + this.$route.fullPath,
+          vmid: "og:url",
         },
         {
-          property: 'twitter:card',
-          content: 'summary',
-          vmid: 'twitter:card'
+          property: "twitter:card",
+          content: "summary",
+          vmid: "twitter:card",
         },
         {
-          property: 'og:site_name',
-          content: 'Story Synth',
-          vmid: 'og:site_name'
+          property: "og:site_name",
+          content: "Story Synth",
+          vmid: "og:site_name",
         },
         {
-          property: 'twitter:image:alt',
+          property: "twitter:image:alt",
           content: this.customOptions.gameTitle + " logo",
-          vmid: 'twitter:image:alt'
+          vmid: "twitter:image:alt",
         },
         {
-          name: 'monetization',
-          content: this.customOptions.wallet,
-          vmid: 'monetization'
+          name: "monetization",
+          content: this.selectedWallet,
+          vmid: "monetization",
         },
-      ]
-    }
+      ],
+    };
   },
   mounted(){
+    if (document.monetization?.state == "started") {
+      this.monetizationStarted()
+    }
+    document.monetization?.addEventListener('monetizationstart', () => {
+      this.monetizationStarted()
+    })
+
     this.fetchAndCleanSheetData(this.gSheetID);
 
     this.$bind('roomInfo', roomsCollection.doc(this.roomID))
@@ -113,6 +149,14 @@ export default {
       })
   },
   methods: {
+    monetizationStarted() {
+      console.log('monetizing')
+      this.monetizedByUser = true;
+    },
+    updateRoomMonetization(monetizationValue){
+      this.roomMonetized = monetizationValue;
+      console.log("room is now monetizied")
+    },
     syncExtension(){
       roomsCollection.doc(this.roomID).update({
         extensionData: this.roomInfo.extensionData
@@ -164,6 +208,18 @@ export default {
           if (Math.random() <= this.customOptions.revShare){
             this.customOptions.wallet = '$ilp.uphold.com/WMbkRBiZFgbx';
           }
+        }
+
+        // monetization
+        if (this.customOptions.wallet) {
+          this.customOptions.wallet = this.customOptions.wallet.split(',')
+          if (Math.random() <= this.customOptions.revShare) {
+            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+          } else {
+            this.selectedWallet = this.customOptions.wallet[0];
+          }
+        } else {
+          this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
         }
 
         // apply custom style to body
