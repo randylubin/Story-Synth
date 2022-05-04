@@ -29,6 +29,7 @@
           <app-journal class="extension"
             :journalEntries="JSON.parse(extensionData.journalEntries)"
             :journalUpperText="extensionData.journalUpperText"
+            :journalOrder="extensionData.journalOrder"
             @process-extension-update="processExtensionUpdate($event)"
             v-if="(extensionList['journalEntries'] || extensionList.journalUpperText) && ((!extensionList.journalEntiresLocation && extensionLocation == 'lower') || (extensionList.journalEntriesLocation == extensionLocation)) && (!extensionList.journalFirstVisible || extensionList.journalFirstVisible <= roomInfo.currentCardIndex)"></app-journal>
           <app-currentPlayerHeader class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :currentPlayerHeader="extensionList.currentPlayerHeader" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['currentPlayerHeader'] && extensionList['playerTurnOrder'] && extensionLocation == 'upper'"></app-currentPlayerHeader>

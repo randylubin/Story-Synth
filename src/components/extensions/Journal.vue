@@ -13,7 +13,7 @@
               </form>
 
               <div v-if="journalEntries != []">
-                <div v-for="(entry, index) in journalEntries.slice().reverse()" v-bind:key="index">
+                <div v-for="(entry, index) in sortedJournalEntries" v-bind:key="index">
                   <div class="row journal-list-row" v-if="entry && (entry != 'EMPTY')">
                     <div class="col-sm-12 my-1 card px-0">
                       <div class="journal-entry justify-content-between d-flex">
@@ -54,6 +54,7 @@ export default {
   props: {
     journalEntries: Array,
     journalUpperText: String,
+    journalOrder: String,
   },
   data: function() {
     return {
@@ -65,6 +66,19 @@ export default {
   },
   mounted(){
 
+  },
+  computed: {
+    sortedJournalEntries: function(){
+      let sortedEntries = []
+
+      if (!this.journalOrder || this.journalOrder == "newestFirst") {
+        sortedEntries = this.journalEntries?.slice().reverse();
+      } else {
+        sortedEntries = this.journalEntries?.slice()
+      }
+
+      return sortedEntries
+    }
   },
   methods: {
     addItem(item){
