@@ -133,7 +133,8 @@
             </div>
           </div>
         </b-container>
-        <div class="" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+        <!-- <app-menuModal :customOptions="customOptions" :location="'menu'"></app-menuModal> -->
+        <div class="" v-if="(customOptions.modalOneLabel || customOptions.modalTwoLabel || customOptions.modalThreeLabel || customOptions.modalFourLabel || customOptions.modalFiveLabel)">
           <hr class='mb-4'/>
           <b-button
             v-b-modal.modalOne
@@ -151,6 +152,30 @@
             class="btn-block btn-lg"
             v-if="customOptions.modalTwoLabel"
             >{{ customOptions.modalTwoLabel }}</b-button
+          >
+          <b-button
+            v-b-modal.modalThree
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalThreeLabel"
+            >{{ customOptions.modalThreeLabel }}</b-button
+          >
+          <b-button
+            v-b-modal.modalFour
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalFourLabel"
+            >{{ customOptions.modalFourLabel }}</b-button
+          >
+          <b-button
+            v-b-modal.modalFive
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalFiveLabel"
+            >{{ customOptions.modalFiveLabel }}</b-button
           >
         </div>
         <div class="row menu-row mt-4">
@@ -547,8 +572,7 @@
           ></app-extensionManager>
         </div>
 
-        
-
+        <!-- <app-menuModal :customOptions="customOptions" :location="'body'"></app-menuModal> -->
         <b-modal
           id="modalOne"
           v-bind:title="customOptions.modalOneLabel"
@@ -571,6 +595,38 @@
           ></div>
         </b-modal>
 
+        <b-modal
+          id="modalThree"
+          v-bind:title="customOptions.modalThreeLabel"
+          hide-footer
+        >
+          <div
+            class="d-block text-left"
+            v-html="customOptions.modalThreeText"
+          ></div>
+        </b-modal>
+
+        <b-modal
+          id="modalFour"
+          v-bind:title="customOptions.modalFourLabel"
+          hide-footer
+        >
+          <div
+            class="d-block text-left"
+            v-html="customOptions.modalFourText"
+          ></div>
+        </b-modal>
+
+        <b-modal
+          id="modalFive"
+          v-bind:title="customOptions.modalFiveLabel"
+          hide-footer
+        >
+          <div
+            class="d-block text-left"
+            v-html="customOptions.modalFiveText"
+          ></div>
+        </b-modal>
 
         <b-modal
           id="modalNextDeckConfirm"
@@ -621,12 +677,14 @@ import { roomsCollection } from "../../firebase";
 import axios from "axios";
 import ExtensionManager from "../extensions/ExtensionManager.vue";
 import RoomLink from '../layout/RoomLink.vue';
+// import MenuModal from '../layout/MenuModals.vue';
 
 export default {
   name: "app-shuffled",
   components: {
     "app-extensionManager": ExtensionManager,
     'app-roomLink': RoomLink,
+    // 'app-menuModal': MenuModal,
   },
   props: {
     roomID: String,
