@@ -48,7 +48,7 @@
             </b-button>
           </div>
         </b-container>
-        <div class="" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
+        <div class="" v-if="(customOptions.modalOneLabel || customOptions.modalTwoLabel || customOptions.modalThreeLabel || customOptions.modalFourLabel || customOptions.modalFiveLabel)">
           <hr class='mb-4'/>
           <b-button
             v-b-modal.modalOne
@@ -66,6 +66,30 @@
             class="btn-block btn-lg"
             v-if="customOptions.modalTwoLabel"
             >{{ customOptions.modalTwoLabel }}</b-button
+          >
+          <b-button
+            v-b-modal.modalThree
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalThreeLabel"
+            >{{ customOptions.modalThreeLabel }}</b-button
+          >
+          <b-button
+            v-b-modal.modalFour
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalFourLabel"
+            >{{ customOptions.modalFourLabel }}</b-button
+          >
+          <b-button
+            v-b-modal.modalFive
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalFiveLabel"
+            >{{ customOptions.modalFiveLabel }}</b-button
           >
         </div>
         <div class="row menu-row mt-4">
@@ -160,6 +184,39 @@
             class="d-block text-left"
             style="white-space: pre-line"
             v-html="customOptions.modalTwoText"
+          ></div>
+        </b-modal>
+
+        <b-modal
+          id="modalThree"
+          v-bind:title="customOptions.modalThreeLabel"
+          hide-footer
+        >
+          <div
+            class="d-block text-left"
+            v-html="customOptions.modalThreeText"
+          ></div>
+        </b-modal>
+
+        <b-modal
+          id="modalFour"
+          v-bind:title="customOptions.modalFourLabel"
+          hide-footer
+        >
+          <div
+            class="d-block text-left"
+            v-html="customOptions.modalFourText"
+          ></div>
+        </b-modal>
+
+        <b-modal
+          id="modalFive"
+          v-bind:title="customOptions.modalFiveLabel"
+          hide-footer
+        >
+          <div
+            class="d-block text-left"
+            v-html="customOptions.modalFiveText"
           ></div>
         </b-modal>
       </div>
