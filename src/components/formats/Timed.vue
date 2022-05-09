@@ -22,8 +22,86 @@
       </template>  
     </b-overlay> 
     
-    <div class="menu-bar mb-4 d-flex align-items-right">
+    <div class="menu-bar mb-4 d-flex align-items-center">
+      <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal v-bind:style="{color: customOptions.menuColor}"><b-icon-list></b-icon-list> Menu</button>
       <app-roomLink class="d-none d-sm-block" :monetizedByUser="monetizedByUser" @roomMonetized="updateRoomMonetization" :routeRoomID="$route.params.roomID" :color="customOptions.menuColor" v-if="dataReady && firebaseReady"></app-roomLink>
+
+      <b-modal
+        id="menuModal"
+        :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'" 
+        hide-footer
+      >  
+        <b-container>
+          <div class="row menu-row">
+            <b-button
+              class="border-0 btn-lg btn-block"
+              v-on:click="copyLinkToClipboard(); closeMenu();"
+              @click="$bvToast.show('copyToast')"
+            >
+              <b-icon-link45deg></b-icon-link45deg> Copy URL 
+            </b-button>
+          </div>
+          <div class="row menu-row">
+            <b-button
+              variant="outline-dark"
+              class="control-button-safety-card btn-lg btn-block"
+              v-on:click="stop(); closeMenu();"
+              v-html="
+                customOptions.safetyCardButton
+                    ? customOptions.safetyCardButton
+                    : 'Pause'
+              "
+              ></b-button>
+          </div>
+        </b-container>
+        <div class="" v-if="(customOptions.modalOneLabel || customOptions.modalTwoLabel || customOptions.modalThreeLabel || customOptions.modalFourLabel || customOptions.modalFiveLabel)">
+          <hr class='mb-4'/>
+          <b-button
+            v-b-modal.modalOne
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalOneLabel"
+          >
+            {{ customOptions.modalOneLabel }}
+          </b-button>
+          <b-button
+            v-b-modal.modalTwo
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalTwoLabel"
+            >{{ customOptions.modalTwoLabel }}</b-button
+          >
+          <b-button
+            v-b-modal.modalThree
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalThreeLabel"
+            >{{ customOptions.modalThreeLabel }}</b-button
+          >
+          <b-button
+            v-b-modal.modalFour
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalFourLabel"
+            >{{ customOptions.modalFourLabel }}</b-button
+          >
+          <b-button
+            v-b-modal.modalFive
+            v-on:click="closeMenu();"
+            variant="outline-dark"
+            class="btn-block btn-lg"
+            v-if="customOptions.modalFiveLabel"
+            >{{ customOptions.modalFiveLabel }}</b-button
+          >
+        </div>
+        <div class="row menu-row mt-4">
+          <a href="https://storysynth.org" target="_blank">Powered by Story Synth</a>
+        </div>
+      </b-modal>
     </div>
 
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
@@ -98,6 +176,51 @@
         </transition>
       </div>
     </div>
+
+    <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
+      <div class="d-block text-left" v-html="customOptions.modalOneText">
+        
+      </div>
+    </b-modal>
+
+    <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
+      <div class="d-block text-left" v-html="customOptions.modalTwoText">
+      </div>
+    </b-modal>
+
+    <b-modal
+      id="modalThree"
+      v-bind:title="customOptions.modalThreeLabel"
+      hide-footer
+    >
+      <div
+        class="d-block text-left"
+        v-html="customOptions.modalThreeText"
+      ></div>
+    </b-modal>
+
+    <b-modal
+      id="modalFour"
+      v-bind:title="customOptions.modalFourLabel"
+      hide-footer
+    >
+      <div
+        class="d-block text-left"
+        v-html="customOptions.modalFourText"
+      ></div>
+    </b-modal>
+
+    <b-modal
+      id="modalFive"
+      v-bind:title="customOptions.modalFiveLabel"
+      hide-footer
+    >
+      <div
+        class="d-block text-left"
+        v-html="customOptions.modalFiveText"
+      ></div>
+    </b-modal>
+
 
     <link v-bind:href="selectedWallet">
   </div>
@@ -327,6 +450,9 @@ export default {
           this.zeroPrefix(min, 2) + ":" +
           this.zeroPrefix(sec, 2)
       }
+    },
+    closeMenu(){
+      this.$bvModal.hide("menuModal");
     },
     zeroPrefix(num, digit) {
       var zero = '';
