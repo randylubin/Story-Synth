@@ -677,6 +677,7 @@ import { roomsCollection } from "../../firebase";
 import axios from "axios";
 import ExtensionManager from "../extensions/ExtensionManager.vue";
 import RoomLink from '../layout/RoomLink.vue';
+import { marked } from 'marked'
 // import MenuModal from '../layout/MenuModals.vue';
 
 export default {
@@ -1064,7 +1065,7 @@ export default {
               // Handle options
               if (item.values[0].formattedValue == "option") {
                 this.customOptions[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
+                  item.values[1].formattedValue.includes('modal') && item.values[1].formattedValue.includes('Text') ?marked(item.values[2].formattedValue):item.values[2].formattedValue;
                 console.log(item.values[2].formattedValue);
               }
 
@@ -1089,11 +1090,11 @@ export default {
                   ordered: item.values[0].formattedValue,
                   deckNumberClass: "deck-number-" + item.values[0].formattedValue,
                   headerText: item.values[1]?.formattedValue,
-                  bodyText: item.values[2]?.formattedValue,
+                  bodyText: marked(item.values[2]?.formattedValue),
                 };
 
                 if (item.values[3] && item.values[3].formattedValue) {
-                  rowInfo.cardBack = item.values[3].formattedValue
+                  rowInfo.cardBack = marked(item.values[3].formattedValue)
                 }
 
                 cleanData.push(rowInfo);
