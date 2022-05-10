@@ -678,6 +678,7 @@ import axios from "axios";
 import ExtensionManager from "../extensions/ExtensionManager.vue";
 import RoomLink from '../layout/RoomLink.vue';
 import { marked } from 'marked'
+import markdownFriendlyOptions from '../../misc/markdown-friendly-options.json'
 // import MenuModal from '../layout/MenuModals.vue';
 
 export default {
@@ -1065,7 +1066,7 @@ export default {
               // Handle options
               if (item.values[0].formattedValue == "option") {
                 this.customOptions[item.values[1].formattedValue] =
-                  item.values[1].formattedValue.includes('modal') && item.values[1].formattedValue.includes('Text') ?marked(item.values[2].formattedValue):item.values[2].formattedValue;
+                  markdownFriendlyOptions.includes(item.values[1].formattedValue) ? marked(item.values[2].formattedValue) : item.values[2].formattedValue;
                 console.log(item.values[2].formattedValue);
               }
 

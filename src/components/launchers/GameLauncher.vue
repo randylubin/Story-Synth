@@ -260,6 +260,7 @@
 <script>
 import axios from "axios";
 import VanityLookup from "./VanityLookup.js";
+import {marked} from "marked"
 
 export default {
   name: "app-gameLauncher",
@@ -1698,6 +1699,10 @@ export default {
               }
             }
           });
+
+          if (this.customOptions.gameBlurb) {
+            this.customOptions.gameBlurb = marked(this.customOptions.gameBlurb)
+          }
 
           // custom style template
           let styleTemplate =

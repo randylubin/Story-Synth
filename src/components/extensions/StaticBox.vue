@@ -3,7 +3,7 @@
       <div class="row">
         <div class="col-sm">
           <div class="card d-flex extension-card">
-            <div class="card-body" v-html="staticBoxContent">
+            <div class="card-body" v-html="markdownParsedStaticContent">
             </div>
           </div>
         </div>
@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import {marked} from 'marked'
+
 export default {
   name: 'app-staticBox',
   props: {
@@ -21,6 +23,11 @@ export default {
     return {
       error: null
     };
+  },
+  computed: {
+    markdownParsedStaticContent: function(){
+      return marked(this.staticBoxContent)
+    }
   },
   mounted(){
 
