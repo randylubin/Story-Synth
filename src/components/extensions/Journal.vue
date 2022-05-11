@@ -13,7 +13,7 @@
               </form>
 
               <div v-if="journalEntries != []">
-                <div v-for="(entry, index) in sortedJournalEntries" v-bind:key="index">
+                <div v-for="(entry, index) in markdownRenderedEntries" v-bind:key="index">
                   <div class="row journal-list-row" v-if="entry && (entry != 'EMPTY')">
                     <div class="col-sm-12 my-1 card px-0">
                       <div class="journal-entry justify-content-between d-flex">
@@ -78,6 +78,11 @@ export default {
       }
 
       return sortedEntries
+    },
+    markdownRenderedEntries: function(){
+      let renderedEntries = this.sortedJournalEntries.map(entry => this.$marked(entry))
+      
+      return renderedEntries
     }
   },
   methods: {
@@ -119,7 +124,6 @@ export default {
 <style scoped>
 
 .card .journal-entry-inner {
-  white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: break-all;
 }
