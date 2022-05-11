@@ -12,8 +12,6 @@
 </template>
 
 <script>
-import {marked} from 'marked'
-
 export default {
   name: 'app-staticBox',
   props: {
@@ -26,7 +24,7 @@ export default {
   },
   computed: {
     markdownParsedStaticContent: function(){
-      return marked(this.staticBoxContent)
+      return this.$marked(this.staticBoxContent)
     }
   },
   mounted(){

@@ -215,7 +215,7 @@
             <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
           </div>
 
-          <div class="card-body justify-content-center mt-2" style="white-space: pre-line" v-if="!roomInfo.xCardIsActive && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
+          <div class="card-body justify-content-center mt-2" v-if="!roomInfo.xCardIsActive && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
             <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
               <div class="col-sm">
                 <h2>Instructions</h2>
@@ -313,7 +313,7 @@
           <div class="d-block text-left" v-html="customOptions.modalTwoText">
           </div>
         </b-modal>
-        
+
         <b-modal
           id="modalThree"
           v-bind:title="customOptions.modalThreeLabel"
@@ -626,7 +626,8 @@ export default {
 
             // Handle options
             if (item.values[0].formattedValue == "option"){
-              this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+              this.customOptions[item.values[1].formattedValue] =
+                  this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
               console.log(item.values[2].formattedValue)
             }
 
@@ -649,7 +650,7 @@ export default {
                 rowInfo = {
                   ordered: item.values[0].formattedValue,
                   headerText: item.values[1].formattedValue,
-                  bodyText: item.values[2].formattedValue
+                  bodyText: this.$marked(item.values[2].formattedValue)
                 }
                 cleanData.push(rowInfo)
 
@@ -659,7 +660,7 @@ export default {
 
                 if (item.values[0].formattedValue == 1){
                   for (var j = 3; j < item.values.length; j++) {
-                    this.wheels[j-3].push(item.values[j].formattedValue)
+                    this.wheels[j-3].push(this.$marked(item.values[j].formattedValue))
                   }
                 }
               }

@@ -119,7 +119,6 @@
     <div class="upper-text row" v-if="customOptions.upperText">
       <div
         class="col-sm"
-        style="white-space: pre-line"
         v-html="customOptions.upperText"
       ></div>
     </div>
@@ -149,12 +148,6 @@
         aria-label="Extra Info"
         v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel"
       >
-        <!-- <b-button
-          v-b-modal.modalOne
-          variant="outline-dark"
-          v-if="customOptions.modalOneLabel"
-          >{{ customOptions.modalOneLabel }}</b-button
-        > -->
 
         <b-modal
           id="modalOne"
@@ -163,17 +156,9 @@
         >
           <div
             class="d-block text-left"
-            style="white-space: pre-line"
             v-html="customOptions.modalOneText"
           ></div>
         </b-modal>
-
-        <!-- <b-button
-          v-b-modal.modalTwo
-          variant="outline-dark"
-          v-if="customOptions.modalTwoLabel"
-          >{{ customOptions.modalTwoLabel }}</b-button
-        > -->
 
         <b-modal
           id="modalTwo"
@@ -182,7 +167,6 @@
         >
           <div
             class="d-block text-left"
-            style="white-space: pre-line"
             v-html="customOptions.modalTwoText"
           ></div>
         </b-modal>
@@ -805,7 +789,7 @@ export default {
               // Handle options
               if (item.values[0].formattedValue == "option") {
                 this.customOptions[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
+                  this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
                 console.log(item.values[2].formattedValue);
               }
 
@@ -831,7 +815,7 @@ export default {
                   hexInfo = {
                     hexID: parseInt(item.values[0].formattedValue),
                     summary: item.values[3].formattedValue,
-                    fullContent: item.values[4]?.formattedValue,
+                    fullContent: this.$marked(item.values[4]?.formattedValue),
                     probability: item.values[5]?.formattedValue,
                     background: item.values[6]?.formattedValue,
                   };

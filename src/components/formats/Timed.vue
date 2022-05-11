@@ -166,7 +166,7 @@
             <div class="col-sm">
               <div class="card shadow">
                 <div class="card-body">
-                  <div class="card-text" style="white-space: pre-line" v-html="row.text">
+                  <div class="card-text" v-html="row.text">
 
                   </div>
                 </div>
@@ -490,8 +490,10 @@ export default {
         gRows.forEach((item) => {
           console.log(item.values[0].formattedValue)
 
+          // Handle options
           if (item.values[0].formattedValue == "option"){
-            this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+            this.customOptions[item.values[1].formattedValue] =
+                  this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
             console.log(item.values[2].formattedValue)
           }
 
@@ -499,7 +501,7 @@ export default {
 
             var rowInfo = {
               time: item.values[0].formattedValue,
-              text: item.values[1].formattedValue
+              text: this.$marked(item.values[1].formattedValue)
             }
 
             playerArray.forEach((player, i)=>{

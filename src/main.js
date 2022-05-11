@@ -8,6 +8,12 @@ import Vue from 'vue'
 import VueMeta from 'vue-meta'
 Vue.use(VueMeta);
 
+import { marked } from 'marked'
+Vue.prototype.$marked = marked;
+
+import markdownFriendlyOptions from './misc/markdown-friendly-options.json'
+Vue.prototype.$markdownFriendlyOptions = markdownFriendlyOptions;
+
 import { BootstrapVue, BIcon, BIconPeople, BIconCoin, BIconPencil, BIconTrash, BIconCheck2, BIconList, BIconLink45deg, BIconArrowClockwise, BIconArrowsMove, BIconChevronLeft, BIconCardHeading, BIconChevronRight} from 'bootstrap-vue'
 
 // Install BootstrapVue

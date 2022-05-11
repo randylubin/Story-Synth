@@ -235,27 +235,27 @@
                         <b-progress :value="roomInfo.currentCardIndex" :max="customOptions.instructionsProgressBar" variant="dark"></b-progress>
                       </div>
                     </div>
-                    <div class="card-title" style="white-space: pre-line" v-if="!row.subtitle">
+                    <div class="card-title" v-if="!row.subtitle">
                       <div v-if="index == 0">
                         <h1 class="mt-4">{{row.archetype}}</h1>
                         <div v-html="row.characterDetail"></div>
                       </div>
 
                       <div v-if="index !== 0">
-                        <p class="mt-4" style="white-space: pre-line" v-html="row.archetype"></p>
-                        <div class="text-left" style="white-space: pre-line" v-html="row.characterDetail">
+                        <p class="mt-4" v-html="row.archetype"></p>
+                        <div class="text-left" v-html="row.characterDetail">
 
                         </div>
                       </div>
 
                     </div>
 
-                    <h4 class="card-title" style="white-space: pre-line" v-if="row.subtitle">
+                    <h4 class="card-title" v-if="row.subtitle">
                       {{row.archetype}}
                     </h4>
                     <h5 class="card-subtitle mb-4 text-muted">{{row.subtitle}}</h5>
 
-                    <div class="card-text text-left" v-if="clickedCard == index || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered" style="white-space: pre-line">
+                    <div class="card-text text-left" v-if="clickedCard == index || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
 
                       <h5>{{row.characterQuestion}}</h5>
                       <div v-html="row.characterDetail">
@@ -595,7 +595,8 @@ export default {
           if (i !== 0 && item.values[0] && item.values[0].formattedValue){
             // Handle options
             if (item.values[0].formattedValue == "option"){
-              this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+              this.customOptions[item.values[1].formattedValue] =
+                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
               console.log(item.values[2].formattedValue)
             }
 
@@ -616,12 +617,12 @@ export default {
 
               var rowInfo = {
                 ordered: item.values[0].formattedValue,
-                archetype: item.values[1].formattedValue,
+                archetype: (item.values[1].formattedValue && !item.values[2].formattedValue) ? this.$marked(item.values[1].formattedValue) : item.values[1].formattedValue,
                 subtitle: item.values[2].formattedValue,
                 characterQuestion: item.values[3].formattedValue,
-                characterDetail: item.values[4].formattedValue,
+                characterDetail: item.values[4].formattedValue ? this.$marked(item.values[4].formattedValue) : item.values[4].formattedValue,
                 keyQuestion: item.values[5].formattedValue,
-                keyDetails: item.values[6].formattedValue
+                keyDetails: item.values[6].formattedValue ? this.$marked(item.values[6].formattedValue) : item.values[6].formattedValue
               }
 
               cleanData.push(rowInfo)

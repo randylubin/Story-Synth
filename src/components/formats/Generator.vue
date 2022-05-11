@@ -119,7 +119,6 @@
     <div class="upper-text row" v-if="customOptions.upperText">
       <div
         class="col-sm"
-        style="white-space: pre-line"
         v-html="customOptions.upperText"
       ></div>
     </div>
@@ -149,12 +148,6 @@
         aria-label="Extra Info"
         v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel"
       >
-        <!-- <b-button
-          v-b-modal.modalOne
-          variant="outline-dark"
-          v-if="customOptions.modalOneLabel"
-          >{{ customOptions.modalOneLabel }}</b-button
-        > -->
 
         <b-modal
           id="modalOne"
@@ -163,17 +156,9 @@
         >
           <div
             class="d-block text-left"
-            style="white-space: pre-line"
             v-html="customOptions.modalOneText"
           ></div>
         </b-modal>
-
-        <!-- <b-button
-          v-b-modal.modalTwo
-          variant="outline-dark"
-          v-if="customOptions.modalTwoLabel"
-          >{{ customOptions.modalTwoLabel }}</b-button
-        > -->
 
         <b-modal
           id="modalTwo"
@@ -182,7 +167,6 @@
         >
           <div
             class="d-block text-left"
-            style="white-space: pre-line"
             v-html="customOptions.modalTwoText"
           ></div>
         </b-modal>
@@ -315,7 +299,7 @@
               v-bind:key="index"
               class="col-12"
             >
-              <div v-on:click="shuffleOne(index)" class="" style="white-space: pre-line; cursor: pointer">
+              <div v-on:click="shuffleOne(index)" class="" style="cursor: pointer">
                 <span
                   v-html="categoryLabels[index - 1] + ':'"
                   v-if="!customOptions.hideLabels"
@@ -659,7 +643,7 @@ export default {
               // Handle options
               if (item.values[0].formattedValue == "option") {
                 this.customOptions[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
+                  this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
                 console.log(item.values[2].formattedValue);
               }
 
@@ -746,7 +730,7 @@ export default {
                   rowInfo = {
                     ordered: item.values[0].formattedValue,
                     headerText: item.values[1].formattedValue,
-                    bodyText: item.values[2].formattedValue,
+                    bodyText: this.$marked(item.values[2].formattedValue),
                   };
                   cleanData.push(rowInfo);
 
@@ -758,7 +742,7 @@ export default {
                     for (var j = 3; j < item.values.length; j++) {
                       if (item.values[j].formattedValue) {
                         this.categoryData[j - 3].push(
-                          item.values[j].formattedValue
+                          this.$marked(item.values[j].formattedValue)
                         );
                       }
                     }
@@ -916,7 +900,6 @@ select {
 
 .generator-cell-contents {
   width: 100%;
-  white-space: pre-line;
   display: flex;
   align-items: center;
   flex-direction: column;

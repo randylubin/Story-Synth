@@ -190,11 +190,11 @@
               <div class="card shadow" v-on:click="updateClickedCard(index)" style="cursor:pointer">
                 <div class="card-body">
                   <h5>Public: </h5>
-                  <span style="white-space: pre-line" v-html="row.publicText"></span>
+                  <span v-html="row.publicText"></span>
                   <br><br>
 
                   <h5>Secret:</h5>
-                  <span style="white-space: pre-line" v-html="row[playerSelected]"></span>
+                  <span v-html="row[playerSelected]"></span>
 
                 </div>
               </div>
@@ -550,7 +550,8 @@ export default {
 
           // Handle options
           if (item.values[0].formattedValue == "option"){
-            this.customOptions[item.values[1].formattedValue] = item.values[2].formattedValue
+            this.customOptions[item.values[1].formattedValue] =
+              this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
             console.log(item.values[2].formattedValue)
           }
 
@@ -558,11 +559,11 @@ export default {
 
             var rowInfo = {
               order: item.values[0].formattedValue,
-              publicText: item.values[1].formattedValue
+              publicText: this.$marked(item.values[1].formattedValue)
             }
 
             for (var i = 0; i < playerArray.length; i++) {
-              rowInfo[playerArray[i]] = item.values[i+2].formattedValue
+              rowInfo[playerArray[i]] = this.$marked(item.values[i+2].formattedValue)
             }
 
             /*

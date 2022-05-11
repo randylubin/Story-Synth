@@ -382,7 +382,6 @@
             >
               <div
                 class="card-body justify-content-center d-flex align-items-center mt-4"
-                style="white-space: pre-line"
                 v-bind:class="{
                   'card-img-overlay':
                     customOptions.cardBackgroundImage &&
@@ -397,13 +396,13 @@
                         .headerText
                     }}
                   </h1>
-                  <p
+                  <div
                     class="mt-4 mb-4"
                     v-html="
                       gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
                         .bodyText
                     "
-                  ></p>
+                  ></div>
                   <button class="btn btn-outline-dark" v-on:click="flipCard()" v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack && customOptions.reversableCards">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
                       <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
@@ -677,8 +676,6 @@ import { roomsCollection } from "../../firebase";
 import axios from "axios";
 import ExtensionManager from "../extensions/ExtensionManager.vue";
 import RoomLink from '../layout/RoomLink.vue';
-import { marked } from 'marked'
-import markdownFriendlyOptions from '../../misc/markdown-friendly-options.json'
 // import MenuModal from '../layout/MenuModals.vue';
 
 export default {
@@ -1066,7 +1063,7 @@ export default {
               // Handle options
               if (item.values[0].formattedValue == "option") {
                 this.customOptions[item.values[1].formattedValue] =
-                  markdownFriendlyOptions.includes(item.values[1].formattedValue) ? marked(item.values[2].formattedValue) : item.values[2].formattedValue;
+                  this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
                 console.log(item.values[2].formattedValue);
               }
 
@@ -1091,11 +1088,11 @@ export default {
                   ordered: item.values[0].formattedValue,
                   deckNumberClass: "deck-number-" + item.values[0].formattedValue,
                   headerText: item.values[1]?.formattedValue,
-                  bodyText: marked(item.values[2]?.formattedValue),
+                  bodyText: this.$marked(item.values[2]?.formattedValue),
                 };
 
                 if (item.values[3] && item.values[3].formattedValue) {
-                  rowInfo.cardBack = marked(item.values[3].formattedValue)
+                  rowInfo.cardBack = this.$marked(item.values[3].formattedValue)
                 }
 
                 cleanData.push(rowInfo);
