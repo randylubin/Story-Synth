@@ -3,7 +3,7 @@
       <div class="row">
         <div class="col-sm">
           <div class="card d-flex extension-card">
-            <div class="card-body" v-html="markdownParsedStaticContent">
+            <div class="card-body" v-dompurify-html="markdownParsedStaticContent">
             </div>
           </div>
         </div>

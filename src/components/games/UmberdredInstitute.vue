@@ -5,7 +5,7 @@
     v-bind:class="['style-template-' + customOptions.styleTemplate]"
   >
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.style"></div>
 
     <!-- Menu Bar -->
     <div class="menu-bar mb-4 d-flex align-items-center">
@@ -77,7 +77,7 @@
       <div
         class="col-sm"
         style="white-space: pre-line"
-        v-html="customOptions.upperText"
+        v-dompurify-html="customOptions.upperText"
       ></div>
     </div>
 
@@ -121,7 +121,7 @@
           <div
             class="d-block text-left"
             style="white-space: pre-line"
-            v-html="customOptions.modalOneText"
+            v-dompurify-html="customOptions.modalOneText"
           ></div>
         </b-modal>
 
@@ -140,7 +140,7 @@
           <div
             class="d-block text-left"
             style="white-space: pre-line"
-            v-html="customOptions.modalTwoText"
+            v-dompurify-html="customOptions.modalTwoText"
           ></div>
         </b-modal>
       </div>
@@ -200,7 +200,7 @@
                 >
                   <div class="mb-2">
                     <div
-                      v-html="categoryLabels[index - 1]"
+                      v-dompurify-html="categoryLabels[index - 1]"
                       v-if="!customOptions.hideLabels"
                       class="generator-cell-label px-2"
                       style="cursor: pointer"
@@ -213,7 +213,7 @@
                           roomInfo.currentGeneratorSelection[index - 1]
                         ]
                       "
-                      v-html="
+                      v-dompurify-html="
                         categoryData[index - 1][
                           roomInfo.currentGeneratorSelection[index - 1]
                         ]
@@ -241,7 +241,7 @@
             >
               <div v-on:click="shuffleOne(index)" class="" style="white-space: pre-line; cursor: pointer">
                 <span
-                  v-html="categoryLabels[index - 1] + ':'"
+                  v-dompurify-html="categoryLabels[index - 1] + ':'"
                   v-if="!customOptions.hideLabels"
                   class="summary-category-label px-2 font-weight-bold"
                 ></span>
@@ -250,7 +250,7 @@
                     :key="
                       roomInfo.currentGeneratorSelection[index - 1]
                     "
-                    v-html="
+                    v-dompurify-html="
                       categoryData[index - 1][
                         roomInfo.currentGeneratorSelection[index - 1]
                       ]
@@ -274,7 +274,7 @@
               <div class="my-4 generator-cell-contents">
                 <div class="mb-2">
                   <div
-                    v-html="categoryLabels[index - 1]"
+                    v-dompurify-html="categoryLabels[index - 1]"
                     v-on:click="shuffleOne(index)"
                     v-if="!customOptions.hideLabels"
                     class="generator-cell-label px-2"
@@ -286,7 +286,7 @@
                 >
                   <transition name="reroll-list" mode="out-in">
                     <span
-                      v-html="option"
+                      v-dompurify-html="option"
                       v-on:click="selectOne(index, optionIndex)"
                       class="font-weight-normal"
                       v-bind:class="{
@@ -316,7 +316,7 @@
       </div>
 
       <div class="lower-text row mt-4" v-if="customOptions.lowerText">
-        <div class="col-sm" v-html="customOptions.lowerText"></div>
+        <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>
       </div>
     </div>
 

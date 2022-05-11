@@ -1,15 +1,15 @@
 <template>
   <div class="container game-room sandbox">
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
-    <div v-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
+    <div v-dompurify-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
     <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-html="customOptions.monetizationMessage"></b-alert>
+      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
     </div>
     <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
       <template #overlay>
         <div class="text-center">
-          <div v-html="customOptions.monetizationPaywall"></div>
+          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
           <div class="mt-4">
             <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
             <b-spinner

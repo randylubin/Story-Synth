@@ -5,15 +5,15 @@
     v-bind:class="{'px-0': generatorAsExtension, styleTemplate: styleTemplate}"
   >
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
-    <div v-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
+    <div v-dompurify-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
     <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-html="customOptions.monetizationMessage"></b-alert>
+      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
     </div>
     <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
       <template #overlay>
         <div class="text-center">
-          <div v-html="customOptions.monetizationPaywall"></div>
+          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
           <div class="mt-4">
             <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
             <b-spinner
@@ -119,7 +119,7 @@
     <div class="upper-text row" v-if="customOptions.upperText">
       <div
         class="col-sm"
-        v-html="customOptions.upperText"
+        v-dompurify-html="customOptions.upperText"
       ></div>
     </div>
 
@@ -156,7 +156,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalOneText"
+            v-dompurify-html="customOptions.modalOneText"
           ></div>
         </b-modal>
 
@@ -167,7 +167,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalTwoText"
+            v-dompurify-html="customOptions.modalTwoText"
           ></div>
         </b-modal>
 
@@ -178,7 +178,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalThreeText"
+            v-dompurify-html="customOptions.modalThreeText"
           ></div>
         </b-modal>
 
@@ -189,7 +189,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalFourText"
+            v-dompurify-html="customOptions.modalFourText"
           ></div>
         </b-modal>
 
@@ -200,7 +200,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalFiveText"
+            v-dompurify-html="customOptions.modalFiveText"
           ></div>
         </b-modal>
       </div>
@@ -260,7 +260,7 @@
                 >
                   <div class="mb-2">
                     <div
-                      v-html="categoryLabels[index - 1]"
+                      v-dompurify-html="categoryLabels[index - 1]"
                       v-if="!customOptions.hideLabels"
                       class="generator-cell-label px-2"
                       style="cursor: pointer"
@@ -273,7 +273,7 @@
                           roomInfo.currentGeneratorSelection[index - 1]
                         ]
                       "
-                      v-html="
+                      v-dompurify-html="
                         categoryData[index - 1][
                           roomInfo.currentGeneratorSelection[index - 1]
                         ]
@@ -301,7 +301,7 @@
             >
               <div v-on:click="shuffleOne(index)" class="" style="cursor: pointer">
                 <span
-                  v-html="categoryLabels[index - 1] + ':'"
+                  v-dompurify-html="categoryLabels[index - 1] + ':'"
                   v-if="!customOptions.hideLabels"
                   class="summary-category-label px-2 font-weight-bold"
                 ></span>
@@ -310,7 +310,7 @@
                     :key="
                       roomInfo.currentGeneratorSelection[index - 1]
                     "
-                    v-html="
+                    v-dompurify-html="
                       categoryData[index - 1][
                         roomInfo.currentGeneratorSelection[index - 1]
                       ]
@@ -334,7 +334,7 @@
               <div class="my-4 generator-cell-contents">
                 <div class="mb-2">
                   <div
-                    v-html="categoryLabels[index - 1]"
+                    v-dompurify-html="categoryLabels[index - 1]"
                     v-on:click="shuffleOne(index)"
                     v-if="!customOptions.hideLabels"
                     class="generator-cell-label px-2"
@@ -346,7 +346,7 @@
                 >
                   <transition name="reroll-list" mode="out-in">
                     <span
-                      v-html="option"
+                      v-dompurify-html="option"
                       v-on:click="selectOne(index, optionIndex)"
                       class="font-weight-normal"
                       v-bind:class="{
@@ -376,7 +376,7 @@
       </div>
 
       <div class="lower-text row mt-4" v-if="customOptions.lowerText">
-        <div class="col-sm" v-html="customOptions.lowerText"></div>
+        <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>
       </div>
     </div>
 

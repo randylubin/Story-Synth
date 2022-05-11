@@ -4,7 +4,7 @@
         <div class="col-sm">
           <div class="card d-flex extension-card">
             <div class="card-body">
-              <h2 v-html="diceRollerTitle" v-if="diceRollerTitle != undefined"></h2>
+              <h2 v-dompurify-html="diceRollerTitle" v-if="diceRollerTitle != undefined"></h2>
               <h2 v-else>Dice Roller</h2>
 
               <div class="row">

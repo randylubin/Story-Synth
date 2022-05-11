@@ -5,7 +5,7 @@
     v-bind:class="['style-template-' + customOptions.styleTemplate]"
   >
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.style"></div>
 
     <div class="game-meta">
       <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
@@ -27,7 +27,7 @@
       <div
         class="col-sm"
         style="white-space: pre-line"
-        v-html="customOptions.upperText"
+        v-dompurify-html="customOptions.upperText"
       ></div>
     </div>
 
@@ -53,7 +53,7 @@
           <div
             class="d-block text-left"
             style="white-space: pre-line"
-            v-html="customOptions.modalOneText"
+            v-dompurify-html="customOptions.modalOneText"
           ></div>
         </b-modal>
 
@@ -72,7 +72,7 @@
           <div
             class="d-block text-left"
             style="white-space: pre-line"
-            v-html="customOptions.modalTwoText"
+            v-dompurify-html="customOptions.modalTwoText"
           ></div>
         </b-modal>
       </div>
@@ -117,7 +117,7 @@
               >
                 <div class="my-4" style="white-space: pre-line">
                   <div
-                    v-html="
+                    v-dompurify-html="
                       originalGridmapData[
                         roomInfo.currentMapData[
                           rowIndex * parseInt(customOptions.mapColumns) +
@@ -143,7 +143,7 @@
       </div>
 
       <div class="lower-text row mt-4" v-if="customOptions.lowerText">
-        <div class="col-sm" v-html="customOptions.lowerText"></div>
+        <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>
       </div>
     </div>
 

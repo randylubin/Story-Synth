@@ -1,15 +1,15 @@
 <template>
   <div class="shuffled game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
-    <div v-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
+    <div v-dompurify-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
     <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-html="customOptions.monetizationMessage"></b-alert>
+      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
     </div>
     <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
       <template #overlay>
         <div class="text-center">
-          <div v-html="customOptions.monetizationPaywall"></div>
+          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
           <div class="mt-4">
             <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
             <b-spinner
@@ -60,7 +60,7 @@
               variant="outline-dark"
               class="control-button-safety-card btn-lg btn-block"
               v-on:click="xCard(); closeMenu();"
-              v-html="
+              v-dompurify-html="
                 customOptions.safetyCardButton
                   ? customOptions.safetyCardButton
                   : 'X-Card'
@@ -78,7 +78,7 @@
                 roomInfo.xCardIsActive ||
                   roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
               "
-              v-html="
+              v-dompurify-html="
                 customOptions.showNextDeckButton
                   ? customOptions.showNextDeckButton
                   : 'Next Deck'
@@ -398,7 +398,7 @@
                   </h1>
                   <div
                     class="mt-4 mb-4"
-                    v-html="
+                    v-dompurify-html="
                       gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
                         .bodyText
                     "
@@ -411,7 +411,7 @@
                   </button>
                 </div>
                 <div v-else>
-                  <div class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack">
+                  <div class="mt-4 mb-4" v-dompurify-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack">
                   </div> 
                   <button class="btn btn-outline-dark" v-on:click="flipCard()" v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].cardBack && customOptions.reversableCards">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
@@ -422,7 +422,7 @@
                 </div>
               </div>
             </div>
-            <b-alert show class="mx-3" v-html="customOptions.lastCardReminderText" variant="info" v-if="customOptions.lastCardReminderText && customOptions.lastCardReminderFrequency && roomInfo.currentCardIndex > firstNonInstruction && ((roomInfo.currentCardIndex - firstNonInstruction) % customOptions.lastCardReminderFrequency == customOptions.lastCardReminderFrequency - 1)"></b-alert>
+            <b-alert show class="mx-3" v-dompurify-html="customOptions.lastCardReminderText" variant="info" v-if="customOptions.lastCardReminderText && customOptions.lastCardReminderFrequency && roomInfo.currentCardIndex > firstNonInstruction && ((roomInfo.currentCardIndex - firstNonInstruction) % customOptions.lastCardReminderFrequency == customOptions.lastCardReminderFrequency - 1)"></b-alert>
 
             <!-- Safety Card -->
             <div
@@ -439,7 +439,7 @@
                 <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
                 <div
                   class="safety-card-text"
-                  v-html="customOptions.safetyCardText"
+                  v-dompurify-html="customOptions.safetyCardText"
                   v-if="customOptions.safetyCardText"
                 ></div>
               </div>
@@ -484,7 +484,7 @@
               variant="outline-dark"
               class="control-button-safety-card"
               v-on:click="xCard()"
-              v-html="
+              v-dompurify-html="
                 customOptions.safetyCardButton
                   ? customOptions.safetyCardButton
                   : 'X-Card'
@@ -500,7 +500,7 @@
                 roomInfo.xCardIsActive ||
                   roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
               "
-              v-html="
+              v-dompurify-html="
                 customOptions.showNextDeckButton
                   ? customOptions.showNextDeckButton
                   : 'Next Deck'
@@ -579,7 +579,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalOneText"
+            v-dompurify-html="customOptions.modalOneText"
           ></div>
         </b-modal>
 
@@ -590,7 +590,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalTwoText"
+            v-dompurify-html="customOptions.modalTwoText"
           ></div>
         </b-modal>
 
@@ -601,7 +601,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalThreeText"
+            v-dompurify-html="customOptions.modalThreeText"
           ></div>
         </b-modal>
 
@@ -612,7 +612,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalFourText"
+            v-dompurify-html="customOptions.modalFourText"
           ></div>
         </b-modal>
 
@@ -623,7 +623,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalFiveText"
+            v-dompurify-html="customOptions.modalFiveText"
           ></div>
         </b-modal>
 

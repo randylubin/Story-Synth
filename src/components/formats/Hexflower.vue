@@ -5,15 +5,15 @@
     v-bind:class="{'px-0': hexflowerAsExtension, styleTemplate: styleTemplate}"
   >
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
-    <div v-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
+    <div v-dompurify-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
     <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-html="customOptions.monetizationMessage"></b-alert>
+      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
     </div>
     <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
       <template #overlay>
         <div class="text-center">
-          <div v-html="customOptions.monetizationPaywall"></div>
+          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
           <div class="mt-4">
             <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
             <b-spinner
@@ -119,7 +119,7 @@
     <div class="upper-text row" v-if="customOptions.upperText">
       <div
         class="col-sm"
-        v-html="customOptions.upperText"
+        v-dompurify-html="customOptions.upperText"
       ></div>
     </div>
 
@@ -156,7 +156,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalOneText"
+            v-dompurify-html="customOptions.modalOneText"
           ></div>
         </b-modal>
 
@@ -167,7 +167,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalTwoText"
+            v-dompurify-html="customOptions.modalTwoText"
           ></div>
         </b-modal>
 
@@ -178,7 +178,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalThreeText"
+            v-dompurify-html="customOptions.modalThreeText"
           ></div>
         </b-modal>
 
@@ -189,7 +189,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalFourText"
+            v-dompurify-html="customOptions.modalFourText"
           ></div>
         </b-modal>
 
@@ -200,7 +200,7 @@
         >
           <div
             class="d-block text-left"
-            v-html="customOptions.modalFiveText"
+            v-dompurify-html="customOptions.modalFiveText"
           ></div>
         </b-modal>
       </div>
@@ -284,7 +284,7 @@
                         'hex-tile-inner-content-sm': countGraphemes(hex.summary) >= 5 && countGraphemes(hex.summary) < 25,
                         'hex-tile-inner-content-xs': countGraphemes(hex.summary) >= 25
                       }"
-                      v-html="hex.summary"
+                      v-dompurify-html="hex.summary"
                     >
                     </div>
                   </div>
@@ -301,7 +301,7 @@
             v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent && !roomInfo.tempSameHex"
             v-bind:class="{'invisible':roomInfo.playRandomizerAnimation}"
           >
-            <div class="col-sm-12" v-html="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent">
+            <div class="col-sm-12" v-dompurify-html="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent">
             </div>
           </div>
         </transition>
@@ -310,7 +310,7 @@
       
 
       <div class="lower-text row mt-4" v-if="customOptions.lowerText">
-        <div class="col-sm" v-html="customOptions.lowerText"></div>          
+        <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>          
       </div>
 
     </div>

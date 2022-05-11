@@ -1,7 +1,7 @@
 <template>
   <div class="slot-machine game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.style"></div>
 
     <!-- Menu Bar -->
     <div class="menu-bar mb-4 d-flex align-items-center">
@@ -41,7 +41,7 @@
               variant="outline-dark"
               class="control-button-safety-card btn-lg btn-block"
               v-on:click="xCard(); closeMenu();"
-              v-html="
+              v-dompurify-html="
                 customOptions.safetyCardButton
                   ? customOptions.safetyCardButton
                   : 'X-Card'
@@ -167,11 +167,11 @@
 
             <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
               <h1>{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h1>
-              <p class="mt-4 mb-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+              <p class="mt-4 mb-4" v-dompurify-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
             </div>
 
             <div v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
-              <div v-for="(index) in numberOfWheels" v-bind:key="index" v-html="wheels[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
+              <div v-for="(index) in numberOfWheels" v-bind:key="index" v-dompurify-html="wheels[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
                 
               </div>
             </div>
@@ -181,7 +181,7 @@
           <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
             <div class="mt-5 pt-5 mb-5">
               <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
-              <div class="safety-card-tet" v-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
+              <div class="safety-card-tet" v-dompurify-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
             </div>
             <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
             <div class="" v-if="!customOptions.safetyCardText">
@@ -197,7 +197,7 @@
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
           <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
-          <b-button variant="outline-dark" v-on:click="xCard()" v-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'"></b-button>
+          <b-button variant="outline-dark" v-on:click="xCard()" v-dompurify-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'"></b-button>
           <button class="btn btn-outline-dark" :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive" v-on:click="lastCard()">Last Card</button>
         </div>
       </div>
@@ -227,7 +227,7 @@
           <!-- <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button> -->
 
           <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
-            <div class="d-block text-left" v-html="customOptions.modalOneText">
+            <div class="d-block text-left" v-dompurify-html="customOptions.modalOneText">
               
             </div>
           </b-modal>
@@ -235,7 +235,7 @@
           <!-- <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button> -->
 
           <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
-            <div class="d-block text-left" v-html="customOptions.modalTwoText">
+            <div class="d-block text-left" v-dompurify-html="customOptions.modalTwoText">
             </div>
           </b-modal>
         </div>

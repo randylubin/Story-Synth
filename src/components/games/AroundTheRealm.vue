@@ -1,7 +1,7 @@
 <template>
   <div class="phases">
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.style"></div>
 
     <div class="game-room container" v-if="roomInfo">
       
@@ -43,7 +43,7 @@
                 variant="outline-dark"
                 class="control-button-safety-card btn-lg btn-block"
                 v-on:click="xCard(); closeMenu();"
-                v-html="
+                v-dompurify-html="
                   customOptions.safetyCardButton
                     ? customOptions.safetyCardButton
                     : 'X-Card'
@@ -169,14 +169,14 @@
               <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
                 <h2 class="card-header-text">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h2>
                 
-                <p v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText" v-bind:class="{ 'text-left': gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText.length > 60 }" class="my-4" v-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+                <p v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText" v-bind:class="{ 'text-left': gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText.length > 60 }" class="my-4" v-dompurify-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
               </div>
 
               <div v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
-                <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
+                <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-dompurify-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
                 </div>-->
                 <h2 class="card-header-text">{{phaseNames[roomInfo.currentPhase]}}</h2>
-                <div v-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]"></div>
+                <div v-dompurify-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]"></div>
                 <div v-if="Array.isArray(customOptions.phaseHelpText)" class="my-4">
                   <p class="phase-help-text">
                     <i class="">{{customOptions.phaseHelpText[roomInfo.currentPhase]}}</i>
@@ -190,7 +190,7 @@
             <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage && !customOptions.cardBackgroundImageAlign }">
               <div class="mt-5 pt-5 mb-5">
                 <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
-                <div class="safety-card-tet" v-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
+                <div class="safety-card-tet" v-dompurify-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
               </div>
               <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
               <div class="" v-if="!customOptions.safetyCardText">
@@ -208,7 +208,7 @@
         <div class="row mb-4">
           <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
             <button class="btn btn-outline-dark" :disabled="roomInfo.xCardIsActive" v-on:click="shuffle()" color="rgb(187, 138, 200)">Re-shuffle</button>
-            <b-button variant="outline-dark" v-on:click="xCard()" v-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'"></b-button>
+            <b-button variant="outline-dark" v-on:click="xCard()" v-dompurify-html="customOptions.safetyCardButton ? customOptions.safetyCardButton : 'X-Card'"></b-button>
             <button class="btn btn-outline-dark" v-on:click="skipInstructions()" v-if="roomInfo.currentCardIndex < firstNonInstruction">Skip Instructions</button>
             <button class="btn btn-outline-dark" v-if="roomInfo.currentCardIndex >= firstNonInstruction" :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive" v-on:click="ending()">Ending</button>
           </div>
@@ -237,7 +237,7 @@
           <!-- <b-button v-b-modal.modalOne variant="outline-dark" v-if="customOptions.modalOneLabel">{{customOptions.modalOneLabel}}</b-button> -->
 
           <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
-            <div class="d-block text-left" v-html="customOptions.modalOneText">
+            <div class="d-block text-left" v-dompurify-html="customOptions.modalOneText">
               
             </div>
           </b-modal>
@@ -245,7 +245,7 @@
           <!-- <b-button v-b-modal.modalTwo variant="outline-dark" v-if="customOptions.modalTwoLabel">{{customOptions.modalTwoLabel}}</b-button> -->
 
           <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
-            <div class="d-block text-left" v-html="customOptions.modalTwoText">
+            <div class="d-block text-left" v-dompurify-html="customOptions.modalTwoText">
             </div>
           </b-modal>
         </div>
@@ -257,11 +257,11 @@
           <div class="card-body justify-content-center">
             <div class="row my-2">
               <div class="col-sm game-meta">
-                <h2 v-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'"></h2>
+                <h2 v-dompurify-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'"></h2>
               </div>
             </div>
             <div class="row">
-              <div class="col-sm" v-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null"></div>
+              <div class="col-sm" v-dompurify-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null"></div>
             </div>
             <div v-for="(round, roundIndex) in roomInfo.cardSequence" v-bind:key="roundIndex">
               <div v-if="Object.prototype.toString.call(round) === '[object Object]' && phaseData.length>0 && roundIndex <= roomInfo.currentCardIndex">
@@ -276,7 +276,7 @@
               </div>
             </div>
             <div class="row" v-if="roomInfo.currentCardIndex >= endingIndex">
-              <div class="col-sm" v-html="customOptions.pastPromptCoda ? customOptions.pastPromptCoda : null">
+              <div class="col-sm" v-dompurify-html="customOptions.pastPromptCoda ? customOptions.pastPromptCoda : null">
               </div>
             </div>
           </div>

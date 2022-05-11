@@ -4,7 +4,7 @@
         <div class="col-sm">
           <div class="card d-flex extension-card">
             <div class="card-body">
-              <h2 v-html="editableListTitle" v-if="editableListTitle != undefined"></h2>
+              <h2 v-dompurify-html="editableListTitle" v-if="editableListTitle != undefined"></h2>
               <h2 v-else>List</h2>
 
               <div v-if="editableList != []">

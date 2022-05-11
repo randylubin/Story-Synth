@@ -1,15 +1,15 @@
 <template>
   <div class="monster game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
-    <div v-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
+    <div v-dompurify-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
     <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-html="customOptions.monetizationMessage"></b-alert>
+      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
     </div>
     <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
       <template #overlay>
         <div class="text-center">
-          <div v-html="customOptions.monetizationPaywall"></div>
+          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
           <div class="mt-4">
             <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
             <b-spinner
@@ -48,7 +48,7 @@
               variant="outline-dark"
               class="control-button-safety-card btn-lg btn-block"
               v-on:click="xCard(); closeMenu();"
-              v-html="
+              v-dompurify-html="
                 customOptions.safetyCardButton
                     ? customOptions.safetyCardButton
                     : 'Pause'
@@ -146,7 +146,7 @@
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
           <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-outline-dark" v-html="
+          <button class="btn btn-outline-dark" v-dompurify-html="
                   customOptions.safetyCardButton
                     ? customOptions.safetyCardButton
                     : 'Pause'
@@ -203,7 +203,7 @@
           </div>
           <div
             class="safety-card-text"
-            v-html="customOptions.safetyCardText"
+            v-dompurify-html="customOptions.safetyCardText"
             v-if="customOptions.safetyCardText"
           ></div>
 
@@ -238,12 +238,12 @@
                     <div class="card-title" v-if="!row.subtitle">
                       <div v-if="index == 0">
                         <h1 class="mt-4">{{row.archetype}}</h1>
-                        <div v-html="row.characterDetail"></div>
+                        <div v-dompurify-html="row.characterDetail"></div>
                       </div>
 
                       <div v-if="index !== 0">
-                        <p class="mt-4" v-html="row.archetype"></p>
-                        <div class="text-left" v-html="row.characterDetail">
+                        <p class="mt-4" v-dompurify-html="row.archetype"></p>
+                        <div class="text-left" v-dompurify-html="row.characterDetail">
 
                         </div>
                       </div>
@@ -258,10 +258,10 @@
                     <div class="card-text text-left" v-if="clickedCard == index || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
 
                       <h5>{{row.characterQuestion}}</h5>
-                      <div v-html="row.characterDetail">
+                      <div v-dompurify-html="row.characterDetail">
                       </div>
                       <h5 class="mt-4">{{row.keyQuestion}}</h5>
-                      <div v-html="row.keyDetails">
+                      <div v-dompurify-html="row.keyDetails">
                       </div>
                     </div>
 
@@ -282,13 +282,13 @@
     <div class="btn-group col-sm" role="group" aria-label="Extra Info" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
 
       <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
-        <div class="d-block text-left" v-html="customOptions.modalOneText">
+        <div class="d-block text-left" v-dompurify-html="customOptions.modalOneText">
           
         </div>
       </b-modal>
 
       <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
-        <div class="d-block text-left" v-html="customOptions.modalTwoText">
+        <div class="d-block text-left" v-dompurify-html="customOptions.modalTwoText">
         </div>
       </b-modal>
 
@@ -299,7 +299,7 @@
       >
         <div
           class="d-block text-left"
-          v-html="customOptions.modalThreeText"
+          v-dompurify-html="customOptions.modalThreeText"
         ></div>
       </b-modal>
 
@@ -310,7 +310,7 @@
       >
         <div
           class="d-block text-left"
-          v-html="customOptions.modalFourText"
+          v-dompurify-html="customOptions.modalFourText"
         ></div>
       </b-modal>
 
@@ -321,7 +321,7 @@
       >
         <div
           class="d-block text-left"
-          v-html="customOptions.modalFiveText"
+          v-dompurify-html="customOptions.modalFiveText"
         ></div>
       </b-modal>
 

@@ -1,15 +1,15 @@
 <template>
   <div class="secretCards game-room container" v-if="roomInfo">
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
-    <div v-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
+    <div v-dompurify-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
     <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-html="customOptions.monetizationMessage"></b-alert>
+      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
     </div>
     <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
       <template #overlay>
         <div class="text-center">
-          <div v-html="customOptions.monetizationPaywall"></div>
+          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
           <div class="mt-4">
             <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
             <b-spinner
@@ -47,7 +47,7 @@
               variant="outline-dark"
               class="control-button-safety-card btn-lg btn-block"
               v-on:click="xCard(); closeMenu();"
-              v-html="
+              v-dompurify-html="
                 customOptions.safetyCardButton
                     ? customOptions.safetyCardButton
                     : 'Pause'
@@ -190,11 +190,11 @@
               <div class="card shadow" v-on:click="updateClickedCard(index)" style="cursor:pointer">
                 <div class="card-body">
                   <h5>Public: </h5>
-                  <span v-html="row.publicText"></span>
+                  <span v-dompurify-html="row.publicText"></span>
                   <br><br>
 
                   <h5>Secret:</h5>
-                  <span v-html="row[playerSelected]"></span>
+                  <span v-dompurify-html="row[playerSelected]"></span>
 
                 </div>
               </div>
@@ -256,13 +256,13 @@
     </div>
     -->
     <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
-      <div class="d-block text-left" v-html="customOptions.modalOneText">
+      <div class="d-block text-left" v-dompurify-html="customOptions.modalOneText">
         
       </div>
     </b-modal>
 
     <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
-      <div class="d-block text-left" v-html="customOptions.modalTwoText">
+      <div class="d-block text-left" v-dompurify-html="customOptions.modalTwoText">
       </div>
     </b-modal>
 
@@ -273,7 +273,7 @@
     >
       <div
         class="d-block text-left"
-        v-html="customOptions.modalThreeText"
+        v-dompurify-html="customOptions.modalThreeText"
       ></div>
     </b-modal>
 
@@ -284,7 +284,7 @@
     >
       <div
         class="d-block text-left"
-        v-html="customOptions.modalFourText"
+        v-dompurify-html="customOptions.modalFourText"
       ></div>
     </b-modal>
 
@@ -295,7 +295,7 @@
     >
       <div
         class="d-block text-left"
-        v-html="customOptions.modalFiveText"
+        v-dompurify-html="customOptions.modalFiveText"
       ></div>
     </b-modal>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="game-launcher">
     <div class="full-page-background"></div>
-    <div v-html="customOptions.style"></div>
+    <div v-dompurify-html="customOptions.style"></div>
     <div class="container">
       <div class="card shadow mb-4" style="margin-top: 76px">
         <div class="card-body text-center" v-if="!dataReady && !error">
@@ -73,7 +73,7 @@
                 class="col-sm text-center game-burb"
                 style="white-space: pre-wrap"
               >
-                <p v-html="customOptions.gameBlurb"></p>
+                <p v-dompurify-html="customOptions.gameBlurb"></p>
               </div>
             </div>
           </div>
@@ -238,7 +238,7 @@
 
             <div
               class="col-sm-6 text-center"
-              v-html="customOptions.license"
+              v-dompurify-html="customOptions.license"
             ></div>
           </div>
 

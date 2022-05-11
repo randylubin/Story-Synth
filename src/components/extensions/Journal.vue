@@ -4,7 +4,7 @@
         <div class="col-sm">
           <div class="card d-flex extension-card">
             <div class="card-body">
-              <h2 v-html="journalUpperText" v-if="journalUpperText != undefined"></h2>
+              <h2 v-dompurify-html="journalUpperText" v-if="journalUpperText != undefined"></h2>
               <h2 v-else>Journal Entries</h2>
 
               <form>
@@ -18,7 +18,7 @@
                     <div class="col-sm-12 my-1 card px-0">
                       <div class="journal-entry justify-content-between d-flex">
                         <div class="card-body text-left ">
-                          <div class="journal-entry-inner" v-html="entry" v-if="index != currentEditIndex"></div>
+                          <div class="journal-entry-inner" v-dompurify-html="entry" v-if="index != currentEditIndex"></div>
                           <textarea v-else class="form-control" type="text" v-model="currentEditText" maxlength="250" rows="5"></textarea>
                         </div>
                         <div v-if="currentEditIndex !== index">

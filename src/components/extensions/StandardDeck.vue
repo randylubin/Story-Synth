@@ -4,7 +4,7 @@
         <div class="col-sm">
           <div class="card d-flex shadow extension-card">
             <div class="card-body">
-              <h2 v-html="standardDeckTitle" v-if="standardDeckTitle != undefined"></h2>
+              <h2 v-dompurify-html="standardDeckTitle" v-if="standardDeckTitle != undefined"></h2>
               <h2 v-else>Standard Deck</h2>
 
               <h3 v-if="standardDeck.drawnCards.length" v-bind:class="{redCard: (standardDeck.drawnCards[standardDeck.drawnCards.length-1].includes('♡') || standardDeck.drawnCards[standardDeck.drawnCards.length-1].includes('♢'))}">{{standardDeck.drawnCards[standardDeck.drawnCards.length-1]}}</h3>
@@ -12,7 +12,7 @@
               <div v-if="standardDeck.drawnCards.length > 1">
                 Past draws:
                 <span v-for="(card, index) in standardDeck.drawnCards" v-bind:key="index">
-                  <span v-if="index != standardDeck.drawnCards.length-1" v-html="card" class="ml-1" v-bind:class="{redCard: (card.includes('♡') || card.includes('♢'))}"></span>
+                  <span v-if="index != standardDeck.drawnCards.length-1" v-dompurify-html="card" class="ml-1" v-bind:class="{redCard: (card.includes('♡') || card.includes('♢'))}"></span>
                 </span>
               </div>
 

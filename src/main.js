@@ -11,6 +11,9 @@ Vue.use(VueMeta);
 import { marked } from 'marked'
 Vue.prototype.$marked = marked;
 
+import VueDOMPurifyHTML from 'vue-dompurify-html'
+Vue.use(VueDOMPurifyHTML)
+
 import markdownFriendlyOptions from './misc/markdown-friendly-options.json'
 Vue.prototype.$markdownFriendlyOptions = markdownFriendlyOptions;
 

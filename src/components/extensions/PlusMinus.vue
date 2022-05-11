@@ -4,7 +4,7 @@
         <div class="col-sm">
           <div class="card d-flex extension-card">
             <div class="card-body">
-              <h2 v-html="plusMinusTitle" v-if="plusMinusTitle != undefined"></h2>
+              <h2 v-dompurify-html="plusMinusTitle" v-if="plusMinusTitle != undefined"></h2>
               <h2 v-else>Key Stats</h2>
 
               <div v-for="(variable, index) in plusMinus" v-bind:key="index" class="row">

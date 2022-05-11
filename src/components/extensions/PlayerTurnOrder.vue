@@ -4,7 +4,7 @@
         <div class="col-sm">
           <div class="card d-flex extension-card">
             <div class="card-body">
-              <h2 v-html="playerTurnOrderHeader" v-if="playerTurnOrderHeader != undefined"></h2>
+              <h2 v-dompurify-html="playerTurnOrderHeader" v-if="playerTurnOrderHeader != undefined"></h2>
               <h2 v-else>Player Turn Order</h2>
               
               <div v-if="playerTurnOrder.players">
@@ -35,7 +35,7 @@
               </div>
 
               <input type="text" v-model="newPlayer" maxlength="50">
-              <button :disabled="!newPlayer" class="btn btn-outline-dark m-2" v-on:click="addPlayer(newPlayer)" v-html="playerTurnOrderButtonLabel" v-if="playerTurnOrderButtonLabel != undefined">Add Player</button>
+              <button :disabled="!newPlayer" class="btn btn-outline-dark m-2" v-on:click="addPlayer(newPlayer)" v-dompurify-html="playerTurnOrderButtonLabel" v-if="playerTurnOrderButtonLabel != undefined">Add Player</button>
               <button v-else :disabled="!newPlayer" class="btn btn-outline-dark m-2" v-on:click="addPlayer(newPlayer)">Add Player</button>
               
             </div>

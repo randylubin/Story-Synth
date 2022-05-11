@@ -21,6 +21,7 @@
     "sass-loader": "^10.0.1",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",
+    "vue-dompurify-html": "^2.5.2",
     "vue-gtag": "^1.10.0",
     "vue-meta": "^2.4.0",
     "vue-mixpanel": "^1.0.6",

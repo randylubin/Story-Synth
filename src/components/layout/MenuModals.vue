@@ -53,7 +53,7 @@
       >
         <div
           class="d-block text-left"
-          v-html="customOptions.modalOneText"
+          v-dompurify-html="customOptions.modalOneText"
         ></div>
       </b-modal>
 
@@ -64,7 +64,7 @@
       >
         <div
           class="d-block text-left"
-          v-html="customOptions.modalTwoText"
+          v-dompurify-html="customOptions.modalTwoText"
         ></div>
       </b-modal>
 
@@ -75,7 +75,7 @@
       >
         <div
           class="d-block text-left"
-          v-html="customOptions.modalThreeText"
+          v-dompurify-html="customOptions.modalThreeText"
         ></div>
       </b-modal>
 
@@ -86,7 +86,7 @@
       >
         <div
           class="d-block text-left"
-          v-html="customOptions.modalFourText"
+          v-dompurify-html="customOptions.modalFourText"
         ></div>
       </b-modal>
 
@@ -97,7 +97,7 @@
       >
         <div
           class="d-block text-left"
-          v-html="customOptions.modalFiveText"
+          v-dompurify-html="customOptions.modalFiveText"
         ></div>
       </b-modal>
     </div>
