@@ -33,6 +33,7 @@
             @process-extension-update="processExtensionUpdate($event)"
             v-if="(extensionList['journalEntries'] || extensionList.journalUpperText) && ((!extensionList.journalEntiresLocation && extensionLocation == 'lower') || (extensionList.journalEntriesLocation == extensionLocation)) && (!extensionList.journalFirstVisible || extensionList.journalFirstVisible <= roomInfo.currentCardIndex)"></app-journal>
           <app-currentPlayerHeader class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :currentPlayerHeader="extensionList.currentPlayerHeader" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['currentPlayerHeader'] && extensionList['playerTurnOrder'] && extensionLocation == 'upper'"></app-currentPlayerHeader>
+          <app-embedWebsite class="extension" :embedWebsiteURL="extensionList.embedWebsiteURL" v-if="extensionList.embedWebsiteURL"></app-embedWebsite>
         </div>
       </div>
   </div>
@@ -49,6 +50,7 @@ import StaticBox from './StaticBox.vue'
 import StandardDeck from './StandardDeck.vue'
 import Journal from './Journal.vue'
 import Hexflower from '../formats/Hexflower.vue'
+import EmbedWebsite from './EmbedWebsite.vue'
 import Generator from '../formats/Generator.vue'
 
 export default {
@@ -65,6 +67,7 @@ export default {
     'app-journal': Journal,
     'app-hexflowerAsExtension': Hexflower,
     'app-generatorAsExtension': Generator,
+    'app-embedWebsite': EmbedWebsite,
   },
   props: {
     extensionData: Object,
