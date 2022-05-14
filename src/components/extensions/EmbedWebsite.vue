@@ -10,22 +10,22 @@
             title="Paste an embeddable link here"
             size="lg" 
           />
-          <b-button :disabled="!newURL" v-on:click="submitURL()">Embed URL</b-button>
+          <b-button :disabled="!newURL" class="btn btn-outline-dark m-3" v-on:click="submitURL()">Embed URL</b-button>
         </div>
 
       </div>
       <div class="card embed-website-by-url" v-if="selectedWebsiteURL">
         <div class="row">
           <div class="col-sm iframe-menu text-right">
-            <b-button size="sm" pill variant="outline-secondary" class="m-1" v-if="!expand" v-on:click="toggleExpansion()">
-              <b-icon-arrows-angle-expand></b-icon-arrows-angle-expand>
-            </b-button>
-            <b-button v-else size="sm" pill variant="outline-secondary" class="m-1" v-on:click="toggleExpansion()">
-              <b-icon-arrows-angle-contract></b-icon-arrows-angle-contract>
-            </b-button>
-            <b-button v-if="!hardcodedWebsiteURL" size="sm" pill variant="outline-secondary" class="m-1" v-on:click="clearEmbed()">
-              X
-            </b-button>  
+            <button class="btn btn-sm btn-outline-dark m-1 px-1 border-0" size="sm" v-if="!expand" v-on:click="toggleExpansion()">
+              <b-icon-arrows-expand rotate="90"></b-icon-arrows-expand>
+            </button>
+            <button class="btn btn-sm btn-outline-dark m-1 px-1 border-0" v-else v-on:click="toggleExpansion()">
+              <b-icon-arrows-collapse rotate="90"></b-icon-arrows-collapse>
+            </button>
+            <button class="btn btn-sm btn-outline-dark m-1 px-1 border-0" v-if="!hardcodedWebsiteURL" v-on:click="clearEmbed()">
+              <b-icon-trash></b-icon-trash>
+            </button>  
           </div>
         </div>
         <div class="row">
@@ -70,7 +70,7 @@ export default {
       this.$emit('process-extension-update', ['selectedWebsiteURL', null]);
     },
     submitURL(){
-      this.$emit('process-extension-update', ['selectedWebsiteURL',this.newURL])
+      this.$emit('process-extension-update', ['selectedWebsiteURL', this.newURL])
     },
     toggleExpansion(){
       this.expand = !this.expand

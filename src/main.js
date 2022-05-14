@@ -17,14 +17,14 @@ Vue.use(VueDOMPurifyHTML)
 import markdownFriendlyOptions from './misc/markdown-friendly-options.json'
 Vue.prototype.$markdownFriendlyOptions = markdownFriendlyOptions;
 
-import { BootstrapVue, BIcon, BIconArrowsAngleExpand, BIconArrowsAngleContract, BIconPeople, BIconCoin, BIconPencil, BIconTrash, BIconCheck2, BIconList, BIconLink45deg, BIconArrowClockwise, BIconArrowsMove, BIconChevronLeft, BIconCardHeading, BIconChevronRight} from 'bootstrap-vue'
+import { BootstrapVue, BIcon, BIconArrowsExpand, BIconArrowsCollapse, BIconPeople, BIconCoin, BIconPencil, BIconTrash, BIconCheck2, BIconList, BIconLink45deg, BIconArrowClockwise, BIconArrowsMove, BIconChevronLeft, BIconCardHeading, BIconChevronRight} from 'bootstrap-vue'
 
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.component('BIcon', BIcon)
-Vue.component('BIconArrowsAngleExpand', BIconArrowsAngleExpand),
-Vue.component('BIconArrowsAngleContract', BIconArrowsAngleContract),
+Vue.component('BIconArrowsExpand', BIconArrowsExpand),
+Vue.component('BIconArrowsCollapse', BIconArrowsCollapse),
 Vue.component('BIconPencil', BIconPencil)
 Vue.component('BIconTrash', BIconTrash)
 Vue.component('BIconCheck2', BIconCheck2)
