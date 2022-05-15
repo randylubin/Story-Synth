@@ -6,16 +6,16 @@
           <b-form-input
             v-model="newURL"
             class="form-control"
-            placeholder="Paste a link here to embed it in the page"
+            placeholder="Paste a shared link here"
             title="Paste an embeddable link here"
-            size="lg" 
           />
           <b-button :disabled="!newURL" class="btn btn-outline-dark m-3" v-on:click="submitURL()">Embed URL</b-button>
         </div>
 
       </div>
       <div class="card embed-website-by-url" v-if="selectedWebsiteURL">
-        <div class="row">
+        <div class="row justify-content-between d-flex align-items-center">
+          <!-- <div class="col-sm text-left m-1 ml-3">Embedded Site</div> -->
           <div class="col-sm iframe-menu text-right">
             <button class="btn btn-sm btn-outline-dark m-1 px-1 border-0" size="sm" v-if="!expand" v-on:click="toggleExpansion()">
               <b-icon-arrows-expand rotate="90"></b-icon-arrows-expand>
@@ -30,7 +30,7 @@
         </div>
         <div class="row">
           <div class="col-sm">
-            <iframe width="100%" height="1500" :src="selectedWebsiteURL" allow="fullscreen" title="Embedded Doc"></iframe>
+            <iframe width="100%" height="1500" :src="selectedWebsiteURL" allow="fullscreen" fetchpriority="low" title="Embedded Doc"></iframe>
           </div>
         </div>
       </div>
