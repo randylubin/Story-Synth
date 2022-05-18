@@ -23,11 +23,15 @@
           <app-grants></app-grants>
         </div>
 
+        <div v-if="$route.fullPath == '/CSS-Playground/'">
+          <app-CSSPlayground></app-CSSPlayground>
+        </div>
+
         <div v-if="$route.fullPath == '/Upload/'">
           <app-uploadPage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-uploadPage>
         </div>
         
-        <div v-if="!['Games', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
+        <div v-if="!['CSS-Playground', 'Games', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
           <!--For published version, remove any components you aren't using -->
           <div v-if="!$route.params.roomID && $route.params.gSheetID">
             <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameLauncher>
@@ -70,6 +74,7 @@
   import Gallery from './components/other/Gallery.vue'
   import FormatsAndExtensionsOverview from './components/other/FormatsAndExtensionsOverview.vue'
   import Grants from './components/other/Grants.vue'
+  import CSSPlayground from './components/other/CSSPlayground.vue'
 
   import UploadPage from './components/launchers/UploadPage.vue'
   import GameLauncher from './components/launchers/GameLauncher.vue'
@@ -97,6 +102,7 @@
       'app-grants': Grants,
       'app-gallery': Gallery,
       'app-formatsAndExtensions': FormatsAndExtensionsOverview,
+      'app-CSSPlayground': CSSPlayground,
 
       'app-uploadPage': UploadPage,
       'app-gameLauncher': GameLauncher,
