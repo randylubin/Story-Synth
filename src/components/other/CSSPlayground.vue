@@ -231,29 +231,29 @@ export default {
       return 'style-template-' + this.selectedStyleTemplate
     },
     computedStyle: function(){
-      let styleBlob = "<style>"
+      let styleBlob = "<style>\n"
 
       if (this.backgroundColor){
-        styleBlob += ".full-page-background {background:" + this.backgroundColor + " !important;}"
+        styleBlob += ".full-page-background {background:" + this.backgroundColor + " !important;} "
       }
 
       if (this.menuColor){
-        styleBlob += ".menu-bar, .menu-bar .btn {color:" + this.menuColor + " !important;}"
+        styleBlob += ".menu-bar, .menu-bar .btn {color:" + this.menuColor + " !important;} "
       }
 
       if (this.cardColor){
-        styleBlob += ".card {background:" + this.cardColor + " !important;}"
+        styleBlob += ".card {background:" + this.cardColor + " !important;} "
       }
 
       if (this.textColor){
-        styleBlob += ".card-body {color:" + this.textColor + " !important;}"
+        styleBlob += ".card-body {color:" + this.textColor + " !important;} "
       }
 
       if (this.linkColor){
-        styleBlob += ".card-body a {color:" + this.linkColor + " !important;}"
+        styleBlob += ".card-body a {color:" + this.linkColor + " !important;} "
       }
 
-      return styleBlob + "</style>"
+      return styleBlob + "\n</style>"
     }
   },
   components: {
