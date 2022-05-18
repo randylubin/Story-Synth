@@ -92,12 +92,19 @@
         <div class="row">
           <div class="col-sm">
             <h1>CSS Editor</h1>
+            <p>Learn more in the <a href="https://docs.storysynth.org/guide/options.html#visual-style">Visual Style</a> section of the docs or via the Story Synth <a href="https://docs.storysynth.org/tutorials/styling.html">CSS Tutorial</a></p>
+            <hr style="border-top: 1px solid rgb(255 255 255 / 54%)">
           </div>
         </div>
 
         <div class="row">
           <div class="col-sm-3">
             <div class="row">
+              <div class="col">
+                <h4>Color Pickers</h4>
+              </div>
+            </div>
+            <!-- <div class="row">
               <div class="col-sm-7">
                 <p>Style Template:</p>
               </div>
@@ -116,7 +123,7 @@
                   <option>vaporwave</option>
                 </b-form-select>
               </div>
-            </div>
+            </div> -->
 
             <div class="row">
               <div class="col-sm-7">
@@ -164,17 +171,17 @@
             </div>
           </div>
 
-          <div class="col-sm-4">
+          <div class="col-sm-4 px-5">
             <div class="row">
-              <h4>Selected CSS</h4>
+              <h4>Resulting CSS</h4>
             </div>
             <div class="row">
-              <code class="col-sm">{{computedStyle}}</code>
+              <code class="col-sm computed-css py-3">{{computedStyle}}</code>
             </div>
           </div>
           <div class="col-sm-5">
             <div class="row">
-              <h4>Freeform style</h4>
+              <h4>Freeform editing</h4>
             </div>
             <div class="row">
               <textarea v-model="editableStyle" id="" cols="30" rows="10"></textarea>
@@ -318,7 +325,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
 #css-playground {
   margin: auto;
   padding-bottom: 1em;
@@ -360,8 +367,17 @@ export default {
 
 .css-editor {
   color: white;
-  background: black;
+  background: #302c2c;
   height: 500px;
+
+  a {
+    color: white;
+    text-decoration: underline;
+  }
+}
+
+.computed-css {
+  background: black;
 }
 
 </style>
