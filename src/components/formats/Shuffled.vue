@@ -1084,6 +1084,9 @@ export default {
                 item.values[0].formattedValue !== "option" &&
                 item.values[0].formattedValue !== "extension"
               ) {
+                item.values[2].formattedValue = item.values[2]?.formattedValue ?? '-'
+                item.values[3].formattedValue = item.values[3]?.formattedValue ?? '-'
+
                 var rowInfo = {
                   ordered: item.values[0].formattedValue,
                   deckNumberClass: "deck-number-" + item.values[0].formattedValue,
