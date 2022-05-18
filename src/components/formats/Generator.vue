@@ -791,6 +791,12 @@ export default {
           let body = document.getElementById("app"); // document.body;
           body.classList.add(styleTemplate);
 
+          if (this.customOptions.style){
+            if (this.customOptions.style.substring(0,7) != "<style>"){
+              this.customOptions.style = "<style>" + this.customOptions.style + "</style>"
+            }
+          }
+
           // For the published version, set gSheet equal to your converted JSON object
           this.gSheet = cleanData;
 
@@ -870,7 +876,7 @@ select {
   color: inherit;
   transition: background-color 0.2s;
   transition: all 0.3s;  
-  white-space: nowrap;
+  // white-space: nowrap;
   overflow: hidden;
   outline-offset: -1px;
 }

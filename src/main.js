@@ -12,7 +12,13 @@ import { marked } from 'marked'
 Vue.prototype.$marked = marked;
 
 import VueDOMPurifyHTML from 'vue-dompurify-html'
-Vue.use(VueDOMPurifyHTML)
+Vue.use(VueDOMPurifyHTML, {
+    default: {
+      FORCE_BODY: true,
+      ALLOWED_ATTR: ['style', 'class', 'type', 'href'],
+
+    }
+})
 
 import markdownFriendlyOptions from './misc/markdown-friendly-options.json'
 Vue.prototype.$markdownFriendlyOptions = markdownFriendlyOptions;
