@@ -304,7 +304,7 @@
             class="card main-card d-flex shadow img-fluid mb-4"
             v-bind:class="{
               'bg-transparent':
-                customOptions.coverImage && cardIndex == 0,
+                customOptions.coverImage && !customOptions.noCoverImageInSession && cardIndex == 0,
             }"
             v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] && cardIndex == roomInfo.currentCardIndex"
           >
@@ -313,7 +313,7 @@
               v-bind:src="customOptions.coverImage"
               class="card-img-top"
               style="width:100%"
-              v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0"
+              v-if="customOptions.coverImage && !customOptions.noCoverImageInSession && roomInfo.currentCardIndex == 0"
             />
             <img
               v-bind:src="customOptions.cardBackgroundImage"
@@ -322,7 +322,7 @@
               v-if="
                 customOptions.cardBackgroundImage &&
                   (!customOptions.coverImage ||
-                    roomInfo.currentCardIndex != 0) &&
+                    roomInfo.currentCardIndex != 0 || customOptions.noCoverImageInSession) &&
                   !customOptions.cardBackgroundImageAlign
               "
             />
@@ -376,7 +376,7 @@
 
             <!-- Main Game Cards -->
             <div
-              v-if="!customOptions.coverImage || roomInfo.currentCardIndex != 0"
+              v-if="!customOptions.coverImage || roomInfo.currentCardIndex != 0 || customOptions.noCoverImageInSession"
               v-bind:class="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
                         .deckNumberClass"
             >
