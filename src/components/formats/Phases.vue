@@ -197,8 +197,14 @@
               :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)"
             >
               <!-- Next Card -->
-              <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
-              <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>              
+              <div v-if="roomInfo.currentCardIndex == 0">
+                <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
+                <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
+              </div>
+              <div v-else>
+                <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
+                <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>              
+              </div>                
             </button>
         </div>        
       </transition>
