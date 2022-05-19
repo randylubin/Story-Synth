@@ -600,6 +600,7 @@ export default {
     syncExtension() {
       roomsCollection.doc(this.roomID).update({
         extensionData: this.roomInfo.extensionData,
+        timeLastUpdated: Date.now(),
       });
     },
     fetchAndCleanSheetData(sheetID){
