@@ -1090,8 +1090,13 @@ export default {
                 item.values[0].formattedValue !== "option" &&
                 item.values[0].formattedValue !== "extension"
               ) {
-                item.values[2].formattedValue = item.values[2]?.formattedValue ?? '-'
-                item.values[3].formattedValue = item.values[3]?.formattedValue ?? '-'
+                if (item.values[2]){
+                  item.values[2].formattedValue = item.values[2]?.formattedValue ?? ""
+                } else {item.values[2] = {formattedValue: ""} }
+                
+                if (item.values[3]){
+                  item.values[3].formattedValue = item.values[3]?.formattedValue ?? ""
+                } else {item.values[3] = {formattedValue: ""}}
 
                 var rowInfo = {
                   ordered: item.values[0].formattedValue,
