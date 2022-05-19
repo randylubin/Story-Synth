@@ -127,6 +127,24 @@
       </div>
     </div>
 
+    <div
+          v-if="
+            dataReady &&
+              firebaseReady &&
+              roomInfo &&
+              Object.keys(roomInfo.extensionData).length > 1
+          "
+    >
+      <app-extensionManager
+        @sync-extension="syncExtension()"
+        :extensionData="roomInfo.extensionData"
+        :extensionList="tempExtensionData"
+        :roomInfo="roomInfo"
+        :extensionLocation="'upper'"
+        class="extension-upper"
+      ></app-extensionManager>
+    </div>
+
     <div v-if="timerSynced">
       <div v-if="!playerSelected" class="row my-4">
         <div class="btn-group col-sm" role="group" aria-label="Role Controls">
@@ -175,6 +193,24 @@
           </div>
         </transition>
       </div>
+    </div>
+
+    <div
+      v-if="
+        dataReady &&
+          firebaseReady &&
+          roomInfo &&
+          Object.keys(roomInfo.extensionData).length > 1
+      "
+    >
+      <app-extensionManager
+        @sync-extension="syncExtension()"
+        :extensionData="roomInfo.extensionData"
+        :extensionList="tempExtensionData"
+        :roomInfo="roomInfo"
+        :extensionLocation="'lower'"
+        class="extension-lower"
+      ></app-extensionManager>
     </div>
 
     <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
@@ -233,10 +269,12 @@
 import { roomsCollection } from '../../firebase';
 import axios from 'axios'
 import RoomLink from '../layout/RoomLink.vue';
+import ExtensionManager from "../extensions/ExtensionManager.vue";
 
 export default {
   name: 'app-timed',
   components:{
+    "app-extensionManager": ExtensionManager,
     'app-roomLink': RoomLink,
   },
   props: {
@@ -272,6 +310,7 @@ export default {
       selectedWallet: undefined,
       roomMonetized: null,
       monetizedByUser: false,
+      tempExtensionData: { test: null },
       error: false,
     }
   },
@@ -351,6 +390,7 @@ export default {
             , timeStopped: null
             , stoppedDuration: 0
             , running: false
+            , extensionData: this.tempExtensionData,
             });
 
           if (this.dataReady) {
@@ -464,6 +504,12 @@ export default {
     selectPlayer(player){
       this.playerSelected = player
     },
+    syncExtension() {
+      roomsCollection.doc(this.roomID).update({
+        extensionData: this.roomInfo.extensionData,
+        timeLastUpdated: Date.now(),
+      });
+    },
     fetchAndCleanSheetData(sheetID){
       if (!sheetID || sheetID == 'demo') {
         sheetID = '1yq2AKwaYL1uZrCnEfwgSpC0SPkQAZqnCdjNxH_pm018'
@@ -497,7 +543,23 @@ export default {
             console.log(item.values[2].formattedValue)
           }
 
-          if (item.values[0].formattedValue !== "option"){
+          // Handle extensions
+          if (item.values[0].formattedValue == "extension") {
+            this.tempExtensionData[item.values[1].formattedValue] =
+              item.values[2].formattedValue;
+
+            console.log(
+              "extension -",
+              item.values[1].formattedValue,
+              item.values[2].formattedValue
+            );
+          }
+
+          // Handle cards
+          if (
+            item.values[0].formattedValue !== "option" &&
+            item.values[0].formattedValue !== "extension"
+          ){
 
             var rowInfo = {
               time: item.values[0].formattedValue,
@@ -511,6 +573,15 @@ export default {
             cleanData.push(rowInfo)
           }
         });
+
+        if (
+          this.firebaseReady &&
+          Object.keys(this.tempExtensionData).length > 1
+        ) {
+          roomsCollection
+            .doc(this.roomID)
+            .update({ extensionData: this.tempExtensionData });
+        }
 
         // monetization
         if (this.customOptions.wallet) {

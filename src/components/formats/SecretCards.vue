@@ -129,6 +129,24 @@
         </div>
       </div>
 
+      <div
+        v-if="
+          dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData).length > 1
+        "
+      >
+        <app-extensionManager
+          @sync-extension="syncExtension()"
+          :extensionData="roomInfo.extensionData"
+          :extensionList="tempExtensionData"
+          :roomInfo="roomInfo"
+          :extensionLocation="'upper'"
+          class="extension-upper"
+        ></app-extensionManager>
+      </div>
+
       <div v-if="!playerSelected" class="mb-4">
         <div class="row align-center mb-3">
           <img v-bind:src="customOptions.coverImage" class="img-fluid" alt="">
@@ -255,6 +273,24 @@
       <button class="btn btn-warning" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
     </div>
     -->
+    <div
+      v-if="
+        dataReady &&
+          firebaseReady &&
+          roomInfo &&
+          Object.keys(roomInfo.extensionData).length > 1
+      "
+    >
+      <app-extensionManager
+        @sync-extension="syncExtension()"
+        :extensionData="roomInfo.extensionData"
+        :extensionList="tempExtensionData"
+        :roomInfo="roomInfo"
+        :extensionLocation="'lower'"
+        class="extension-lower"
+      ></app-extensionManager>
+    </div>
+
     <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
       <div class="d-block text-left" v-dompurify-html="customOptions.modalOneText">
         
@@ -307,10 +343,12 @@
 import { roomsCollection } from '../../firebase';
 import axios from 'axios'
 import RoomLink from '../layout/RoomLink.vue';
+import ExtensionManager from "../extensions/ExtensionManager.vue";
 
 export default {
   name: 'app-secretCards',
   components:{
+    "app-extensionManager": ExtensionManager,
     'app-roomLink': RoomLink,
   },
   props: {
@@ -349,6 +387,7 @@ export default {
       selectedWallet: undefined,
       roomMonetized: null,
       monetizedByUser: false,
+      tempExtensionData: { test: null },
     }
   },
   metaInfo() {
@@ -421,7 +460,11 @@ export default {
         if (!this.roomInfo){
           console.log("new room!")
 
-          roomsCollection.doc(this.roomID).set({currentCardIndex:0,xCardIsActive: false, cardSequence:[0,1,2]})
+          roomsCollection.doc(this.roomID).set({
+            currentCardIndex:0,xCardIsActive: false,
+            cardSequence:[0,1,2],
+            extensionData: this.tempExtensionData,
+          })
         }
       })
       .catch((error) => {
@@ -521,6 +564,12 @@ export default {
     selectPlayer(player){
       this.playerSelected = player
     },
+    syncExtension() {
+      roomsCollection.doc(this.roomID).update({
+        extensionData: this.roomInfo.extensionData,
+        timeLastUpdated: Date.now(),
+      });
+    },
     fetchAndCleanSheetData(sheetID){
       if (!sheetID || sheetID == 'demo') {
         sheetID = '1JwMF02DSxNKtjHp6u-wyznSs-iEG_3DpOobgc17I16o'
@@ -555,7 +604,19 @@ export default {
             console.log(item.values[2].formattedValue)
           }
 
-          if (item.values[0].formattedValue !== "option"){
+          // Handle extensions
+              if (item.values[0].formattedValue == "extension") {
+                this.tempExtensionData[item.values[1].formattedValue] =
+                  item.values[2].formattedValue;
+
+                console.log(
+                  "extension -",
+                  item.values[1].formattedValue,
+                  item.values[2].formattedValue
+                );
+              }
+
+          if (item.values[0].formattedValue !== "option" && item.values[0].formattedValue !== "extension"){
 
             var rowInfo = {
               order: item.values[0].formattedValue,
@@ -575,6 +636,15 @@ export default {
             cleanData.push(rowInfo)
           }
         });
+
+        if (
+          this.firebaseReady &&
+          Object.keys(this.tempExtensionData).length > 1
+        ) {
+          roomsCollection
+            .doc(this.roomID)
+            .update({ extensionData: this.tempExtensionData });
+        }
 
         // monetization
         if (this.customOptions.wallet) {
