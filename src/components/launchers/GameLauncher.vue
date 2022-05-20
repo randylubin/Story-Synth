@@ -259,7 +259,7 @@
 
 <script>
 import axios from "axios";
-import createRandomRoomName from "../createRandomRoomName.js";
+import createRandomRoomName from "/src/misc/createRandomRoomName.js";
 import VanityLookup from "./VanityLookup.js";
 
 export default {

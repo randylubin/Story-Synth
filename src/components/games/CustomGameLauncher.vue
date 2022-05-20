@@ -256,7 +256,7 @@
 
 <script>
 import axios from "axios";
-import createRandomRoomName from "../createRandomRoomName.js";
+import createRandomRoomName from "/src/misc/createRandomRoomName.js";
 
 export default {
   name: "app-gameLauncher",

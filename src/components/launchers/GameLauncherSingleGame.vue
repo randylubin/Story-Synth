@@ -117,7 +117,7 @@
 
 
 <script>
-import createRandomRoomName from "../createRandomRoomName";
+import createRandomRoomName from "/src/misc/createRandomRoomName.js";
 
 export default {
   name: "app-gameLauncherSingleGame",
