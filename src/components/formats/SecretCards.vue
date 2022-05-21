@@ -43,7 +43,7 @@
             </b-button>
           </div>
           <div class="row menu-row">
-            <app-downloadExtensionData :extensionData="roomInfo.extensionData" :gameTitle="customOptions.gameTitle" v-if="(tempExtensionData['journalEntries'] || tempExtensionData['multiEditableLists'] || tempExtensionData['editableList'])"></app-downloadExtensionData>
+            <app-downloadExtensionData :extensionData="roomInfo.extensionData" :gameTitle="customOptions.gameTitle" v-if="(tempExtensionData['journalEntries'] || tempExtensionData['multiEditableLists'] || tempExtensionData['editableList'] || tempExtensionData['plusMinus'])"></app-downloadExtensionData>
           </div>
           <div class="row menu-row">
             <b-button
