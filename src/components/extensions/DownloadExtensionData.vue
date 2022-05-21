@@ -1,11 +1,7 @@
 <template>
-  <div class="mb-4 download-extension-data">
-      <div class="row">
-        <div class="col-sm">
-            <b-button pill variant="light" v-on:click="downloadData()">Save Data <b-icon-save></b-icon-save></b-button>          
-        </div>
-      </div>
-  </div>
+  <b-button class="control-button-restart btn-lg btn-block d-flex align-items-center justify-content-center" variant="outline-dark" v-on:click="downloadData()">
+    <span class="mx-2">Download Data</span> <b-icon icon="save" font-scale=".8"></b-icon>
+  </b-button>          
 </template>
 
 <script>

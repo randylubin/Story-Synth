@@ -44,6 +44,9 @@
             </b-button>
           </div>
           <div class="row menu-row">
+            <app-downloadExtensionData :extensionData="roomInfo.extensionData" :gameTitle="customOptions.gameTitle" v-if="(tempExtensionData['journalEntries'] || tempExtensionData['multiEditableLists'] || tempExtensionData['editableList'])"></app-downloadExtensionData>
+          </div>
+          <div class="row menu-row">
             <b-button
               v-b-modal.reshuffleConfirm
               v-on:click="closeMenu();"
@@ -681,6 +684,7 @@
 import { roomsCollection } from "../../firebase";
 import axios from "axios";
 import ExtensionManager from "../extensions/ExtensionManager.vue";
+import DownloadExtensionData from "../extensions/DownloadExtensionData.vue";
 import RoomLink from '../layout/RoomLink.vue';
 // import MenuModal from '../layout/MenuModals.vue';
 
@@ -688,6 +692,7 @@ export default {
   name: "app-shuffled",
   components: {
     "app-extensionManager": ExtensionManager,
+    "app-downloadExtensionData": DownloadExtensionData,
     'app-roomLink': RoomLink,
     // 'app-menuModal': MenuModal,
   },

@@ -34,7 +34,7 @@
             v-if="(extensionList['journalEntries'] || extensionList.journalUpperText) && ((!extensionList.journalEntiresLocation && extensionLocation == 'lower') || (extensionList.journalEntriesLocation == extensionLocation)) && (!extensionList.journalFirstVisible || extensionList.journalFirstVisible <= roomInfo.currentCardIndex)"></app-journal>
           <app-currentPlayerHeader class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :currentPlayerHeader="extensionList.currentPlayerHeader" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['currentPlayerHeader'] && extensionList['playerTurnOrder'] && extensionLocation == 'upper'"></app-currentPlayerHeader>
           <app-embedWebsite class="extension" :hardcodedWebsiteURL="extensionData.hardcodedWebsiteURL" :selectedWebsiteURL="extensionData.selectedWebsiteURL" :embedWebsiteMessage="extensionData.embedWebsiteMessage" @process-extension-update="processExtensionUpdate($event)" v-if="(extensionList['hardcodedWebsiteURL'] || extensionList['embedWebsiteMessage']) && ((!extensionList.embededWebsiteLocation && extensionLocation == 'lower') || (extensionList.embededWebsiteLocation == extensionLocation))"></app-embedWebsite>
-          <app-downloadExtensionData :extensionData="extensionData" :gameTitle="gameTitle" v-if="(extensionList['journalEntries'] || extensionList['multiEditableLists'] || extensionList['editableList']) && ((!extensionList.downloadExtensionDataLocation && extensionLocation == 'lower') || (extensionList.downloadExtensionDataLocation == extensionLocation))"></app-downloadExtensionData>
+          <!-- <app-downloadExtensionData :extensionData="extensionData" :gameTitle="gameTitle" v-if="(extensionList['journalEntries'] || extensionList['multiEditableLists'] || extensionList['editableList']) && ((!extensionList.downloadExtensionDataLocation && extensionLocation == 'lower') || (extensionList.downloadExtensionDataLocation == extensionLocation))"></app-downloadExtensionData> -->
         </div>
       </div>
   </div>
@@ -53,7 +53,7 @@ import Journal from './Journal.vue'
 import Hexflower from '../formats/Hexflower.vue'
 import EmbedWebsite from './EmbedWebsite.vue'
 import Generator from '../formats/Generator.vue'
-import DownloadExtensionData from './DownloadExtensionData.vue'
+// import DownloadExtensionData from './DownloadExtensionData.vue'
 
 export default {
   name: 'app-extensionManager',
@@ -69,7 +69,7 @@ export default {
     'app-journal': Journal,
     'app-hexflowerAsExtension': Hexflower,
     'app-generatorAsExtension': Generator,
-    'app-downloadExtensionData': DownloadExtensionData,
+    // 'app-downloadExtensionData': DownloadExtensionData,
     'app-embedWebsite': EmbedWebsite,
   },
   props: {
