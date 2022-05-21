@@ -54,7 +54,7 @@ export default {
   },
   computed: {
     markdownParsedStaticContent: function(){
-      return this.$marked(this.embedWebsiteMessage)
+      return this.embedWebsiteMessage ? this.$marked(this.embedWebsiteMessage) : null
     }
   },
   mounted(){
