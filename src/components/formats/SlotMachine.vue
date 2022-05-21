@@ -44,6 +44,9 @@
             </b-button>
           </div>
           <div class="row menu-row">
+            <app-downloadExtensionData :extensionData="roomInfo.extensionData" :gameTitle="customOptions.gameTitle" v-if="(tempExtensionData['journalEntries'] || tempExtensionData['multiEditableLists'] || tempExtensionData['editableList'])"></app-downloadExtensionData>
+          </div>
+          <div class="row menu-row">
             <b-button
               v-b-modal.reshuffleConfirm
               v-on:click="closeMenu();"
@@ -362,15 +365,14 @@
 
 <script>
 import { roomsCollection } from '../../firebase';
-import ExtensionManager from "../extensions/ExtensionManager.vue";
 import axios from 'axios'
-import RoomLink from '../layout/RoomLink.vue';
 
 export default {
   name: 'app-slotMachine',
   components: {
-    "app-extensionManager": ExtensionManager,
-    'app-roomLink': RoomLink,
+    'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
+    'app-downloadExtensionData': () => import("../extensions/DownloadExtensionData.vue"),
+    'app-roomLink': () => import('../layout/RoomLink.vue'),
   },
   props: {
     roomID: String,

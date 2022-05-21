@@ -42,6 +42,9 @@
             </b-button>
           </div>
           <div class="row menu-row">
+            <app-downloadExtensionData :extensionData="roomInfo.extensionData" :gameTitle="customOptions.gameTitle" v-if="(tempExtensionData['journalEntries'] || tempExtensionData['multiEditableLists'] || tempExtensionData['editableList'])"></app-downloadExtensionData>
+          </div>
+          <div class="row menu-row">
             <b-button
               variant="outline-dark"
               class="control-button-safety-card btn-lg btn-block"
@@ -268,14 +271,13 @@
 <script>
 import { roomsCollection } from '../../firebase';
 import axios from 'axios'
-import RoomLink from '../layout/RoomLink.vue';
-import ExtensionManager from "../extensions/ExtensionManager.vue";
 
 export default {
   name: 'app-timed',
   components:{
-    "app-extensionManager": ExtensionManager,
-    'app-roomLink': RoomLink,
+    'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
+    'app-downloadExtensionData': () => import("../extensions/DownloadExtensionData.vue"),
+    'app-roomLink': () => import('../layout/RoomLink.vue'),
   },
   props: {
     roomID: String,

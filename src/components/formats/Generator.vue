@@ -47,6 +47,9 @@
               <b-icon-link45deg></b-icon-link45deg> Copy URL 
             </b-button>
           </div>
+          <div class="row menu-row">
+            <app-downloadExtensionData :extensionData="roomInfo.extensionData" :gameTitle="customOptions.gameTitle" v-if="(tempExtensionData['journalEntries'] || tempExtensionData['multiEditableLists'] || tempExtensionData['editableList'])"></app-downloadExtensionData>
+          </div>
         </b-container>
         <div class="" v-if="(customOptions.modalOneLabel || customOptions.modalTwoLabel || customOptions.modalThreeLabel || customOptions.modalFourLabel || customOptions.modalFiveLabel)">
           <hr class='mb-4'/>
@@ -404,15 +407,14 @@
 
 <script>
 import { roomsCollection } from "../../firebase";
-import ExtensionManager from "../extensions/ExtensionManager.vue";
 import axios from "axios";
-import RoomLink from '../layout/RoomLink.vue';
 
 export default {
   name: "app-generator",
   components: {
-    "app-extensionManager": ExtensionManager,
-    'app-roomLink': RoomLink,
+    'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
+    'app-downloadExtensionData': () => import("../extensions/DownloadExtensionData.vue"),
+    'app-roomLink': () => import('../layout/RoomLink.vue'),
   },
   props: {
     roomID: String,

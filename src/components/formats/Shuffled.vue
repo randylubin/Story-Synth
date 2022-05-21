@@ -683,18 +683,13 @@
 <script>
 import { roomsCollection } from "../../firebase";
 import axios from "axios";
-import ExtensionManager from "../extensions/ExtensionManager.vue";
-import DownloadExtensionData from "../extensions/DownloadExtensionData.vue";
-import RoomLink from '../layout/RoomLink.vue';
-// import MenuModal from '../layout/MenuModals.vue';
 
 export default {
   name: "app-shuffled",
   components: {
-    "app-extensionManager": ExtensionManager,
-    "app-downloadExtensionData": DownloadExtensionData,
-    'app-roomLink': RoomLink,
-    // 'app-menuModal': MenuModal,
+    'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
+    'app-downloadExtensionData': () => import("../extensions/DownloadExtensionData.vue"),
+    'app-roomLink': () => import('../layout/RoomLink.vue'),
   },
   props: {
     roomID: String,
