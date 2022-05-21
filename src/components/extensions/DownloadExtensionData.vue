@@ -32,6 +32,18 @@ export default {
         filename = "story-synth-data.txt"
       }
 
+      // PlusMinus
+      let plusMinusData = this.extensionData.plusMinus ? JSON.parse(this.extensionData.plusMinus) : null;
+      if (plusMinusData){
+        if (this.extensionData.plusMinusTitle){
+          downloadText += "# " + this.extensionData.plusMinusTitle + "\n\n"
+        } else (downloadText += "# Stats\n\n")
+        for (let i=0; i < plusMinusData.length; i++){
+          downloadText += plusMinusData[i].name + ": " + plusMinusData[i].value + "\n"
+        }
+        downloadText += "\n\n"
+      }
+
       // Editable List
       let listItems = this.extensionData.editableList ? this.extensionData.editableList.split(', ') : null;
       if (listItems) {
