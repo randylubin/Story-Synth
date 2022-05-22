@@ -8,7 +8,7 @@
               <h2 v-else>Journal Entries</h2>
 
               <form>
-                <textarea v-model="newItem" type="text" maxlength="250" rows="5" class="form-control"></textarea>
+                <textarea title="new journal entry input field" v-model="newItem" type="text" maxlength="250" rows="5" class="form-control"></textarea>
                 <button :disabled="!newItem" class="btn btn-outline-dark m-3" v-on:click="addItem(newItem)">Post</button>
               </form>
 
@@ -19,7 +19,7 @@
                       <div class="journal-entry justify-content-between d-flex">
                         <div class="card-body text-left ">
                           <div class="journal-entry-inner" v-dompurify-html="entry" v-if="index != currentEditIndex"></div>
-                          <textarea v-else class="form-control" type="text" v-model="currentEditText" maxlength="250" rows="5"></textarea>
+                          <textarea title="edit journal entry field" v-else class="form-control" type="text" v-model="currentEditText" maxlength="250" rows="5"></textarea>
                         </div>
                         <div v-if="currentEditIndex !== index">
                           <button class="btn btn-sm btn-outline-dark m-1 px-1 edit-button" v-on:click="editItem(index)">

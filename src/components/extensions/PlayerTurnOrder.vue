@@ -17,7 +17,7 @@
                       <span v-if="index == (currentCardIndex + playerTurnOrder.activePlayerOffset) % playerTurnOrder.players.length">– </span>
                     </span>
                     
-                    <input v-else type="text" v-model="currentEditText" maxlength="50">
+                    <input title="Edit name" v-else type="text" v-model="currentEditText" maxlength="50">
 
                     <div>
                       <button class="btn btn-sm btn-outline-dark m-1 px-1 edit-button" v-on:click="editPlayer(index)" v-if="currentEditIndex !== index">
@@ -34,7 +34,7 @@
                 </div>
               </div>
 
-              <input type="text" v-model="newPlayer" maxlength="50">
+              <input title="Add player input" type="text" v-model="newPlayer" maxlength="50">
               <button :disabled="!newPlayer" class="btn btn-outline-dark m-2" v-on:click="addPlayer(newPlayer)" v-dompurify-html="playerTurnOrderButtonLabel" v-if="playerTurnOrderButtonLabel != undefined">Add Player</button>
               <button v-else :disabled="!newPlayer" class="btn btn-outline-dark m-2" v-on:click="addPlayer(newPlayer)">Add Player</button>
               

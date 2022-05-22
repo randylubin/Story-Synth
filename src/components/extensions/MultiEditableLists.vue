@@ -16,7 +16,7 @@
                     <div class="col-sm justify-content-between d-flex my-1">
                       <span style="min-width:1em"></span>
                       <div class="my-auto" v-if="itemIndex != currentEditItemIndex || listIndex != currentEditListIndex">{{item}}</div>
-                      <input v-else type="text" v-model="currentEditText" maxlength="50">
+                      <input title="edit list item" v-else type="text" v-model="currentEditText" maxlength="50">
                       <div>
                         <button class="btn btn-sm btn-outline-dark m-1 px-1 edit-button" v-on:click="editItem(listIndex, itemIndex)" v-if="currentEditItemIndex != itemIndex || currentEditListIndex != listIndex">
                           <b-icon-pencil></b-icon-pencil>
@@ -31,7 +31,7 @@
                     </div>
                   </div>
                   <form class="mb-4">
-                    <input v-model="newItemArray[listIndex]" type="text" maxlength="50">
+                    <input title="add new list item" v-model="newItemArray[listIndex]" type="text" maxlength="50">
                     <button :disabled="!newItemArray[listIndex]" class="btn btn-outline-dark m-3" v-on:click="addItem(listIndex, newItemArray[listIndex])">Add</button>
                   </form>
                 </div>

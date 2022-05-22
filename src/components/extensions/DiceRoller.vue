@@ -17,7 +17,7 @@
 
               <div class="row">
                 <div class="col-sm">
-                  <input v-model="diceInput" type="text" maxlength="50">
+                  <input title="dice input field" v-model="diceInput" type="text" maxlength="50">
                   <button class="btn btn-outline-dark m-2" v-on:click="rollDice(diceInput)" :disabled="!diceInput">Roll</button>
                 </div>
               </div>
