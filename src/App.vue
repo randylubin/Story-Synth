@@ -31,24 +31,7 @@
           <app-uploadPage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-uploadPage>
         </div>
         
-        <div v-if="!['CSS-Playground', 'Games', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
-          <!--For published version, remove any components you aren't using -->
-          <div v-if="!$route.params.roomID && $route.params.gSheetID">
-            <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameLauncher>
-          </div>
-
-          <app-timed :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed' && $route.params.roomID"></app-timed>
-          <app-shuffled ref="shuffled" :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" :userRole="$route.params.userRole" v-if="$route.params.gameType=='Shuffled' && $route.params.roomID"></app-shuffled>
-          <app-monster :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster' && $route.params.roomID"></app-monster>
-          <app-secretCards :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards' && $route.params.roomID"></app-secretCards>
-          <app-slotMachine :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="($route.params.gameType=='SlotMachine' || $route.params.gameType=='Composite') && $route.params.roomID"></app-slotMachine>
-          <app-phases :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases' && $route.params.roomID"></app-phases>
-          <app-generator :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Generator' && $route.params.roomID"></app-generator>
-          <app-hexflower :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Hexflower' && $route.params.roomID"></app-hexflower>
-          <app-gridmap :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Gridmap' && $route.params.roomID"></app-gridmap>
-
-          <app-sandbox :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox' && $route.params.roomID"></app-sandbox>
-        </div>
+        <app-game v-if="!['CSS-Playground', 'Games', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"></app-game>
         <div v-else-if="$route.params.gameType == 'Games'">
           <div v-if="!$route.params.roomID && $route.params.gSheetID">
             <app-customGameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-customGameLauncher>
@@ -77,20 +60,8 @@
   import CSSPlayground from './components/other/CSSPlayground.vue'
 
   import UploadPage from './components/launchers/UploadPage.vue'
-  import GameLauncher from './components/launchers/GameLauncher.vue'
   import CustomGameLauncher from './components/games/CustomGameLauncher.vue'
   import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
-
-  import Timed from './components/formats/Timed.vue'
-  import Shuffled from './components/formats/Shuffled.vue'
-  import Monster from './components/formats/Monster.vue'
-  import SecretCards from './components/formats/SecretCards.vue'
-  import SlotMachine from './components/formats/SlotMachine.vue'
-  import Phases from './components/formats/Phases.vue'
-  import Generator from './components/formats/Generator.vue'
-  import Gridmap from './components/formats/Gridmap.vue'
-  import Hexflower from './components/formats/Hexflower.vue'
-  import Sandbox from './components/formats/Sandbox.vue'
 
   export default {
     name: 'app',
@@ -105,20 +76,9 @@
       'app-CSSPlayground': CSSPlayground,
 
       'app-uploadPage': UploadPage,
-      'app-gameLauncher': GameLauncher,
+      'app-game': () => import('./components/layout/Game.vue'),
       'app-customGameLauncher': CustomGameLauncher,
       'app-customGameSessionManager': CustomGameSessionManager,
-
-      'app-timed': Timed,
-      'app-shuffled': Shuffled,
-      'app-monster': Monster,
-      'app-secretCards': SecretCards,
-      'app-slotMachine': SlotMachine,
-      'app-phases': Phases,
-      'app-generator': Generator,
-      'app-gridmap': Gridmap,
-      'app-hexflower': Hexflower,
-      'app-sandbox': Sandbox,
       
     },
     data () {
