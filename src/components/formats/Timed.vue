@@ -1,5 +1,5 @@
 <template>
-  <div class="container game-room">
+  <div class="game-room">
     <div class="full-page-background"></div>
     <div v-dompurify-html="customOptions.style"></div>
     <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
@@ -21,91 +21,31 @@
         </div>
       </template>  
     </b-overlay> 
-    
-    <div class="menu-bar mb-4 d-flex align-items-center">
-      <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal v-bind:style="{color: customOptions.menuColor}"><b-icon-list></b-icon-list> Menu</button>
-      <app-roomLink class="d-none d-sm-block" :monetizedByUser="monetizedByUser" @roomMonetized="updateRoomMonetization" :routeRoomID="$route.params.roomID" :color="customOptions.menuColor" v-if="dataReady && firebaseReady"></app-roomLink>
 
-      <b-modal
-        id="menuModal"
-        :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'" 
-        hide-footer
-      >  
-        <b-container>
-          <div class="row menu-row">
-            <b-button
-              class="border-0 btn-lg btn-block"
-              v-on:click="copyLinkToClipboard(); closeMenu();"
-              @click="$bvToast.show('copyToast')"
-            >
-              <b-icon-link45deg></b-icon-link45deg> Copy URL 
-            </b-button>
-          </div>
-          <div class="row menu-row">
-            <app-downloadExtensionData :extensionData="roomInfo.extensionData" :gameTitle="customOptions.gameTitle" v-if="(tempExtensionData['journalEntries'] || tempExtensionData['multiEditableLists'] || tempExtensionData['editableList'] || tempExtensionData['plusMinus'])"></app-downloadExtensionData>
-          </div>
-          <div class="row menu-row">
-            <b-button
-              variant="outline-dark"
-              class="control-button-safety-card btn-lg btn-block"
-              v-on:click="stop(); closeMenu();"
-              v-dompurify-html="
-                customOptions.safetyCardButton
-                    ? customOptions.safetyCardButton
-                    : 'Pause'
-              "
-              ></b-button>
-          </div>
-        </b-container>
-        <div class="" v-if="(customOptions.modalOneLabel || customOptions.modalTwoLabel || customOptions.modalThreeLabel || customOptions.modalFourLabel || customOptions.modalFiveLabel)">
-          <hr class='mb-4'/>
-          <b-button
-            v-b-modal.modalOne
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalOneLabel"
-          >
-            {{ customOptions.modalOneLabel }}
-          </b-button>
-          <b-button
-            v-b-modal.modalTwo
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalTwoLabel"
-            >{{ customOptions.modalTwoLabel }}</b-button
-          >
-          <b-button
-            v-b-modal.modalThree
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalThreeLabel"
-            >{{ customOptions.modalThreeLabel }}</b-button
-          >
-          <b-button
-            v-b-modal.modalFour
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalFourLabel"
-            >{{ customOptions.modalFourLabel }}</b-button
-          >
-          <b-button
-            v-b-modal.modalFive
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalFiveLabel"
-            >{{ customOptions.modalFiveLabel }}</b-button
-          >
-        </div>
-        <div class="row menu-row mt-4">
-          <a href="https://storysynth.org" target="_blank">Powered by Story Synth</a>
-        </div>
-      </b-modal>
-    </div>
+    <app-menuBar
+      :roomInfo="roomInfo"
+      :tempExtensionData="tempExtensionData"
+      :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser"
+      :routeRoomID="$route.params.roomID"
+      :dataReady="dataReady"
+      :firebaseReady="firebaseReady"
+      @roomMonetized="updateRoomMonetization"
+    >
+      <div class="row menu-row">
+        <b-button
+          variant="outline-dark"
+          class="control-button-safety-card btn-lg btn-block"
+          v-on:click="stop(); closeMenu();"
+          v-dompurify-html="
+            customOptions.safetyCardButton
+                ? customOptions.safetyCardButton
+                : 'Pause'
+          "
+          ></b-button>
+      </div>
+    </app-menuBar>
+    
 
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
@@ -216,51 +156,6 @@
       ></app-extensionManager>
     </div>
 
-    <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
-      <div class="d-block text-left" v-dompurify-html="customOptions.modalOneText">
-        
-      </div>
-    </b-modal>
-
-    <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
-      <div class="d-block text-left" v-dompurify-html="customOptions.modalTwoText">
-      </div>
-    </b-modal>
-
-    <b-modal
-      id="modalThree"
-      v-bind:title="customOptions.modalThreeLabel"
-      hide-footer
-    >
-      <div
-        class="d-block text-left"
-        v-dompurify-html="customOptions.modalThreeText"
-      ></div>
-    </b-modal>
-
-    <b-modal
-      id="modalFour"
-      v-bind:title="customOptions.modalFourLabel"
-      hide-footer
-    >
-      <div
-        class="d-block text-left"
-        v-dompurify-html="customOptions.modalFourText"
-      ></div>
-    </b-modal>
-
-    <b-modal
-      id="modalFive"
-      v-bind:title="customOptions.modalFiveLabel"
-      hide-footer
-    >
-      <div
-        class="d-block text-left"
-        v-dompurify-html="customOptions.modalFiveText"
-      ></div>
-    </b-modal>
-
-
     <link v-bind:href="selectedWallet">
   </div>
     <!-- Timer code remixed from https://codepen.io/raphael_octau by raphael_octau -->
@@ -276,8 +171,7 @@ export default {
   name: 'app-timed',
   components:{
     'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
-    'app-downloadExtensionData': () => import("../extensions/DownloadExtensionData.vue"),
-    'app-roomLink': () => import('../layout/RoomLink.vue'),
+    'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
     roomID: String,

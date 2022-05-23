@@ -1,5 +1,5 @@
 <template>
-  <div class="container game-room sandbox">
+  <div class="game-room sandbox">
     <div class="full-page-background"></div>
     <div v-dompurify-html="customOptions.style"></div>
     <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
@@ -21,6 +21,17 @@
         </div>
       </template>  
     </b-overlay> 
+
+    <app-menuBar
+      :roomInfo="roomInfo"
+      :tempExtensionData="tempExtensionData"
+      :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser"
+      :routeRoomID="$route.params.roomID"
+      :dataReady="dataReady"
+      :firebaseReady="firebaseReady"
+      @roomMonetized="updateRoomMonetization"
+    ></app-menuBar>
 
     <div class="row">
       <div class="col-sm">
@@ -45,6 +56,7 @@ export default {
   name: 'app-sandbox',
   components: {
     'app-extensionManager': ExtensionManager,
+    'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
     gSheetID: String,

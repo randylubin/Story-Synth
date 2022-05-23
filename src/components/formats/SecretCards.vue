@@ -1,5 +1,5 @@
 <template>
-  <div class="secretCards game-room container" v-if="roomInfo">
+  <div class="secretCards game-room" v-if="roomInfo">
     <div class="full-page-background"></div>
     <div v-dompurify-html="customOptions.style"></div>
     <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
@@ -22,92 +22,29 @@
       </template>  
     </b-overlay> 
 
-    <!-- Menu Bar -->
-    <div class="menu-bar mb-4 d-flex align-items-center">
-      <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal v-bind:style="{color: customOptions.menuColor}"><b-icon-list></b-icon-list> Menu</button>
-      <app-roomLink class="d-none d-sm-block" :monetizedByUser="monetizedByUser" @roomMonetized="updateRoomMonetization" :routeRoomID="$route.params.roomID" :color="customOptions.menuColor" v-if="dataReady && firebaseReady"></app-roomLink>
-
-      <b-modal
-        id="menuModal"
-        :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'" 
-        hide-footer
-      >  
-        <b-container>
-          <div class="row menu-row">
-            <b-button
-              class="border-0 btn-lg btn-block"
-              v-on:click="copyLinkToClipboard(); closeMenu();"
-              @click="$bvToast.show('copyToast')"
-            >
-              <b-icon-link45deg></b-icon-link45deg> Copy URL 
-            </b-button>
-          </div>
-          <div class="row menu-row">
-            <app-downloadExtensionData :extensionData="roomInfo.extensionData" :gameTitle="customOptions.gameTitle" v-if="(tempExtensionData['journalEntries'] || tempExtensionData['multiEditableLists'] || tempExtensionData['editableList'] || tempExtensionData['plusMinus'])"></app-downloadExtensionData>
-          </div>
-          <div class="row menu-row">
-            <b-button
-              variant="outline-dark"
-              class="control-button-safety-card btn-lg btn-block"
-              v-on:click="xCard(); closeMenu();"
-              v-dompurify-html="
-                customOptions.safetyCardButton
-                    ? customOptions.safetyCardButton
-                    : 'Pause'
-              "
-              ></b-button>
-          </div>
-        </b-container>
-        <div class="" v-if="(customOptions.modalOneLabel || customOptions.modalTwoLabel || customOptions.modalThreeLabel || customOptions.modalFourLabel || customOptions.modalFiveLabel)">
-          <hr class='mb-4'/>
-          <b-button
-            v-b-modal.modalOne
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalOneLabel"
-          >
-            {{ customOptions.modalOneLabel }}
-          </b-button>
-          <b-button
-            v-b-modal.modalTwo
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalTwoLabel"
-            >{{ customOptions.modalTwoLabel }}</b-button
-          >
-          <b-button
-            v-b-modal.modalThree
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalThreeLabel"
-            >{{ customOptions.modalThreeLabel }}</b-button
-          >
-          <b-button
-            v-b-modal.modalFour
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalFourLabel"
-            >{{ customOptions.modalFourLabel }}</b-button
-          >
-          <b-button
-            v-b-modal.modalFive
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalFiveLabel"
-            >{{ customOptions.modalFiveLabel }}</b-button
-          >
-        </div>
-        <div class="row menu-row mt-4">
-          <a href="https://storysynth.org" target="_blank">Powered by Story Synth</a>
-        </div>
-      </b-modal>
-    </div>
-
+    <app-menuBar
+      :roomInfo="roomInfo"
+      :tempExtensionData="tempExtensionData"
+      :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser"
+      :routeRoomID="$route.params.roomID"
+      :dataReady="dataReady"
+      :firebaseReady="firebaseReady"
+      @roomMonetized="updateRoomMonetization"
+    >
+      <div class="row menu-row">
+        <b-button
+          variant="outline-dark"
+          class="control-button-safety-card btn-lg btn-block"
+          v-on:click="xCard(); closeMenu();"
+          v-dompurify-html="
+            customOptions.safetyCardButton
+                ? customOptions.safetyCardButton
+                : 'Pause'
+          "
+          ></b-button>
+      </div>
+    </app-menuBar>
 
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
@@ -225,57 +162,6 @@
       </div>
     </div>
 
-    <!--
-    <div class="btn-group col-sm" role="group" aria-label="Advice Buttons">
-      <b-button v-b-modal.speaker-tips variant="warning">Speaker Tips</b-button>
-
-      <b-modal id="speaker-tips" title="Advice for giving a speech" hide-footer>
-        <div class="d-block text-left">
-          <h4>Creating a character</h4>
-          <p>Take a minute to read through the suggested answers. For each question, pick one or two answers that resonate with you or make up your own; consider what embellishments you might add. Think about what type of personality your character might have and how that might be expressed through manner of speech and gestures.</p>
-
-          <h4>Opening remarks</h4>
-          <p>When you're ready to start the meeting, you can say "May I have your attention please." Introduce yourself, in character, including any of the key details about your background. Then, make sure you cover the key information relating to the second question on the character card.</p>
-          <p>Feel free to ham it up and make your character ridiculous! When you're done with your speech, open it up to the audience with "Any questions?"</p>
-
-          <h4>Answering questions</h4>
-          <p>Here are some go-to tactics when answering questions:</p>
-          <ul>
-            <li>Make up an answer</li>
-            <li>Change the subject</li>
-            <li>Be overly defensive</li>
-            <li>Show contrition</li>
-            <li>Attack whomever asked the question</li>
-            <li>Claim ignorance</li>
-            <li>Cut off whomever is asking the questions</li>
-          </ul>
-          <p>You end the round at any time by saying "That will be all!"</p>
-        </div>
-      </b-modal>
-
-      <b-button v-b-modal.audience-tips variant="warning">Audience Tips</b-button>
-
-      <b-modal id="audience-tips" title="Advice for asking questions" hide-footer>
-        <div class="d-block text-left">
-          <h4>Being a character</h4>
-          <p>You don't need to ask questions in character but it can help! Consider who you might be and why you're at the this speech. For instance you could be a collegue, a rival, a skeptic, a fan, or a concerned citizen.</p>
-
-          <h4>Asking questions</h4>
-          <p>Try keep the focus on the speaker; don't hog the spotlight. Try the following types of questions:</p>
-          <ul>
-            <li>Ask for an elaboration on something the speaker mentioned</li>
-            <li>Ask about potential consequences of something in the story</li>
-            <li>Cast doubt on the speaker: "That's not what I heard..."</li>
-            <li>Introduce new info: “What do you think of rumors that...”</li>
-            <li>Share a controverisal opinion: “More of a statement than a question...”</li>
-          </ul>
-
-        </div>
-      </b-modal>
-
-      <button class="btn btn-warning" v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0">Pause</button>
-    </div>
-    -->
     <div
       v-if="
         dataReady &&
@@ -294,50 +180,6 @@
       ></app-extensionManager>
     </div>
 
-    <b-modal id="modalOne" v-bind:title="customOptions.modalOneLabel" hide-footer>
-      <div class="d-block text-left" v-dompurify-html="customOptions.modalOneText">
-        
-      </div>
-    </b-modal>
-
-    <b-modal id="modalTwo" v-bind:title="customOptions.modalTwoLabel" hide-footer>
-      <div class="d-block text-left" v-dompurify-html="customOptions.modalTwoText">
-      </div>
-    </b-modal>
-
-    <b-modal
-      id="modalThree"
-      v-bind:title="customOptions.modalThreeLabel"
-      hide-footer
-    >
-      <div
-        class="d-block text-left"
-        v-dompurify-html="customOptions.modalThreeText"
-      ></div>
-    </b-modal>
-
-    <b-modal
-      id="modalFour"
-      v-bind:title="customOptions.modalFourLabel"
-      hide-footer
-    >
-      <div
-        class="d-block text-left"
-        v-dompurify-html="customOptions.modalFourText"
-      ></div>
-    </b-modal>
-
-    <b-modal
-      id="modalFive"
-      v-bind:title="customOptions.modalFiveLabel"
-      hide-footer
-    >
-      <div
-        class="d-block text-left"
-        v-dompurify-html="customOptions.modalFiveText"
-      ></div>
-    </b-modal>
-
     <link v-bind:href="selectedWallet">
   </div>
 </template>
@@ -350,8 +192,7 @@ export default {
   name: 'app-secretCards',
   components:{
     'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
-    'app-downloadExtensionData': () => import("../extensions/DownloadExtensionData.vue"),
-    'app-roomLink': () => import('../layout/RoomLink.vue'),
+    'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
     roomID: String,
