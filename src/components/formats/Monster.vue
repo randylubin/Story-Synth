@@ -1,26 +1,5 @@
 <template>
   <div class="monster game-room" v-if="roomInfo">
-    <div class="full-page-background"></div>
-    <div v-dompurify-html="customOptions.style"></div>
-    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
-    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
-    </div>
-    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
-      <template #overlay>
-        <div class="text-center">
-          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
-          <div class="mt-4">
-            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
-            <b-spinner
-                class="m-5"
-                style="width: 4rem; height: 4rem;"
-                label="Busy"
-              ></b-spinner>
-          </div>
-        </div>
-      </template>  
-    </b-overlay> 
     
     <app-menuBar
       :roomInfo="roomInfo"
@@ -160,12 +139,6 @@
 
 
     <div v-if="!roomInfo.xCardIsActive">
-      <div class="card shadow" v-if="(!dataReady || !firebaseReady) && !error">
-        <div class="card-body text-center">
-          <h1 class="m-5">Loading</h1>
-          <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
-        </div>
-      </div>
 
       <div v-for="(row, index) in gSheet" v-bind:key="index">
         <transition name="">
@@ -249,7 +222,6 @@
 
 <script>
 import { roomsCollection } from '../../firebase';
-import axios from 'axios'
 
 export default {
   name: 'app-monster',
@@ -259,7 +231,8 @@ export default {
   },
   props: {
     roomID: String,
-    gSheetID: String
+    gSheetID: String,
+    sheetData: Array,
   },
   data: function(){
     return {
@@ -346,6 +319,11 @@ export default {
       ],
     };
   },
+  watch: {
+    sheetData: function(){
+      this.processSheetData();
+    },
+  },
   mounted(){
     if (document.monetization?.state == "started") {
       this.monetizationStarted()
@@ -354,11 +332,14 @@ export default {
       this.monetizationStarted()
     })
 
-    this.fetchAndCleanSheetData(this.gSheetID);
+    if (this.sheetData){
+      this.processSheetData();
+    }
 
     this.$bind('roomInfo', roomsCollection.doc(this.roomID))
       .then(() => {
         this.firebaseReady = true
+        this.$emit('firebase-ready', true);
       })
       .then(() => {
         if (!this.roomInfo){
@@ -474,21 +455,11 @@ export default {
         timeLastUpdated: Date.now(),
       });
     },
-    fetchAndCleanSheetData(sheetID){
-      if (!sheetID || sheetID == 'demo') {
-        sheetID = '1NgNHy7Qe1R8KhGR2cOmJwL2aOl2tocBemW2HIAKjrvI'
-      }
+    processSheetData() {
+      let cleanData = [];
 
-      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa400&key='  + process.env.VUE_APP_FIREBASE_API_KEY
-
-      axios.get(getURL)
-      .then(response => {
-
-        var cleanData = []
-        var gRows = response.data.sheets[0].data[0].rowData
-
-        // Transform Sheets API response into cleanData
-        gRows.forEach((item, i) => {
+      if (this.sheetData){
+        this.sheetData.forEach((item, i) => {
           if (i !== 0 && item.values[0] && item.values[0].formattedValue){
             // Handle options
             if (item.values[0].formattedValue == "option"){
@@ -538,24 +509,6 @@ export default {
           }*/
         });
 
-        // monetization
-        if (this.customOptions.wallet) {
-          this.customOptions.wallet = this.customOptions.wallet.split(',')
-          if (Math.random() <= this.customOptions.revShare) {
-            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-          } else {
-            this.selectedWallet = this.customOptions.wallet[0];
-          }
-        } else {
-          this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-        }
-
-        // apply custom style to body
-        let styleTemplate =
-          "style-template-" + this.customOptions.styleTemplate;
-        let body = document.getElementById("app"); // document.body;
-        body.classList.add(styleTemplate);
-
         this.dataReady = true
         if (location.hostname.toString() !== 'localhost'){
           this.$mixpanel.track('Visit Game Session', {
@@ -565,13 +518,8 @@ export default {
           });
         }
 
-      }).catch(error => {
-        this.gSheet = [{text:'Error loading Google Sheet'}]
-        this.error = error
-        console.log(error)
-      })
+      }
     }
-
   }
 }
 </script>
@@ -639,13 +587,4 @@ export default {
     padding-bottom: 1em;
   }
 
-  .full-page-background {
-    position: absolute;
-    height: 100%;
-    width: 100vw;
-    top: 0;
-    right: 0;
-    margin: 0;
-    z-index: -1;
-  }
 </style>

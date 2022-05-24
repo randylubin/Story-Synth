@@ -1,26 +1,5 @@
 <template>
   <div class="slot-machine game-room" v-if="roomInfo">
-    <div class="full-page-background"></div>
-    <div v-dompurify-html="customOptions.style"></div>
-    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
-    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
-    </div>
-    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
-      <template #overlay>
-        <div class="text-center">
-          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
-          <div class="mt-4">
-            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
-            <b-spinner
-                class="m-5"
-                style="width: 4rem; height: 4rem;"
-                label="Busy"
-              ></b-spinner>
-          </div>
-        </div>
-      </template>  
-    </b-overlay> 
 
     <app-menuBar
       :roomInfo="roomInfo"
@@ -154,10 +133,6 @@
         <div class="card d-flex shadow img-fluid" v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
           <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%" v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
           <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
-          <div class="card-body text-center" v-if="(!dataReady || !firebaseReady) && !error">
-            <h1 class="m-5">Loading</h1>
-            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
-          </div>
 
           <div class="card-body justify-content-center mt-2" v-if="!roomInfo.xCardIsActive && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
             <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
@@ -247,7 +222,6 @@
 
 <script>
 import { roomsCollection } from '../../firebase';
-import axios from 'axios'
 
 export default {
   name: 'app-slotMachine',
@@ -257,7 +231,8 @@ export default {
   },
   props: {
     roomID: String,
-    gSheetID: String
+    gSheetID: String,
+    sheetData: Array,
   },
   data: function(){
     return {
@@ -341,6 +316,11 @@ export default {
       ],
     };
   },
+  watch: {
+    sheetData: function(){
+      this.processSheetData();
+    },
+  },
   mounted(){
     if (document.monetization?.state == "started") {
       this.monetizationStarted()
@@ -349,11 +329,14 @@ export default {
       this.monetizationStarted()
     })
 
-    this.fetchAndCleanSheetData(this.gSheetID);
+    if (this.sheetData){
+      this.processSheetData();
+    }
 
     this.$bind('roomInfo', roomsCollection.doc(this.roomID))
       .then(() => {
         this.firebaseReady = true
+        this.$emit('firebase-ready', true);
       })
       .then(() => {
         if (!this.roomInfo){
@@ -486,32 +469,17 @@ export default {
         timeLastUpdated: Date.now(),
       });
     },
-    fetchAndCleanSheetData(sheetID){
+    processSheetData() {
+      let cleanData = [];
 
-      // Remove for published version
-      if (!sheetID || sheetID == 'demo') {
-        sheetID = '1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU'
-      }
-
-      // For published version, set getURL equal to the url of your spreadsheet
-      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa400&key=' + process.env.VUE_APP_FIREBASE_API_KEY
-
-
-      // For the published version - remove if you're hardcoding the data instead of using Google Sheets
-      axios.get(getURL)
-      .then(response => {
-
-        var cleanData = []
-        var gRows = response.data.sheets[0].data[0].rowData
-
-        this.numberOfWheels = gRows[0].values.length - 3
+      if (this.sheetData){
+        this.numberOfWheels = this.sheetData[0].values.length - 3
         
         for (var w = 0; w < this.numberOfWheels; w++) {
           this.wheels.push([])
         }
 
-        // Transform Sheets API response into cleanData
-        gRows.forEach((item, i) => {
+        this.sheetData.forEach((item, i) => {
           if (i !== 0 && item.values[0].formattedValue){
 
             // Handle options
@@ -569,30 +537,6 @@ export default {
             .update({ extensionData: this.tempExtensionData });
         }
 
-        if (this.customOptions.wallet) {
-          if (Math.random() <= this.customOptions.revShare) {
-            this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-          }
-        }
-
-        // monetization
-        if (this.customOptions.wallet) {
-          this.customOptions.wallet = this.customOptions.wallet.split(',')
-          if (Math.random() <= this.customOptions.revShare) {
-            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-          } else {
-            this.selectedWallet = this.customOptions.wallet[0];
-          }
-        } else {
-          this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-        }
-
-        // apply custom style to body
-        let styleTemplate =
-          "style-template-" + this.customOptions.styleTemplate;
-        let body = document.getElementById("app"); // document.body;
-        body.classList.add(styleTemplate);
-
         // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData
 
@@ -609,21 +553,8 @@ export default {
 
         if(this.firebaseReady && this.roomInfo.cardSequence.length < 4){this.shuffle();}
 
-      }).catch(error => {
-        this.gSheet = [
-          {
-            ordered: 0,
-            headerText: "Error",
-            bodyText:'Error loading the Google Sheet. Please make sure that the link is correct and that it is publicly viewable'
-          }
-        ]
-
-        this.orderedCards = this.gSheet
-        this.error = error
-        console.log(error.message, error)
-      })      
+      }  
     }
-
   }
 }
 </script>
@@ -656,13 +587,4 @@ export default {
     text-decoration: underline;
   }
 
-  .full-page-background {
-    position: absolute;
-    height: 100%;
-    width: 100vw;
-    top: 0;
-    right: 0;
-    margin: 0;
-    z-index: -1; 
-  }
 </style>

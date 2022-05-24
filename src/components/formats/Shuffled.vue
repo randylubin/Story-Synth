@@ -1,26 +1,5 @@
 <template>
   <div class="shuffled game-room" v-if="roomInfo">
-    <div class="full-page-background"></div>
-    <div v-dompurify-html="customOptions.style"></div>
-    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
-    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
-    </div>
-    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
-      <template #overlay>
-        <div class="text-center">
-          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
-          <div class="mt-4">
-            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
-            <b-spinner
-                class="m-5"
-                style="width: 4rem; height: 4rem;"
-                label="Busy"
-              ></b-spinner>
-          </div>
-        </div>
-      </template>  
-    </b-overlay> 
 
     <app-menuBar
       :roomInfo="roomInfo"
@@ -152,32 +131,6 @@
           ></app-extensionManager>
         </div>
 
-        <!-- <div class="row card-navigation-buttons card-nav-above mb-4" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
-          <transition name="fade">
-            <div class="btn-group col-sm" role="group" aria-label="Card Controls">
-              <button
-                class="btn btn-outline-dark control-button-previous-card"
-                v-on:click="previousCard()"
-                :disabled="
-                  roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
-                "
-              >
-                Previous Card
-              </button>
-              <button
-                class="btn btn-outline-dark control-button-next-card"
-                v-on:click="nextCard()"
-                :disabled="
-                  roomInfo.xCardIsActive ||
-                    roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
-                "
-              >
-                Next Card
-              </button>
-            </div>
-          </transition>
-        </div> -->
-
         <transition name="fade">
           <div class="fab-buttons container" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
               <button
@@ -261,26 +214,6 @@
                   roomInfo.currentCardIndex != 0
               "
             ></b-card-img>
-
-
-            <!-- Loading Visual -->
-            <div
-              class="card-body text-center"
-              v-if="(!dataReady || !firebaseReady) && !error"
-            >
-              <h1 class="m-5">Loading</h1>
-              <b-spinner
-                class="m-5"
-                style="width: 4rem; height: 4rem;"
-                label="Busy"
-              ></b-spinner>
-
-              <div v-if="customOptions.debugLoading == 'TRUE'">
-                <div>Google Sheet ready: {{dataReady}}</div>
-                <div>Firebase ready: {{firebaseReady}}</div>
-                <div>Error: {{error}}</div>
-              </div>
-            </div>
 
             <div
               class="row mt-4 mx-4 game-meta"
@@ -460,7 +393,6 @@
 
 <script>
 import { roomsCollection } from "../../firebase";
-import axios from "axios";
 
 export default {
   name: "app-shuffled",
@@ -472,6 +404,7 @@ export default {
     roomID: String,
     gSheetID: String,
     userRole: String,
+    sheetData: Array,
   },
   data: function() {
     return {
@@ -559,6 +492,11 @@ export default {
       ],
     };
   },
+  watch: {
+    sheetData: function(){
+      this.processSheetData();
+    },
+  },
   mounted() {
     if (document.monetization?.state == "started") {
       this.monetizationStarted()
@@ -567,11 +505,14 @@ export default {
       this.monetizationStarted()
     })
 
-    this.fetchAndCleanSheetData(this.gSheetID);
+    if (this.sheetData){
+      this.processSheetData();
+    }
 
     this.$bind("roomInfo", roomsCollection.doc(this.roomID))
       .then(() => {
         this.firebaseReady = true;
+        this.$emit('firebase-ready', true);
       })
       .then(() => {
         if (!this.roomInfo) {
@@ -822,180 +763,127 @@ export default {
         timeLastUpdated: Date.now(),
       });
     },
-    fetchAndCleanSheetData(sheetID) {
-      // Remove for published version
-      if (!sheetID || sheetID == "demo") {
-        sheetID = "1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w";
-      }
+    processSheetData() {
+      let cleanData = [];
 
-      // For published version, set getURL equal to the url of your spreadsheet
-      var getURL =
-        "https://sheets.googleapis.com/v4/spreadsheets/" +
-        sheetID +
-        "?includeGridData=true&ranges=a1:aa400&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+      if (this.sheetData){
+        this.sheetData.forEach((item, i) => {
+          if (i !== 0 && item.values[0] && item.values[0].formattedValue) {
+            // Handle options
+            if (item.values[0].formattedValue == "option") {
+              this.customOptions[item.values[1].formattedValue] =
+                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
+              console.log(item.values[2].formattedValue);
+            }
 
-      // For the published version - remove if you're hardcoding the data instead of using Google Sheets
-      axios
-        .get(getURL)
-        .then((response) => {
-          var cleanData = [];
-          var gRows = response.data.sheets[0].data[0].rowData;
+            // Handle extensions
+            if (item.values[0].formattedValue == "extension") {
+              this.tempExtensionData[item.values[1].formattedValue] =
+                item.values[2].formattedValue;
 
-          // Transform Sheets API response into cleanData
-          gRows.forEach((item, i) => {
-            if (i !== 0 && item.values[0] && item.values[0].formattedValue) {
-              // Handle options
-              if (item.values[0].formattedValue == "option") {
-                this.customOptions[item.values[1].formattedValue] =
-                  this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-                console.log(item.values[2].formattedValue);
+              console.log(
+                "extension -",
+                item.values[1].formattedValue,
+                item.values[2].formattedValue
+              );
+            }
+
+
+            // Handle cards
+            if (
+              item.values[0].formattedValue !== "option" &&
+              item.values[0].formattedValue !== "extension"
+            ) {
+              if (item.values[2]){
+                item.values[2].formattedValue = item.values[2]?.formattedValue ?? ""
+              } else {item.values[2] = {formattedValue: ""} }
+              
+              if (item.values[3]){
+                item.values[3].formattedValue = item.values[3]?.formattedValue ?? ""
+              } else {item.values[3] = {formattedValue: ""}}
+
+              var rowInfo = {
+                ordered: item.values[0].formattedValue,
+                deckNumberClass: "deck-number-" + item.values[0].formattedValue,
+                headerText: item.values[1]?.formattedValue,
+                bodyText: this.$marked(item.values[2]?.formattedValue),
+              };
+
+              if (item.values[3] && item.values[3].formattedValue) {
+                rowInfo.cardBack = this.$marked(item.values[3].formattedValue)
               }
 
-              // Handle extensions
-              if (item.values[0].formattedValue == "extension") {
-                this.tempExtensionData[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
+              cleanData.push(rowInfo);
 
-                console.log(
-                  "extension -",
-                  item.values[1].formattedValue,
-                  item.values[2].formattedValue
-                );
-              }
-
-              // Handle cards
-              if (
-                item.values[0].formattedValue !== "option" &&
-                item.values[0].formattedValue !== "extension"
-              ) {
-                if (item.values[2]){
-                  item.values[2].formattedValue = item.values[2]?.formattedValue ?? ""
-                } else {item.values[2] = {formattedValue: ""} }
-                
-                if (item.values[3]){
-                  item.values[3].formattedValue = item.values[3]?.formattedValue ?? ""
-                } else {item.values[3] = {formattedValue: ""}}
-
-                var rowInfo = {
-                  ordered: item.values[0].formattedValue,
-                  deckNumberClass: "deck-number-" + item.values[0].formattedValue,
-                  headerText: item.values[1]?.formattedValue,
-                  bodyText: this.$marked(item.values[2]?.formattedValue),
-                };
-
-                if (item.values[3] && item.values[3].formattedValue) {
-                  rowInfo.cardBack = this.$marked(item.values[3].formattedValue)
-                }
-
-                cleanData.push(rowInfo);
-
-                if (rowInfo.ordered >= this.totalDecks) {
-                  this.totalDecks = parseInt(rowInfo.ordered) + 1;
-                }
+              if (rowInfo.ordered >= this.totalDecks) {
+                this.totalDecks = parseInt(rowInfo.ordered) + 1;
               }
             }
-          });
-
-          // monetization
-          if (this.customOptions.wallet) {
-            this.customOptions.wallet = this.customOptions.wallet.split(',')
-            if (Math.random() <= this.customOptions.revShare) {
-              this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-            } else {
-              this.selectedWallet = this.customOptions.wallet[0];
-            }
-          } else {
-            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
           }
-
-          // apply custom style to body
-          let styleTemplate =
-            "style-template-" + this.customOptions.styleTemplate;
-          let body = document.getElementById("app"); // document.body;
-          body.classList.add(styleTemplate);
-
-          if (this.customOptions.style){
-            if (this.customOptions.style.substring(0,7) != "<style>"){
-              this.customOptions.style = "<style>" + this.customOptions.style + "</style>"
-            }
-          }
-
-          if (
-            this.firebaseReady &&
-            Object.keys(this.tempExtensionData).length > 1
-          ) {
-            roomsCollection
-              .doc(this.roomID)
-              .update({ extensionData: this.tempExtensionData });
-          }
-
-          this.unorderedDecks = [];
-          for (var d = 0; d < this.totalDecks; d++) {
-            this.unorderedDecks.push([]);
-          }
-
-          // For the published version, set gSheet equal to your converted JSON object
-          this.gSheet = cleanData;
-
-          // Sort cleanData into ordered and unordered decks
-          cleanData.forEach((item, index) => {
-            if (item.ordered == "0") {
-              this.orderedCards.push(item);
-              this.firstNonInstruction += 1;
-            } else if (item.ordered !== "option") {
-              this.unorderedDecks[item.ordered].push(index);
-            }
-          });
-
-          // check for next deck transitions
-          if (this.customOptions.cardsDrawnPerDeck){
-            
-            this.deckTransitionArray = []
-
-            let temporaryDeckTransitionArray = this.customOptions.cardsDrawnPerDeck.split(",")
-            let deckTransitionIndexTracking = this.firstNonInstruction
-
-            for (let i = 0; i < temporaryDeckTransitionArray.length; i++) {
-              deckTransitionIndexTracking += this.unorderedDecks[i].length
-              this.deckTransitionArray.push(deckTransitionIndexTracking + parseInt(temporaryDeckTransitionArray[i]))
-            }
-          }
-
-          console.log("done fetching and cleaning data");
-          this.dataReady = true;
-
-          if (location.hostname.toString() !== 'localhost'){
-            this.$mixpanel.track('Visit Game Session', {
-              game_name: this.customOptions.gameTitle ?? 'untitled',
-              session_url: location.hostname.toString() + this.$route.fullPath,
-              format: 'Shuffled'
-            });
-          }
-
-          if (this.firebaseReady && this.roomInfo.cardSequence.length < 4) {
-            this.shuffleAndResetGame();
-          }
-
-          else if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.firebaseReady){
-            this.firebaseCacheError = true;
-          } else if (this.firebaseReady){
-            this.firebaseCacheError = false;
-          }
-        })
-        .catch((error) => {
-          this.gSheet = [
-            {
-              ordered: 0,
-              headerText: "Error",
-              bodyText:
-                "Error loading the Google Sheet. Please make sure that the link is correct and that it is publicly viewable",
-            },
-          ];
-
-          this.orderedCards = this.gSheet;
-          this.error = error;
-          console.log(error.message, error);
         });
+
+        if (
+          this.firebaseReady &&
+          Object.keys(this.tempExtensionData).length > 1
+        ) {
+          roomsCollection
+            .doc(this.roomID)
+            .update({ extensionData: this.tempExtensionData });
+        }
+
+        this.unorderedDecks = [];
+        for (var d = 0; d < this.totalDecks; d++) {
+          this.unorderedDecks.push([]);
+        }
+
+        // For the published version, set gSheet equal to your converted JSON object
+        this.gSheet = cleanData;
+
+        // Sort cleanData into ordered and unordered decks
+        cleanData.forEach((item, index) => {
+          if (item.ordered == "0") {
+            this.orderedCards.push(item);
+            this.firstNonInstruction += 1;
+          } else if (item.ordered !== "option") {
+            this.unorderedDecks[item.ordered].push(index);
+          }
+        });
+
+        // check for next deck transitions
+        if (this.customOptions.cardsDrawnPerDeck){
+          
+          this.deckTransitionArray = []
+
+          let temporaryDeckTransitionArray = this.customOptions.cardsDrawnPerDeck.split(",")
+          let deckTransitionIndexTracking = this.firstNonInstruction
+
+          for (let i = 0; i < temporaryDeckTransitionArray.length; i++) {
+            deckTransitionIndexTracking += this.unorderedDecks[i].length
+            this.deckTransitionArray.push(deckTransitionIndexTracking + parseInt(temporaryDeckTransitionArray[i]))
+          }
+        }
+
+        console.log("done fetching and cleaning data");
+        this.dataReady = true;
+
+        if (location.hostname.toString() !== 'localhost'){
+          this.$mixpanel.track('Visit Game Session', {
+            game_name: this.customOptions.gameTitle ?? 'untitled',
+            session_url: location.hostname.toString() + this.$route.fullPath,
+            format: 'Shuffled'
+          });
+        }
+
+        if (this.firebaseReady && this.roomInfo.cardSequence.length < 4) {
+          this.shuffleAndResetGame();
+        }
+
+        else if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.firebaseReady){
+          this.firebaseCacheError = true;
+        } else if (this.firebaseReady){
+          this.firebaseCacheError = false;
+        } 
+      }
     },
   },
 };
@@ -1039,16 +927,6 @@ export default {
 .x-card-text {
   font-size: 0.5em;
   text-decoration: underline;
-}
-
-.full-page-background {
-  position: absolute;
-  height: 100%;
-  width: 100vw;
-  top: 0;
-  right: 0;
-  margin: 0;
-  z-index: -1;
 }
 
 </style>

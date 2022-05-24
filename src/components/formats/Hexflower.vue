@@ -4,27 +4,6 @@
     v-if="roomInfo"
     v-bind:class="{'px-0': hexflowerAsExtension, styleTemplate: styleTemplate}"
   >
-    <div class="full-page-background"></div>
-    <div v-dompurify-html="customOptions.style"></div>
-    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
-    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
-    </div>
-    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
-      <template #overlay>
-        <div class="text-center">
-          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
-          <div class="mt-4">
-            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
-            <b-spinner
-                class="m-5"
-                style="width: 4rem; height: 4rem;"
-                label="Busy"
-              ></b-spinner>
-          </div>
-        </div>
-      </template>  
-    </b-overlay> 
 
     <app-menuBar
       :roomInfo="roomInfo"
@@ -81,19 +60,6 @@
     </div>
 
     <div class="mb-4">
-      <div
-        class="d-flex shadow img-fluid"
-        v-if="(!dataReady || !firebaseReady) && !error"
-      >
-        <div class="card-body text-center">
-          <h1 class="m-5">Loading</h1>
-          <b-spinner
-            class="m-5"
-            style="width: 4rem; height: 4rem"
-            label="Busy"
-          ></b-spinner>
-        </div>
-      </div>
 
       <div class="mt-4 hexflower-main card shadow mb-4" v-if="firebaseReady && dataReady && !error">
         <div class="game-title-on-card mt-4" v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard">
@@ -213,7 +179,6 @@
 
 <script>
 import { roomsCollection } from "../../firebase";
-import axios from "axios";
 import GraphemeSplitter from 'grapheme-splitter';
 
 export default {
@@ -225,6 +190,7 @@ export default {
   props: {
     roomID: String,
     gSheetID: String,
+    sheetData: Array,
     hexflowerAsExtension: Boolean,
     gSheetForExtension: String,
   },
@@ -339,11 +305,14 @@ export default {
       this.monetizationStarted()
     })
 
-    this.fetchAndCleanSheetData(this.gSheetID);
+    if (this.sheetData){
+      this.processSheetData();
+    }
 
     this.$bind("roomInfo", roomsCollection.doc(this.roomID))
       .then(() => {
         this.firebaseReady = true;
+        this.$emit('firebase-ready', true);
       })
       .then(() => {
         if (!this.roomInfo) {
@@ -385,7 +354,10 @@ export default {
           }
         , 1000)
       }
-    }
+    },
+    sheetData: function(){
+      this.processSheetData();
+    },
   },
   computed: {
     updatedHexMapRows: function() {
@@ -637,169 +609,120 @@ export default {
         timeLastUpdated: Date.now(),
       });
     },
-    fetchAndCleanSheetData(sheetID) {
-      // Remove for published version
-      if (!sheetID || sheetID == "demo") {
-        sheetID = "1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU";
-      }
+    processSheetData() {
+      let cleanData = [];
 
-      // For published version, set getURL equal to the url of your spreadsheet
-      var getURL =
-        "https://sheets.googleapis.com/v4/spreadsheets/" +
-        sheetID +
-        "?includeGridData=true&ranges=a1:aa400&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+      if (this.sheetData){
+        this.sheetData.forEach((item, i) => {
+          if (i !== 0 && item.values[0].formattedValue) {
+            // Handle options
+            if (item.values[0].formattedValue == "option") {
+              this.customOptions[item.values[1].formattedValue] =
+                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
+              console.log(item.values[2].formattedValue);
+            }
 
-      // For the published version - remove if you're hardcoding the data instead of using Google Sheets
-      axios
-        .get(getURL)
-        .then((response) => {
-          var cleanData = [];
-          var gRows = response.data.sheets[0].data[0].rowData;
+            // Handle extensions
+            if (item.values[0].formattedValue == "extension") {
+              this.tempExtensionData[item.values[1].formattedValue] =
+                item.values[2].formattedValue;
 
-          // Transform Sheets API response into cleanData
-          gRows.forEach((item, i) => {
-            //console.log(i)
-            if (i !== 0 && item.values[0].formattedValue) {
-              // Handle options
-              if (item.values[0].formattedValue == "option") {
-                this.customOptions[item.values[1].formattedValue] =
-                  this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-                console.log(item.values[2].formattedValue);
-              }
+              console.log(
+                "extension -",
+                item.values[1].formattedValue,
+                item.values[2].formattedValue
+              );
+            }
 
-              // Handle extensions
-              if (item.values[0].formattedValue == "extension") {
-                this.tempExtensionData[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
+            if (
+              item.values[0].formattedValue !== "option" &&
+              item.values[0].formattedValue !== "extension"
+            ) {
+              let hexInfo = {};
+              if (item.values[0].formattedValue >= 0) {
+                // initial hex info
+                hexInfo = {
+                  hexID: parseInt(item.values[0].formattedValue),
+                  summary: item.values[3].formattedValue,
+                  fullContent: this.$marked(item.values[4]?.formattedValue),
+                  probability: item.values[5]?.formattedValue,
+                  background: item.values[6]?.formattedValue,
+                };
 
-                console.log(
-                  "extension -",
-                  item.values[1].formattedValue,
-                  item.values[2].formattedValue
-                );
-              }
-
-              if (
-                item.values[0].formattedValue !== "option" &&
-                item.values[0].formattedValue !== "extension"
-              ) {
-                let hexInfo = {};
-                if (item.values[0].formattedValue >= 0) {
-                  // initial hex info
-                  hexInfo = {
-                    hexID: parseInt(item.values[0].formattedValue),
-                    summary: item.values[3].formattedValue,
-                    fullContent: this.$marked(item.values[4]?.formattedValue),
-                    probability: item.values[5]?.formattedValue,
-                    background: item.values[6]?.formattedValue,
-                  };
-
-                  // check for background
-                  if (hexInfo.background?.substring(0, 4) !== "http"){
-                    hexInfo.backgroundColor = hexInfo.background;
-                  } else {
-                    hexInfo.backgroundImage = 'url("'+ hexInfo.background + '")';
-                  }
-
-                  // organize into rows
-                  let hexRowLookup = {0:0,1:1,2:1,3:2,4:2,5:2,6:3,7:3,8:4,9:4,10:4,11:5,12:5,13:6,14:6,15:6,16:7,17:7,18:8}
-                  if (this.hexMapRows[hexRowLookup[hexInfo.hexID]]){
-                    this.hexMapRows[hexRowLookup[hexInfo.hexID]].push(hexInfo);
-                  }
-
-                  cleanData.push(hexInfo);
+                // check for background
+                if (hexInfo.background?.substring(0, 4) !== "http"){
+                  hexInfo.backgroundColor = hexInfo.background;
+                } else {
+                  hexInfo.backgroundImage = 'url("'+ hexInfo.background + '")';
                 }
+
+                // organize into rows
+                let hexRowLookup = {0:0,1:1,2:1,3:2,4:2,5:2,6:3,7:3,8:4,9:4,10:4,11:5,12:5,13:6,14:6,15:6,16:7,17:7,18:8}
+                if (this.hexMapRows[hexRowLookup[hexInfo.hexID]]){
+                  this.hexMapRows[hexRowLookup[hexInfo.hexID]].push(hexInfo);
+                }
+
+                cleanData.push(hexInfo);
               }
             }
-          });
-
-          if (this.customOptions.initiallyVisible){
-            this.customOptions.initiallyVisible = this.customOptions.initiallyVisible.split(',')
-            for (let v = 0; v < this.customOptions.initiallyVisible.length; v++){
-              this.customOptions.initiallyVisible[v] = parseInt(this.customOptions.initiallyVisible[v])
-            }
           }
-
-          if (this.customOptions.hexWarp == "TRUE"){
-            this.hexNeighborMap = [
-              [18, 3, 2, 4, 1, 5],
-              [16, 0, 4, 6, 3, 10], [17, 8, 5, 7, 4, 0],
-              [13,1,6,8,0,15],[0,2,7,9,6,1],[15,13,0,10,7,2],
-              [1,4,9,11,8,3],[2,5,10,12,9,4],
-              [3,6,11,13,2,17],[4,7,12,14,11,6],[5,16,1,15,12,7],
-              [6,9,14,16,13,8],[7,10,15,17,14,9],
-              [8,11,16,3,5,18],[9,12,17,18,16,11],[10,18,3,5,17,12],
-              [11,14,18,1,10,13],[12,15,8,2,18,14],
-              [14,17,13,0,15,16],
-            ]
-          }
-
-          if (
-            this.firebaseReady &&
-            Object.keys(this.tempExtensionData).length > 1
-          ) {
-            roomsCollection
-              .doc(this.roomID)
-              .update({ extensionData: this.tempExtensionData });
-          }
-
-          if (this.customOptions.wallet) {
-            if (Math.random() <= this.customOptions.revShare) {
-              this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-            }
-          }
-          
-          // monetization
-          if (this.customOptions.wallet) {
-            this.customOptions.wallet = this.customOptions.wallet.split(',')
-            if (Math.random() <= this.customOptions.revShare) {
-              this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-            } else {
-              this.selectedWallet = this.customOptions.wallet[0];
-            }
-          } else {
-            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-          }
-
-          // apply custom style to body
-          let styleTemplate =
-            "style-template-" + this.customOptions.styleTemplate;
-          let body = document.getElementById("app"); // document.body;
-          body.classList.add(styleTemplate);
-          this.styleTemplate = styleTemplate
-
-          // For the published version, set gSheet equal to your converted JSON object
-          this.gSheet = cleanData;
-
-          console.log("done fetching and cleaning data");
-          this.dataReady = true;
-
-          if (location.hostname.toString() !== "localhost") {
-            this.$mixpanel.track("Visit Game Session", {
-              game_name: this.customOptions.gameTitle ?? "untitled",
-              session_url: location.hostname.toString() + this.$route.fullPath,
-              format: "Hexflower",
-            });
-          }
-
-          if (this.firebaseReady && this.roomInfo.hexesVisible.length == 0) {
-            console.log('about to regen', this.roomInfo)
-            this.regenerateHexes();
-          }
-        })
-        .catch((error) => {
-          this.gSheet = [
-            {
-              ordered: 0,
-              headerText: "Error",
-              bodyText:
-                "Error loading the Google Sheet. Please make sure that the link is correct and that it is publicly viewable",
-            },
-          ];
-
-          this.error = error;
-          console.log(error.message, error);
         });
+
+        if (this.customOptions.initiallyVisible){
+          this.customOptions.initiallyVisible = this.customOptions.initiallyVisible.split(',')
+          for (let v = 0; v < this.customOptions.initiallyVisible.length; v++){
+            this.customOptions.initiallyVisible[v] = parseInt(this.customOptions.initiallyVisible[v])
+          }
+        }
+
+        if (this.customOptions.hexWarp == "TRUE"){
+          this.hexNeighborMap = [
+            [18, 3, 2, 4, 1, 5],
+            [16, 0, 4, 6, 3, 10], [17, 8, 5, 7, 4, 0],
+            [13,1,6,8,0,15],[0,2,7,9,6,1],[15,13,0,10,7,2],
+            [1,4,9,11,8,3],[2,5,10,12,9,4],
+            [3,6,11,13,2,17],[4,7,12,14,11,6],[5,16,1,15,12,7],
+            [6,9,14,16,13,8],[7,10,15,17,14,9],
+            [8,11,16,3,5,18],[9,12,17,18,16,11],[10,18,3,5,17,12],
+            [11,14,18,1,10,13],[12,15,8,2,18,14],
+            [14,17,13,0,15,16],
+          ]
+        }
+
+        if (
+          this.firebaseReady &&
+          Object.keys(this.tempExtensionData).length > 1
+        ) {
+          roomsCollection
+            .doc(this.roomID)
+            .update({ extensionData: this.tempExtensionData });
+        }
+
+        if (this.customOptions.wallet) {
+          if (Math.random() <= this.customOptions.revShare) {
+            this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+          }
+        }
+
+        // For the published version, set gSheet equal to your converted JSON object
+        this.gSheet = cleanData;
+
+        console.log("done fetching and cleaning data");
+        this.dataReady = true;
+
+        if (location.hostname.toString() !== "localhost") {
+          this.$mixpanel.track("Visit Game Session", {
+            game_name: this.customOptions.gameTitle ?? "untitled",
+            session_url: location.hostname.toString() + this.$route.fullPath,
+            format: "Hexflower",
+          });
+        }
+
+        if (this.firebaseReady && this.roomInfo.hexesVisible.length == 0) {
+          console.log('about to regen', this.roomInfo)
+          this.regenerateHexes();
+        }
+      }
     },
   },
 };
@@ -1085,13 +1008,4 @@ $hex-padding: 4px;
   text-decoration: underline;
 }
 
-.full-page-background {
-  position: absolute;
-  height: 100%;
-  width: 100vw;
-  top: 0;
-  right: 0;
-  margin: 0;
-  z-index: -1;
-}
 </style>

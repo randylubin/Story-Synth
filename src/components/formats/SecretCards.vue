@@ -1,26 +1,5 @@
 <template>
   <div class="secretCards game-room" v-if="roomInfo">
-    <div class="full-page-background"></div>
-    <div v-dompurify-html="customOptions.style"></div>
-    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
-    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
-    </div>
-    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
-      <template #overlay>
-        <div class="text-center">
-          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
-          <div class="mt-4">
-            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
-            <b-spinner
-                class="m-5"
-                style="width: 4rem; height: 4rem;"
-                label="Busy"
-              ></b-spinner>
-          </div>
-        </div>
-      </template>  
-    </b-overlay> 
 
     <app-menuBar
       :roomInfo="roomInfo"
@@ -62,12 +41,6 @@
     <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
 
     <div>
-      <div class="card shadow" v-if="(!dataReady || !firebaseReady) && !error">
-        <div class="card-body text-center">
-          <h1 class="m-5">Loading</h1>
-          <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
-        </div>
-      </div>
 
       <div
         v-if="
@@ -186,7 +159,7 @@
 
 <script>
 import { roomsCollection } from '../../firebase';
-import axios from 'axios'
+
 
 export default {
   name: 'app-secretCards',
@@ -196,7 +169,8 @@ export default {
   },
   props: {
     roomID: String,
-    gSheetID: String
+    gSheetID: String,
+    sheetData: Array,
   },
   data: function(){
     return {
@@ -285,6 +259,11 @@ export default {
       ],
     };
   },
+  watch: {
+    sheetData: function(){
+      this.processSheetData();
+    },
+  },
   mounted(){
     if (document.monetization?.state == "started") {
       this.monetizationStarted()
@@ -293,11 +272,14 @@ export default {
       this.monetizationStarted()
     })
 
-    this.fetchAndCleanSheetData(this.gSheetID);
+    if (this.sheetData){
+      this.processSheetData();
+    }
 
     this.$bind('roomInfo', roomsCollection.doc(this.roomID))
       .then(() => {
         this.firebaseReady = true
+        this.$emit('firebase-ready', true);
       })
       .then(() => {
         if (!this.roomInfo){
@@ -413,20 +395,11 @@ export default {
         timeLastUpdated: Date.now(),
       });
     },
-    fetchAndCleanSheetData(sheetID){
-      if (!sheetID || sheetID == 'demo') {
-        sheetID = '1JwMF02DSxNKtjHp6u-wyznSs-iEG_3DpOobgc17I16o'
-      }
+    processSheetData() {
+      let cleanData = [];
 
-      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa400&key=' + process.env.VUE_APP_FIREBASE_API_KEY
-
-      axios.get(getURL)
-      .then(response => {
-
-        var cleanData = []
-        var gRows = response.data.sheets[0].data[0].rowData
-
-        var headers = gRows[0].values
+      if (this.sheetData){
+        var headers = this.sheetData[0].values
 
         var playerArray = []
 
@@ -436,8 +409,7 @@ export default {
           }
         });
 
-
-        gRows.forEach((item) => {
+        this.sheetData.forEach((item) => {
           console.log(item.values[0].formattedValue)
 
           // Handle options
@@ -466,8 +438,8 @@ export default {
               publicText: this.$marked(item.values[1].formattedValue)
             }
 
-            for (var i = 0; i < playerArray.length; i++) {
-              rowInfo[playerArray[i]] = this.$marked(item.values[i+2].formattedValue)
+            for (var p = 0; p < playerArray.length; p++) {
+              rowInfo[playerArray[p]] = this.$marked(item.values[p+2].formattedValue)
             }
 
             /*
@@ -489,24 +461,6 @@ export default {
             .update({ extensionData: this.tempExtensionData });
         }
 
-        // monetization
-        if (this.customOptions.wallet) {
-          this.customOptions.wallet = this.customOptions.wallet.split(',')
-          if (Math.random() <= this.customOptions.revShare) {
-            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-          } else {
-            this.selectedWallet = this.customOptions.wallet[0];
-          }
-        } else {
-          this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-        }
-
-        // apply custom style to body
-        let styleTemplate =
-          "style-template-" + this.customOptions.styleTemplate;
-        let body = document.getElementById("app"); // document.body;
-        body.classList.add(styleTemplate);
-
         this.gSheet = cleanData.slice().reverse();
         this.playerArray = playerArray
         this.dataReady = true;
@@ -518,14 +472,8 @@ export default {
             format: 'Secret Cards'
           });
         }
-
-      }).catch(error => {
-        this.gSheet = [{text:'Error loading Google Sheet'}]
-        console.log(error)
-        this.error = error
-      })
+      }
     }
-
   }
 }
 </script>
@@ -577,16 +525,6 @@ export default {
   .btn-warning:hover {
     background-color: #c39736;
     border-color: #422d00;
-  }
-
-  .full-page-background {
-    position: absolute;
-    height: 100%;
-    width: 100vw;
-    top: 0;
-    right: 0;
-    margin: 0;
-    z-index: -1;
   }
 
 </style>

@@ -341,6 +341,7 @@ export default {
     };
   },
   mounted() {
+    this.$emit('firebase-ready', false);
     this.fetchAndCleanSheetData(this.routeGSheetID);
 
     if (!this.roomID) {

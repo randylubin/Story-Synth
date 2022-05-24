@@ -1,26 +1,5 @@
 <template>
   <div class="game-room sandbox">
-    <div class="full-page-background"></div>
-    <div v-dompurify-html="customOptions.style"></div>
-    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
-    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
-    </div>
-    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
-      <template #overlay>
-        <div class="text-center">
-          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
-          <div class="mt-4">
-            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
-            <b-spinner
-                class="m-5"
-                style="width: 4rem; height: 4rem;"
-                label="Busy"
-              ></b-spinner>
-          </div>
-        </div>
-      </template>  
-    </b-overlay> 
 
     <app-menuBar
       :roomInfo="roomInfo"
@@ -49,7 +28,6 @@
 
 <script>
 import ExtensionManager from '../extensions/ExtensionManager.vue'
-import axios from 'axios'
 import { roomsCollection } from '../../firebase';
 
 export default {
@@ -61,6 +39,7 @@ export default {
   props: {
     gSheetID: String,
     roomID: String,
+    sheetData: Array,
   },
   data: function() {
     return {
@@ -135,6 +114,11 @@ export default {
       ],
     };
   },
+  watch: {
+    sheetData: function(){
+      this.processSheetData();
+    },
+  },
   mounted(){
     if (document.monetization?.state == "started") {
       this.monetizationStarted()
@@ -143,11 +127,14 @@ export default {
       this.monetizationStarted()
     })
 
-    this.fetchAndCleanSheetData(this.gSheetID);
+    if (this.sheetData){
+      this.processSheetData();
+    }
 
     this.$bind('roomInfo', roomsCollection.doc(this.roomID))
       .then(() => {
         this.firebaseReady = true
+        this.$emit('firebase-ready', true);
       })
       .then(() => {
         if (!this.roomInfo){
@@ -175,24 +162,10 @@ export default {
         timeLastUpdated: Date.now(),
       })
     },
-    fetchAndCleanSheetData(sheetID){
-
-      // Remove for published version
-      if (!sheetID || sheetID == 'demo') {
-        sheetID = '1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w'
-      }
-
-      // For published version, set getURL equal to the url of your spreadsheet
-      var getURL = 'https://sheets.googleapis.com/v4/spreadsheets/' + sheetID + '?includeGridData=true&ranges=a1:aa400&key=' + process.env.VUE_APP_FIREBASE_API_KEY
-
-
-      // For the published version - remove if you're hardcoding the data instead of using Google Sheets
-      axios.get(getURL)
-      .then(response => {
-        var gRows = response.data.sheets[0].data[0].rowData
-
-        // Transform Sheets API response into cleanData
-        gRows.forEach((item, i) => {
+    processSheetData() {
+      if (this.sheetData){
+        this.sheetData.forEach((item, i) => {
+      
           if (i !== 0 && item.values[0].formattedValue){
 
             // Handle options
@@ -223,24 +196,6 @@ export default {
           }
         }
 
-        // monetization
-        if (this.customOptions.wallet) {
-          this.customOptions.wallet = this.customOptions.wallet.split(',')
-          if (Math.random() <= this.customOptions.revShare) {
-            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-          } else {
-            this.selectedWallet = this.customOptions.wallet[0];
-          }
-        } else {
-          this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-        }
-
-        // apply custom style to body
-        let styleTemplate =
-          "style-template-" + this.customOptions.styleTemplate;
-        let body = document.getElementById("app"); // document.body;
-        body.classList.add(styleTemplate);
-
         this.dataReady = true;
         
         if (location.hostname.toString() !== 'localhost'){
@@ -251,9 +206,7 @@ export default {
           });
         }
 
-      }).catch(error => {
-        console.log(error.message, error)
-      })      
+      }     
     }
   }
 };
@@ -264,15 +217,6 @@ export default {
     margin:auto;
     padding-top: 1em;
     padding-bottom: 1em; 
-  }
-  .full-page-background {
-    position: absolute;
-    height: 100%;
-    width: 100vw;
-    top: 0;
-    right: 0;
-    margin: 0;
-    z-index: -1; 
   }
 
 </style>

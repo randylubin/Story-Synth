@@ -4,28 +4,6 @@
     v-if="roomInfo"
     v-bind:class="{'px-0': generatorAsExtension, styleTemplate: styleTemplate}"
   >
-    <div class="full-page-background"></div>
-    <div v-dompurify-html="customOptions.style"></div>
-    <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
-    <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
-    </div>
-    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
-      <template #overlay>
-        <div class="text-center">
-          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
-          <div class="mt-4">
-            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
-            <b-spinner
-                class="m-5"
-                style="width: 4rem; height: 4rem;"
-                label="Busy"
-              ></b-spinner>
-          </div>
-        </div>
-      </template>  
-    </b-overlay> 
-
     <app-menuBar
       :roomInfo="roomInfo"
       :tempExtensionData="tempExtensionData"
@@ -81,19 +59,6 @@
     </div>
 
     <div class="mb-4">
-      <div
-        class="d-flex shadow img-fluid"
-        v-if="(!dataReady || !firebaseReady) && !error"
-      >
-        <div class="card-body text-center">
-          <h1 class="m-5">Loading</h1>
-          <b-spinner
-            class="m-5"
-            style="width: 4rem; height: 4rem"
-            label="Busy"
-          ></b-spinner>
-        </div>
-      </div>
 
       <div class="mt-4 generator-main card shadow mb-4">
         <div class="game-title-on-card mt-4" v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard">
@@ -278,7 +243,6 @@
 
 <script>
 import { roomsCollection } from "../../firebase";
-import axios from "axios";
 
 export default {
   name: "app-generator",
@@ -289,6 +253,7 @@ export default {
   props: {
     roomID: String,
     gSheetID: String,
+    sheetData: Array,
     generatorAsExtension: Boolean,
   },
   data: function () {
@@ -372,6 +337,11 @@ export default {
       ],
     };
   },
+  watch: {
+    sheetData: function(){
+      this.processSheetData();
+    },
+  },
   mounted() {
     if (document.monetization?.state == "started") {
       this.monetizationStarted()
@@ -380,11 +350,14 @@ export default {
       this.monetizationStarted()
     })
 
-    this.fetchAndCleanSheetData(this.gSheetID);
+    if (this.sheetData){
+      this.processSheetData();
+    }
 
     this.$bind("roomInfo", roomsCollection.doc(this.roomID))
       .then(() => {
         this.firebaseReady = true;
+        this.$emit('firebase-ready', true);
       })
       .then(() => {
         if (!this.roomInfo) {
@@ -477,230 +450,177 @@ export default {
         timeLastUpdated: Date.now(),
       });
     },
-    fetchAndCleanSheetData(sheetID) {
-      // Remove for published version
-      if (!sheetID || sheetID == "demo") {
-        sheetID = "1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU";
-      }
+    processSheetData() {
+      let cleanData = [];
 
-      // For published version, set getURL equal to the url of your spreadsheet
-      var getURL =
-        "https://sheets.googleapis.com/v4/spreadsheets/" +
-        sheetID +
-        "?includeGridData=true&ranges=a1:aa400&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+      if (this.sheetData){
+        this.numberOfCategories = this.sheetData[0].values.length - 3;
+        
+        for (var w = 0; w < this.numberOfCategories; w++) {
+          this.categoryData.push([]);
+        }
 
-      // For the published version - remove if you're hardcoding the data instead of using Google Sheets
-      axios
-        .get(getURL)
-        .then((response) => {
-          var cleanData = [];
-          var gRows = response.data.sheets[0].data[0].rowData;
-
-          this.numberOfCategories = gRows[0].values.length - 3;
-
-          for (var w = 0; w < this.numberOfCategories; w++) {
-            this.categoryData.push([]);
+        this.sheetData.forEach((item, i) => {
+          // grab labels
+          if (i == 0) {
+            for (let j = 3; j < item.values.length; j++) {
+              this.categoryLabels.push(item.values[j].formattedValue);
+            }
+            console.log("labels:", this.categoryLabels);
           }
 
-          // Transform Sheets API response into cleanData
-          gRows.forEach((item, i) => {
-            // grab labels
-            if (i == 0) {
-              for (let j = 3; j < item.values.length; j++) {
-                this.categoryLabels.push(item.values[j].formattedValue);
-              }
-              console.log("labels:", this.categoryLabels);
+          if (i !== 0 && item.values[0].formattedValue) {
+            // Handle options
+            if (item.values[0].formattedValue == "option") {
+              this.customOptions[item.values[1].formattedValue] =
+                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
+              console.log(item.values[2].formattedValue);
             }
 
-            if (i !== 0 && item.values[0].formattedValue) {
-              // Handle options
-              if (item.values[0].formattedValue == "option") {
-                this.customOptions[item.values[1].formattedValue] =
-                  this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-                console.log(item.values[2].formattedValue);
+            if (item.values[1].formattedValue == "generatorRowLayout") {
+              let rowLayout =
+                this.customOptions.generatorRowLayout.split(",");
+
+              let bootstrapLayout = [];
+
+              for (let j = 0; j < rowLayout.length; j++) {
+                let rowClass = "generator-row-" + (j + 1);
+                switch (rowLayout[j]) {
+                  case "2":
+                    bootstrapLayout.push(
+                      "col-sm-6 generator-cell-one-half generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-6 generator-cell-one-half generator-cell generator-cell-row-end " +
+                        rowClass
+                    );
+                    break;
+                  case "3":
+                    bootstrapLayout.push(
+                      "col-sm-4 generator-cell-one-third generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-4 generator-cell-one-third generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-4 generator-cell-one-third generator-cell generator-cell-row-end " +
+                        rowClass
+                    );
+                    break;
+                  case "4":
+                    bootstrapLayout.push(
+                      "col-sm-3 generator-cell-one-quarter generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-3 generator-cell-one-quarter generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-3 generator-cell-one-quarter generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-3 generator-cell-one-quarter generator-cell generator-cell-row-end " +
+                        rowClass
+                    );
+                    break;
+                  default:
+                    bootstrapLayout.push(
+                      "col-sm-12 generator-cell-full generator-cell generator-cell-row-end " +
+                        rowClass
+                    );
+                }
               }
 
-              if (item.values[1].formattedValue == "generatorRowLayout") {
-                let rowLayout =
-                  this.customOptions.generatorRowLayout.split(",");
+              this.customOptions.generatorRowLayout = bootstrapLayout;
+            }
 
-                let bootstrapLayout = [];
+            // Handle extensions
+            if (item.values[0].formattedValue == "extension") {
+              this.tempExtensionData[item.values[1].formattedValue] =
+                item.values[2].formattedValue;
 
-                for (let j = 0; j < rowLayout.length; j++) {
-                  let rowClass = "generator-row-" + (j + 1);
-                  switch (rowLayout[j]) {
-                    case "2":
-                      bootstrapLayout.push(
-                        "col-sm-6 generator-cell-one-half generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-6 generator-cell-one-half generator-cell generator-cell-row-end " +
-                          rowClass
-                      );
-                      break;
-                    case "3":
-                      bootstrapLayout.push(
-                        "col-sm-4 generator-cell-one-third generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-4 generator-cell-one-third generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-4 generator-cell-one-third generator-cell generator-cell-row-end " +
-                          rowClass
-                      );
-                      break;
-                    case "4":
-                      bootstrapLayout.push(
-                        "col-sm-3 generator-cell-one-quarter generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-3 generator-cell-one-quarter generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-3 generator-cell-one-quarter generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-3 generator-cell-one-quarter generator-cell generator-cell-row-end " +
-                          rowClass
-                      );
-                      break;
-                    default:
-                      bootstrapLayout.push(
-                        "col-sm-12 generator-cell-full generator-cell generator-cell-row-end " +
-                          rowClass
-                      );
-                  }
+              console.log(
+                "extension -",
+                item.values[1].formattedValue,
+                item.values[2].formattedValue
+              );
+            }
+
+            if (
+              item.values[0].formattedValue !== "option" &&
+              item.values[0].formattedValue !== "extension"
+            ) {
+              var rowInfo = {};
+              if (item.values[0].formattedValue >= 0) {
+                rowInfo = {
+                  ordered: item.values[0].formattedValue,
+                  headerText: item.values[1].formattedValue,
+                  bodyText: this.$marked(item.values[2].formattedValue),
+                };
+                cleanData.push(rowInfo);
+
+                if (item.values[0].formattedValue == 0) {
+                  this.firstNonInstruction += 1;
                 }
 
-                this.customOptions.generatorRowLayout = bootstrapLayout;
-              }
-
-              // Handle extensions
-              if (item.values[0].formattedValue == "extension") {
-                this.tempExtensionData[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
-
-                console.log(
-                  "extension -",
-                  item.values[1].formattedValue,
-                  item.values[2].formattedValue
-                );
-              }
-
-              if (
-                item.values[0].formattedValue !== "option" &&
-                item.values[0].formattedValue !== "extension"
-              ) {
-                var rowInfo = {};
-                if (item.values[0].formattedValue >= 0) {
-                  rowInfo = {
-                    ordered: item.values[0].formattedValue,
-                    headerText: item.values[1].formattedValue,
-                    bodyText: this.$marked(item.values[2].formattedValue),
-                  };
-                  cleanData.push(rowInfo);
-
-                  if (item.values[0].formattedValue == 0) {
-                    this.firstNonInstruction += 1;
-                  }
-
-                  if (item.values[0].formattedValue == 1) {
-                    for (var j = 3; j < item.values.length; j++) {
-                      if (item.values[j].formattedValue) {
-                        this.categoryData[j - 3].push(
-                          this.$marked(item.values[j].formattedValue)
-                        );
-                      }
+                if (item.values[0].formattedValue == 1) {
+                  for (var j = 3; j < item.values.length; j++) {
+                    if (item.values[j].formattedValue) {
+                      this.categoryData[j - 3].push(
+                        this.$marked(item.values[j].formattedValue)
+                      );
                     }
                   }
                 }
               }
             }
-          });
-
-          // check for empty cols
-          this.categoryData = this.categoryData.filter(col => col != undefined && col.length != 0)
-          this.categoryLabels = this.categoryLabels.filter(col => col != undefined && col.length != 0)
-          this.numberOfCategories = this.categoryData.length
-          this.generatorRowLayout = this.generatorLayout.filter(row => row > this.numberOfCategories)
-
-          if (
-            this.firebaseReady &&
-            Object.keys(this.tempExtensionData).length > 1
-          ) {
-            roomsCollection
-              .doc(this.roomID)
-              .update({ extensionData: this.tempExtensionData });
           }
-
-          if (this.customOptions.wallet) {
-            if (Math.random() <= this.customOptions.revShare) {
-              this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-            }
-          }
-          
-          // monetization
-          if (this.customOptions.wallet) {
-            this.customOptions.wallet = this.customOptions.wallet.split(',')
-            if (Math.random() <= this.customOptions.revShare) {
-              this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-            } else {
-              this.selectedWallet = this.customOptions.wallet[0];
-            }
-          } else {
-            this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-          }
-
-          // apply custom style to body
-          let styleTemplate =
-            "style-template-" + this.customOptions.styleTemplate;
-          let body = document.getElementById("app"); // document.body;
-          body.classList.add(styleTemplate);
-
-          if (this.customOptions.style){
-            if (this.customOptions.style.substring(0,7) != "<style>"){
-              this.customOptions.style = "<style>" + this.customOptions.style + "</style>"
-            }
-          }
-
-          // For the published version, set gSheet equal to your converted JSON object
-          this.gSheet = cleanData;
-
-          console.log("done fetching and cleaning data");
-          this.dataReady = true;
-
-          if (location.hostname.toString() !== "localhost") {
-            this.$mixpanel.track("Visit Game Session", {
-              game_name: this.customOptions.gameTitle ?? "untitled",
-              session_url: location.hostname.toString() + this.$route.fullPath,
-              format: "Generator",
-            });
-          }
-
-          if (this.firebaseReady && this.categoryData) {
-            this.shuffleAll();
-          }
-        })
-        .catch((error) => {
-          this.gSheet = [
-            {
-              ordered: 0,
-              headerText: "Error",
-              bodyText:
-                "Error loading the Google Sheet. Please make sure that the link is correct and that it is publicly viewable",
-            },
-          ];
-
-          this.error = error;
-          console.log(error.message, error);
         });
+
+        // check for empty cols
+        this.categoryData = this.categoryData.filter(col => col != undefined && col.length != 0)
+        this.categoryLabels = this.categoryLabels.filter(col => col != undefined && col.length != 0)
+        this.numberOfCategories = this.categoryData.length
+        this.generatorRowLayout = this.generatorLayout.filter(row => row > this.numberOfCategories)
+
+        if (
+          this.firebaseReady &&
+          Object.keys(this.tempExtensionData).length > 1
+        ) {
+          roomsCollection
+            .doc(this.roomID)
+            .update({ extensionData: this.tempExtensionData });
+        }
+
+        if (this.customOptions.wallet) {
+          if (Math.random() <= this.customOptions.revShare) {
+            this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+          }
+        }
+
+        // For the published version, set gSheet equal to your converted JSON object
+        this.gSheet = cleanData;
+
+        console.log("done fetching and cleaning data");
+        this.dataReady = true;
+
+        if (location.hostname.toString() !== "localhost") {
+          this.$mixpanel.track("Visit Game Session", {
+            game_name: this.customOptions.gameTitle ?? "untitled",
+            session_url: location.hostname.toString() + this.$route.fullPath,
+            format: "Generator",
+          });
+        }
+
+        if (this.firebaseReady && this.categoryData) {
+          this.shuffleAll();
+        }
+      }
     },
   },
 };
@@ -919,13 +839,4 @@ select {
   text-decoration: underline;
 }
 
-.full-page-background {
-  position: absolute;
-  height: 100%;
-  width: 100vw;
-  top: 0;
-  right: 0;
-  margin: 0;
-  z-index: -1;
-}
 </style>
