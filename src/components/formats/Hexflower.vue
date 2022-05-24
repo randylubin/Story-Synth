@@ -14,6 +14,7 @@
       :dataReady="dataReady"
       :firebaseReady="firebaseReady"
       @roomMonetized="updateRoomMonetization"
+      v-if="!hexflowerAsExtension"
     ></app-menuBar>
 
     <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
@@ -644,7 +645,7 @@ export default {
                 hexInfo = {
                   hexID: parseInt(item.values[0].formattedValue),
                   summary: item.values[3].formattedValue,
-                  fullContent: this.$marked(item.values[4]?.formattedValue),
+                  fullContent: item.values[4]?.formattedValue ? this.$marked(item.values[4]?.formattedValue) : null,
                   probability: item.values[5]?.formattedValue,
                   background: item.values[6]?.formattedValue,
                 };
@@ -736,6 +737,10 @@ $base-color: rgb(33, 33, 33);
 $hex-height: 92px; // flat top
 $hex-width: math.floor($hex-height * 1.1547);
 $hex-padding: 4px;
+
+.game-room {
+  margin:auto;
+}
 
 .hexflower {
   padding-top: 20px;

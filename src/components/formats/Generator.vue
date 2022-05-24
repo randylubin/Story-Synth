@@ -13,6 +13,7 @@
       :dataReady="dataReady"
       :firebaseReady="firebaseReady"
       @roomMonetized="updateRoomMonetization"
+      v-if="!generatorAsExtension"
     ></app-menuBar>
 
     <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
@@ -633,6 +634,7 @@ $base-color: rgb(33, 33, 33);
 
 .game-room {
   padding-top: 20px;
+  margin:auto;
 }
 .generator-main {
   font-weight: bold;  

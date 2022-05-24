@@ -6,11 +6,13 @@
             :hexflowerAsExtension="Boolean(extensionData.hexflowerAsExtension)"
             :gSheetForExtension="extensionData.hexflowerAsExtension"
             :gSheetID="extensionData.hexflowerAsExtension.substring(extensionData.hexflowerAsExtension.indexOf('/d/') + 3, extensionData.hexflowerAsExtension.indexOf('/edit'))"
+            :sheetData="hexflowerSheetData"
             :roomID="$route.params.roomID + '-hexflower-extensions'" v-if="Boolean(extensionData.hexflowerAsExtension) && ((!extensionList.hexflowerAsExtensionLocation && extensionLocation == 'lower') || (extensionList.hexflowerAsExtensionLocation == extensionLocation))"></app-hexflowerAsExtension>
           <app-generatorAsExtension class="extension"
             :generatorAsExtension="Boolean(extensionData.generatorAsExtension)"
             :gSheetForExtension="extensionData.generatorAsExtension"
             :gSheetID="extensionData.generatorAsExtension.substring(extensionData.generatorAsExtension.indexOf('/d/') + 3, extensionData.generatorAsExtension.indexOf('/edit'))"
+            :sheetData="generatorSheetData"
             :roomID="$route.params.roomID + '-generator-extensions'" v-if="Boolean(extensionData.generatorAsExtension) && ((!extensionList.generatorAsExtensionLocation && extensionLocation == 'lower') || (extensionList.generatorAsExtensionLocation == extensionLocation))"></app-generatorAsExtension>
           <app-staticBox class="extension" :staticBoxContent="extensionData.staticBoxContent" v-if="extensionData.staticBoxContent && ((!extensionList.staticBoxLocation && extensionLocation == 'lower') || (extensionList.staticBoxLocation == extensionLocation))"></app-staticBox>
           <app-playerTurnOrder class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :playerTurnOrderHeader="extensionData.playerTurnOrderHeader" :playerTurnOrderButtonLabel="extensionData.playerTurnOrderButtonLabel" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['playerTurnOrder'] && ((!extensionList.playerTurnOrderLocation && extensionLocation == 'lower') || (extensionList.playerTurnOrderLocation == extensionLocation))"></app-playerTurnOrder>
@@ -41,6 +43,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 import PlayerTurnOrder from './PlayerTurnOrder'
 import CurrentPlayerHeader from './CurrentPlayerHeader.vue'
 import PlusMinus from './PlusMinus.vue'
@@ -81,10 +85,34 @@ export default {
   },
   data: function() {
     return {
-      
+      generatorSheetData: null,
+      hexflowerSheetData: null,
     };
   },
+  watch: {
+    'extensionList.generatorAsExtension': function() {
+      if (this.extensionData.generatorAsExtension){
+        let sheetID = this.extensionData.generatorAsExtension.substring(this.extensionData.generatorAsExtension.indexOf('/d/') + 3, this.extensionData.generatorAsExtension.indexOf('/edit'))
+        this.fetchDataForEmbeddedFormat(sheetID, 'generatorSheetData')
+      }
+    },
+    'extensionList.hexflowerAsExtension': function() {
+      if (this.extensionData.hexflowerAsExtension){
+        let sheetID = this.extensionData.hexflowerAsExtension.substring(this.extensionData.hexflowerAsExtension.indexOf('/d/') + 3, this.extensionData.hexflowerAsExtension.indexOf('/edit'))
+        this.fetchDataForEmbeddedFormat(sheetID, 'hexflowerSheetData')
+      }
+    },
+  },
   mounted(){
+    if (this.extensionData.generatorAsExtension){
+      let sheetID = this.extensionData.generatorAsExtension.substring(this.extensionData.generatorAsExtension.indexOf('/d/') + 3, this.extensionData.generatorAsExtension.indexOf('/edit'))
+      this.fetchDataForEmbeddedFormat(sheetID, 'generatorSheetData')
+    }
+
+    if (this.extensionData.hexflowerAsExtension){
+      let sheetID = this.extensionData.hexflowerAsExtension.substring(this.extensionData.hexflowerAsExtension.indexOf('/d/') + 3, this.extensionData.hexflowerAsExtension.indexOf('/edit'))
+      this.fetchDataForEmbeddedFormat(sheetID, 'hexflowerSheetData')
+    }
 
   },
   methods: {
@@ -93,6 +121,30 @@ export default {
       this.$set(this.extensionData, newData[0], newData[1])
       this.$emit('sync-extension')
     },
+    fetchDataForEmbeddedFormat(sheetID, varName){
+      // Remove for published version
+      if (!sheetID || sheetID == "demo") {
+        sheetID = "1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w";
+      }
+
+      // For published version, set getURL equal to the url of your spreadsheet
+      let getURL =
+        "https://sheets.googleapis.com/v4/spreadsheets/" +
+        sheetID +
+        "?includeGridData=true&ranges=a1:aa400&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+
+      axios
+        .get(getURL)
+        .then((response) => {
+          console.log('DAAAAAAATA', response.data.sheets[0].data[0].rowData)
+          this[varName] = response.data.sheets[0].data[0].rowData
+        })
+        .catch((error) => {
+          console.log(error.message, error);
+          this[varName] = error
+        })
+        
+    }
   }
 };
 </script>

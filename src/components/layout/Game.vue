@@ -46,7 +46,10 @@
           ></app-extensionManager>
         </div> -->
 
-        <app-timed :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed'"></app-timed>
+        <!-- The Main Format Component -->
+        <component :is="formatInfo.componentName" :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" :userRole="$route.params.userRole"></component>
+
+        <!-- <app-timed :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed'"></app-timed>
         <app-shuffled ref="shuffled" :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" :userRole="$route.params.userRole" v-if="$route.params.gameType=='Shuffled'"></app-shuffled>
         <app-monster :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster'"></app-monster>
         <app-secretCards :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards'"></app-secretCards>
@@ -56,7 +59,7 @@
         <app-hexflower :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Hexflower'"></app-hexflower>
         <app-gridmap :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Gridmap'"></app-gridmap>
 
-        <app-sandbox :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox'"></app-sandbox>
+        <app-sandbox :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox'"></app-sandbox> -->
         
         <!-- TODO: Lower Extension -->
         <!-- <div
@@ -103,6 +106,18 @@ export default {
       firebaseReady: null,
       selectedWallet: null,
       roomMonetized: null,
+      componentList: {
+        'Timed': 'app-timed',
+        'Shuffled': 'app-shuffled',
+        'Monster': 'app-monster',
+        'SecretCards': 'app-secretCards',
+        'SlotMachine': 'app-slotMachine',
+        'Phases': 'app-phases',
+        'Generator': 'app-generator',
+        'Gridmap': 'app-gridmap',
+        'Hexflower': 'app-hexflower',
+        'Sandbox': 'app-sandbox',
+      },
     };
   },
   components: {
@@ -120,6 +135,15 @@ export default {
     'app-sandbox': () => import('../formats/Sandbox.vue'),
 
     'app-monetization': () => import('../layout/Monetization.vue'),
+  },
+  computed: {
+    formatInfo: function(){
+      let info = {
+        componentName: this.componentList[this.$route.params.gameType]
+      }
+
+      return info
+    }
   },
   mounted(){
     this.fetchAndCleanSheetData(this.$route.params.gSheetID);
