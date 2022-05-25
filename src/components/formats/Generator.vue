@@ -561,7 +561,7 @@ export default {
                 rowInfo = {
                   ordered: item.values[0].formattedValue,
                   headerText: item.values[1].formattedValue,
-                  bodyText: this.$marked(item.values[2].formattedValue),
+                  bodyText: this.$marked(item.values[2].formattedValue ?? null),
                 };
                 cleanData.push(rowInfo);
 
@@ -573,7 +573,7 @@ export default {
                   for (var j = 3; j < item.values.length; j++) {
                     if (item.values[j].formattedValue) {
                       this.categoryData[j - 3].push(
-                        this.$marked(item.values[j].formattedValue)
+                        this.$marked(item.values[j].formattedValue ?? null)
                       );
                     }
                   }

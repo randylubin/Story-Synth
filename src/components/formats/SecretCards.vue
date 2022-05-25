@@ -435,11 +435,11 @@ export default {
 
             var rowInfo = {
               order: item.values[0].formattedValue,
-              publicText: this.$marked(item.values[1].formattedValue)
+              publicText: this.$marked(item.values[1].formattedValue ?? null)
             }
 
             for (var p = 0; p < playerArray.length; p++) {
-              rowInfo[playerArray[p]] = this.$marked(item.values[p+2].formattedValue)
+              rowInfo[playerArray[p]] = this.$marked(item.values[p+2].formattedValue ?? null)
             }
 
             /*

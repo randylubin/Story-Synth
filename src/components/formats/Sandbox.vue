@@ -52,7 +52,7 @@ export default {
         revShare: 0.2,
       },
       roomInfo: {
-
+        extensionData: {}
       },
       tempExtensionData: {test:null},
       dataReady: false,
@@ -140,7 +140,10 @@ export default {
         if (!this.roomInfo){
           console.log("new room!")
 
-          roomsCollection.doc(this.roomID).set({extensionData: this.tempExtensionData,currentCardIndex:0, xCardIsActive: false, cardSequence:[0,1,2], currentPhase: 0})
+          roomsCollection.doc(this.roomID).set({
+            extensionData: this.tempExtensionData,
+            xCardIsActive: false,
+          })
         }
       })
       .catch((error) => {

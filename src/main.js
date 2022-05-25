@@ -15,8 +15,8 @@ import VueDOMPurifyHTML from 'vue-dompurify-html'
 Vue.use(VueDOMPurifyHTML, {
     default: {
       FORCE_BODY: true,
-      ALLOWED_ATTR: ['style', 'class', 'type', 'href', 'rel'],
-      ADD_TAGS: ['link'],
+      ALLOWED_ATTR: ['style', 'class', 'type', 'href', 'rel', 'width', 'height', 'transform', 'xmlns', ' xmlns:xlink', 'viewbox', 'version', 'xml:space', 'xmlns:serif'],
+      ADD_TAGS: ['link', 'svg', 'g'],
 
     }
 })

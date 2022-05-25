@@ -27,22 +27,6 @@
     
     <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
 
-    <!-- <div class="game-meta">
-      <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
-        <div class="row text-center" v-if="customOptions.gameTitle">
-          <div class="col-sm">
-            <h1>{{customOptions.gameTitle}}</h1>
-          </div>
-        </div>
-
-        <div class="row text-center" v-if="customOptions.byline">
-          <div class="col-sm">
-            <h4>{{customOptions.byline}}</h4>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <div
         v-if="
           dataReady &&
@@ -60,23 +44,6 @@
           class="extension-upper"
         ></app-extensionManager>
       </div>
-
-    <!-- <div class="btn-container" style>
-      <div class="row mb-4">
-        <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-outline-dark" v-dompurify-html="
-                  customOptions.safetyCardButton
-                    ? customOptions.safetyCardButton
-                    : 'Pause'
-                " v-on:click="xCard()" :disabled="roomInfo.currentCardIndex == 0"></button>
-          <button class="btn btn-outline-dark" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
-            <span v-if="roomInfo.currentCardIndex == 0">Start</span>
-            <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
-          </button>
-        </div>
-      </div>
-    </div> -->
 
     <transition name="fade">
       <div class="fab-buttons container" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
@@ -156,7 +123,7 @@
                     </div>
                     <div class="card-title" v-if="!row.subtitle">
                       <div v-if="index == 0">
-                        <h1 class="mt-4">{{row.archetype}}</h1>
+                        <h1 class="mt-4" v-dompurify-html="row.archetype"></h1>
                         <div v-dompurify-html="row.characterDetail"></div>
                       </div>
 

@@ -431,7 +431,7 @@ export default {
 
             var rowInfo = {
               time: item.values[0].formattedValue,
-              text: this.$marked(item.values[1].formattedValue)
+              text: this.$marked(item.values[1].formattedValue ?? null)
             }
 
             playerArray.forEach((player, i)=>{
@@ -474,6 +474,7 @@ export default {
 
   .game-room {
     padding-top: 20px;
+    margin: auto;
   }
   .time {
     font-size: 4em;

@@ -508,7 +508,7 @@ export default {
                 rowInfo = {
                   ordered: item.values[0].formattedValue,
                   headerText: item.values[1].formattedValue,
-                  bodyText: this.$marked(item.values[2].formattedValue)
+                  bodyText: this.$marked(item.values[2].formattedValue ?? null)
                 }
                 cleanData.push(rowInfo)
 
