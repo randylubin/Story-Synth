@@ -407,7 +407,7 @@ export default {
         probabilityDistribution[hexIndex] = probabilityWeights[hexIndex] / probabilitySum 
       }
 
-      // console.log(this.hexNeighborMap[this.roomInfo.currentLocation], probabilityDistribution)
+      // console.log(this.hexNeighborMap[this.roomInfo.currentLocation], probabilityWeights, probabilityDistribution)
 
       let i, sum=0, r=Math.random();
       for (i in probabilityDistribution) {
@@ -418,7 +418,7 @@ export default {
         }
       }
 
-      let targetHexID = this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex] ?? hexIndex
+      let targetHexID = this.hexNeighborMap[this.roomInfo.currentLocation][hexIndex] ?? this.roomInfo.currentLocation
 
       // RANDOMIZER ANIMATION
       // Compute which hexes to take into account for the animation
