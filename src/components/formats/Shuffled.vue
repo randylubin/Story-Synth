@@ -11,19 +11,17 @@
       :firebaseReady="firebaseReady"
       @roomMonetized="updateRoomMonetization"
     >
-      <div class="row menu-row">
+      <div class="row menu-row" v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
         <b-button
           v-b-modal.reshuffleConfirm
           v-on:click="closeMenu();"
           class="control-button-restart btn-lg btn-block"
           variant="outline-dark"
           :disabled="roomInfo.xCardIsActive"
-          v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
           color="rgb(187, 138, 200)"
-          >Restart</b-button
-        >
+          >Restart</b-button>
       </div>
-      <div class="row menu-row">
+      <div class="row menu-row" v-if="!roomInfo.xCardIsActive">
         <b-button
           variant="outline-dark"
           class="control-button-safety-card btn-lg btn-block"
