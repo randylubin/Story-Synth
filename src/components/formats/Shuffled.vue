@@ -607,11 +607,7 @@ export default {
         cardSequence = this.roomInfo.cardSequence
       }
 
-      var tempLastCardIndex = cardSequence.splice(
-        this.roomInfo.locationOfLastCard,
-        1
-      );
-      var tempNewLastCardLocation = 0;
+      var tempNewLastCardLocation = cardSequence.length - 1;
 
       switch (location) {
         case "center":
@@ -628,22 +624,37 @@ export default {
           break;
         default:
           if(Number.isInteger(location)) {
-            console.log('last card', location)
             tempNewLastCardLocation = location
           }
 
       }
+      console.log('last card', location)
 
-      let tempNewCardSequence = cardSequence
+      let oldLastCardLocation = cardSequence.length - 1
+
+      if (this.roomInfo.locationOfLastCard == 0 || !this.roomInfo.locationOfLastCard){
+        oldLastCardLocation = cardSequence.length - 1
+      } else { oldLastCardLocation = this.roomInfo.locationOfLastCard}
+
+      let lastCardNumber = cardSequence[oldLastCardLocation]
+
+      // remove the last card from the sequence
+      let newCardSequence = cardSequence
       
-      tempNewCardSequence.splice(
+      newCardSequence.splice(
+        oldLastCardLocation,
+        1
+      )
+
+      // add it back in
+      newCardSequence.splice(
         tempNewLastCardLocation,
         0,
-        tempLastCardIndex[0]
+        lastCardNumber
       );
 
       this.$emit('firebase-update',{
-        cardSequence: tempNewCardSequence,
+        cardSequence: newCardSequence,
         locationOfLastCard: tempNewLastCardLocation,
         showCardBack: false,
       });
