@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container game-container">
       <!--For published version, remove any components you aren't using -->
       <div v-if="!$route.params.roomID && $route.params.gSheetID">
         <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType" @firebase-ready="firebaseIsReady($event)"></app-gameLauncher>
@@ -27,8 +27,7 @@
           </template>
         </b-overlay>
 
-        <!-- TODO: Upper Extensions -->
-        <!-- <div
+        <div
           v-if="
             dataReady &&
               firebaseReady &&
@@ -37,17 +36,27 @@
           "
         >
           <app-extensionManager
-            @sync-extension="syncExtension()"
+            @sync-extension="syncExtension($event)"
             :extensionData="roomInfo.extensionData"
             :extensionList="tempExtensionData"
             :roomInfo="roomInfo"
             :extensionLocation="'upper'"
             class="extension-upper"
           ></app-extensionManager>
-        </div> -->
+        </div>
 
         <!-- The Main Format Component -->
-        <component :is="formatInfo.componentName" :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" :userRole="$route.params.userRole"></component>
+        <component
+          :is="formatInfo.componentName"
+          :roomID="$route.params.roomID"
+          :roomInfo="roomInfo"
+          :sheetData="sheetData"
+          :gSheetID="$route.params.gSheetID"
+          :userRole="$route.params.userRole"
+          :firebaseReady="firebaseReady"
+          @firebase-update="firebaseUpdate($event)"
+          @firebase-set="firebaseSet($event)"
+        ></component>
 
         <!-- <app-timed :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed'"></app-timed>
         <app-shuffled ref="shuffled" :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" :userRole="$route.params.userRole" v-if="$route.params.gameType=='Shuffled'"></app-shuffled>
@@ -61,24 +70,24 @@
 
         <app-sandbox :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox'"></app-sandbox> -->
         
-        <!-- TODO: Lower Extension -->
-        <!-- <div
+        <div
           v-if="
             dataReady &&
               firebaseReady &&
               roomInfo &&
               Object.keys(roomInfo.extensionData).length > 1
           "
+          class="extension-container"
         >
           <app-extensionManager
-            @sync-extension="syncExtension()"
+            @sync-extension="syncExtension($event)"
             :extensionData="roomInfo.extensionData"
             :extensionList="tempExtensionData"
             :roomInfo="roomInfo"
             :extensionLocation="'lower'"
             class="extension-lower"
           ></app-extensionManager>
-        </div> -->
+        </div>
       </div>
 
     </div>
@@ -86,6 +95,7 @@
 
 <script>
 import axios from "axios";
+import { roomsCollection } from '../../firebase';
 
 export default {
   name: 'app-game',
@@ -98,6 +108,31 @@ export default {
         password: undefined,
         wallet: undefined,
         revShare: 0.2,
+      },
+      roomInfo: {
+        extensionData: {},
+        currentCardIndex: 0,
+        xCardIsActive: false,
+        cardSequence: [0, 1, 2],
+        locationOfLastCard: 0,
+        timeBegan: null, 
+        timeStopped: null, 
+        stoppedDuration: 0, 
+        running: false,
+        roundInfo: "",
+        roundProgress: "",
+        roundTitle: "",
+        currentPhase: 0,
+        skipToEnding: false,
+        lastSeenRound: 0,
+        lastSeenPhase: 0,
+        currentLocation: null,
+        playRandomizerAnimation: false,
+        hexesToAnimate: [],
+        hexesVisible: [],
+        hexesMidreveal: [],
+        hexArray: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+        currentGeneratorSelection: [0, 1, 2], 
       },
       tempExtensionData: { test: null },
       error: null,
@@ -135,6 +170,7 @@ export default {
     'app-sandbox': () => import('../formats/Sandbox.vue'),
 
     'app-monetization': () => import('../layout/Monetization.vue'),
+    'app-extensionManager': ()=> import('../extensions/ExtensionManager.vue')
   },
   computed: {
     formatInfo: function(){
@@ -143,14 +179,114 @@ export default {
       }
 
       return info
+    },
+    roomID: function(){
+      if (this.$route.params.roomID){
+        return this.$route.params.roomID
+      } else {
+        return null
+      }
+    }
+  },
+  watch: {
+    roomID: function(){
+
+      if (this.$route.params.roomID){
+        this.bindFirebaseToRoomInfo();
+      }
     }
   },
   mounted(){
+    if (this.$route.params.roomID){
+      this.bindFirebaseToRoomInfo();
+    }
+
     this.fetchAndCleanSheetData(this.$route.params.gSheetID);
   },
   methods: {
+    bindFirebaseToRoomInfo(){
+      if (this.$route.params.roomID){
+        this.$bind('roomInfo', roomsCollection.doc(this.$route.params.roomID))
+          .then(() => {
+            this.firebaseReady = true
+
+            if (!this.roomInfo){
+              roomsCollection
+                .doc(this.roomID)
+                .set({
+                    extensionData: {},
+                    currentCardIndex: 0,
+                    xCardIsActive: false,
+                    cardSequence: [0, 1, 2],
+                    locationOfLastCard: 0,
+                    timeBegan: null, 
+                    timeStopped: null, 
+                    stoppedDuration: 0, 
+                    running: false,
+                    roundInfo: "",
+                    roundProgress: "",
+                    roundTitle: "",
+                    currentPhase: 0,
+                    skipToEnding: false,
+                    lastSeenRound: 0,
+                    lastSeenPhase: 0,
+                    currentLocation: null,
+                    playRandomizerAnimation: false,
+                    hexesToAnimate: [],
+                    hexesVisible: [],
+                    hexesMidreveal: [],
+                    currentGeneratorSelection: [0, 1, 2],
+                })
+            }
+          })
+          .catch((error) => {
+            console.log('error in loading: ', error)
+          })
+      } else {
+        //this.$unbind('roomInfo')
+        this.roomInfo = {
+          extensionData: {},
+          currentCardIndex: 0,
+          xCardIsActive: false,
+          cardSequence: [0, 1, 2],
+          locationOfLastCard: 0,
+          timeBegan: null, 
+          timeStopped: null, 
+          stoppedDuration: 0, 
+          running: false,
+          roundInfo: "",
+          roundProgress: "",
+          roundTitle: "",
+          currentPhase: 0,
+          skipToEnding: false,
+          lastSeenRound: 0,
+          lastSeenPhase: 0,
+          currentLocation: null,
+          playRandomizerAnimation: false,
+          hexesToAnimate: [],
+          hexesVisible: [],
+          hexesMidreveal: [],
+          currentGeneratorSelection: [0, 1, 2],
+        }
+      }
+    },
     firebaseIsReady(value){
       this.firebaseReady = value;
+    },
+    firebaseSet(values){
+      roomsCollection.doc(this.$route.params.roomID).set(values)      
+    },
+    firebaseUpdate(values){
+      console.log('update values', values)
+      roomsCollection.doc(this.$route.params.roomID).update(values)
+    },
+    syncExtension(newData){
+      this.firebaseUpdate(
+        {
+          extensionData: newData,
+          timeLastUpdated: Date.now(),
+        }
+      )
     },
     fetchAndCleanSheetData(sheetID) {
       // Remove for published version
@@ -175,7 +311,7 @@ export default {
               if (item.values[0].formattedValue == "option") {
                 this.customOptions[item.values[1].formattedValue] =
                   this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-                console.log(item.values[2].formattedValue);
+                // console.log(item.values[2].formattedValue);
               }
 
               // Handle extensions
@@ -183,11 +319,11 @@ export default {
                 this.tempExtensionData[item.values[1].formattedValue] =
                   item.values[2].formattedValue;
 
-                console.log(
-                  "extension -",
-                  item.values[1].formattedValue,
-                  item.values[2].formattedValue
-                );
+                // console.log(
+                //   "extension -",
+                //   item.values[1].formattedValue,
+                //   item.values[2].formattedValue
+                // );
               }
             }
           });

@@ -42,24 +42,6 @@
     
     <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
 
-    <div
-          v-if="
-            dataReady &&
-              firebaseReady &&
-              roomInfo &&
-              Object.keys(roomInfo.extensionData).length > 1
-          "
-    >
-      <app-extensionManager
-        @sync-extension="syncExtension()"
-        :extensionData="roomInfo.extensionData"
-        :extensionList="tempExtensionData"
-        :roomInfo="roomInfo"
-        :extensionLocation="'upper'"
-        class="extension-upper"
-      ></app-extensionManager>
-    </div>
-
     <div v-if="timerSynced">
       <div v-if="!playerSelected" class="row my-4">
         <div class="btn-group col-sm" role="group" aria-label="Role Controls">
@@ -110,24 +92,6 @@
       </div>
     </div>
 
-    <div
-      v-if="
-        dataReady &&
-          firebaseReady &&
-          roomInfo &&
-          Object.keys(roomInfo.extensionData).length > 1
-      "
-    >
-      <app-extensionManager
-        @sync-extension="syncExtension()"
-        :extensionData="roomInfo.extensionData"
-        :extensionList="tempExtensionData"
-        :roomInfo="roomInfo"
-        :extensionLocation="'lower'"
-        class="extension-lower"
-      ></app-extensionManager>
-    </div>
-
     <link v-bind:href="selectedWallet">
   </div>
     <!-- Timer code remixed from https://codepen.io/raphael_octau by raphael_octau -->
@@ -136,18 +100,17 @@
 </template>
 
 <script>
-import { roomsCollection } from '../../firebase';
-
 export default {
   name: 'app-timed',
   components:{
-    'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
     'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
     roomID: String,
     gSheetID: String,
     sheetData: Array,
+    roomInfo: Object,
+    firebaseReady: Boolean,
   },
   data: function(){
     return {
@@ -156,12 +119,6 @@ export default {
       timerSynced: false,
       timeElapsed: new Date(0),
       secondsElapsed: 0,
-      roomInfo: {
-        timeBegan: null
-        , timeStopped: null
-        , stoppedDuration: 0
-        , running: false
-      },
       playerSelected: null,
       playerArray: [],
       gSheet: [],
@@ -174,7 +131,6 @@ export default {
         revShare: 0.2,
       },
       dataReady: false,
-      firebaseReady: false,
       selectedWallet: undefined,
       roomMonetized: null,
       monetizedByUser: false,
@@ -238,6 +194,11 @@ export default {
     sheetData: function(){
       this.processSheetData();
     },
+    firebaseReady: function(){
+      if (this.firebaseReady && !this.roomInfo){
+        this.initialFirebaseSetup()
+      }
+    },
   },
   mounted(){
     if (document.monetization?.state == "started") {
@@ -251,44 +212,29 @@ export default {
       this.processSheetData();
     }
 
-    this.$bind("roomInfo", roomsCollection.doc(this.roomID))
-      .then(() => {
-        this.firebaseReady = true;
-        this.$emit('firebase-ready', true);
-      })
-      .then(() => {
-        if (!this.roomInfo) {
-          console.log("new room!");
-
-          roomsCollection
-            .doc(this.roomID)
-            .set({
-              timeBegan: null
-            , timeStopped: null
-            , stoppedDuration: 0
-            , running: false
-            , extensionData: this.tempExtensionData,
-            });
-
-          if (this.dataReady) {
-            this.shuffleAndResetGame();
-          }
-        } else if (this.dataReady){
-          this.firebaseCacheError = false;
-        }
-    })
-    .catch((error) => {
-      console.log("error in loading: ", error);
-    });
+    if (this.firebaseReady && !this.roomInfo){
+      this.initialFirebaseSetup()
+    }
 
     this.sync();
   },
-  firestore() {
-    return {
-      roomInfo: roomsCollection.doc(this.roomID)//.set(this.roomInfo, {merge:true})
-    }
-  },
+  // firestore() {
+  //   return {
+  //     roomInfo: roomsCollection.doc(this.roomID)//.set(this.roomInfo, {merge:true})
+  //   }
+  // },
   methods: {
+    initialFirebaseSetup() {
+      this.$emit('firebase-set',
+        {
+          timeBegan: null
+          , timeStopped: null
+          , stoppedDuration: 0
+          , running: false
+          , extensionData: this.tempExtensionData,
+        }
+      )
+    },
     monetizationStarted() {
       console.log('monetizing')
       this.monetizedByUser = true;
@@ -302,38 +248,38 @@ export default {
 
       if (this.roomInfo.timeBegan === null) {
         this.reset();
-        roomsCollection.doc(this.roomID).update({
+        this.$emit('firebase-update',{
           timeBegan: new Date()
         })
       }
 
       if (this.roomInfo.timeStopped !== null) {
-        roomsCollection.doc(this.roomID).update({
+        this.$emit('firebase-update',{
           stoppedDuration: this.roomInfo.stoppedDuration + (new Date() - this.roomInfo.timeStopped.toDate())
         })
       }
 
       this.started = setInterval(this.clockRunning, 100);
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         running: true
       })
 
     },
     stop() {
       if (this.roomInfo.timeBegan !== null){
-        roomsCollection.doc(this.roomID).update({
+        this.$emit('firebase-update',{
           running: false
         })
-        roomsCollection.doc(this.roomID).update({
+        this.$emit('firebase-update',{
           timeStopped: new Date()
         })
       }
     },
     reset() {
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         running: false
       })
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         stoppedDuration: 0,
         timeBegan: null,
         timeStopped: null
@@ -380,12 +326,6 @@ export default {
     },
     selectPlayer(player){
       this.playerSelected = player
-    },
-    syncExtension() {
-      roomsCollection.doc(this.roomID).update({
-        extensionData: this.roomInfo.extensionData,
-        timeLastUpdated: Date.now(),
-      });
     },
     processSheetData() {
       let cleanData = [];
@@ -446,9 +386,7 @@ export default {
           this.firebaseReady &&
           Object.keys(this.tempExtensionData).length > 1
         ) {
-          roomsCollection
-            .doc(this.roomID)
-            .update({ extensionData: this.tempExtensionData });
+          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
         }
 
         this.gSheet = cleanData.slice().reverse();

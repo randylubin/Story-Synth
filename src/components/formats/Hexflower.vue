@@ -42,24 +42,6 @@
       ></div>
     </div>
 
-    <div
-      v-if="
-        dataReady &&
-          firebaseReady &&
-          roomInfo &&
-          Object.keys(roomInfo.extensionData).length > 1
-      "
-    >
-      <app-extensionManager
-        @sync-extension="syncExtension()"
-        :extensionData="roomInfo.extensionData"
-        :extensionList="tempExtensionData"
-        :roomInfo="roomInfo"
-        :extensionLocation="'upper'"
-        class="extension-upper"
-      ></app-extensionManager>
-    </div>
-
     <div class="mb-4">
 
       <div class="mt-4 hexflower-main card shadow mb-4" v-if="firebaseReady && dataReady && !error">
@@ -156,36 +138,16 @@
 
     </div>
 
-    <div
-      v-if="
-        dataReady &&
-        firebaseReady &&
-        roomInfo &&
-        Object.keys(roomInfo.extensionData).length > 1
-      "
-    >
-      <app-extensionManager
-        @sync-extension="syncExtension()"
-        :extensionData="roomInfo.extensionData"
-        :extensionList="tempExtensionData"
-        :roomInfo="roomInfo"
-        :extensionLocation="'lower'"
-        class="extension-lower"
-      ></app-extensionManager>
-    </div>
-
     <link v-bind:href="selectedWallet">
   </div>
 </template>
 
 <script>
-import { roomsCollection } from "../../firebase";
 import GraphemeSplitter from 'grapheme-splitter';
 
 export default {
   name: "app-hexflower",
   components: {
-    'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
     'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
@@ -194,18 +156,12 @@ export default {
     sheetData: Array,
     hexflowerAsExtension: Boolean,
     gSheetForExtension: String,
+    roomInfo: Object,
+    firebaseReady: Boolean,
   },
   data: function () {
     return {
-      roomInfo: {
-        currentLocation: null,
-        playRandomizerAnimation: false,
-        hexesToAnimate: [],
-        hexesVisible: [],
-        hexesMidreveal: [],
-      },
       dataReady: false,
-      firebaseReady: false,
       gSheet: [{ text: "loading" }],
       hexMapRows: [[],[],[],[],[],[],[],[],[]],
       hexNeighborMap: [
@@ -310,33 +266,9 @@ export default {
       this.processSheetData();
     }
 
-    this.$bind("roomInfo", roomsCollection.doc(this.roomID))
-      .then(() => {
-        this.firebaseReady = true;
-        this.$emit('firebase-ready', true);
-      })
-      .then(() => {
-        if (!this.roomInfo) {
-          console.log("new room! dataReady", this.dataReady);
-
-          roomsCollection.doc(this.roomID).set({
-            hexesToAnimate: [],
-            extensionData: this.tempExtensionData,
-            currentLocation: 9,
-            hexArray: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
-            hexesVisible: [],
-            hexesMidreveal: [],
-            playRandomizerAnimation: false,
-          });
-
-          if (this.dataReady) {
-            this.regenerateHexes();
-          }
-        }
-      })
-      .catch((error) => {
-        console.log("error in loading: ", error);
-      });
+    if (this.firebaseReady && !this.roomInfo){
+      this.initialFirebaseSetup()
+    }
   },
   watch: {
     roomInfo: function (val) {
@@ -359,11 +291,16 @@ export default {
     sheetData: function(){
       this.processSheetData();
     },
+    firebaseReady: function(){
+      if (this.firebaseReady && !this.roomInfo){
+        this.initialFirebaseSetup()
+      }
+    },
   },
   computed: {
     updatedHexMapRows: function() {
       let newHexMapRows = JSON.parse(JSON.stringify(this.hexMapRows))
-      if (this.firebaseReady && this.dataReady){
+      if (this.firebaseReady && this.dataReady && this.roomInfo){
         let hexIndexTracker = 0;
           for (let r = 0; r < newHexMapRows.length; r++){
             for (let c = 0; c < newHexMapRows[r].length; c++){
@@ -377,6 +314,22 @@ export default {
     }
   },
   methods: {
+    initialFirebaseSetup() {
+      this.$emit('firebase-set',
+        {
+          hexesToAnimate: [],
+          extensionData: this.tempExtensionData,
+          currentLocation: 9,
+          hexArray: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+          hexesVisible: [],
+          hexesMidreveal: [],
+          playRandomizerAnimation: false,
+        }
+      )
+      if (this.dataReady) {
+        this.regenerateHexes();
+      }
+    },
     monetizationStarted() {
       console.log('monetizing')
       this.monetizedByUser = true;
@@ -507,7 +460,7 @@ export default {
 
       // check if moving to self
       if (this.roomInfo.currentLocation == hexID){
-        roomsCollection.doc(this.roomID).update({
+        this.$emit('firebase-update',{
           previousLocation: this.roomInfo.currentLocation,
           currentLocation: hexID,
           playRandomizerAnimation: playRandomizerAnimation,
@@ -518,12 +471,12 @@ export default {
           tempSameHex: true,
         });
         setTimeout(() =>
-          roomsCollection.doc(this.roomID).update({
+          this.$emit('firebase-update',{
             tempSameHex: false,
           }), 200
         )
       } else {
-        roomsCollection.doc(this.roomID).update({
+        this.$emit('firebase-update',{
           previousLocation: this.roomInfo.currentLocation,
           playRandomizerAnimation: playRandomizerAnimation,
           playResetAnimation: false,
@@ -594,7 +547,7 @@ export default {
         hexIndexList.push(newHexArray[hexIndex].hexID)
       }
 
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         previousLocation: null,
         playRandomizerAnimation: false,
         playResetAnimation: true,
@@ -603,12 +556,6 @@ export default {
         hexesVisible: visibleHexArray,
       });
 
-    },
-    syncExtension() {
-      roomsCollection.doc(this.roomID).update({
-        extensionData: this.roomInfo.extensionData,
-        timeLastUpdated: Date.now(),
-      });
     },
     processSheetData() {
       let cleanData = [];
@@ -694,9 +641,7 @@ export default {
           this.firebaseReady &&
           Object.keys(this.tempExtensionData).length > 1
         ) {
-          roomsCollection
-            .doc(this.roomID)
-            .update({ extensionData: this.tempExtensionData });
+          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
         }
 
         if (this.customOptions.wallet) {

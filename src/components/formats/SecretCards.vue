@@ -42,23 +42,7 @@
 
     <div>
 
-      <div
-        v-if="
-          dataReady &&
-            firebaseReady &&
-            roomInfo &&
-            Object.keys(roomInfo.extensionData).length > 1
-        "
-      >
-        <app-extensionManager
-          @sync-extension="syncExtension()"
-          :extensionData="roomInfo.extensionData"
-          :extensionList="tempExtensionData"
-          :roomInfo="roomInfo"
-          :extensionLocation="'upper'"
-          class="extension-upper"
-        ></app-extensionManager>
-      </div>
+      
 
       <div v-if="!playerSelected" class="mb-4">
         <div class="row align-center mb-3">
@@ -135,55 +119,26 @@
       </div>
     </div>
 
-    <div
-      v-if="
-        dataReady &&
-          firebaseReady &&
-          roomInfo &&
-          Object.keys(roomInfo.extensionData).length > 1
-      "
-    >
-      <app-extensionManager
-        @sync-extension="syncExtension()"
-        :extensionData="roomInfo.extensionData"
-        :extensionList="tempExtensionData"
-        :roomInfo="roomInfo"
-        :extensionLocation="'lower'"
-        class="extension-lower"
-      ></app-extensionManager>
-    </div>
-
     <link v-bind:href="selectedWallet">
   </div>
 </template>
 
 <script>
-import { roomsCollection } from '../../firebase';
-
-
 export default {
   name: 'app-secretCards',
   components:{
-    'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
     'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
     roomID: String,
     gSheetID: String,
     sheetData: Array,
+    roomInfo: Object,
+    firebaseReady: Boolean,
   },
   data: function(){
     return {
-      roomInfo: {
-        currentCardIndex: 0,
-        xCardIsActive: false,
-        cardSequence: [0,1,2],
-        roundInfo: "",
-        roundProgress: "",
-        roundTitle: ""
-      },
       dataReady: false,
-      firebaseReady: false,
       error: false,
       playerSelected: null,
       playerArray: [],
@@ -263,6 +218,11 @@ export default {
     sheetData: function(){
       this.processSheetData();
     },
+    firebaseReady: function(){
+      if (this.firebaseReady && !this.roomInfo){
+        this.initialFirebaseSetup()
+      }
+    },
   },
   mounted(){
     if (document.monetization?.state == "started") {
@@ -276,27 +236,21 @@ export default {
       this.processSheetData();
     }
 
-    this.$bind('roomInfo', roomsCollection.doc(this.roomID))
-      .then(() => {
-        this.firebaseReady = true
-        this.$emit('firebase-ready', true);
-      })
-      .then(() => {
-        if (!this.roomInfo){
-          console.log("new room!")
+    if (this.firebaseReady && !this.roomInfo){
+      this.initialFirebaseSetup()
+    }
 
-          roomsCollection.doc(this.roomID).set({
-            currentCardIndex:0,xCardIsActive: false,
-            cardSequence:[0,1,2],
-            extensionData: this.tempExtensionData,
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('error in loading: ', error)
-      })
   },
   methods: {
+    initialFirebaseSetup() {
+      this.$emit('firebase-set',
+        {
+          currentCardIndex:0,xCardIsActive: false,
+          cardSequence:[0,1,2],
+          extensionData: this.tempExtensionData,
+        }
+      )
+    },
     monetizationStarted() {
       console.log('monetizing')
       this.monetizedByUser = true;
@@ -317,13 +271,13 @@ export default {
       });
     },
     previousCard(){
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         currentCardIndex: this.roomInfo.currentCardIndex -= 1
       })
       this.updateRoundInfo();
     },
     nextCard(){
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         currentCardIndex: this.roomInfo.currentCardIndex += 1
       })
       this.updateRoundInfo();
@@ -372,14 +326,14 @@ export default {
       }
 
 
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         roundInfo: newRoundInfo,
         roundProgress: newRoundProgress,
         roundTitle: newRoundTitle
       })
     },
     xCard(){
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         xCardIsActive: !this.roomInfo.xCardIsActive
       })
     },
@@ -388,12 +342,6 @@ export default {
     },
     selectPlayer(player){
       this.playerSelected = player
-    },
-    syncExtension() {
-      roomsCollection.doc(this.roomID).update({
-        extensionData: this.roomInfo.extensionData,
-        timeLastUpdated: Date.now(),
-      });
     },
     processSheetData() {
       let cleanData = [];
@@ -456,9 +404,7 @@ export default {
           this.firebaseReady &&
           Object.keys(this.tempExtensionData).length > 1
         ) {
-          roomsCollection
-            .doc(this.roomID)
-            .update({ extensionData: this.tempExtensionData });
+          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
         }
 
         this.gSheet = cleanData.slice().reverse();

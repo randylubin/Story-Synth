@@ -20,7 +20,7 @@
             <b-icon-link45deg></b-icon-link45deg> Copy URL 
           </b-button>
         </div>
-        <div class="row menu-row">
+        <div class="row menu-row" v-if="roomInfo">
           <app-downloadExtensionData :extensionData="roomInfo.extensionData" :gameTitle="customOptions.gameTitle" v-if="(tempExtensionData['journalEntries'] || tempExtensionData['multiEditableLists'] || tempExtensionData['editableList'] || tempExtensionData['plusMinus'])"></app-downloadExtensionData>
         </div>
         <slot></slot>

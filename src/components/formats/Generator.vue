@@ -41,24 +41,6 @@
       ></div>
     </div>
 
-    <div
-      v-if="
-        dataReady &&
-          firebaseReady &&
-          roomInfo &&
-          Object.keys(roomInfo.extensionData).length > 1
-      "
-    >
-      <app-extensionManager
-        @sync-extension="syncExtension()"
-        :extensionData="roomInfo.extensionData"
-        :extensionList="tempExtensionData"
-        :roomInfo="roomInfo"
-        :extensionLocation="'upper'"
-        class="extension-upper"
-      ></app-extensionManager>
-    </div>
-
     <div class="mb-4">
 
       <div class="mt-4 generator-main card shadow mb-4">
@@ -220,35 +202,14 @@
       </div>
     </div>
 
-    <div
-      v-if="
-        dataReady &&
-          firebaseReady &&
-          roomInfo &&
-          Object.keys(roomInfo.extensionData).length > 1
-      "
-    >
-      <app-extensionManager
-        @sync-extension="syncExtension()"
-        :extensionData="roomInfo.extensionData"
-        :extensionList="tempExtensionData"
-        :roomInfo="roomInfo"
-        :extensionLocation="'lower'"
-        class="extension-lower"
-      ></app-extensionManager>
-    </div>
-
     <link v-bind:href="selectedWallet">
   </div>
 </template>
 
 <script>
-import { roomsCollection } from "../../firebase";
-
 export default {
   name: "app-generator",
   components: {
-    'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
     'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
@@ -256,14 +217,12 @@ export default {
     gSheetID: String,
     sheetData: Array,
     generatorAsExtension: Boolean,
+    roomInfo: Object,
+    firebaseReady: Boolean,
   },
   data: function () {
     return {
-      roomInfo: {
-        currentGeneratorSelection: [0, 1, 2],
-      },
       dataReady: false,
-      firebaseReady: false,
       gSheet: [{ text: "loading" }],
       generatorLayout: [],
       generatorView: 'Grid View',
@@ -342,6 +301,11 @@ export default {
     sheetData: function(){
       this.processSheetData();
     },
+    firebaseReady: function(){
+      if (this.firebaseReady && !this.roomInfo){
+        this.initialFirebaseSetup()
+      }
+    },
   },
   mounted() {
     if (document.monetization?.state == "started") {
@@ -355,30 +319,22 @@ export default {
       this.processSheetData();
     }
 
-    this.$bind("roomInfo", roomsCollection.doc(this.roomID))
-      .then(() => {
-        this.firebaseReady = true;
-        this.$emit('firebase-ready', true);
-      })
-      .then(() => {
-        if (!this.roomInfo) {
-          console.log("new room!");
-
-          roomsCollection.doc(this.roomID).set({
-            extensionData: this.tempExtensionData,
-            currentGeneratorSelection: [0, 1, 2],
-          });
-
-          if (this.dataReady) {
-            this.shuffleAll();
-          }
-        }
-      })
-      .catch((error) => {
-        console.log("error in loading: ", error);
-      });
+    if (this.firebaseReady && !this.roomInfo){
+      this.initialFirebaseSetup()
+    }
   },
   methods: {
+    initialFirebaseSetup() {
+      this.$emit('firebase-set',
+        {
+          extensionData: this.tempExtensionData,
+          currentGeneratorSelection: [0, 1, 2],
+        }
+      )
+      if (this.dataReady) {
+        this.shuffleAll();
+      }
+    },
     monetizationStarted() {
       console.log('monetizing')
       this.monetizedByUser = true;
@@ -410,7 +366,7 @@ export default {
       console.log("new generator picks:", newGeneratorSelection);
 
       // sync the shuffled array
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         currentGeneratorSelection: newGeneratorSelection,
       });
     },
@@ -423,7 +379,7 @@ export default {
 
       if (newGeneratorSelection[index - 1] == newValueIndex){
         newGeneratorSelection[index - 1] = ''
-        roomsCollection.doc(this.roomID).update({
+        this.$emit('firebase-update',{
           currentGeneratorSelection: newGeneratorSelection,
         });
       }      
@@ -431,7 +387,7 @@ export default {
       newGeneratorSelection[index - 1] = newValueIndex;
 
       // sync the shuffled array
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         currentGeneratorSelection: newGeneratorSelection,
       });
     },
@@ -441,14 +397,8 @@ export default {
       newGeneratorSelection[index - 1] = optionIndex;
 
       // sync the shuffled array
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         currentGeneratorSelection: newGeneratorSelection,
-      });
-    },
-    syncExtension() {
-      roomsCollection.doc(this.roomID).update({
-        extensionData: this.roomInfo.extensionData,
-        timeLastUpdated: Date.now(),
       });
     },
     processSheetData() {
@@ -593,9 +543,7 @@ export default {
           this.firebaseReady &&
           Object.keys(this.tempExtensionData).length > 1
         ) {
-          roomsCollection
-            .doc(this.roomID)
-            .update({ extensionData: this.tempExtensionData });
+          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
         }
 
         if (this.customOptions.wallet) {

@@ -69,24 +69,6 @@
       </div>
     </div> -->
 
-    <div
-      v-if="
-        dataReady &&
-          firebaseReady &&
-          roomInfo &&
-          Object.keys(roomInfo.extensionData).length > 1
-      "
-    >
-      <app-extensionManager
-        @sync-extension="syncExtension()"
-        :extensionData="roomInfo.extensionData"
-        :extensionList="tempExtensionData"
-        :roomInfo="roomInfo"
-        :extensionLocation="'upper'"
-        class="extension-upper"
-      ></app-extensionManager>
-    </div>
-
     <!-- <div class="row mb-4">
       <div class="btn-group col-sm" role="group" aria-label="Card Controls">
         <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous Card</button>
@@ -241,54 +223,26 @@
         </div>
       </div>
     </div>
-    
-    <div
-      v-if="
-        dataReady &&
-          firebaseReady &&
-          roomInfo &&
-          Object.keys(roomInfo.extensionData).length > 1
-      "
-    >
-      <app-extensionManager
-        @sync-extension="syncExtension()"
-        :extensionData="roomInfo.extensionData"
-        :extensionList="tempExtensionData"
-        :roomInfo="roomInfo"
-        :extensionLocation="'lower'"
-        class="extension-lower"
-      ></app-extensionManager>
-    </div>
 
     <link v-bind:href="selectedWallet">
   </div>
 </template>
 
 <script>
-import { roomsCollection } from '../../firebase';
-
 export default {
   name: 'app-phases',
   components: {
-    'app-extensionManager': () => import("../extensions/ExtensionManager.vue"),
     'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
     roomID: String,
     gSheetID: String,
     sheetData: Array,
+    roomInfo: Object,
+    firebaseReady: Boolean,
   },
   data: function(){
     return {
-      roomInfo: {
-        currentCardIndex: 0,
-        currentPhase: 0,
-        xCardIsActive: false,
-        cardSequence: [0,1,2],
-        skipToEnding: false,
-        lastSeenRound: 0,
-        lastSeenPhase: 0, 
-      },
       customOptions: {
         gameTitle: undefined,
         byline: undefined,
@@ -298,7 +252,6 @@ export default {
         revShare: 0.2,
       },
       dataReady: false,
-      firebaseReady: false,
       tempExtensionData: { test: null },
       gSheet: [{text:"loading"}],
       numberOfPhases: 0,
@@ -370,6 +323,11 @@ export default {
     sheetData: function(){
       this.processSheetData();
     },
+    firebaseReady: function(){
+      if (this.firebaseReady && !this.roomInfo){
+        this.initialFirebaseSetup()
+      }
+    },
   },
   mounted(){
     if (document.monetization?.state == "started") {
@@ -383,25 +341,19 @@ export default {
       this.processSheetData();
     }
 
-    this.$bind('roomInfo', roomsCollection.doc(this.roomID))
-      .then(() => {
-        this.firebaseReady = true
-        this.$emit('firebase-ready', true);
-      })
-      .then(() => {
-        if (!this.roomInfo){
-          console.log("new room!")
-
-          roomsCollection.doc(this.roomID).set({currentCardIndex:0, xCardIsActive: false,extensionData: this.tempExtensionData, cardSequence:[0,1,2], currentPhase: 0, skipToEnding: false, lastSeenRound: 0, lastSeenPhase: 0})
-
-          if(this.dataReady){this.shuffle();}
-        }
-      })
-      .catch((error) => {
-        console.log('error in loading: ', error)
-      })
+    if (this.firebaseReady && !this.roomInfo){
+      this.initialFirebaseSetup()
+    }
   },
   methods: {
+    initialFirebaseSetup() {
+      this.$emit('firebase-set',
+        {currentCardIndex:0, xCardIsActive: false,extensionData: this.tempExtensionData, cardSequence:[0,1,2], currentPhase: 0, skipToEnding: false, lastSeenRound: 0, lastSeenPhase: 0}
+      )
+      if (this.dataReady) {
+        this.shuffle();
+      }
+    },
     monetizationStarted() {
       console.log('monetizing')
       this.monetizedByUser = true;
@@ -440,7 +392,7 @@ export default {
       let lastSeenRound = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenRound : this.roomInfo.currentCardIndex
       let lastSeenPhase = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenPhase : this.roomInfo.currentPhase
       
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         currentCardIndex: this.roomInfo.currentCardIndex,
         lastSeenRound: lastSeenRound,
         currentPhase: this.roomInfo.currentPhase,
@@ -467,7 +419,7 @@ export default {
 
       // numberOfRounds
       if ((this.roomInfo.currentCardIndex >= this.endingIndex) || !this.customOptions.numberOfRounds || parseInt(this.customOptions.numberOfRounds) > this.roomInfo.currentCardIndex - this.firstNonInstruction){
-        roomsCollection.doc(this.roomID).update({
+        this.$emit('firebase-update',{
           currentCardIndex: this.roomInfo.currentCardIndex,
           lastSeenRound: lastSeenRound,
           currentPhase: this.roomInfo.currentPhase,
@@ -479,7 +431,7 @@ export default {
 
     },
     skipInstructions(){
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         currentCardIndex: this.firstNonInstruction,
         lastSeenRound: this.firstNonInstruction,
         currentPhase: 0,
@@ -491,7 +443,7 @@ export default {
         this.shuffle();
       }
 
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         lastSeenRound: this.roomInfo.currentCardIndex,
         lastSeenPhase: this.roomInfo.currentPhase,
         currentCardIndex: this.endingIndex,
@@ -499,7 +451,7 @@ export default {
       })
     },
     xCard(){
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         xCardIsActive: !this.roomInfo.xCardIsActive
       })
     },
@@ -507,7 +459,7 @@ export default {
       this.$bvModal.hide('reshuffleConfirm')
 
       // reset card count
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         currentCardIndex: 0,
         currentPhase: 0,
         lastSeenPhase: 0,
@@ -561,16 +513,10 @@ export default {
 
 
       // sync the shuffled array
-      roomsCollection.doc(this.roomID).update({
+      this.$emit('firebase-update',{
         cardSequence: initialCardSequence.concat(shuffledCards).concat(finalCardSequence)
       })
 
-    },
-    syncExtension() {
-      roomsCollection.doc(this.roomID).update({
-        extensionData: this.roomInfo.extensionData,
-        timeLastUpdated: Date.now(),
-      });
     },
     processSheetData() {
       let cleanData = [];

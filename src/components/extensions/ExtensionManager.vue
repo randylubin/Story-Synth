@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="extension-manager">
       <div class="row">
         <div class="col-sm">
           <app-hexflowerAsExtension class="extension"
@@ -45,36 +45,24 @@
 <script>
 import axios from 'axios'
 
-import PlayerTurnOrder from './PlayerTurnOrder'
-import CurrentPlayerHeader from './CurrentPlayerHeader.vue'
-import PlusMinus from './PlusMinus.vue'
-import EditableList from './EditableList.vue'
-import MultiEditableLists from './MultiEditableLists.vue'
-import DiceRoller from './DiceRoller.vue'
-import StaticBox from './StaticBox.vue'
-import StandardDeck from './StandardDeck.vue'
-import Journal from './Journal.vue'
-import Hexflower from '../formats/Hexflower.vue'
-import EmbedWebsite from './EmbedWebsite.vue'
-import Generator from '../formats/Generator.vue'
 // import DownloadExtensionData from './DownloadExtensionData.vue'
 
 export default {
   name: 'app-extensionManager',
   components: {
-    'app-plusMinus': PlusMinus,
-    'app-editableList': EditableList,
-    'app-multiEditableLists': MultiEditableLists,
-    'app-diceRoller': DiceRoller,
-    'app-staticBox': StaticBox,
-    'app-playerTurnOrder': PlayerTurnOrder,
-    'app-currentPlayerHeader': CurrentPlayerHeader,
-    'app-standardDeck': StandardDeck,
-    'app-journal': Journal,
-    'app-hexflowerAsExtension': Hexflower,
-    'app-generatorAsExtension': Generator,
+    'app-currentPlayerHeader': () => import('./CurrentPlayerHeader.vue'),
+    'app-diceRoller': () => import('./DiceRoller.vue'),
+    'app-editableList': () => import('./EditableList.vue'),
+    'app-embedWebsite': () => import('./EmbedWebsite.vue'),
+    'app-generatorAsExtension': () => import('../formats/Generator.vue'),
+    'app-hexflowerAsExtension': () => import('../formats/Hexflower.vue'),
+    'app-journal': () => import('./Journal.vue'),
+    'app-multiEditableLists': () => import('./MultiEditableLists.vue'),
+    'app-playerTurnOrder': () => import('./PlayerTurnOrder'),
+    'app-plusMinus': () => import('./PlusMinus.vue'),
+    'app-standardDeck': () => import('./StandardDeck.vue'),
+    'app-staticBox': () => import('./StaticBox.vue'),
     // 'app-downloadExtensionData': DownloadExtensionData,
-    'app-embedWebsite': EmbedWebsite,
   },
   props: {
     extensionData: Object,
@@ -119,7 +107,7 @@ export default {
     processExtensionUpdate(newData){
       //console.log('new data',newData)
       this.$set(this.extensionData, newData[0], newData[1])
-      this.$emit('sync-extension')
+      this.$emit('sync-extension', this.extensionData)
     },
     fetchDataForEmbeddedFormat(sheetID, varName){
       // Remove for published version
@@ -150,4 +138,9 @@ export default {
 </script>
 
 <style scoped>
+.extension-manager {
+  margin:auto;
+  max-width: 600px;
+  text-align: center;
+}
 </style>

@@ -17,7 +17,7 @@
         <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
         <h1 class="game-meta">Sandbox</h1>
         <div v-if="dataReady && firebaseReady && roomInfo && Object.keys(roomInfo.extensionData).length > 1">
-          <app-extensionManager @sync-extension="syncExtension()" :gameTitle="customOptions.gameTitle" :extensionData="roomInfo.extensionData" :extensionList="tempExtensionData" :roomInfo="roomInfo"></app-extensionManager>
+          <!-- <app-extensionManager @sync-extension="syncExtension()" :gameTitle="customOptions.gameTitle" :extensionData="roomInfo.extensionData" :extensionList="tempExtensionData" :roomInfo="roomInfo"></app-extensionManager> -->
         </div>
       </div>
     </div>
@@ -27,19 +27,18 @@
 </template>
 
 <script>
-import ExtensionManager from '../extensions/ExtensionManager.vue'
-import { roomsCollection } from '../../firebase';
-
 export default {
   name: 'app-sandbox',
   components: {
-    'app-extensionManager': ExtensionManager,
+    // 'app-extensionManager': () => import('../extensions/ExtensionManager.vue'),
     'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
     gSheetID: String,
     roomID: String,
     sheetData: Array,
+    roomInfo: Object,
+    firebaseReady: Boolean,
   },
   data: function() {
     return {
@@ -51,12 +50,8 @@ export default {
         wallet: undefined,
         revShare: 0.2,
       },
-      roomInfo: {
-        extensionData: {}
-      },
       tempExtensionData: {test:null},
       dataReady: false,
-      firebaseReady: false,
       selectedWallet: undefined,
       roomMonetized: null,
       monetizedByUser: false,
@@ -118,6 +113,11 @@ export default {
     sheetData: function(){
       this.processSheetData();
     },
+    firebaseReady: function(){
+      if (this.firebaseReady && !this.roomInfo){
+        this.initialFirebaseSetup()
+      }
+    }
   },
   mounted(){
     if (document.monetization?.state == "started") {
@@ -131,26 +131,21 @@ export default {
       this.processSheetData();
     }
 
-    this.$bind('roomInfo', roomsCollection.doc(this.roomID))
-      .then(() => {
-        this.firebaseReady = true
-        this.$emit('firebase-ready', true);
-      })
-      .then(() => {
-        if (!this.roomInfo){
-          console.log("new room!")
-
-          roomsCollection.doc(this.roomID).set({
-            extensionData: this.tempExtensionData,
-            xCardIsActive: false,
-          })
-        }
-      })
-      .catch((error) => {
-        console.log('error in loading: ', error)
-      })
+    if (this.firebaseReady && !this.roomInfo){
+      this.initialFirebaseSetup()
+    }
+    
+     
   },
   methods: {
+    initialFirebaseSetup() {
+      this.$emit('firebase-set',
+          {
+            extensionData: this.tempExtensionData,
+            xCardIsActive: false,
+          }
+        )
+    },
     monetizationStarted() {
       console.log('monetizing')
       this.monetizedByUser = true;
@@ -160,10 +155,12 @@ export default {
       console.log("room is now monetizied")
     },
     syncExtension(){
-      roomsCollection.doc(this.roomID).update({
-        extensionData: this.roomInfo.extensionData,
-        timeLastUpdated: Date.now(),
-      })
+      this.$emit('firebase-update',
+        {
+          extensionData: this.roomInfo.extensionData,
+          timeLastUpdated: Date.now(),
+        }
+      )
     },
     processSheetData() {
       if (this.sheetData){
@@ -190,7 +187,7 @@ export default {
 
         if(this.firebaseReady && Object.keys(this.tempExtensionData).length > 1) {
           
-          roomsCollection.doc(this.roomID).update({extensionData: this.tempExtensionData})
+          this.$emit('firebase-update',{extensionData: this.tempExtensionData})
         }
 
         if (this.customOptions.wallet) {
