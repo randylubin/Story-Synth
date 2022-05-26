@@ -2,7 +2,7 @@
   <div
     class="hexflower game-room"
     v-if="roomInfo"
-    v-bind:class="{'px-0': hexflowerAsExtension, styleTemplate: styleTemplate}"
+    v-bind:class="{'px-0': gameAsExtension, styleTemplate: styleTemplate}"
   >
 
     <app-menuBar
@@ -14,7 +14,7 @@
       :dataReady="dataReady"
       :firebaseReady="firebaseReady"
       @roomMonetized="updateRoomMonetization"
-      v-if="!hexflowerAsExtension"
+      v-if="!gameAsExtension"
     ></app-menuBar>
 
     <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
@@ -154,7 +154,7 @@ export default {
     roomID: String,
     gSheetID: String,
     sheetData: Array,
-    hexflowerAsExtension: Boolean,
+    gameAsExtension: Boolean,
     gSheetForExtension: String,
     roomInfo: Object,
     firebaseReady: Boolean,
@@ -203,56 +203,58 @@ export default {
     };
   },
   metaInfo() {
-    return {
-      title: this.customOptions.gameTitle,
-      meta: [
-        {
-          property: "description",
-          content: this.customOptions.gameBlurb,
-          vmid: "description",
-        },
-        {
-          property: "og:title",
-          content: this.customOptions.gameTitle,
-          vmid: "og:title",
-        },
-        {
-          property: "og:description",
-          content: this.customOptions.gameBlurb,
-          vmid: "og:description",
-        },
-        {
-          property: "og:image",
-          content: this.customOptions.ogImageSquare,
-          vmid: "og:image",
-        },
-        {
-          property: "og:url",
-          content: "https://storysynth.org/#" + this.$route.fullPath,
-          vmid: "og:url",
-        },
-        {
-          property: "twitter:card",
-          content: "summary",
-          vmid: "twitter:card",
-        },
-        {
-          property: "og:site_name",
-          content: "Story Synth",
-          vmid: "og:site_name",
-        },
-        {
-          property: "twitter:image:alt",
-          content: this.customOptions.gameTitle + " logo",
-          vmid: "twitter:image:alt",
-        },
-        {
-          name: "monetization",
-          content: this.selectedWallet,
-          vmid: "monetization",
-        },
-      ],
-    };
+    if(!this.gameAsExtension){
+      return {
+        title: this.customOptions.gameTitle,
+        meta: [
+          {
+            property: "description",
+            content: this.customOptions.gameBlurb,
+            vmid: "description",
+          },
+          {
+            property: "og:title",
+            content: this.customOptions.gameTitle,
+            vmid: "og:title",
+          },
+          {
+            property: "og:description",
+            content: this.customOptions.gameBlurb,
+            vmid: "og:description",
+          },
+          {
+            property: "og:image",
+            content: this.customOptions.ogImageSquare,
+            vmid: "og:image",
+          },
+          {
+            property: "og:url",
+            content: "https://storysynth.org/#" + this.$route.fullPath,
+            vmid: "og:url",
+          },
+          {
+            property: "twitter:card",
+            content: "summary",
+            vmid: "twitter:card",
+          },
+          {
+            property: "og:site_name",
+            content: "Story Synth",
+            vmid: "og:site_name",
+          },
+          {
+            property: "twitter:image:alt",
+            content: this.customOptions.gameTitle + " logo",
+            vmid: "twitter:image:alt",
+          },
+          {
+            name: "monetization",
+            content: this.selectedWallet,
+            vmid: "monetization",
+          },
+        ],
+      };
+    }
   },
   mounted() {
     if (document.monetization?.state == "started") {

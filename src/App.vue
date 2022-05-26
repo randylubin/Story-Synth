@@ -31,7 +31,12 @@
           <app-uploadPage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-uploadPage>
         </div>
         
-        <app-game v-if="!['CSS-Playground', 'Games', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"></app-game>
+        <app-game 
+          v-if="!['CSS-Playground', 'Games', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          :roomID="$route.params.roomID"
+          :gSheetID="$route.params.gSheetID"
+          :gameType="$route.params.gameType"
+        ></app-game>
         <div v-else-if="$route.params.gameType == 'Games'">
           <div v-if="!$route.params.roomID && $route.params.gSheetID">
             <app-customGameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-customGameLauncher>

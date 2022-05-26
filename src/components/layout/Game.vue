@@ -1,11 +1,11 @@
 <template>
     <div class="container game-container">
       <!--For published version, remove any components you aren't using -->
-      <div v-if="!$route.params.roomID && $route.params.gSheetID">
-        <app-gameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType" @firebase-ready="firebaseIsReady($event)"></app-gameLauncher>
+      <div v-if="!roomID && gSheetID && !gameAsExtension">
+        <app-gameLauncher :routeGSheetID="gSheetID" :routeGameType="gameType" @firebase-ready="firebaseIsReady($event)"></app-gameLauncher>
       </div>
 
-      <div v-if="$route.params.roomID && $route.params.gSheetID">
+      <div v-if="roomID && gSheetID">
         <div class="full-page-background"></div>
         <div v-dompurify-html="customOptions.style"></div> 
         <app-monetization :customOptions="customOptions" :roomMonetized="roomMonetized"></app-monetization>
@@ -48,11 +48,13 @@
         <!-- The Main Format Component -->
         <component
           :is="formatInfo.componentName"
-          :roomID="$route.params.roomID"
+          :roomID="roomID"
           :roomInfo="roomInfo"
           :sheetData="sheetData"
-          :gSheetID="$route.params.gSheetID"
+          :gSheetID="gSheetID"
+          :gameType="gameType"
           :userRole="$route.params.userRole"
+          :gameAsExtension="gameAsExtension"
           :firebaseReady="firebaseReady"
           @firebase-update="firebaseUpdate($event)"
           @firebase-set="firebaseSet($event)"
@@ -99,6 +101,12 @@ import { roomsCollection } from '../../firebase';
 
 export default {
   name: 'app-game',
+  props: {
+    roomID: String,
+    gSheetID: String,
+    gameType: String,
+    gameAsExtension: Boolean,
+  },
   data: function() {
     return {
       customOptions: {
@@ -175,38 +183,31 @@ export default {
   computed: {
     formatInfo: function(){
       let info = {
-        componentName: this.componentList[this.$route.params.gameType]
+        componentName: this.componentList[this.gameType]
       }
 
       return info
     },
-    roomID: function(){
-      if (this.$route.params.roomID){
-        return this.$route.params.roomID
-      } else {
-        return null
-      }
-    }
   },
   watch: {
     roomID: function(){
 
-      if (this.$route.params.roomID){
+      if (this.roomID){
         this.bindFirebaseToRoomInfo();
       }
     }
   },
   mounted(){
-    if (this.$route.params.roomID){
+    if (this.roomID){
       this.bindFirebaseToRoomInfo();
     }
 
-    this.fetchAndCleanSheetData(this.$route.params.gSheetID);
+    this.fetchAndCleanSheetData(this.gSheetID);
   },
   methods: {
     bindFirebaseToRoomInfo(){
-      if (this.$route.params.roomID){
-        this.$bind('roomInfo', roomsCollection.doc(this.$route.params.roomID))
+      if (this.roomID){
+        this.$bind('roomInfo', roomsCollection.doc(this.roomID))
           .then(() => {
             this.firebaseReady = true
 
@@ -274,11 +275,11 @@ export default {
       this.firebaseReady = value;
     },
     firebaseSet(values){
-      roomsCollection.doc(this.$route.params.roomID).set(values)      
+      roomsCollection.doc(this.roomID).set(values)      
     },
     firebaseUpdate(values){
       console.log('update values', values)
-      roomsCollection.doc(this.$route.params.roomID).update(values)
+      roomsCollection.doc(this.roomID).update(values)
     },
     syncExtension(newData){
       this.firebaseUpdate(

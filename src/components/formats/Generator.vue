@@ -2,7 +2,7 @@
   <div
     class="generator game-room"
     v-if="roomInfo"
-    v-bind:class="{'px-0': generatorAsExtension, styleTemplate: styleTemplate}"
+    v-bind:class="{'px-0': gameAsExtension, styleTemplate: styleTemplate}"
   >
     <app-menuBar
       :roomInfo="roomInfo"
@@ -13,7 +13,7 @@
       :dataReady="dataReady"
       :firebaseReady="firebaseReady"
       @roomMonetized="updateRoomMonetization"
-      v-if="!generatorAsExtension"
+      v-if="!gameAsExtension"
     ></app-menuBar>
 
     <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
@@ -216,7 +216,7 @@ export default {
     roomID: String,
     gSheetID: String,
     sheetData: Array,
-    generatorAsExtension: Boolean,
+    gameAsExtension: Boolean,
     roomInfo: Object,
     firebaseReady: Boolean,
   },
@@ -246,56 +246,58 @@ export default {
     };
   },
   metaInfo() {
-    return {
-      title: this.customOptions.gameTitle,
-      meta: [
-        {
-          property: "description",
-          content: this.customOptions.gameBlurb,
-          vmid: "description",
-        },
-        {
-          property: "og:title",
-          content: this.customOptions.gameTitle,
-          vmid: "og:title",
-        },
-        {
-          property: "og:description",
-          content: this.customOptions.gameBlurb,
-          vmid: "og:description",
-        },
-        {
-          property: "og:image",
-          content: this.customOptions.ogImageSquare,
-          vmid: "og:image",
-        },
-        {
-          property: "og:url",
-          content: "https://storysynth.org/#" + this.$route.fullPath,
-          vmid: "og:url",
-        },
-        {
-          property: "twitter:card",
-          content: "summary",
-          vmid: "twitter:card",
-        },
-        {
-          property: "og:site_name",
-          content: "Story Synth",
-          vmid: "og:site_name",
-        },
-        {
-          property: "twitter:image:alt",
-          content: this.customOptions.gameTitle + " logo",
-          vmid: "twitter:image:alt",
-        },
-        {
-          name: "monetization",
-          content: this.selectedWallet,
-          vmid: "monetization",
-        },
-      ],
-    };
+    if (!this.gameAsExtension){
+      return {
+        title: this.customOptions.gameTitle,
+        meta: [
+          {
+            property: "description",
+            content: this.customOptions.gameBlurb,
+            vmid: "description",
+          },
+          {
+            property: "og:title",
+            content: this.customOptions.gameTitle,
+            vmid: "og:title",
+          },
+          {
+            property: "og:description",
+            content: this.customOptions.gameBlurb,
+            vmid: "og:description",
+          },
+          {
+            property: "og:image",
+            content: this.customOptions.ogImageSquare,
+            vmid: "og:image",
+          },
+          {
+            property: "og:url",
+            content: "https://storysynth.org/#" + this.$route.fullPath,
+            vmid: "og:url",
+          },
+          {
+            property: "twitter:card",
+            content: "summary",
+            vmid: "twitter:card",
+          },
+          {
+            property: "og:site_name",
+            content: "Story Synth",
+            vmid: "og:site_name",
+          },
+          {
+            property: "twitter:image:alt",
+            content: this.customOptions.gameTitle + " logo",
+            vmid: "twitter:image:alt",
+          },
+          {
+            name: "monetization",
+            content: this.selectedWallet,
+            vmid: "monetization",
+          },
+        ],
+      };
+    }
   },
   watch: {
     sheetData: function(){
@@ -566,7 +568,7 @@ export default {
           });
         }
 
-        if (this.firebaseReady && this.categoryData) {
+        if (this.firebaseReady && this.currentGeneratorSelection == [0, 1, 2]) {
           this.shuffleAll();
         }
       }

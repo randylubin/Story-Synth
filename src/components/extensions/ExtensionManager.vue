@@ -2,18 +2,17 @@
   <div class="extension-manager">
       <div class="row">
         <div class="col-sm">
-          <app-hexflowerAsExtension class="extension"
-            :hexflowerAsExtension="Boolean(extensionData.hexflowerAsExtension)"
-            :gSheetForExtension="extensionData.hexflowerAsExtension"
+          <app-game class="extension"
+            :gameAsExtension="Boolean(extensionData.hexflowerAsExtension)"
             :gSheetID="extensionData.hexflowerAsExtension.substring(extensionData.hexflowerAsExtension.indexOf('/d/') + 3, extensionData.hexflowerAsExtension.indexOf('/edit'))"
-            :sheetData="hexflowerSheetData"
-            :roomID="$route.params.roomID + '-hexflower-extensions'" v-if="Boolean(extensionData.hexflowerAsExtension) && ((!extensionList.hexflowerAsExtensionLocation && extensionLocation == 'lower') || (extensionList.hexflowerAsExtensionLocation == extensionLocation))"></app-hexflowerAsExtension>
-          <app-generatorAsExtension class="extension"
-            :generatorAsExtension="Boolean(extensionData.generatorAsExtension)"
-            :gSheetForExtension="extensionData.generatorAsExtension"
+            :gameType="'Hexflower'"
+            :roomID="$route.params.roomID + '-hexflower-extensions'" v-if="Boolean(extensionData.hexflowerAsExtension) && ((!extensionList.hexflowerAsExtensionLocation && extensionLocation == 'lower') || (extensionList.hexflowerAsExtensionLocation == extensionLocation))"></app-game>
+          <app-game class="extension"
+            :gameAsExtension="Boolean(extensionData.generatorAsExtension)"
             :gSheetID="extensionData.generatorAsExtension.substring(extensionData.generatorAsExtension.indexOf('/d/') + 3, extensionData.generatorAsExtension.indexOf('/edit'))"
-            :sheetData="generatorSheetData"
-            :roomID="$route.params.roomID + '-generator-extensions'" v-if="Boolean(extensionData.generatorAsExtension) && ((!extensionList.generatorAsExtensionLocation && extensionLocation == 'lower') || (extensionList.generatorAsExtensionLocation == extensionLocation))"></app-generatorAsExtension>
+            :gameType="'Generator'"
+            :roomID="$route.params.roomID + '-generator-extensions'"
+            v-if="Boolean(extensionData.generatorAsExtension) && ((!extensionList.generatorAsExtensionLocation && extensionLocation == 'lower') || (extensionList.generatorAsExtensionLocation == extensionLocation))"></app-game>
           <app-staticBox class="extension" :staticBoxContent="extensionData.staticBoxContent" v-if="extensionData.staticBoxContent && ((!extensionList.staticBoxLocation && extensionLocation == 'lower') || (extensionList.staticBoxLocation == extensionLocation))"></app-staticBox>
           <app-playerTurnOrder class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :playerTurnOrderHeader="extensionData.playerTurnOrderHeader" :playerTurnOrderButtonLabel="extensionData.playerTurnOrderButtonLabel" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['playerTurnOrder'] && ((!extensionList.playerTurnOrderLocation && extensionLocation == 'lower') || (extensionList.playerTurnOrderLocation == extensionLocation))"></app-playerTurnOrder>
           <app-plusMinus class="extension" :plusMinus="JSON.parse(extensionData.plusMinus)" :plusMinusTitle="extensionData.plusMinusTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['plusMinus'] && ((!extensionList.plusMinusLocation && extensionLocation == 'lower') || (extensionList.plusMinusLocation == extensionLocation))"></app-plusMinus>
@@ -45,24 +44,23 @@
 <script>
 import axios from 'axios'
 
-// import DownloadExtensionData from './DownloadExtensionData.vue'
-
 export default {
   name: 'app-extensionManager',
   components: {
+    'app-game': () => import('../layout/Game.vue'),
     'app-currentPlayerHeader': () => import('./CurrentPlayerHeader.vue'),
     'app-diceRoller': () => import('./DiceRoller.vue'),
     'app-editableList': () => import('./EditableList.vue'),
     'app-embedWebsite': () => import('./EmbedWebsite.vue'),
-    'app-generatorAsExtension': () => import('../formats/Generator.vue'),
-    'app-hexflowerAsExtension': () => import('../formats/Hexflower.vue'),
+    // 'app-generatorAsExtension': () => import('../formats/Generator.vue'),
+    // 'app-hexflowerAsExtension': () => import('../formats/Hexflower.vue'),
     'app-journal': () => import('./Journal.vue'),
     'app-multiEditableLists': () => import('./MultiEditableLists.vue'),
     'app-playerTurnOrder': () => import('./PlayerTurnOrder'),
     'app-plusMinus': () => import('./PlusMinus.vue'),
     'app-standardDeck': () => import('./StandardDeck.vue'),
     'app-staticBox': () => import('./StaticBox.vue'),
-    // 'app-downloadExtensionData': DownloadExtensionData,
+    // 'app-downloadExtensionData': () => import('./DownloadExtensionData.vue'),
   },
   props: {
     extensionData: Object,
