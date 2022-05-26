@@ -53,6 +53,8 @@
 
 <script>
   import firebase from 'firebase'
+ 
+  import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
 
   export default {
     name: 'app',
@@ -69,7 +71,7 @@
       'app-game': () => import('./components/layout/Game.vue'),
       'app-uploadPage': () => import('./components/launchers/UploadPage.vue'),
       'app-customGameLauncher': () => import('./components/games/CustomGameLauncher.vue'),
-      'app-customGameSessionManager': () => import('./components/games/CustomGameSessionManager.vue'),
+      'app-customGameSessionManager': CustomGameSessionManager,
       
     },
     data () {
