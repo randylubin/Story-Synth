@@ -54,36 +54,22 @@
 <script>
   import firebase from 'firebase'
 
-  // Remove for published version any components you aren't using
-  import Header from './components/layout/Header.vue'
-  import Footer from './components/layout/Footer.vue'
-
-  import Homepage from './components/other/Homepage.vue'
-  import Gallery from './components/other/Gallery.vue'
-  import FormatsAndExtensionsOverview from './components/other/FormatsAndExtensionsOverview.vue'
-  import Grants from './components/other/Grants.vue'
-  import CSSPlayground from './components/other/CSSPlayground.vue'
-
-  import UploadPage from './components/launchers/UploadPage.vue'
-  import CustomGameLauncher from './components/games/CustomGameLauncher.vue'
-  import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
-
   export default {
     name: 'app',
     components: { // Remove unused components from the published version
-      'app-header': Header,
-      'app-footer': Footer,
+      'app-header': () => import('./components/layout/Header.vue'),
+      'app-footer': () => import('./components/layout/Footer.vue'),
 
-      'app-homepage': Homepage,
-      'app-grants': Grants,
-      'app-gallery': Gallery,
-      'app-formatsAndExtensions': FormatsAndExtensionsOverview,
-      'app-CSSPlayground': CSSPlayground,
+      'app-homepage': () => import('./components/other/Homepage.vue'),
+      'app-gallery': () => import('./components/other/Gallery.vue'),
+      'app-formatsAndExtensions': () => import('./components/other/FormatsAndExtensionsOverview.vue'),
+      'app-grants': () => import('./components/other/Grants.vue'),
+      'app-CSSPlayground': () => import('./components/other/CSSPlayground.vue'),
 
-      'app-uploadPage': UploadPage,
       'app-game': () => import('./components/layout/Game.vue'),
-      'app-customGameLauncher': CustomGameLauncher,
-      'app-customGameSessionManager': CustomGameSessionManager,
+      'app-uploadPage': () => import('./components/launchers/UploadPage.vue'),
+      'app-customGameLauncher': () => import('./components/games/CustomGameLauncher.vue'),
+      'app-customGameSessionManager': () => import('./components/games/CustomGameSessionManager.vue'),
       
     },
     data () {
