@@ -97,7 +97,7 @@
 
 <script>
 import axios from "axios";
-import {getRoom, updateRoom, onRoomUpdate  } from '../../firebase/models/rooms.js';
+import {getRoom, updateRoom, onRoomUpdate, setRoom  } from '../../firebase/models/rooms.js';
 
 export default {
   name: 'app-game',
@@ -191,95 +191,83 @@ export default {
   },
   watch: {
     roomID: function(){
-
       if (this.roomID){
         this.bindFirebaseToRoomInfo();
       }
     }
   },
   mounted(){
-    if (this.roomID){
-      this.bindFirebaseToRoomInfo();
-    }
-
-    this.fetchAndCleanSheetData(this.gSheetID);
+    this.bindFirebaseToRoomInfo()
   },
   methods: {
-    bindFirebaseToRoomInfo(){
-      if (this.roomID){
-        this.$bind('roomInfo', roomsCollection.doc(this.roomID))
+  bindFirebaseToRoomInfo(){
+    getRoom(this.roomID)
+      .then(room => {
+        if(!room){
+          setRoom(this.roomID, this.createDefaultRoom())
           .then(() => {
-            this.firebaseReady = true
-
-            if (!this.roomInfo){
-              roomsCollection
-                .doc(this.roomID)
-                .set({
-                    extensionData: {},
-                    currentCardIndex: 0,
-                    xCardIsActive: false,
-                    cardSequence: [0, 1, 2],
-                    locationOfLastCard: 0,
-                    timeBegan: null, 
-                    timeStopped: null, 
-                    stoppedDuration: 0, 
-                    running: false,
-                    roundInfo: "",
-                    roundProgress: "",
-                    roundTitle: "",
-                    currentPhase: 0,
-                    skipToEnding: false,
-                    lastSeenRound: 0,
-                    lastSeenPhase: 0,
-                    currentLocation: null,
-                    playRandomizerAnimation: false,
-                    hexesToAnimate: [],
-                    hexesVisible: [],
-                    hexesMidreveal: [],
-                    currentGeneratorSelection: [0, 1, 2],
-                })
+              console.log("setRoom ok")
+              this.fetchAndCleanSheetData(this.gSheetID);
+              if (this.dataReady) {
+                this.shuffleAndResetGame();
+              }
+          })
+          .catch(err => {
+            if (err.code == "permission-denied"){
+              this.permissionDenied = true
             }
-          })
-          .catch((error) => {
-            console.log('error in loading: ', error)
-          })
-      } else {
-        //this.$unbind('roomInfo')
-        this.roomInfo = {
-          extensionData: {},
-          currentCardIndex: 0,
-          xCardIsActive: false,
-          cardSequence: [0, 1, 2],
-          locationOfLastCard: 0,
-          timeBegan: null, 
-          timeStopped: null, 
-          stoppedDuration: 0, 
-          running: false,
-          roundInfo: "",
-          roundProgress: "",
-          roundTitle: "",
-          currentPhase: 0,
-          skipToEnding: false,
-          lastSeenRound: 0,
-          lastSeenPhase: 0,
-          currentLocation: null,
-          playRandomizerAnimation: false,
-          hexesToAnimate: [],
-          hexesVisible: [],
-          hexesMidreveal: [],
-          currentGeneratorSelection: [0, 1, 2],
+          });
+        }else{
+          // We must do this before setting the room other wise things break. Yay.
+          // We found that once we introduce auth, it can get in an infinite loop when a client isn't authorised.
+          this.fetchAndCleanSheetData(this.gSheetID);
+          this.setComponentRoom(room);
         }
-      }
+      });
+    onRoomUpdate(this.roomID, this.setComponentRoom );
+  },
+   createDefaultRoom(){
+     return {
+      extensionData: {},
+      currentCardIndex: 0,
+      xCardIsActive: false,
+      cardSequence: [0, 1, 2],
+      locationOfLastCard: 0,
+      timeBegan: null, 
+      timeStopped: null, 
+      stoppedDuration: 0, 
+      running: false,
+      roundInfo: "",
+      roundProgress: "",
+      roundTitle: "",
+      currentPhase: 0,
+      skipToEnding: false,
+      lastSeenRound: 0,
+      lastSeenPhase: 0,
+      currentLocation: null,
+      playRandomizerAnimation: false,
+      hexesToAnimate: [],
+      hexesVisible: [],
+      hexesMidreveal: [],
+      currentGeneratorSelection: [0, 1, 2],
+     }
+   },
+
+    setComponentRoom(room) {
+      this.roomInfo = room;
+      this.firebaseIsReady(true);
     },
+    
     firebaseIsReady(value){
       this.firebaseReady = value;
     },
+    // Sets the firebase doc
     firebaseSet(values){
-      roomsCollection.doc(this.roomID).set(values)      
+      setRoom(this.roomID, values)
     },
     firebaseUpdate(values){
       console.log('update values', values)
-      roomsCollection.doc(this.roomID).update(values)
+      updateRoom(this.roomID, values)
     },
     syncExtension(newData){
       this.firebaseUpdate(
