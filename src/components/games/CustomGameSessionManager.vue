@@ -1,31 +1,33 @@
 <template>
   <div class="">
+  <!--
     <app-aethelredsAcademy :roomID="$route.params.roomID" v-if="routeGSheetID == 'Aethelreds-Academy'"></app-aethelredsAcademy>
     <app-aroundTheRealm :roomID="$route.params.roomID" v-if="routeGSheetID == 'Around-The-Realm'"></app-aroundTheRealm>
     <app-clashAtIkara :roomID="$route.params.roomID" v-if="routeGSheetID == 'Clash-At-Ikara'"></app-clashAtIkara> 
     <app-postWorkParadise :roomID="$route.params.roomID" v-if="routeGSheetID == 'Post-Work-Paradise'"></app-postWorkParadise>
     <app-raisedByMechs :roomID="$route.params.roomID" v-if="routeGSheetID == 'Raised-By-Mechs'"></app-raisedByMechs>
     <app-umberdredInstitute :roomID="$route.params.roomID" v-if="routeGSheetID == 'Umberdred-Institute'"></app-umberdredInstitute>
+    -->
   </div>
 </template>
 
 <script>
-import AethelredsAcedemy from './AethelredsAcademy.vue';
-import AroundTheRealm from './AroundTheRealm.vue';
-import ClashAtIkara from './ClashAtIkara.vue';
-import PostWorkParadise from './PostWorkParadise.vue';
-import RaisedByMechs from './RaisedByMechs.vue';
-import UmberdredInstitute from './UmberdredInstitute.vue';
+//import AethelredsAcedemy from './AethelredsAcademy.vue';
+//import AroundTheRealm from './AroundTheRealm.vue';
+//import ClashAtIkara from './ClashAtIkara.vue';
+//import PostWorkParadise from './PostWorkParadise.vue';
+//import RaisedByMechs from './RaisedByMechs.vue';
+//import UmberdredInstitute from './UmberdredInstitute.vue';
 
 export default {
   name: 'app-customGameSession',
   components: {
-    'app-aethelredsAcademy': AethelredsAcedemy,
-    'app-aroundTheRealm': AroundTheRealm,
-    'app-clashAtIkara': ClashAtIkara,
-    'app-postWorkParadise': PostWorkParadise,
-    'app-raisedByMechs': RaisedByMechs,
-    'app-umberdredInstitute': UmberdredInstitute
+    //'app-aethelredsAcademy': AethelredsAcedemy,
+    //'app-aroundTheRealm': AroundTheRealm,
+    //'app-clashAtIkara': ClashAtIkara,
+    //'app-postWorkParadise': PostWorkParadise,
+    //'app-raisedByMechs': RaisedByMechs,
+    //'app-umberdredInstitute': UmberdredInstitute
   },
   props: {
     routeGSheetID: String,

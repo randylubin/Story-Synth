@@ -47,9 +47,8 @@
 </template>
 
 <script>
-import { rtdb } from "../../firebase";
-var rooms = rtdb.ref("rooms");
-var amOnline = rtdb.ref(".info/connected");
+
+import {notifyMyOnlineStatus, onRoomInfoUpdate} from "../../firebase/models/players_in_room.js";
 
 export default {
   name: "app-roomLink",
@@ -70,34 +69,19 @@ export default {
       atLeastOneMonetizedUser: false,
     };
   },
-  firebase: {
-    roomInfo: rtdb.ref("documents"),
-  },
   mounted() {
-    if (this.routeRoomID  && !this.userID) {
-      this.userID =
-        "rooms/" +
-        this.routeRoomID +
-        "/" +
-        Math.trunc(Math.random() * 100000).toString();
-
-      let userRef = rtdb.ref(this.userID);
-
-      amOnline.on("value", function (snapshot) {
-        if (snapshot.val()) {
-          userRef.onDisconnect().remove();
-          userRef.set({here:true});
-        }
-      });
-
-      this.$rtdbBind("roomInfo", rooms.child(this.routeRoomID)).then(() => {});
-
+    if (this.routeRoomID) {
+      
+      notifyMyOnlineStatus(this.routeRoomID);
+      onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
+        console.log(roomInfo)
+        this.roomInfo = roomInfo
+      })
       this.$gtag.event("reachedGameSession", {
         sheetID: this.$route.gSheetID,
         gameSessionURL: this.currentUrl,
       });
-
-      this.updateUrl()
+      this.updateUrl();
     }
   },
   computed: {
@@ -106,16 +90,17 @@ export default {
     }
   },
   watch: {
-    monetizedByUser: function(){
-      var userRef = rtdb.ref(this.userID)
-      let selfMonetized = this.monetizedByUser ?? false
-      amOnline.on("value", function (snapshot) {
-        if (snapshot.val()) {
-          userRef.onDisconnect().remove();
-          userRef.set({here:true, monetized: selfMonetized});
-        }
-      });
-    },
+    // TODO
+    //monetizedByUser: function(){
+    //  var userRef = rtdb.ref(this.userID)
+    //  let selfMonetized = this.monetizedByUser ?? false
+    //  amOnline.on("value", function (snapshot) {
+    //    if (snapshot.val()) {
+    //      userRef.onDisconnect().remove();
+    //      userRef.set({here:true, monetized: selfMonetized});
+    //    }
+    //  });
+    //},
     stringyRoomInfo: function(){
       for (const user in this.roomInfo){
         if (this.roomInfo[user].monetized || this.monetizedByUser){
@@ -125,26 +110,12 @@ export default {
       }
     },
     $route() {
-      if (this.routeRoomID && !this.userID) {
-        this.userID =
-          "rooms/" +
-          this.routeRoomID +
-          "/" +
-          Math.trunc(Math.random() * 1000).toString();
-
-        var userRef = rtdb.ref(this.userID);
-
-        amOnline.on("value", function (snapshot) {
-          if (snapshot.val()) {
-            userRef.onDisconnect().remove();
-            userRef.set({here:true});
-          }
+      if (this.routeRoomID) {
+        notifyMyOnlineStatus(this.routeRoomID);
+        onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
+            console.log({roomInfo})
+            this.roomInfo = roomInfo
         });
-
-        this.$rtdbBind("roomInfo", rooms.child(this.routeRoomID)).then(
-          () => {}
-        );
-
         this.$gtag.event("reachedGameSession", {
           sheetID: this.$route.gSheetID,
           gameSessionURL: this.currentUrl,

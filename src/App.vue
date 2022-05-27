@@ -52,7 +52,7 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
+  import {anonymousSignIn } from './firebase/auth.js';
  
   import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
 
@@ -132,7 +132,7 @@
     }
   },
     mounted () {
-      firebase.auth().signInAnonymously()
+      anonymousSignIn()
       .then(() => {
         //console.log('anon auth')
       })

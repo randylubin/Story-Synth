@@ -97,7 +97,7 @@
 
 <script>
 import axios from "axios";
-import { roomsCollection } from '../../firebase';
+import {getRoom, updateRoom, onRoomUpdate  } from '../../firebase/models/rooms.js';
 
 export default {
   name: 'app-game',
@@ -157,7 +157,7 @@ export default {
         'SlotMachine': 'app-slotMachine',
         'Phases': 'app-phases',
         'Generator': 'app-generator',
-        'Gridmap': 'app-gridmap',
+        //'Gridmap': 'app-gridmap',
         'Hexflower': 'app-hexflower',
         'Sandbox': 'app-sandbox',
       },
@@ -173,7 +173,7 @@ export default {
     'app-slotMachine': () => import('../formats/SlotMachine.vue'),
     'app-phases': () => import('../formats/Phases.vue'),
     'app-generator': () => import('../formats/Generator.vue'),
-    'app-gridmap': () => import('../formats/Gridmap.vue'),
+    //'app-gridmap': () => import('../formats/Gridmap.vue'),
     'app-hexflower': () => import('../formats/Hexflower.vue'),
     'app-sandbox': () => import('../formats/Sandbox.vue'),
 
