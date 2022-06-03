@@ -6,7 +6,8 @@
             :hexflowerAsExtension="Boolean(extensionData.hexflowerAsExtension)"
             :gSheetForExtension="extensionData.hexflowerAsExtension"
             :gSheetID="extensionData.hexflowerAsExtension.substring(extensionData.hexflowerAsExtension.indexOf('/d/') + 3, extensionData.hexflowerAsExtension.indexOf('/edit'))"
-            :roomID="$route.params.roomID + '-hexflower-extensions'" v-if="Boolean(extensionData.hexflowerAsExtension) && ((!extensionList.hexflowerAsExtensionLocation && extensionLocation == 'lower') || (extensionList.hexflowerAsExtensionLocation == extensionLocation))"></app-hexflowerAsExtension>
+            :roomID="$route.params.roomID + '-hexflower-extensions'"
+            v-if="Boolean(extensionData.hexflowerAsExtension) && (!extensionList.hexflowerFirstVisible || extensionList.hexflowerFirstVisible <= roomInfo.currentCardIndex) && ((!extensionList.hexflowerAsExtensionLocation && extensionLocation == 'lower') || (extensionList.hexflowerAsExtensionLocation == extensionLocation))"></app-hexflowerAsExtension>
           <app-generatorAsExtension class="extension"
             :generatorAsExtension="Boolean(extensionData.generatorAsExtension)"
             :gSheetForExtension="extensionData.generatorAsExtension"
