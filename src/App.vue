@@ -32,7 +32,7 @@
         </div>
         
         <app-game 
-          v-if="$route.params.gameType && !['CSS-Playground', 'Games', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          v-if="!['CSS-Playground', 'Games', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
           :roomID="$route.params.roomID"
           :gSheetID="$route.params.gSheetID"
           :gameType="$route.params.gameType"

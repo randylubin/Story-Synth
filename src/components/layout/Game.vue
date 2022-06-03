@@ -201,30 +201,32 @@ export default {
   },
   methods: {
   bindFirebaseToRoomInfo(){
-    getRoom(this.roomID)
-      .then(room => {
-        if(!room){
-          setRoom(this.roomID, this.createDefaultRoom())
-          .then(() => {
-              console.log("setRoom ok")
-              this.fetchAndCleanSheetData(this.gSheetID);
-              if (this.dataReady) {
-                this.shuffleAndResetGame();
+    if(this.roomID){
+      getRoom(this.roomID)
+        .then(room => {
+          if(!room){
+            setRoom(this.roomID, this.createDefaultRoom())
+            .then(() => {
+                console.log("setRoom ok")
+                this.fetchAndCleanSheetData(this.gSheetID);
+                if (this.dataReady) {
+                  this.shuffleAndResetGame();
+                }
+            })
+            .catch(err => {
+              if (err.code == "permission-denied"){
+                this.permissionDenied = true
               }
-          })
-          .catch(err => {
-            if (err.code == "permission-denied"){
-              this.permissionDenied = true
-            }
-          });
-        }else{
-          // We must do this before setting the room other wise things break. Yay.
-          // We found that once we introduce auth, it can get in an infinite loop when a client isn't authorised.
-          this.fetchAndCleanSheetData(this.gSheetID);
-          this.setComponentRoom(room);
-        }
-      });
-    onRoomUpdate(this.roomID, this.setComponentRoom );
+            });
+          }else{
+            // We must do this before setting the room other wise things break. Yay.
+            // We found that once we introduce auth, it can get in an infinite loop when a client isn't authorised.
+            this.fetchAndCleanSheetData(this.gSheetID);
+            this.setComponentRoom(room);
+          }
+        });
+      onRoomUpdate(this.roomID, this.setComponentRoom );
+    }
   },
    createDefaultRoom(){
      return {
