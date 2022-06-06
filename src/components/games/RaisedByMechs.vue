@@ -601,7 +601,7 @@ export default {
         locationOfLastCard: 0,
       },
       firstNonInstruction: 0,
-      tempExtensionData: { test: null },
+      tempExtensionData: {  },
       dataReady: false,
       firebaseReady: false,
       gSheet: [{ text: "loading" }],
@@ -855,35 +855,35 @@ export default {
 
           // Transform Sheets API response into cleanData
           gRows.forEach((item, i) => {
-            if (i !== 0 && item.values[0].formattedValue) {
+            if (i !== 0 && item[0]) {
               // Handle options
-              if (item.values[0].formattedValue == "option") {
-                this.customOptions[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
-                console.log(item.values[2].formattedValue);
+              if (item[0] == "option") {
+                this.customOptions[item[1]] =
+                  item[2];
+                console.log(item[2]);
               }
 
               // Handle extensions
-              if (item.values[0].formattedValue == "extension") {
-                this.tempExtensionData[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
+              if (item[0] == "extension") {
+                this.tempExtensionData[item[1]] =
+                  item[2];
 
                 console.log(
                   "extension -",
-                  item.values[1].formattedValue,
-                  item.values[2].formattedValue
+                  item[1],
+                  item[2]
                 );
               }
 
               // Handle cards
               if (
-                item.values[0].formattedValue !== "option" &&
-                item.values[0].formattedValue !== "extension"
+                item[0] !== "option" &&
+                item[0] !== "extension"
               ) {
                 var rowInfo = {
-                  ordered: item.values[0].formattedValue,
-                  headerText: item.values[1].formattedValue,
-                  bodyText: item.values[2].formattedValue,
+                  ordered: item[0],
+                  headerText: item[1],
+                  bodyText: item[2],
                 };
 
                 cleanData.push(rowInfo);

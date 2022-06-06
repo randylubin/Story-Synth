@@ -1,18 +1,21 @@
 <template>
   <div class="">
-  <!--
-    <app-aethelredsAcademy :roomID="$route.params.roomID" v-if="routeGSheetID == 'Aethelreds-Academy'"></app-aethelredsAcademy>
-    <app-aroundTheRealm :roomID="$route.params.roomID" v-if="routeGSheetID == 'Around-The-Realm'"></app-aroundTheRealm>
+
+    <app-aethelredsAcademy :roomID="$route.params.roomID" v-if="routeGSheetID == 'Aethelreds-Academy'"
+      :roomInfo="roomInfo" :gSheetID="gSheetID" :routeGSheetID="gSheetID" :gameType="gameType"
+      :userRole="$route.params.userRole" :gameAsExtension="gameAsExtension" :firebaseReady="firebaseReady"
+      @firebase-update="firebaseUpdate($event)" @firebase-set="firebaseSet($event)"></app-aethelredsAcademy>
+    <!-- <app-aroundTheRealm :roomID="$route.params.roomID" v-if="routeGSheetID == 'Around-The-Realm'"></app-aroundTheRealm>
     <app-clashAtIkara :roomID="$route.params.roomID" v-if="routeGSheetID == 'Clash-At-Ikara'"></app-clashAtIkara> 
     <app-postWorkParadise :roomID="$route.params.roomID" v-if="routeGSheetID == 'Post-Work-Paradise'"></app-postWorkParadise>
     <app-raisedByMechs :roomID="$route.params.roomID" v-if="routeGSheetID == 'Raised-By-Mechs'"></app-raisedByMechs>
-    <app-umberdredInstitute :roomID="$route.params.roomID" v-if="routeGSheetID == 'Umberdred-Institute'"></app-umberdredInstitute>
-    -->
+    <app-umberdredInstitute :roomID="$route.params.roomID" v-if="routeGSheetID == 'Umberdred-Institute'"></app-umberdredInstitute> -->
+
   </div>
 </template>
 
 <script>
-//import AethelredsAcedemy from './AethelredsAcademy.vue';
+import AethelredsAcedemy from './AethelredsAcademy.vue';
 //import AroundTheRealm from './AroundTheRealm.vue';
 //import ClashAtIkara from './ClashAtIkara.vue';
 //import PostWorkParadise from './PostWorkParadise.vue';
@@ -22,7 +25,7 @@
 export default {
   name: 'app-customGameSession',
   components: {
-    //'app-aethelredsAcademy': AethelredsAcedemy,
+    'app-aethelredsAcademy': AethelredsAcedemy,
     //'app-aroundTheRealm': AroundTheRealm,
     //'app-clashAtIkara': ClashAtIkara,
     //'app-postWorkParadise': PostWorkParadise,
@@ -32,6 +35,13 @@ export default {
   props: {
     routeGSheetID: String,
     routeUserRole: String,
+    roomID: String,
+    roomInfo: Object,
+    gSheetID: String,
+    gameType: String,
+    userRole: String,
+    gameAsExtension: Boolean,
+    firebaseReady: Boolean,
   },
   data: function() {
     return {
@@ -126,7 +136,12 @@ export default {
     }
   },
   methods: {
-
+    firebaseUpdate($event) {
+      this.$emit('firebase-update', $event)
+    },
+    firebaseSet($event) {
+      this.$emit('firebase-set', $event)
+    },
   }
 };
 </script>

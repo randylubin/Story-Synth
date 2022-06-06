@@ -239,6 +239,7 @@ export default {
     gSheetID: String,
     sheetData: Array,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
   },
   data: function(){
@@ -252,7 +253,6 @@ export default {
         revShare: 0.2,
       },
       dataReady: false,
-      tempExtensionData: { test: null },
       gSheet: [{text:"loading"}],
       numberOfPhases: 0,
       phaseNames: [],
@@ -522,64 +522,52 @@ export default {
       let cleanData = [];
 
       if (this.sheetData){
-        this.numberOfPhases = this.sheetData[0].values.length - 3
+        this.numberOfPhases = this.sheetData[0].length - 3
         
         for (var w = 0; w < this.numberOfPhases; w++) {
           this.phaseData.push([])
-          this.phaseNames.push(this.sheetData[0].values[w+3].formattedValue)
+          this.phaseNames.push(this.sheetData[0][w+3])
         }
 
         var newEndingIndex = 0
         
         this.sheetData.forEach((item, i) => {
-          if (i !== 0 && item.values[0].formattedValue){
+          if (i !== 0 && item[0]){
             
             // Handle options
-            if (item.values[0].formattedValue == "option"){
-              this.customOptions[item.values[1].formattedValue] =
-                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-              if (item.values[1].formattedValue == "phaseHelpText"){
+            if (item[0] == "option"){
+              this.customOptions[item[1]] =
+                this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+              if (item[1] == "phaseHelpText"){
                 this.customOptions.phaseHelpText = this.customOptions.phaseHelpText.split('|')
-              } else if (item.values[1].formattedValue == "showPastPrompts") {
+              } else if (item[1] == "showPastPrompts") {
                 this.customOptions.showPastPrompts = this.customOptions.showPastPrompts.split(',')
               }
             }
 
-            // Handle extensions
-            if (item.values[0].formattedValue == "extension") {
-              this.tempExtensionData[item.values[1].formattedValue] =
-                item.values[2].formattedValue;
-
-              console.log(
-                "extension -",
-                item.values[1].formattedValue,
-                item.values[2].formattedValue
-              );
-            }
-
             // Get count of instruction cards
-            if (item.values[0].formattedValue == 0){
+            if (item[0] == 0){
               this.firstNonInstruction += 1
             }
 
             // Get ending index
-            if ((item.values[0].formattedValue == 0 || item.values[0].formattedValue == 1) && this.endingIndex == 0){
+            if ((item[0] == 0 || item[0] == 1) && this.endingIndex == 0){
               newEndingIndex += 1
             }
 
             var rowInfo = {}
-            if (item.values[0].formattedValue >= 0){
+            if (item[0] >= 0){
               rowInfo = {
-                ordered: item.values[0].formattedValue,
-                headerText: item.values[1].formattedValue,
-                bodyText: this.$marked(item.values[2].formattedValue ?? null)
+                ordered: item[0],
+                headerText: item[1],
+                bodyText: this.$marked(item[2] ?? null)
               }
               cleanData.push(rowInfo)
             }
 
-            if (item.values[0].formattedValue == 1){
-              for (var j = 3; j < item.values.length; j++) {
-                this.phaseData[j-3].push(this.$marked(item.values[j].formattedValue ?? null))
+            if (item[0] == 1){
+              for (var j = 3; j < item.length; j++) {
+                this.phaseData[j-3].push(this.$marked(item[j] ?? null))
               }
             }
           }
@@ -601,7 +589,7 @@ export default {
           });
         }
         
-        if(this.firebaseReady && this.roomInfo.cardSequence.length < 4){this.shuffle();}
+        if(this.firebaseReady && this.roomInfo?.cardSequence.length < 4){this.shuffle();}
 
       }     
     }

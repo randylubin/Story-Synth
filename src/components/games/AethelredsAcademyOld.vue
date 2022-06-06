@@ -343,18 +343,16 @@
 <script>
 import { roomsCollection } from "../../firebase";
 import ExtensionManager from "../extensions/ExtensionManager.vue";
-import axios from "axios";
 import RoomLink from '../layout/RoomLink.vue';
 
 export default {
-  name: "app-umberdredInstitute",
+  name: "app-aethelredsAcademy",
   components: {
     "app-extensionManager": ExtensionManager,
     'app-roomLink': RoomLink,
   },
   props: {
     roomID: String,
-    gSheetID: String,
   },
   data: function () {
     return {
@@ -375,7 +373,7 @@ export default {
     };
   },
   mounted() {
-    this.fetchAndCleanSheetData(this.gSheetID);
+    this.fetchAndCleanSheetData();
 
     this.$bind("roomInfo", roomsCollection.doc(this.roomID))
       .then(() => {
@@ -463,206 +461,217 @@ export default {
         extensionData: this.roomInfo.extensionData,
       });
     },
-    fetchAndCleanSheetData(sheetID) {
-      // Remove for published version
-      if (!sheetID || sheetID == "demo") {
-        sheetID = "1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU";
+    fetchAndCleanSheetData() {
+
+      let gRows = [
+        ["deck","instructionText","instructionBody","1) Hero: introduce yourself to the committee and say which certification(s) you think you earned","Certification","Certification","Certification","2) Quest Giver: tell the committe about the goal of the quest","3) Hero: describe how you approached the quest in an attempt to earn the Certification(s)","4) Quest Giver: recommend if the Hero should earn the Certification"  ],
+        ["option","gameTitle","Æthelred's Academy for Aspiring Heroes","","","","","","",""  ],
+        ["option","showGameTitleOnCard","TRUE","","","","","","",""  ],
+        ["option","byline","By Greg Lubin and Randy Lubin","","","","","","",""  ],
+        ["option","coverImage","https://diegeticgames.com/uploads/aethelreds-logo.png","","","","","","",""  ],
+        ["option","gameBlurb","<h2>By Greg Lubin and Randy Lubin</h2>\n<div class=\"text-left\"><p>Tell silly stories about how aspiring heroes accept unlikely quests to earn dubious certifications in adventuring skills.</p><p>Æthelred's Academy is a non-accredited, for-profit institution. Attendees earn their certifications by going on quests and demonstrating competency in their skills.</p><p>Improvise short stories about these aspiring adventures and see if they succeed!</p>\n<h2 class=\"text-center\">Info</h2><ul class=\"text-left\"><li>2+ players</li><li>All ages</li><li>Play time: from 5 minutes to a two year \"degree\"</li><li>Genre: Fantasy</li><li>Tone: Comedy</li><li>Activity: improvising quest recaps</li></ul>\n<p>Icons via Flaticon designers: Freepik, fjstudio, Eucalyp, and Pixel perfect</p>","","","","","","",""  ],
+        ["option","styleTemplate","fantasy","","","","","","",""  ],
+        ["option","upperText","<div class=\"text-left\">\n<p>Welcome to Æthelred's Academy for Aspiring Heroes, a non-accredited and for-profit institution.</p><p>The proven Æthelred Process&trade; involves sending Heroes on quests where they can demonstrate their mastery of a specific adventuring skill.</p><p>In order to receive a certification for a skill, a Hero must return to Æthelred's to present the details of their quest to our certification-granting panel. Please note that aspiring Heroes will be charged a certification evaluation fee regardless of whether the panel issues a certification. Retrying is permitted, for an additional fee.</p>\n<h2 style=\"width:100%; text-align:center\">Instructions</h2><p>The Æthelred Process&trade; is standardized.  Each round will feature a new aspiring hero trying to get a certification for a skill – choose one player to be the aspiring Hero and another to be the Quest Giver. Any additional players are members of the certification committee.</p>\n<h3 style=\"width:100%; text-align:center\">On Each Round</h3>1) The Hero introduces themselves and which certificate they think they have earned (pick from the options listed).\n2) The Quest Giver introduces what the quest goal was and add some embellishing details about the challenges involved.\n3) The Hero tells the committee how they attempted to accomplish the quest in a manner demonstrating the skill up for certification.\n4) The Quest Giver says how they feel about the outcome of the quest and if they hero should be certified in the skill.\n\n<h3 style=\"width:100%; text-align:center\">Tips</h3><p>Each round should last a few minutes, but feel free to go longer or shorter if that's what the players want.</p><p>If the Hero isn't sure how to proceed, they can always say <i>\"And that's when I turned to the Quest Giver for guidance...\"</i> the Quest Giver player can then help with the storytelling, sharing what they advised the hero.</p><p>If the Quest Giver wants to complicate the Hero's story, they can jump in and say <i>\"You wouldn't believe what happened next...\"</i> and then narrate the next story beat.</p><p>Play as many rounds as you like, with each round featuring a new Hero and Quest Giver. When you are done playing the game, share how you expect Æthelred's Academy will rank in this year's Magical Realms News and World Report's survey of non-accredited, for-profit institutions.</p>\n\n</div>","","","","","","",""  ],
+        ["option","generatorRowLayout","1,3,1,1,1","","","","","","",""  ],
+        ["option","style","<style>\n\n.game-launcher .full-page-background {\n  background-color: rgb(117, 61,0);\n}\n\n.game-launcher .card-body {\n  background-color: white;\n}\n\n.full-page-background {\n    \n}\n\n.generator-row{ }\n.generator-col {\n\n}\n\n.generator-row-1 { }\n.generator-row-2 { }\n.generator-row-3 { }\n\n\n.category-label {\n  background-color: #343a40;\n  color: white;\n}\n\n\n.category-body { }\n\n\n</style>","","","","","","",""  ],
+        ["1","-","-","","Pyromancy","Dueling","Acting","Collect ten chickens that have fled the coop","<div style=\"font-size: 0.9em\">What obstacles did you face?\nWhat skills did you use?</div>","<div style=\"font-size: 0.9em\">Were you satisfied with the quest result?\nWas the Certification skill demonstrated?</div>"  ],
+        ["1","-","-","","Necromancy","Animal handling","Meditation","Douse the inferno that's consuming the West End","",""  ],
+        ["1","-","-","","Shapeshifting","Archery","Penmanship","Lead a caravan across the wartorn wastes","",""  ],
+        ["1","-","-","","Summoning","Sleight of Hand","Ballroom Dance","Scare off the bandits","",""  ],
+        ["1","-","-","","Divination","Cartography","Music","Deliver a letter to my aunt","",""  ],
+        ["1","-","-","","Illusion","Negotiations","Etiquette","Release the falsely imprisoned","",""  ],
+        ["1","-","-","","Artifact Enchanting","History","Tactical Retreat","Alphabetize the great archive","",""  ],
+        ["1","-","-","","Telepathy","Stealth","Tax Policy","Help the youth pass their exams","",""  ],
+        ["1","-","-","","Divine Favor","Athletics","Arts and Crafts","Wake the great dragon from its hundred year slumber","",""  ],
+        ["1","-","-","","Cryptozoology","Herbology","Interior Decorating","Convey an apology to a minor deity","",""  ],
+        ["1","-","-","","Teleportation","Medicine","Scrapbooking","Negotiate with the besieging army","",""  ],
+        ["1","-","-","","Alchemy","Traps","Riddles","Secure a strategic alliance","",""  ],
+        ["1","-","-","","","","","Cook a great feast","",""  ],
+        ["1","-","-","","","","","Find the missing treasurer who has a reputation for partying","",""  ],
+        ["1","-","-","","","","","Repair the great walls","",""  ],
+        ["1","-","-","","","","","Fill in for a missing actor on opening night","",""  ],
+        ["1","-","-","","","","","Place first at the town beauty contest","",""  ],
+        ["1","-","-","","","","","Catch the Midnight Murderer","",""  ],
+        ["1","-","-","","","","","Clean the royal stables","",""  ],
+        ["1","-","-","","","","","Train the locals to form a town guard","",""  ],
+        ["1","-","-","","","","","Collect the ingredients for a witches stew","",""  ],
+        ["1","-","-","","","","","Relight the lighthouse fire","",""  ],
+        ["1","-","-","","","","","Lull the great dragon back to sleep","",""  ],
+        ["1","-","-","","","","","Collect debts for Aethelred's bursar","",""  ],
+        ["1","-","-","","","","","Find 10 new students to enroll in Aethelred's (must pay up front!)","",""  ],
+        ["1","-","-","","","","","End the great pestilence","",""  ],
+        ["","","","","","","","Catch the biggest fish","",""  ]
+      ]
+
+      var cleanData = [];
+
+      this.numberOfCategories = gRows[0].length - 3;
+
+      for (var w = 0; w < this.numberOfCategories; w++) {
+        this.categoryData.push([]);
       }
 
-      // For published version, set getURL equal to the url of your spreadsheet
-      var getURL =
-        "https://sheets.googleapis.com/v4/spreadsheets/" +
-        "1-yrqoN7ZKeLHg0ynob9ZCpUbr64T24IrpX1RuSFUAwY" +
-        "?includeGridData=true&ranges=a1:aa100&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+      // Transform Sheets API response into cleanData
+      gRows.forEach((item, i) => {
+        // grab labels
+        if (i == 0) {
+          for (let j = 3; j < item.length; j++) {
+            this.categoryLabels.push(item[j]);
+          }
+          console.log("labels:", this.categoryLabels);
+        }
 
-      // For the published version - remove if you're hardcoding the data instead of using Google Sheets
-      axios
-        .get(getURL)
-        .then((response) => {
-          var cleanData = [];
-          var gRows = response.data.sheets[0].data[0].rowData;
-
-          this.numberOfCategories = gRows[0].length - 3;
-
-          for (var w = 0; w < this.numberOfCategories; w++) {
-            this.categoryData.push([]);
+        if (i !== 0 && item[0]) {
+          // Handle options
+          if (item[0] == "option") {
+            this.customOptions[item[1]] =
+              item[2];
+            console.log(item[2]);
           }
 
-          // Transform Sheets API response into cleanData
-          gRows.forEach((item, i) => {
-            // grab labels
-            if (i == 0) {
-              for (let j = 3; j < item.length; j++) {
-                this.categoryLabels.push(item[j]);
-              }
-              console.log("labels:", this.categoryLabels);
-            }
+          if (item[1] == "generatorRowLayout") {
+            let rowLayout =
+              this.customOptions.generatorRowLayout.split(",");
 
-            if (i !== 0 && item[0]) {
-              // Handle options
-              if (item[0] == "option") {
-                this.customOptions[item[1]] =
-                  item[2];
-                console.log(item[2]);
-              }
+            let bootstrapLayout = [];
 
-              if (item[1] == "generatorRowLayout") {
-                let rowLayout =
-                  this.customOptions.generatorRowLayout.split(",");
-
-                let bootstrapLayout = [];
-
-                for (let j = 0; j < rowLayout.length; j++) {
-                  let rowClass = "generator-row-" + (j + 1);
-                  switch (rowLayout[j]) {
-                    case "2":
-                      bootstrapLayout.push(
-                        "col-sm-6 generator-cell-one-half generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-6 generator-cell-one-half generator-cell generator-cell-row-end " +
-                          rowClass
-                      );
-                      break;
-                    case "3":
-                      bootstrapLayout.push(
-                        "col-sm-4 generator-cell-one-third generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-4 generator-cell-one-third generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-4 generator-cell-one-third generator-cell generator-cell-row-end " +
-                          rowClass
-                      );
-                      break;
-                    case "4":
-                      bootstrapLayout.push(
-                        "col-sm-3 generator-cell-one-quarter generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-3 generator-cell-one-quarter generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-3 generator-cell-one-quarter generator-cell " +
-                          rowClass
-                      );
-                      bootstrapLayout.push(
-                        "col-sm-3 generator-cell-one-quarter generator-cell generator-cell-row-end " +
-                          rowClass
-                      );
-                      break;
-                    default:
-                      bootstrapLayout.push(
-                        "col-sm-12 generator-cell-full generator-cell generator-cell-row-end " +
-                          rowClass
-                      );
-                  }
-                }
-
-                this.customOptions.generatorRowLayout = bootstrapLayout;
-              }
-
-              // Handle extensions
-              if (item[0] == "extension") {
-                this.tempExtensionData[item[1]] =
-                  item[2];
-
-                console.log(
-                  "extension -",
-                  item[1],
-                  item[2]
-                );
-              }
-
-              if (
-                item[0] !== "option" &&
-                item[0] !== "extension"
-              ) {
-                var rowInfo = {};
-                if (item[0] >= 0) {
-                  rowInfo = {
-                    ordered: item[0],
-                    headerText: item[1],
-                    bodyText: item[2],
-                  };
-                  cleanData.push(rowInfo);
-
-                  if (item[0] == 0) {
-                    this.firstNonInstruction += 1;
-                  }
-
-                  if (item[0] == 1) {
-                    for (var j = 3; j < item.length; j++) {
-                      if (item[j]) {
-                        this.categoryData[j - 3].push(
-                          item[j]
-                        );
-                      }
-                    }
-                  }
-                }
+            for (let j = 0; j < rowLayout.length; j++) {
+              let rowClass = "generator-row-" + (j + 1);
+              switch (rowLayout[j]) {
+                case "2":
+                  bootstrapLayout.push(
+                    "col-sm-6 generator-cell-one-half generator-cell " +
+                      rowClass
+                  );
+                  bootstrapLayout.push(
+                    "col-sm-6 generator-cell-one-half generator-cell generator-cell-row-end " +
+                      rowClass
+                  );
+                  break;
+                case "3":
+                  bootstrapLayout.push(
+                    "col-sm-4 generator-cell-one-third generator-cell " +
+                      rowClass
+                  );
+                  bootstrapLayout.push(
+                    "col-sm-4 generator-cell-one-third generator-cell " +
+                      rowClass
+                  );
+                  bootstrapLayout.push(
+                    "col-sm-4 generator-cell-one-third generator-cell generator-cell-row-end " +
+                      rowClass
+                  );
+                  break;
+                case "4":
+                  bootstrapLayout.push(
+                    "col-sm-3 generator-cell-one-quarter generator-cell " +
+                      rowClass
+                  );
+                  bootstrapLayout.push(
+                    "col-sm-3 generator-cell-one-quarter generator-cell " +
+                      rowClass
+                  );
+                  bootstrapLayout.push(
+                    "col-sm-3 generator-cell-one-quarter generator-cell " +
+                      rowClass
+                  );
+                  bootstrapLayout.push(
+                    "col-sm-3 generator-cell-one-quarter generator-cell generator-cell-row-end " +
+                      rowClass
+                  );
+                  break;
+                default:
+                  bootstrapLayout.push(
+                    "col-sm-12 generator-cell-full generator-cell generator-cell-row-end " +
+                      rowClass
+                  );
               }
             }
-          });
+
+            this.customOptions.generatorRowLayout = bootstrapLayout;
+          }
+
+          // Handle extensions
+          if (item[0] == "extension") {
+            this.tempExtensionData[item[1]] =
+              item[2];
+
+            console.log(
+              "extension -",
+              item[1],
+              item[2]
+            );
+          }
 
           if (
-            this.firebaseReady &&
-            Object.keys(this.tempExtensionData).length > 1
+            item[0] !== "option" &&
+            item[0] !== "extension"
           ) {
-            roomsCollection
-              .doc(this.roomID)
-              .update({ extensionData: this.tempExtensionData });
-          }
+            var rowInfo = {};
+            if (item[0] >= 0) {
+              rowInfo = {
+                ordered: item[0],
+                headerText: item[1],
+                bodyText: item[2],
+              };
+              cleanData.push(rowInfo);
 
-          if (this.customOptions.wallet) {
-            if (Math.random() <= this.customOptions.revShare) {
-              this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+              if (item[0] == 0) {
+                this.firstNonInstruction += 1;
+              }
+
+              if (item[0] == 1) {
+                for (var j = 3; j < item.length; j++) {
+                  if (item[j]) {
+                    this.categoryData[j - 3].push(
+                      item[j]
+                    );
+                  }
+                }
+              }
             }
           }
+        }
+      });
 
-          // apply custom style to body
-          let styleTemplate =
-            "style-template-" + this.customOptions.styleTemplate;
-          let body = document.getElementById("app"); // document.body;
-          body.classList.add(styleTemplate);
+      if (
+        this.firebaseReady &&
+        Object.keys(this.tempExtensionData).length > 1
+      ) {
+        roomsCollection
+          .doc(this.roomID)
+          .update({ extensionData: this.tempExtensionData });
+      }
 
-          // For the published version, set gSheet equal to your converted JSON object
-          this.gSheet = cleanData;
+      if (this.customOptions.wallet) {
+        if (Math.random() <= this.customOptions.revShare) {
+          this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+        }
+      }
 
-          console.log("done fetching and cleaning data");
-          this.dataReady = true;
+      // apply custom style to body
+      let styleTemplate =
+        "style-template-" + this.customOptions.styleTemplate;
+      let body = document.getElementById("app"); // document.body;
+      body.classList.add(styleTemplate);
 
-          if (location.hostname.toString() !== "localhost") {
-            this.$mixpanel.track("Visit Game Session", {
-              game_name: this.customOptions.gameTitle ?? "untitled",
-              session_url: location.hostname.toString() + this.$route.fullPath,
-              format: "Generator",
-            });
-          }
+      // For the published version, set gSheet equal to your converted JSON object
+      this.gSheet = cleanData;
 
-          if (this.firebaseReady && this.categoryData) {
-            this.shuffleAll();
-          }
-        })
-        .catch((error) => {
-          this.gSheet = [
-            {
-              ordered: 0,
-              headerText: "Error",
-              bodyText:
-                "Error loading the Google Sheet. Please make sure that the link is correct and that it is publicly viewable",
-            },
-          ];
+      console.log("done fetching and cleaning data");
+      this.dataReady = true;
 
-          this.error = error;
-          console.log(error.message, error);
+      if (location.hostname.toString() !== "localhost") {
+        this.$mixpanel.track("Visit Game Session", {
+          game_name: this.customOptions.gameTitle ?? "untitled",
+          session_url: location.hostname.toString() + this.$route.fullPath,
+          format: "Generator",
         });
+      }
+
+      if (this.firebaseReady && this.categoryData) {
+        this.shuffleAll();
+      }
     },
   },
 };
@@ -676,7 +685,6 @@ $base-color: rgb(33, 33, 33);
 .game-room {
   padding-top: 20px;
 }
-
 .generator-main {
   font-weight: bold;  
   border-radius: 5px;

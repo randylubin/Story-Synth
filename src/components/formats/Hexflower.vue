@@ -157,6 +157,7 @@ export default {
     gameAsExtension: Boolean,
     gSheetForExtension: String,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
   },
   data: function () {
@@ -195,7 +196,6 @@ export default {
         wallet: undefined,
         revShare: 0.2,
       },
-      tempExtensionData: { test: null },
       selectedWallet: undefined,
       roomMonetized: null,
       monetizedByUser: false,
@@ -564,39 +564,27 @@ export default {
 
       if (this.sheetData){
         this.sheetData.forEach((item, i) => {
-          if (i !== 0 && item.values[0].formattedValue) {
+          if (i !== 0 && item[0]) {
             // Handle options
-            if (item.values[0].formattedValue == "option") {
-              this.customOptions[item.values[1].formattedValue] =
-                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-              console.log(item.values[2].formattedValue);
-            }
-
-            // Handle extensions
-            if (item.values[0].formattedValue == "extension") {
-              this.tempExtensionData[item.values[1].formattedValue] =
-                item.values[2].formattedValue;
-
-              console.log(
-                "extension -",
-                item.values[1].formattedValue,
-                item.values[2].formattedValue
-              );
+            if (item[0] == "option") {
+              this.customOptions[item[1]] =
+                this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+              console.log(item[2]);
             }
 
             if (
-              item.values[0].formattedValue !== "option" &&
-              item.values[0].formattedValue !== "extension"
+              item[0] !== "option" &&
+              item[0] !== "extension"
             ) {
               let hexInfo = {};
-              if (item.values[0].formattedValue >= 0) {
+              if (item[0] >= 0) {
                 // initial hex info
                 hexInfo = {
-                  hexID: parseInt(item.values[0].formattedValue),
-                  summary: item.values[3].formattedValue,
-                  fullContent: item.values[4]?.formattedValue ? this.$marked(item.values[4]?.formattedValue) : null,
-                  probability: item.values[5]?.formattedValue,
-                  background: item.values[6]?.formattedValue,
+                  hexID: parseInt(item[0]),
+                  summary: item[3],
+                  fullContent: item[4] ? this.$marked(item[4]) : null,
+                  probability: item[5],
+                  background: item[6],
                 };
 
                 // check for background
@@ -639,13 +627,6 @@ export default {
           ]
         }
 
-        if (
-          this.firebaseReady &&
-          Object.keys(this.tempExtensionData).length > 1
-        ) {
-          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
-        }
-
         if (this.customOptions.wallet) {
           if (Math.random() <= this.customOptions.revShare) {
             this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
@@ -666,7 +647,7 @@ export default {
           });
         }
 
-        if (this.firebaseReady && this.roomInfo.hexesVisible.length == 0) {
+        if (this.firebaseReady && this.roomInfo?.hexesVisible.length == 0) {
           console.log('about to regen', this.roomInfo)
           this.regenerateHexes();
         }

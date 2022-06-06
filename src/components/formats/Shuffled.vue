@@ -365,12 +365,12 @@ export default {
     userRole: String,
     sheetData: Array,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
   },
   data: function() {
     return {
       firstNonInstruction: 0,
-      tempExtensionData: { test: null },
       dataReady: false,
       firebaseCacheError: false,
       gSheet: [{ text: "loading" }],
@@ -671,7 +671,7 @@ export default {
       });
     },
     shuffleAndResetGame() {
-      console.log("shuffling");
+      console.log("shuffling", this.orderedCards, this.unorderedDecks);
       this.firebaseCacheError = false;
       this.$bvModal.hide("reshuffleConfirm")
       this.$bvModal.hide("menuModal")	
@@ -736,50 +736,37 @@ export default {
       let cleanData = [];
 
       if (this.sheetData){
-        this.sheetData.forEach((item, i) => {
-          if (i !== 0 && item.values[0] && item.values[0].formattedValue) {
+        for (let i = 1; i < this.sheetData.length; i++) {
+          let row = this.sheetData[i]
+          if (row[0]) {
             // Handle options
-            if (item.values[0].formattedValue == "option") {
-              this.customOptions[item.values[1].formattedValue] =
-                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-              // console.log(item.values[2].formattedValue);
+            if (row[0] == "option") {
+              this.customOptions[row[1]] =
+                this.$markdownFriendlyOptions.includes(row[1]) ? this.$marked(row[2]) : row[2];
             }
-
-            // Handle extensions
-            if (item.values[0].formattedValue == "extension") {
-              this.tempExtensionData[item.values[1].formattedValue] =
-                item.values[2].formattedValue;
-
-              // console.log(
-              //   "extension -",
-              //   item.values[1].formattedValue,
-              //   item.values[2].formattedValue
-              // );
-            }
-
 
             // Handle cards
             if (
-              item.values[0].formattedValue !== "option" &&
-              item.values[0].formattedValue !== "extension"
+              row[0] !== "option" &&
+              row[0] !== "extension"
             ) {
-              if (item.values[2]){
-                item.values[2].formattedValue = item.values[2]?.formattedValue ?? ""
-              } else {item.values[2] = {formattedValue: ""} }
+              if (row[2]){
+                row[2] = row[2] ?? ""
+              } else {row[2] = ""}
               
-              if (item.values[3]){
-                item.values[3].formattedValue = item.values[3]?.formattedValue ?? ""
-              } else {item.values[3] = {formattedValue: ""}}
+              if (row[3]){
+                row[3] = row[3] ?? ""
+              } else {row[3] =  ""}
 
               var rowInfo = {
-                ordered: item.values[0].formattedValue,
-                deckNumberClass: "deck-number-" + item.values[0].formattedValue,
-                headerText: item.values[1]?.formattedValue,
-                bodyText: this.$marked(item.values[2]?.formattedValue),
+                ordered: row[0],
+                deckNumberClass: "deck-number-" + row[0],
+                headerText: row[1] ?? "",
+                bodyText: this.$marked(row[2] ?? ""),
               };
 
-              if (item.values[3] && item.values[3].formattedValue) {
-                rowInfo.cardBack = this.$marked(item.values[3].formattedValue)
+              if (row[3] && row[3]) {
+                rowInfo.cardBack = this.$marked(row[3])
               }
 
               cleanData.push(rowInfo);
@@ -789,14 +776,6 @@ export default {
               }
             }
           }
-        });
-
-        if (
-          this.firebaseReady &&
-          Object.keys(this.tempExtensionData).length > 1
-        ) {
-          this.$emit('firebase-update',
-            { extensionData: this.tempExtensionData });
         }
 
         this.unorderedDecks = [];
@@ -808,12 +787,12 @@ export default {
         this.gSheet = cleanData;
 
         // Sort cleanData into ordered and unordered decks
-        cleanData.forEach((item, index) => {
-          if (item.ordered == "0") {
-            this.orderedCards.push(item);
+        cleanData.forEach((row, index) => {
+          if (row.ordered == "0") {
+            this.orderedCards.push(row);
             this.firstNonInstruction += 1;
-          } else if (item.ordered !== "option") {
-            this.unorderedDecks[item.ordered].push(index);
+          } else if (row.ordered !== "option") {
+            this.unorderedDecks[row.ordered].push(index);
           }
         });
 

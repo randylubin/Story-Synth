@@ -134,6 +134,7 @@ export default {
     gSheetID: String,
     sheetData: Array,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
   },
   data: function(){
@@ -159,7 +160,6 @@ export default {
       selectedWallet: undefined,
       roomMonetized: null,
       monetizedByUser: false,
-      tempExtensionData: { test: null },
     }
   },
   metaInfo() {
@@ -347,65 +347,46 @@ export default {
       let cleanData = [];
 
       if (this.sheetData){
-        var headers = this.sheetData[0].values
+        var headers = this.sheetData[0]
 
         var playerArray = []
 
         headers.forEach((item, i) => {
           if (i>=2) {
-            playerArray.push(item.formattedValue)
+            playerArray.push(item)
           }
         });
 
         this.sheetData.forEach((item) => {
-          console.log(item.values[0].formattedValue)
+          console.log(item[0])
 
           // Handle options
-          if (item.values[0].formattedValue == "option"){
-            this.customOptions[item.values[1].formattedValue] =
-              this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-            console.log(item.values[2].formattedValue)
+          if (item[0] == "option"){
+            this.customOptions[item[1]] =
+              this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+            console.log(item[2])
           }
 
-          // Handle extensions
-              if (item.values[0].formattedValue == "extension") {
-                this.tempExtensionData[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
-
-                console.log(
-                  "extension -",
-                  item.values[1].formattedValue,
-                  item.values[2].formattedValue
-                );
-              }
-
-          if (item.values[0].formattedValue !== "option" && item.values[0].formattedValue !== "extension"){
+          if (item[0] !== "option" && item[0] !== "extension"){
 
             var rowInfo = {
-              order: item.values[0].formattedValue,
-              publicText: this.$marked(item.values[1].formattedValue ?? null)
+              order: item[0],
+              publicText: this.$marked(item[1] ?? null)
             }
 
             for (var p = 0; p < playerArray.length; p++) {
-              rowInfo[playerArray[p]] = this.$marked(item.values[p+2].formattedValue ?? null)
+              rowInfo[playerArray[p]] = this.$marked(item[p+2] ?? null)
             }
 
             /*
             playerArray.forEach((player, i)=>{
-              rowInfo[player] = parseInt(item.values[i+2].formattedValue);
+              rowInfo[player] = parseInt(item[i+2]);
             });
             */
 
             cleanData.push(rowInfo)
           }
         });
-
-        if (
-          this.firebaseReady &&
-          Object.keys(this.tempExtensionData).length > 1
-        ) {
-          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
-        }
 
         this.gSheet = cleanData.slice().reverse();
         this.playerArray = playerArray

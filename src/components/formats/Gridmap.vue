@@ -193,7 +193,7 @@ export default {
       originalGridmapData: [],
       categoryData: [],
       customOptions: {},
-      tempExtensionData: { test: null },
+      tempExtensionData: {  },
       error: false,
     };
   },
@@ -303,21 +303,21 @@ export default {
           gRows.forEach((item, i) => {
             // grab labels
             if (i == 0) {
-              for (let j = 3; j < item.values.length; j++) {
-                this.categoryLabels.push(item.values[j].formattedValue);
+              for (let j = 3; j < item.length; j++) {
+                this.categoryLabels.push(item[j]);
               }
               console.log("labels:", this.categoryLabels);
             }
 
-            if (i !== 0 && item.values[0].formattedValue) {
+            if (i !== 0 && item[0]) {
               // Handle options
-              if (item.values[0].formattedValue == "option") {
-                this.customOptions[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
-                console.log(item.values[2].formattedValue);
+              if (item[0] == "option") {
+                this.customOptions[item[1]] =
+                  item[2];
+                console.log(item[2]);
               }
 
-              if (item.values[1].formattedValue == "gridmapLayout") {
+              if (item[1] == "gridmapLayout") {
                 let rowLayout = this.customOptions.gridmapLayout.split(",");
 
                 let bootstrapLayout = [];
@@ -349,37 +349,37 @@ export default {
               }
 
               // Handle extensions
-              if (item.values[0].formattedValue == "extension") {
-                this.tempExtensionData[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
+              if (item[0] == "extension") {
+                this.tempExtensionData[item[1]] =
+                  item[2];
 
                 console.log(
                   "extension -",
-                  item.values[1].formattedValue,
-                  item.values[2].formattedValue
+                  item[1],
+                  item[2]
                 );
               }
 
               if (
-                item.values[0].formattedValue !== "option" &&
-                item.values[0].formattedValue !== "extension"
+                item[0] !== "option" &&
+                item[0] !== "extension"
               ) {
                 let rowInfo = {};
-                if (item.values[0].formattedValue >= 0) {
+                if (item[0] >= 0) {
                   rowInfo = {
-                    ordered: item.values[0].formattedValue,
-                    headerText: item.values[1].formattedValue,
-                    bodyText: item.values[2].formattedValue,
+                    ordered: item[0],
+                    headerText: item[1],
+                    bodyText: item[2],
                   };
                   cleanData.push(rowInfo);
 
-                  if (item.values[0].formattedValue == 0) {
+                  if (item[0] == 0) {
                     this.firstNonInstruction += 1;
                   }
 
-                  if (item.values[0].formattedValue == 1) {
+                  if (item[0] == 1) {
                     this.originalGridmapData.push(
-                      item.values[3].formattedValue
+                      item[3]
                     );
                   }
                 }

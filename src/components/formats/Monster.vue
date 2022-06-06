@@ -162,12 +162,12 @@ export default {
     gSheetID: String,
     sheetData: Array,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
   },
   data: function(){
     return {
       dataReady: false,
-      tempExtensionData: { test: null },
       gSheet: [{text:"loading"}],
       orderedCards: [],
       unorderedCards: [],
@@ -373,37 +373,25 @@ export default {
 
       if (this.sheetData){
         this.sheetData.forEach((item, i) => {
-          if (i !== 0 && item.values[0] && item.values[0].formattedValue){
+          if (i !== 0 && item[0] && item[0]){
             // Handle options
-            if (item.values[0].formattedValue == "option"){
-              this.customOptions[item.values[1].formattedValue] =
-                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-              console.log(item.values[2].formattedValue)
+            if (item[0] == "option"){
+              this.customOptions[item[1]] =
+                this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+              console.log(item[2])
             }
 
-            // Handle extensions
-            if (item.values[0].formattedValue == "extension") {
-              this.tempExtensionData[item.values[1].formattedValue] =
-                item.values[2].formattedValue;
-
-              console.log(
-                "extension -",
-                item.values[1].formattedValue,
-                item.values[2].formattedValue
-              );
-            }
-
-            if (item.values[0].formattedValue !== "option" &&
-                item.values[0].formattedValue !== "extension"){
+            if (item[0] !== "option" &&
+                item[0] !== "extension"){
 
               var rowInfo = {
-                ordered: item.values[0].formattedValue,
-                archetype: (item.values[1].formattedValue && !item.values[2].formattedValue) ? this.$marked(item.values[1].formattedValue) : item.values[1].formattedValue,
-                subtitle: item.values[2].formattedValue,
-                characterQuestion: item.values[3].formattedValue,
-                characterDetail: item.values[4].formattedValue ? this.$marked(item.values[4].formattedValue) : item.values[4].formattedValue,
-                keyQuestion: item.values[5].formattedValue,
-                keyDetails: item.values[6].formattedValue ? this.$marked(item.values[6].formattedValue) : item.values[6].formattedValue
+                ordered: item[0],
+                archetype: (item[1] && !item[2]) ? this.$marked(item[1]) : item[1],
+                subtitle: item[2],
+                characterQuestion: item[3],
+                characterDetail: item[4] ? this.$marked(item[4]) : item[4],
+                keyQuestion: item[5],
+                keyDetails: item[6] ? this.$marked(item[6]) : item[6]
               }
 
               cleanData.push(rowInfo)

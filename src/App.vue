@@ -32,17 +32,11 @@
         </div>
         
         <app-game 
-          v-if="!['CSS-Playground', 'Games', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          v-if="!['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
           :roomID="$route.params.roomID"
           :gSheetID="$route.params.gSheetID"
           :gameType="$route.params.gameType"
         ></app-game>
-        <div v-else-if="$route.params.gameType == 'Games'">
-          <div v-if="!$route.params.roomID && $route.params.gSheetID">
-            <app-customGameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-customGameLauncher>
-          </div>
-          <app-customGameSessionManager :routeGSheetID="$route.params.gSheetID" v-if="$route.params.roomID" :userRole="$route.params.userRole"></app-customGameSessionManager>
-        </div>
       </div>
       
       <app-footer v-if="$route.params.roomID && ['Timed', 'SecretCards'].includes($route.params.gameType)"></app-footer>
@@ -54,11 +48,11 @@
 <script>
   import {anonymousSignIn } from './firebase/auth.js';
  
-  import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue'
+  // import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue' // TODO push this to components
 
   export default {
     name: 'app',
-    components: { // Remove unused components from the published version
+    components: {
       'app-header': () => import('./components/layout/Header.vue'),
       'app-footer': () => import('./components/layout/Footer.vue'),
 
@@ -70,8 +64,8 @@
 
       'app-game': () => import('./components/layout/Game.vue'),
       'app-uploadPage': () => import('./components/launchers/UploadPage.vue'),
-      'app-customGameLauncher': () => import('./components/games/CustomGameLauncher.vue'),
-      'app-customGameSessionManager': CustomGameSessionManager,
+      // 'app-customGameLauncher': () => import('./components/games/CustomGameLauncher.vue'),
+      // 'app-customGameSessionManager': CustomGameSessionManager,
       
     },
     data () {

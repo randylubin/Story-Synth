@@ -110,6 +110,7 @@ export default {
     gSheetID: String,
     sheetData: Array,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
   },
   data: function(){
@@ -134,7 +135,6 @@ export default {
       selectedWallet: undefined,
       roomMonetized: null,
       monetizedByUser: false,
-      tempExtensionData: { test: null },
       error: false,
     }
   },
@@ -331,63 +331,44 @@ export default {
       let cleanData = [];
 
       if (this.sheetData){
-        var headers = this.sheetData[0].values
+        var headers = this.sheetData[0]
 
         var playerArray = []
 
         headers.forEach((item, i) => {
           if (i>=2) {
-            playerArray.push(item.formattedValue)
+            playerArray.push(item)
           }
         });
 
         this.sheetData.forEach((item) => {
-          console.log(item.values[0].formattedValue)
+          console.log(item[0])
 
           // Handle options
-          if (item.values[0].formattedValue == "option"){
-            this.customOptions[item.values[1].formattedValue] =
-                  this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-            console.log(item.values[2].formattedValue)
-          }
-
-          // Handle extensions
-          if (item.values[0].formattedValue == "extension") {
-            this.tempExtensionData[item.values[1].formattedValue] =
-              item.values[2].formattedValue;
-
-            console.log(
-              "extension -",
-              item.values[1].formattedValue,
-              item.values[2].formattedValue
-            );
+          if (item[0] == "option"){
+            this.customOptions[item[1]] =
+                  this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+            console.log(item[2])
           }
 
           // Handle cards
           if (
-            item.values[0].formattedValue !== "option" &&
-            item.values[0].formattedValue !== "extension"
+            item[0] !== "option" &&
+            item[0] !== "extension"
           ){
 
             var rowInfo = {
-              time: item.values[0].formattedValue,
-              text: this.$marked(item.values[1].formattedValue ?? null)
+              time: item[0],
+              text: this.$marked(item[1] ?? "")
             }
 
             playerArray.forEach((player, i)=>{
-              rowInfo[player] = parseInt(item.values[i+2].formattedValue);
+              rowInfo[player] = parseInt(item[i+2]);
             });
 
             cleanData.push(rowInfo)
           }
         });
-
-        if (
-          this.firebaseReady &&
-          Object.keys(this.tempExtensionData).length > 1
-        ) {
-          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
-        }
 
         this.gSheet = cleanData.slice().reverse();
         this.playerArray = playerArray

@@ -1,59 +1,20 @@
 <template>
   <div
-    class="generator game-room container"
+    class="generator game-room"
     v-if="roomInfo"
-    v-bind:class="['style-template-' + customOptions.styleTemplate]"
+    v-bind:class="{'px-0': gameAsExtension, styleTemplate: styleTemplate}"
   >
-    <div class="full-page-background"></div>
-    <div v-dompurify-html="customOptions.style"></div>
-
-    <!-- Menu Bar -->
-    <div class="menu-bar mb-4 d-flex align-items-center">
-      <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal><b-icon-list></b-icon-list> Menu</button>
-      <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
-      <app-roomLink class="d-none d-sm-block" :routeRoomID="$route.params.roomID" v-if="dataReady && firebaseReady"></app-roomLink>
-      
-      <b-modal
-        id="menuModal"
-        :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'" 
-        hide-footer
-      >  
-        <b-container>
-          <div class="row menu-row">
-            <b-button
-              class="border-0 btn-lg btn-block"
-              v-on:click="copyLinkToClipboard(); closeMenu();"
-              @click="$bvToast.show('copyToast')"
-            >
-              <b-icon-link45deg></b-icon-link45deg> Copy URL 
-            </b-button>
-          </div>
-        </b-container>
-        <div class="" v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel">
-          <hr class='mb-4'/>
-          <b-button
-            v-b-modal.modalOne
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalOneLabel"
-          >
-            {{ customOptions.modalOneLabel }}
-          </b-button>
-          <b-button
-            v-b-modal.modalTwo
-            v-on:click="closeMenu();"
-            variant="outline-dark"
-            class="btn-block btn-lg"
-            v-if="customOptions.modalTwoLabel"
-            >{{ customOptions.modalTwoLabel }}</b-button
-          >
-        </div>
-        <div class="row menu-row mt-4">
-          <a href="https://storysynth.org" target="_blank">Powered by Story Synth</a>
-        </div>
-      </b-modal>
-    </div>
+    <app-menuBar
+      :roomInfo="roomInfo"
+      :tempExtensionData="tempExtensionData"
+      :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser"
+      :routeRoomID="$route.params.roomID"
+      :dataReady="dataReady"
+      :firebaseReady="firebaseReady"
+      @roomMonetized="updateRoomMonetization"
+      v-if="!gameAsExtension"
+    ></app-menuBar>
 
     <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
 
@@ -76,90 +37,11 @@
     <div class="upper-text row" v-if="customOptions.upperText">
       <div
         class="col-sm"
-        style="white-space: pre-line"
         v-dompurify-html="customOptions.upperText"
       ></div>
     </div>
 
-    <div
-        v-if="
-          dataReady &&
-            firebaseReady &&
-            roomInfo &&
-            Object.keys(roomInfo.extensionData).length > 1
-        "
-      >
-        <app-extensionManager
-          @sync-extension="syncExtension()"
-          :extensionData="roomInfo.extensionData"
-          :extensionList="tempExtensionData"
-          :roomInfo="roomInfo"
-          :extensionLocation="'upper'"
-          class="extension-upper"
-        ></app-extensionManager>
-      </div>
-
-    <div class="row">
-      <div
-        class="btn-group col-sm"
-        role="group"
-        aria-label="Extra Info"
-        v-if="customOptions.modalOneLabel || customOptions.modalTwoLabel"
-      >
-        <!-- <b-button
-          v-b-modal.modalOne
-          variant="outline-dark"
-          v-if="customOptions.modalOneLabel"
-          >{{ customOptions.modalOneLabel }}</b-button
-        > -->
-
-        <b-modal
-          id="modalOne"
-          v-bind:title="customOptions.modalOneLabel"
-          hide-footer
-        >
-          <div
-            class="d-block text-left"
-            style="white-space: pre-line"
-            v-dompurify-html="customOptions.modalOneText"
-          ></div>
-        </b-modal>
-
-        <!-- <b-button
-          v-b-modal.modalTwo
-          variant="outline-dark"
-          v-if="customOptions.modalTwoLabel"
-          >{{ customOptions.modalTwoLabel }}</b-button
-        > -->
-
-        <b-modal
-          id="modalTwo"
-          v-bind:title="customOptions.modalTwoLabel"
-          hide-footer
-        >
-          <div
-            class="d-block text-left"
-            style="white-space: pre-line"
-            v-dompurify-html="customOptions.modalTwoText"
-          ></div>
-        </b-modal>
-      </div>
-    </div>
-
     <div class="mb-4">
-      <div
-        class="d-flex shadow img-fluid"
-        v-if="(!dataReady || !firebaseReady) && !error"
-      >
-        <div class="card-body text-center">
-          <h1 class="m-5">Loading</h1>
-          <b-spinner
-            class="m-5"
-            style="width: 4rem; height: 4rem"
-            label="Busy"
-          ></b-spinner>
-        </div>
-      </div>
 
       <div class="mt-4 generator-main card shadow mb-4">
         <div class="game-title-on-card mt-4" v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard">
@@ -239,7 +121,7 @@
               v-bind:key="index"
               class="col-12"
             >
-              <div v-on:click="shuffleOne(index)" class="" style="white-space: pre-line; cursor: pointer">
+              <div v-on:click="shuffleOne(index)" class="" style="cursor: pointer">
                 <span
                   v-dompurify-html="categoryLabels[index - 1] + ':'"
                   v-if="!customOptions.hideLabels"
@@ -320,150 +202,26 @@
       </div>
     </div>
 
-    <div
-      v-if="
-        dataReady &&
-          firebaseReady &&
-          roomInfo &&
-          Object.keys(roomInfo.extensionData).length > 1
-      "
-    >
-      <app-extensionManager
-        @sync-extension="syncExtension()"
-        :extensionData="roomInfo.extensionData"
-        :extensionList="tempExtensionData"
-        :roomInfo="roomInfo"
-        :extensionLocation="'lower'"
-        class="extension-lower"
-      ></app-extensionManager>
-    </div>
+    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
 <script>
-import { roomsCollection } from "../../firebase";
-import ExtensionManager from "../extensions/ExtensionManager.vue";
-import RoomLink from '../layout/RoomLink.vue';
-
 export default {
-  name: "app-aethelredsAcademy",
+  name: "app-aethelreds-academy",
   components: {
-    "app-extensionManager": ExtensionManager,
-    'app-roomLink': RoomLink,
+    'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
     roomID: String,
+    gSheetID: String,
+    gameAsExtension: Boolean,
+    roomInfo: Object,
+    firebaseReady: Boolean,
   },
   data: function () {
     return {
-      roomInfo: {
-        currentGeneratorSelection: [0, 1, 2],
-      },
-      dataReady: false,
-      firebaseReady: false,
-      gSheet: [{ text: "loading" }],
-      generatorLayout: [],
-      generatorView: 'Grid View',
-      numberOfCategories: 0,
-      categoryLabels: [],
-      categoryData: [],
-      customOptions: {},
-      tempExtensionData: { test: null },
-      error: false,
-    };
-  },
-  mounted() {
-    this.fetchAndCleanSheetData();
-
-    this.$bind("roomInfo", roomsCollection.doc(this.roomID))
-      .then(() => {
-        this.firebaseReady = true;
-      })
-      .then(() => {
-        if (!this.roomInfo) {
-          console.log("new room!");
-
-          roomsCollection.doc(this.roomID).set({
-            extensionData: this.tempExtensionData,
-            currentGeneratorSelection: [0, 1, 2],
-          });
-
-          if (this.dataReady) {
-            this.shuffleAll();
-          }
-        }
-      })
-      .catch((error) => {
-        console.log("error in loading: ", error);
-      });
-  },
-  methods: {
-    closeMenu(){
-      this.$bvModal.hide("menuModal");
-    },
-    copyLinkToClipboard(){
-      let currentUrl = location.hostname.toString() + "/" + this.$route.fullPath
-      navigator.clipboard.writeText(currentUrl).then(function() {
-        console.log('copied url')
-      }, function() {
-        console.log('copy failed')
-      });
-    },
-    shuffleAll() {
-      let newGeneratorSelection = [];
-
-      for (let i = 0; i < this.numberOfCategories; i++) {
-        newGeneratorSelection.push(
-          Math.floor(Math.random() * this.categoryData[i].length)
-        );
-      }
-
-      console.log("new generator picks:", newGeneratorSelection);
-
-      // sync the shuffled array
-      roomsCollection.doc(this.roomID).update({
-        currentGeneratorSelection: newGeneratorSelection,
-      });
-    },
-    shuffleOne(index) {
-      let newGeneratorSelection = this.roomInfo.currentGeneratorSelection;
-
-      let newValueIndex = Math.floor(
-        Math.random() * this.categoryData[index - 1].length
-      );
-
-      if (newGeneratorSelection[index - 1] == newValueIndex){
-        newGeneratorSelection[index - 1] = ''
-        roomsCollection.doc(this.roomID).update({
-          currentGeneratorSelection: newGeneratorSelection,
-        });
-      }      
-
-      newGeneratorSelection[index - 1] = newValueIndex;
-
-      // sync the shuffled array
-      roomsCollection.doc(this.roomID).update({
-        currentGeneratorSelection: newGeneratorSelection,
-      });
-    },
-    selectOne(index, optionIndex) {
-      let newGeneratorSelection = this.roomInfo.currentGeneratorSelection;
-
-      newGeneratorSelection[index - 1] = optionIndex;
-
-      // sync the shuffled array
-      roomsCollection.doc(this.roomID).update({
-        currentGeneratorSelection: newGeneratorSelection,
-      });
-    },
-    syncExtension() {
-      roomsCollection.doc(this.roomID).update({
-        extensionData: this.roomInfo.extensionData,
-      });
-    },
-    fetchAndCleanSheetData() {
-
-      let gRows = [
+      sheetData: [
         ["deck","instructionText","instructionBody","1) Hero: introduce yourself to the committee and say which certification(s) you think you earned","Certification","Certification","Certification","2) Quest Giver: tell the committe about the goal of the quest","3) Hero: describe how you approached the quest in an attempt to earn the Certification(s)","4) Quest Giver: recommend if the Hero should earn the Certification"  ],
         ["option","gameTitle","Æthelred's Academy for Aspiring Heroes","","","","","","",""  ],
         ["option","showGameTitleOnCard","TRUE","","","","","","",""  ],
@@ -501,176 +259,356 @@ export default {
         ["1","-","-","","","","","Find 10 new students to enroll in Aethelred's (must pay up front!)","",""  ],
         ["1","-","-","","","","","End the great pestilence","",""  ],
         ["","","","","","","","Catch the biggest fish","",""  ]
-      ]
+      ],
+      dataReady: false,
+      gSheet: [{ text: "loading" }],
+      generatorLayout: [],
+      generatorView: 'Grid View',
+      numberOfCategories: 0,
+      categoryLabels: [],
+      categoryData: [],
+      customOptions: {
+        gameTitle: undefined,
+        byline: undefined,
+        gameBlurb: undefined,
+        password: undefined,
+        wallet: undefined,
+        revShare: 0.2,
+      },
+      styleTemplate: "",
+      tempExtensionData: {  },
+      selectedWallet: undefined,
+      roomMonetized: null,
+      monetizedByUser: false,
+      error: false,
+    };
+  },
+  metaInfo() {
+    if (!this.gameAsExtension){
+      return {
+        title: this.customOptions.gameTitle,
+        meta: [
+          {
+            property: "description",
+            content: this.customOptions.gameBlurb,
+            vmid: "description",
+          },
+          {
+            property: "og:title",
+            content: this.customOptions.gameTitle,
+            vmid: "og:title",
+          },
+          {
+            property: "og:description",
+            content: this.customOptions.gameBlurb,
+            vmid: "og:description",
+          },
+          {
+            property: "og:image",
+            content: this.customOptions.ogImageSquare,
+            vmid: "og:image",
+          },
+          {
+            property: "og:url",
+            content: "https://storysynth.org/#" + this.$route.fullPath,
+            vmid: "og:url",
+          },
+          {
+            property: "twitter:card",
+            content: "summary",
+            vmid: "twitter:card",
+          },
+          {
+            property: "og:site_name",
+            content: "Story Synth",
+            vmid: "og:site_name",
+          },
+          {
+            property: "twitter:image:alt",
+            content: this.customOptions.gameTitle + " logo",
+            vmid: "twitter:image:alt",
+          },
+          {
+            name: "monetization",
+            content: this.selectedWallet,
+            vmid: "monetization",
+          },
+        ],
+      };
+    }
+  },
+  watch: {
+    sheetData: function(){
+      this.processSheetData();
+    },
+    firebaseReady: function(){
+      if (this.firebaseReady && !this.roomInfo){
+        this.initialFirebaseSetup()
+      }
+    },
+  },
+  mounted() {
+    if (document.monetization?.state == "started") {
+      this.monetizationStarted()
+    }
+    document.monetization?.addEventListener('monetizationstart', () => {
+      this.monetizationStarted()
+    })
 
-      var cleanData = [];
+    if (this.sheetData){
+      this.processSheetData();
+    }
 
-      this.numberOfCategories = gRows[0].length - 3;
+    if (this.firebaseReady && !this.roomInfo){
+      this.initialFirebaseSetup()
+    }
+  },
+  methods: {
+    initialFirebaseSetup() {
+      this.$emit('firebase-set',
+        {
+          extensionData: this.tempExtensionData,
+          currentGeneratorSelection: [0, 1, 2],
+        }
+      )
+      if (this.dataReady) {
+        this.shuffleAll();
+      }
+    },
+    monetizationStarted() {
+      console.log('monetizing')
+      this.monetizedByUser = true;
+    },
+    updateRoomMonetization(monetizationValue){
+      this.roomMonetized = monetizationValue;
+      console.log("room is now monetizied")
+    },
+    closeMenu(){
+      this.$bvModal.hide("menuModal");
+    },
+    copyLinkToClipboard(){
+      let currentUrl = location.hostname.toString() + this.$route.fullPath
+      navigator.clipboard.writeText(currentUrl).then(function() {
+        console.log('copied url')
+      }, function() {
+        console.log('copy failed')
+      });
+    },
+    shuffleAll() {
+      let newGeneratorSelection = [];
 
-      for (var w = 0; w < this.numberOfCategories; w++) {
-        this.categoryData.push([]);
+      for (let i = 0; i < this.numberOfCategories; i++) {
+        newGeneratorSelection.push(
+          Math.floor(Math.random() * this.categoryData[i].length)
+        );
       }
 
-      // Transform Sheets API response into cleanData
-      gRows.forEach((item, i) => {
-        // grab labels
-        if (i == 0) {
-          for (let j = 3; j < item.length; j++) {
-            this.categoryLabels.push(item[j]);
-          }
-          console.log("labels:", this.categoryLabels);
+      console.log("new generator picks:", newGeneratorSelection);
+
+      // sync the shuffled array
+      this.$emit('firebase-update',{
+        currentGeneratorSelection: newGeneratorSelection,
+      });
+    },
+    shuffleOne(index) {
+      let newGeneratorSelection = this.roomInfo.currentGeneratorSelection;
+
+      let newValueIndex = Math.floor(
+        Math.random() * this.categoryData[index - 1].length
+      );
+
+      if (newGeneratorSelection[index - 1] == newValueIndex){
+        newGeneratorSelection[index - 1] = ''
+        this.$emit('firebase-update',{
+          currentGeneratorSelection: newGeneratorSelection,
+        });
+      }      
+
+      newGeneratorSelection[index - 1] = newValueIndex;
+
+      // sync the shuffled array
+      this.$emit('firebase-update',{
+        currentGeneratorSelection: newGeneratorSelection,
+      });
+    },
+    selectOne(index, optionIndex) {
+      let newGeneratorSelection = this.roomInfo.currentGeneratorSelection;
+
+      newGeneratorSelection[index - 1] = optionIndex;
+
+      // sync the shuffled array
+      this.$emit('firebase-update',{
+        currentGeneratorSelection: newGeneratorSelection,
+      });
+    },
+    processSheetData() {
+      let cleanData = [];
+
+      if (this.sheetData){
+        this.numberOfCategories = this.sheetData[0].length - 3;
+        
+        for (var w = 0; w < this.numberOfCategories; w++) {
+          this.categoryData.push([]);
         }
 
-        if (i !== 0 && item[0]) {
-          // Handle options
-          if (item[0] == "option") {
-            this.customOptions[item[1]] =
-              item[2];
-            console.log(item[2]);
+        this.sheetData.forEach((item, i) => {
+          // grab labels
+          if (i == 0) {
+            for (let j = 3; j < item.length; j++) {
+              this.categoryLabels.push(item[j]);
+            }
+            console.log("labels:", this.categoryLabels);
           }
 
-          if (item[1] == "generatorRowLayout") {
-            let rowLayout =
-              this.customOptions.generatorRowLayout.split(",");
-
-            let bootstrapLayout = [];
-
-            for (let j = 0; j < rowLayout.length; j++) {
-              let rowClass = "generator-row-" + (j + 1);
-              switch (rowLayout[j]) {
-                case "2":
-                  bootstrapLayout.push(
-                    "col-sm-6 generator-cell-one-half generator-cell " +
-                      rowClass
-                  );
-                  bootstrapLayout.push(
-                    "col-sm-6 generator-cell-one-half generator-cell generator-cell-row-end " +
-                      rowClass
-                  );
-                  break;
-                case "3":
-                  bootstrapLayout.push(
-                    "col-sm-4 generator-cell-one-third generator-cell " +
-                      rowClass
-                  );
-                  bootstrapLayout.push(
-                    "col-sm-4 generator-cell-one-third generator-cell " +
-                      rowClass
-                  );
-                  bootstrapLayout.push(
-                    "col-sm-4 generator-cell-one-third generator-cell generator-cell-row-end " +
-                      rowClass
-                  );
-                  break;
-                case "4":
-                  bootstrapLayout.push(
-                    "col-sm-3 generator-cell-one-quarter generator-cell " +
-                      rowClass
-                  );
-                  bootstrapLayout.push(
-                    "col-sm-3 generator-cell-one-quarter generator-cell " +
-                      rowClass
-                  );
-                  bootstrapLayout.push(
-                    "col-sm-3 generator-cell-one-quarter generator-cell " +
-                      rowClass
-                  );
-                  bootstrapLayout.push(
-                    "col-sm-3 generator-cell-one-quarter generator-cell generator-cell-row-end " +
-                      rowClass
-                  );
-                  break;
-                default:
-                  bootstrapLayout.push(
-                    "col-sm-12 generator-cell-full generator-cell generator-cell-row-end " +
-                      rowClass
-                  );
-              }
+          if (i !== 0 && item[0]) {
+            // Handle options
+            if (item[0] == "option") {
+              this.customOptions[item[1]] =
+                this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+              console.log(item[2]);
             }
 
-            this.customOptions.generatorRowLayout = bootstrapLayout;
-          }
+            if (item[1] == "generatorRowLayout") {
+              let rowLayout =
+                this.customOptions.generatorRowLayout.split(",");
 
-          // Handle extensions
-          if (item[0] == "extension") {
-            this.tempExtensionData[item[1]] =
-              item[2];
+              let bootstrapLayout = [];
 
-            console.log(
-              "extension -",
-              item[1],
-              item[2]
-            );
-          }
-
-          if (
-            item[0] !== "option" &&
-            item[0] !== "extension"
-          ) {
-            var rowInfo = {};
-            if (item[0] >= 0) {
-              rowInfo = {
-                ordered: item[0],
-                headerText: item[1],
-                bodyText: item[2],
-              };
-              cleanData.push(rowInfo);
-
-              if (item[0] == 0) {
-                this.firstNonInstruction += 1;
+              for (let j = 0; j < rowLayout.length; j++) {
+                let rowClass = "generator-row-" + (j + 1);
+                switch (rowLayout[j]) {
+                  case "2":
+                    bootstrapLayout.push(
+                      "col-sm-6 generator-cell-one-half generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-6 generator-cell-one-half generator-cell generator-cell-row-end " +
+                        rowClass
+                    );
+                    break;
+                  case "3":
+                    bootstrapLayout.push(
+                      "col-sm-4 generator-cell-one-third generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-4 generator-cell-one-third generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-4 generator-cell-one-third generator-cell generator-cell-row-end " +
+                        rowClass
+                    );
+                    break;
+                  case "4":
+                    bootstrapLayout.push(
+                      "col-sm-3 generator-cell-one-quarter generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-3 generator-cell-one-quarter generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-3 generator-cell-one-quarter generator-cell " +
+                        rowClass
+                    );
+                    bootstrapLayout.push(
+                      "col-sm-3 generator-cell-one-quarter generator-cell generator-cell-row-end " +
+                        rowClass
+                    );
+                    break;
+                  default:
+                    bootstrapLayout.push(
+                      "col-sm-12 generator-cell-full generator-cell generator-cell-row-end " +
+                        rowClass
+                    );
+                }
               }
 
-              if (item[0] == 1) {
-                for (var j = 3; j < item.length; j++) {
-                  if (item[j]) {
-                    this.categoryData[j - 3].push(
-                      item[j]
-                    );
+              this.customOptions.generatorRowLayout = bootstrapLayout;
+            }
+
+            // Handle extensions
+            if (item[0] == "extension") {
+              this.tempExtensionData[item[1]] =
+                item[2];
+
+              console.log(
+                "extension -",
+                item[1],
+                item[2]
+              );
+            }
+
+            if (
+              item[0] !== "option" &&
+              item[0] !== "extension"
+            ) {
+              var rowInfo = {};
+              if (item[0] >= 0) {
+                rowInfo = {
+                  ordered: item[0],
+                  headerText: item[1],
+                  bodyText: this.$marked(item[2] ?? null),
+                };
+                cleanData.push(rowInfo);
+
+                if (item[0] == 0) {
+                  this.firstNonInstruction += 1;
+                }
+
+                if (item[0] == 1) {
+                  for (var j = 3; j < item.length; j++) {
+                    if (item[j]) {
+                      this.categoryData[j - 3].push(
+                        this.$marked(item[j] ?? null)
+                      );
+                    }
                   }
                 }
               }
             }
           }
-        }
-      });
-
-      if (
-        this.firebaseReady &&
-        Object.keys(this.tempExtensionData).length > 1
-      ) {
-        roomsCollection
-          .doc(this.roomID)
-          .update({ extensionData: this.tempExtensionData });
-      }
-
-      if (this.customOptions.wallet) {
-        if (Math.random() <= this.customOptions.revShare) {
-          this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
-        }
-      }
-
-      // apply custom style to body
-      let styleTemplate =
-        "style-template-" + this.customOptions.styleTemplate;
-      let body = document.getElementById("app"); // document.body;
-      body.classList.add(styleTemplate);
-
-      // For the published version, set gSheet equal to your converted JSON object
-      this.gSheet = cleanData;
-
-      console.log("done fetching and cleaning data");
-      this.dataReady = true;
-
-      if (location.hostname.toString() !== "localhost") {
-        this.$mixpanel.track("Visit Game Session", {
-          game_name: this.customOptions.gameTitle ?? "untitled",
-          session_url: location.hostname.toString() + this.$route.fullPath,
-          format: "Generator",
         });
-      }
 
-      if (this.firebaseReady && this.categoryData) {
-        this.shuffleAll();
+        // check for empty cols
+        this.categoryData = this.categoryData.filter(col => col != undefined && col.length != 0)
+        this.categoryLabels = this.categoryLabels.filter(col => col != undefined && col.length != 0)
+        this.numberOfCategories = this.categoryData.length
+        this.generatorRowLayout = this.generatorLayout.filter(row => row > this.numberOfCategories)
+
+        if (
+          this.firebaseReady &&
+          Object.keys(this.tempExtensionData).length > 1
+        ) {
+          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
+        }
+
+        if (this.customOptions.wallet) {
+          if (Math.random() <= this.customOptions.revShare) {
+            this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
+          }
+        }
+
+        // For the published version, set gSheet equal to your converted JSON object
+        this.gSheet = cleanData;
+
+        console.log("done fetching and cleaning data");
+        this.dataReady = true;
+
+        if (location.hostname.toString() !== "localhost") {
+          this.$mixpanel.track("Visit Game Session", {
+            game_name: this.customOptions.gameTitle ?? "untitled",
+            session_url: location.hostname.toString() + this.$route.fullPath,
+            format: "Generator",
+          });
+        }
+
+        if (this.firebaseReady && this.currentGeneratorSelection == [0, 1, 2]) {
+          this.shuffleAll();
+        }
       }
     },
   },
@@ -684,6 +622,7 @@ $base-color: rgb(33, 33, 33);
 
 .game-room {
   padding-top: 20px;
+  margin:auto;
 }
 .generator-main {
   font-weight: bold;  
@@ -720,7 +659,7 @@ select {
   color: inherit;
   transition: background-color 0.2s;
   transition: all 0.3s;  
-  white-space: nowrap;
+  // white-space: nowrap;
   overflow: hidden;
   outline-offset: -1px;
 }
@@ -750,7 +689,6 @@ select {
 
 .generator-cell-contents {
   width: 100%;
-  white-space: pre-line;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -891,13 +829,4 @@ select {
   text-decoration: underline;
 }
 
-.full-page-background {
-  position: absolute;
-  height: 100%;
-  width: 100vw;
-  top: 0;
-  right: 0;
-  margin: 0;
-  z-index: -1;
-}
 </style>

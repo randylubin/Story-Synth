@@ -259,7 +259,7 @@ import axios from "axios";
 import createRandomRoomName from "/src/misc/createRandomRoomName.js";
 
 export default {
-  name: "app-gameLauncher",
+  name: "app-customGameLauncher",
   props: {
     routeGSheetID: String,
     routeGameType: String,
@@ -550,11 +550,11 @@ export default {
 
           // Transform Sheets API response into cleanData
           gRows.forEach((item, i) => {
-            if (i !== 0 && item.values[0].formattedValue) {
+            if (i !== 0 && item[0]) {
               // Handle options
-              if (item.values[0].formattedValue == "option") {
-                this.customOptions[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
+              if (item[0] == "option") {
+                this.customOptions[item[1]] =
+                  item[2];
               }
             }
 

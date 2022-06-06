@@ -218,6 +218,7 @@ export default {
     sheetData: Array,
     gameAsExtension: Boolean,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
   },
   data: function () {
@@ -238,7 +239,6 @@ export default {
         revShare: 0.2,
       },
       styleTemplate: "",
-      tempExtensionData: { test: null },
       selectedWallet: undefined,
       roomMonetized: null,
       monetizedByUser: false,
@@ -407,7 +407,7 @@ export default {
       let cleanData = [];
 
       if (this.sheetData){
-        this.numberOfCategories = this.sheetData[0].values.length - 3;
+        this.numberOfCategories = this.sheetData[0].length - 3;
         
         for (var w = 0; w < this.numberOfCategories; w++) {
           this.categoryData.push([]);
@@ -416,21 +416,21 @@ export default {
         this.sheetData.forEach((item, i) => {
           // grab labels
           if (i == 0) {
-            for (let j = 3; j < item.values.length; j++) {
-              this.categoryLabels.push(item.values[j].formattedValue);
+            for (let j = 3; j < item.length; j++) {
+              this.categoryLabels.push(item[j]);
             }
             console.log("labels:", this.categoryLabels);
           }
 
-          if (i !== 0 && item.values[0].formattedValue) {
+          if (i !== 0 && item[0]) {
             // Handle options
-            if (item.values[0].formattedValue == "option") {
-              this.customOptions[item.values[1].formattedValue] =
-                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-              console.log(item.values[2].formattedValue);
+            if (item[0] == "option") {
+              this.customOptions[item[1]] =
+                this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+              console.log(item[2]);
             }
 
-            if (item.values[1].formattedValue == "generatorRowLayout") {
+            if (item[1] == "generatorRowLayout") {
               let rowLayout =
                 this.customOptions.generatorRowLayout.split(",");
 
@@ -492,40 +492,28 @@ export default {
               this.customOptions.generatorRowLayout = bootstrapLayout;
             }
 
-            // Handle extensions
-            if (item.values[0].formattedValue == "extension") {
-              this.tempExtensionData[item.values[1].formattedValue] =
-                item.values[2].formattedValue;
-
-              console.log(
-                "extension -",
-                item.values[1].formattedValue,
-                item.values[2].formattedValue
-              );
-            }
-
             if (
-              item.values[0].formattedValue !== "option" &&
-              item.values[0].formattedValue !== "extension"
+              item[0] !== "option" &&
+              item[0] !== "extension"
             ) {
               var rowInfo = {};
-              if (item.values[0].formattedValue >= 0) {
+              if (item[0] >= 0) {
                 rowInfo = {
-                  ordered: item.values[0].formattedValue,
-                  headerText: item.values[1].formattedValue,
-                  bodyText: this.$marked(item.values[2].formattedValue ?? null),
+                  ordered: item[0],
+                  headerText: item[1],
+                  bodyText: this.$marked(item[2] ?? null),
                 };
                 cleanData.push(rowInfo);
 
-                if (item.values[0].formattedValue == 0) {
+                if (item[0] == 0) {
                   this.firstNonInstruction += 1;
                 }
 
-                if (item.values[0].formattedValue == 1) {
-                  for (var j = 3; j < item.values.length; j++) {
-                    if (item.values[j].formattedValue) {
+                if (item[0] == 1) {
+                  for (var j = 3; j < item.length; j++) {
+                    if (item[j]) {
                       this.categoryData[j - 3].push(
-                        this.$marked(item.values[j].formattedValue ?? null)
+                        this.$marked(item[j] ?? null)
                       );
                     }
                   }
@@ -540,13 +528,6 @@ export default {
         this.categoryLabels = this.categoryLabels.filter(col => col != undefined && col.length != 0)
         this.numberOfCategories = this.categoryData.length
         this.generatorRowLayout = this.generatorLayout.filter(row => row > this.numberOfCategories)
-
-        if (
-          this.firebaseReady &&
-          Object.keys(this.tempExtensionData).length > 1
-        ) {
-          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
-        }
 
         if (this.customOptions.wallet) {
           if (Math.random() <= this.customOptions.revShare) {

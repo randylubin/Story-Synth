@@ -260,29 +260,22 @@
 <script>
 import axios from "axios";
 import createRandomRoomName from "/src/misc/createRandomRoomName.js";
-import VanityLookup from "./VanityLookup.js";
+import VanityLookup from "../../misc/VanityLookup.js";
 
 export default {
   name: "app-gameLauncher",
   props: {
     routeGSheetID: String,
     routeGameType: String,
+    customOptions: Object,
   },
   data() {
     return {
       currentUrl: location.hostname.toString() + "/#" + this.$route.fullPath,
       roomID: null,
-      dataReady: false,
+      dataReady: true,
       error: null,
       passwordInput: null,
-      customOptions: {
-        gameTitle: undefined,
-        byline: undefined,
-        gameBlurb: undefined,
-        password: undefined,
-        wallet: undefined,
-        revShare: 0.2,
-      },
       vanityLookup: VanityLookup,
     };
   },
@@ -342,7 +335,6 @@ export default {
   },
   mounted() {
     this.$emit('firebase-ready', false);
-    this.fetchAndCleanSheetData(this.routeGSheetID);
 
     if (!this.roomID) {
       this.assignRandomRoomName();

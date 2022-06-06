@@ -16,9 +16,6 @@
       <div class="col-sm">
         <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
         <h1 class="game-meta">Sandbox</h1>
-        <div v-if="dataReady && firebaseReady && roomInfo && Object.keys(roomInfo.extensionData).length > 1">
-          <!-- <app-extensionManager @sync-extension="syncExtension()" :gameTitle="customOptions.gameTitle" :extensionData="roomInfo.extensionData" :extensionList="tempExtensionData" :roomInfo="roomInfo"></app-extensionManager> -->
-        </div>
       </div>
     </div>
 
@@ -38,6 +35,7 @@ export default {
     roomID: String,
     sheetData: Array,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
   },
   data: function() {
@@ -50,7 +48,6 @@ export default {
         wallet: undefined,
         revShare: 0.2,
       },
-      tempExtensionData: {test:null},
       dataReady: false,
       selectedWallet: undefined,
       roomMonetized: null,
@@ -166,29 +163,16 @@ export default {
       if (this.sheetData){
         this.sheetData.forEach((item, i) => {
       
-          if (i !== 0 && item.values[0].formattedValue){
+          if (i !== 0 && item[0]){
 
             // Handle options
-            if (item.values[0].formattedValue == "option"){
-              this.$set(this.customOptions, item.values[1].formattedValue, item.values[2].formattedValue)
-              console.log(item.values[1].formattedValue, item.values[2].formattedValue)
+            if (item[0] == "option"){
+              this.$set(this.customOptions, item[1], item[2])
+              console.log(item[1], item[2])
               console.log('options:', this.customOptions)
-            }
-
-            // Handle extensions
-            if (item.values[0].formattedValue == "extension"){
-              this.tempExtensionData[item.values[1].formattedValue] = item.values[2].formattedValue
-
-
-              console.log(item.values[1].formattedValue, item.values[2].formattedValue)
             }
           }
         });
-
-        if(this.firebaseReady && Object.keys(this.tempExtensionData).length > 1) {
-          
-          this.$emit('firebase-update',{extensionData: this.tempExtensionData})
-        }
 
         if (this.customOptions.wallet) {
           if (Math.random() <= this.customOptions.revShare){

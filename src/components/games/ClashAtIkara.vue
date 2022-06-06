@@ -601,7 +601,7 @@ export default {
         locationOfLastCard: 0,
       },
       firstNonInstruction: 0,
-      tempExtensionData: { test: null },
+      tempExtensionData: {  },
       dataReady: false,
       firebaseReady: false,
       firebaseCacheError: false,
