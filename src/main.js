@@ -30,7 +30,7 @@ Vue.use(VueDOMPurifyHTML, {
       "path",
       "d",
     ],
-    ADD_TAGS: ["link", "svg", "g"],
+    ADD_TAGS: ["link", "svg", "g", "style"],
   },
 });
 

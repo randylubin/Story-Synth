@@ -1,30 +1,30 @@
 <template>
   <div class="container game-container">
+    <!-- Loading Spinner -->
+    <b-overlay :show="(!dataReady || (!firebaseReady && $route.params.roomID)) && !error" no-wrap>
+      <template #overlay>
+        <h1>Loading</h1>
+        <div v-if="customOptions.debugLoading == 'TRUE'">
+          <div>Google Sheet ready: {{dataReady}}</div>
+          <div>Firebase ready: {{firebaseReady}}</div>
+          <div>Error: {{error}}</div>
+        </div>
+        <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+      </template>
+    </b-overlay>
+
     <app-gameLauncher :routeGSheetID="gSheetID" :routeGameType="gameType" :customOptions="customOptions"
-      @firebase-ready="firebaseIsReady($event)" v-if="dataReady && !roomID && gSheetID && !gameAsExtension && (gameType != 'Games')">
+      @firebase-ready="firebaseIsReady($event)" v-if="dataReady && !roomID && gSheetID && !gameAsExtension">
     </app-gameLauncher>
 
-    <app-customGameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"
-      :customOptions="customOptions" v-if="dataReady && !roomID && !gameAsExtension && (gameType == 'Games')">
-    </app-customGameLauncher>
+    <!-- <app-customGameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"
+      :customOptions="customOptions" v-if="dataReady && !roomID && !gameAsExtension && (gameType == 'Custom')">
+    </app-customGameLauncher> -->
 
     <div v-if="roomID && gSheetID">
       <div class="full-page-background"></div>
       <div v-dompurify-html="customOptions.style"></div>
       <app-monetization :customOptions="customOptions" :roomMonetized="roomMonetized"></app-monetization>
-
-      <!-- Loading Spinner -->
-      <b-overlay :show="(!dataReady || !firebaseReady) && !error" no-wrap>
-        <template #overlay>
-          <h1>Loading</h1>
-          <div v-if="customOptions.debugLoading == 'TRUE'">
-            <div>Google Sheet ready: {{dataReady}}</div>
-            <div>Firebase ready: {{firebaseReady}}</div>
-            <div>Error: {{error}}</div>
-          </div>
-          <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
-        </template>
-      </b-overlay>
 
       <div v-if="
             dataReady &&
@@ -41,14 +41,14 @@
       <component :is="formatInfo.componentName" :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData"
         :gSheetID="gSheetID" :gameType="gameType" :userRole="$route.params.userRole" :gameAsExtension="gameAsExtension"
         :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady" @firebase-update="firebaseUpdate($event)"
-        @firebase-set="firebaseSet($event)" v-if="gameType != 'Games' && dataReady && firebaseReady"></component>
+        @firebase-set="firebaseSet($event)" v-if="gameType != 'Custom' && dataReady && firebaseReady"></component>
 
       <!-- Custom Game Sessions -->
       <app-customGameSessionManager :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData" :gSheetID="gSheetID"
         :routeGSheetID="gSheetID" :gameType="gameType" :userRole="$route.params.userRole"
         :gameAsExtension="gameAsExtension" :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady"
         @firebase-update="firebaseUpdate($event)" @firebase-set="firebaseSet($event)"
-        v-if="gameType == 'Games' && dataReady && firebaseReady"></app-customGameSessionManager>
+        v-if="gameType == 'Custom' && dataReady && firebaseReady"></app-customGameSessionManager>
 
       <!-- <app-timed :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed'"></app-timed>
         <app-shuffled ref="shuffled" :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" :userRole="$route.params.userRole" v-if="$route.params.gameType=='Shuffled'"></app-shuffled>
@@ -88,7 +88,6 @@ export default {
   props: {
     roomID: String,
     gSheetID: String,
-    gameType: String,
     gameAsExtension: Boolean,
   },
   data: function() {
@@ -127,6 +126,7 @@ export default {
         currentGeneratorSelection: [0, 1, 2], 
       },
       tempExtensionData: {},
+      gameType: null,
       error: null,
       sheetData: null,
       dataReady: null,
@@ -188,6 +188,12 @@ export default {
     this.fetchAndCleanSheetData(this.gSheetID);
     if (this.roomID) {
       this.bindFirebaseToRoomInfo()
+    }
+
+    if (this.$route.params.gameType != "Games") {
+      this.gameType = this.$route.params.gameType;
+    } else {
+      this.gameType = this.customGameData[this.gSheetID]?.gameType ?? "Custom";
     }
   },
   methods: {
@@ -289,51 +295,66 @@ export default {
         sheetID = "1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w";
       }
 
+      // Vanity look up for custom named games with format in URL
       if (this.vanityLookup[sheetID]) {
+        console.log('setting vanity sheetID')
         sheetID = this.vanityLookup[sheetID];
       }
 
-      // For published version, set getURL equal to the url of your spreadsheet
-      let getURL =
-        "https://sheets.googleapis.com/v4/spreadsheets/" +
-        sheetID +
-        "?includeGridData=true&ranges=a1:aa400&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+      // Look for sheet ID for game at /Games/ 
+      if (this.$route.params.gameType == "Games" && this.customGameData[this.gSheetID] && this.customGameData[this.gSheetID].sheetID) {
+        console.log('set custom game sheet to fetch')
+        sheetID = this.customGameData[this.gSheetID].sheetID;
+      }
 
-      axios
-        .get(getURL)
-        .then((response) => {
-          let rawSheetData = response.data.sheets[0].data[0].rowData;
-          let cleanData = []
+      if (this.$route.params.gameType == "Games" && this.customGameData[this.gSheetID] && this.customGameData[this.gSheetID].sheetData) {
+        console.log('processing hardcoded sheet')
+        this.sheetData = this.customGameData[this.gSheetID].sheetData;
+        this.processSheetData();
+      } else {
 
-          rawSheetData.forEach((item, i) => {
-            cleanData.push([])
-            if (item.values[0]) {
-              for (let v = 0; v < item.values.length; v++){
-                if (item.values[v] && item.values[v].formattedValue) {
-                  cleanData[i].push(item.values[v].formattedValue)
-                } else {
-                  cleanData[i].push(null)
+        // For published version, set getURL equal to the url of your spreadsheet
+        let getURL =
+          "https://sheets.googleapis.com/v4/spreadsheets/" +
+          sheetID +
+          "?includeGridData=true&ranges=a1:aa400&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+
+        axios
+          .get(getURL)
+          .then((response) => {
+            let rawSheetData = response.data.sheets[0].data[0].rowData;
+            let cleanData = []
+
+            rawSheetData.forEach((item, i) => {
+              cleanData.push([])
+              if (item.values[0]) {
+                for (let v = 0; v < item.values.length; v++){
+                  if (item.values[v] && item.values[v].formattedValue) {
+                    cleanData[i].push(item.values[v].formattedValue)
+                  } else {
+                    cleanData[i].push(null)
+                  }
                 }
               }
-            }
+            });
+
+            this.sheetData = cleanData;
+
+            this.processSheetData()
+          })
+          .catch((error) => {
+            this.sheetData = [
+              {
+                ordered: 0,
+                headerText: "Error",
+                bodyText:
+                  "Error loading the Google Sheet. Please make sure that the link is correct and that it is publicly viewable",
+              },
+            ];
+            this.error = error;
+            console.log(error.message, error);
           });
-
-          this.sheetData = cleanData;
-
-          this.processSheetData()
-        })
-        .catch((error) => {
-          this.sheetData = [
-            {
-              ordered: 0,
-              headerText: "Error",
-              bodyText:
-                "Error loading the Google Sheet. Please make sure that the link is correct and that it is publicly viewable",
-            },
-          ];
-          this.error = error;
-          console.log(error.message, error);
-        });
+      }
     },
     processSheetData() {
       if (this.sheetData) {
@@ -379,9 +400,13 @@ export default {
         let body = document.getElementById("app"); // document.body;
         body.classList.add(styleTemplate);
 
-        if (this.customOptions.style) {
-          if (this.customOptions.style.substring(0, 7) != "<style>") {
+        if (this.customOptions?.style) {
+          if (this.customOptions.style.substring(0, 7) != "<style>" && this.customOptions.style.substring(0, 5) != "<link") {
+            console.log('adding style tags')
             this.customOptions.style = "<style>" + this.customOptions.style + "</style>"
+          } else {
+            console.log('adding div wrapper')
+            this.customOptions.style = "<div>" + this.customOptions.style + "</div>"
           }
         }
 

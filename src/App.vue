@@ -35,7 +35,6 @@
           v-if="!['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
           :roomID="$route.params.roomID"
           :gSheetID="$route.params.gSheetID"
-          :gameType="$route.params.gameType"
         ></app-game>
       </div>
       
