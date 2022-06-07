@@ -14,7 +14,7 @@
     </b-overlay>
 
     <app-gameLauncher :routeGSheetID="gSheetID" :routeGameType="gameType" :customOptions="customOptions"
-      @firebase-ready="firebaseIsReady($event)" v-if="dataReady && !roomID && gSheetID && !gameAsExtension">
+       v-if="dataReady && !roomID && gSheetID && !gameAsExtension">
     </app-gameLauncher>
 
     <!-- <app-customGameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"
@@ -44,11 +44,11 @@
         @firebase-set="firebaseSet($event)" v-if="gameType != 'Custom' && dataReady && firebaseReady"></component>
 
       <!-- Custom Game Sessions -->
-      <app-customGameSessionManager :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData" :gSheetID="gSheetID"
+      <!-- <app-customGameSessionManager :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData" :gSheetID="gSheetID"
         :routeGSheetID="gSheetID" :gameType="gameType" :userRole="$route.params.userRole"
         :gameAsExtension="gameAsExtension" :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady"
         @firebase-update="firebaseUpdate($event)" @firebase-set="firebaseSet($event)"
-        v-if="gameType == 'Custom' && dataReady && firebaseReady"></app-customGameSessionManager>
+        v-if="gameType == 'Custom' && dataReady && firebaseReady"></app-customGameSessionManager> -->
 
       <!-- <app-timed :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed'"></app-timed>
         <app-shuffled ref="shuffled" :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" :userRole="$route.params.userRole" v-if="$route.params.gameType=='Shuffled'"></app-shuffled>
@@ -181,6 +181,9 @@ export default {
     roomID: function(){
       if (this.roomID){
         this.bindFirebaseToRoomInfo();
+      } else {
+        this.firebaseIsReady(false)
+        // TODO unbind firebase
       }
     }
   },

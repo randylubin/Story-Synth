@@ -41,6 +41,8 @@ export default {
     gameType: String,
     userRole: String,
     gameAsExtension: Boolean,
+    sheetData: Array,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
   },
   data: function() {

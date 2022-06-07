@@ -1,60 +1,40 @@
 <template>
-  <div class="phases game-room" v-if="roomInfo">      
-    <app-menuBar
-      :roomInfo="roomInfo"
-      :tempExtensionData="tempExtensionData"
-      :customOptions="customOptions"
-      :monetizedByUser="monetizedByUser"
-      :routeRoomID="$route.params.roomID"
-      :dataReady="dataReady"
-      :firebaseReady="firebaseReady"
-      @roomMonetized="updateRoomMonetization"
-    >
+  <div class="phases game-room" v-if="roomInfo">
+    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
+      :firebaseReady="firebaseReady" @roomMonetized="updateRoomMonetization">
       <div class="row menu-row">
-        <b-button
-          v-b-modal.reshuffleConfirm
-          v-on:click="closeMenu();"
-          class="control-button-restart btn-lg btn-block"
-          variant="outline-dark"
-          :disabled="roomInfo.xCardIsActive"
-          v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
-          color="rgb(187, 138, 200)"
-          >Restart</b-button
-        >
+        <b-button v-b-modal.reshuffleConfirm v-on:click="closeMenu();" class="control-button-restart btn-lg btn-block"
+          variant="outline-dark" :disabled="roomInfo.xCardIsActive"
+          v-if="!customOptions.facilitatorMode || userRole == 'facilitator'" color="rgb(187, 138, 200)">Restart
+        </b-button>
       </div>
       <div class="row menu-row">
-        <b-button
-          variant="outline-dark"
-          class="control-button-safety-card btn-lg btn-block"
-          v-on:click="xCard(); closeMenu();"
-          v-dompurify-html="
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+          v-on:click="xCard(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
               ? customOptions.safetyCardButton
               : 'X-Card'
-          "
-          ></b-button>
+          "></b-button>
       </div>
       <div class="row menu-row" v-if="roomInfo.currentCardIndex < firstNonInstruction">
-        <b-button
-          variant="outline-dark"
-          class="btn-lg btn-block"
-          v-on:click="skipInstructions(); closeMenu();" 
-          >
-            Skip Instructions
-          </b-button>
+        <b-button variant="outline-dark" class="btn-lg btn-block" v-on:click="skipInstructions(); closeMenu();">
+          Skip Instructions
+        </b-button>
       </div>
       <div class="row menu-row" v-if="roomInfo.currentCardIndex >= firstNonInstruction">
-        <b-button
-          variant="outline-dark"
-          class="btn-lg btn-block"
-          :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive" v-on:click="ending(); closeMenu();">
+        <b-button variant="outline-dark" class="btn-lg btn-block"
+          :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive"
+          v-on:click="ending(); closeMenu();">
           Ending
         </b-button>
       </div>
     </app-menuBar>
-  
-    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
-    
+
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
+        :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
+      it to design your own game!</b-alert>
+
     <!-- <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
         <div class="col-sm">
@@ -77,90 +57,102 @@
     </div> -->
 
     <transition name="fade">
-      <div class="fab-buttons container" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
-          <button
-            class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
-            v-on:click="previousCard()"
-            v-b-tooltip.hover title="Previous Card"
-            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0"
-          >
-            <!-- Previous Card -->
-            <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
-            <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
-          </button>
-          <button
-            class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow"
-            v-b-tooltip.hover title="Next Card"
-            v-on:click="nextCard()"
-            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)"
-          >
-            <!-- Next Card -->
-            <div v-if="roomInfo.currentCardIndex == 0">
-              <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
-              <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
-            </div>
-            <div v-else>
-              <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
-              <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>              
-            </div>                
-          </button>
-      </div>        
+      <div class="fab-buttons container"
+        v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
+        <button class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
+          v-on:click="previousCard()" v-b-tooltip.hover title="Previous Card"
+          :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">
+          <!-- Previous Card -->
+          <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
+          <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+        </button>
+        <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
+          title="Next Card" v-on:click="nextCard()"
+          :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)">
+          <!-- Next Card -->
+          <div v-if="roomInfo.currentCardIndex == 0">
+            <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
+            <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
+          </div>
+          <div v-else>
+            <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
+            <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>
+          </div>
+        </button>
+      </div>
     </transition>
 
 
 
-    <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
-      
-        <div class="card d-flex shadow img-fluid" v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
-          
-          <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%" v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
-          <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0) && (!customOptions.cardBackgroundImageAlign)">
-          <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" top v-if="customOptions.cardBackgroundImageAlign == 'top' && roomInfo.currentCardIndex != 0"></b-card-img>
+    <div
+      v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'"
+      class="mb-4">
 
-          <div class="card-body justify-content-center mt-4 mx-4" v-if="!roomInfo.xCardIsActive && dataReady && firebaseReady && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': (customOptions.cardBackgroundImage && (!customOptions.cardBackgroundImageAlign))}">
-            <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
-              <div class="col-sm">
-                <h2>Instructions</h2>
-                <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction -1" variant="dark"></b-progress>
-              </div>
-            </div>
-            
-            <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
-              <h2 class="card-header-text">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h2>
-              
-              <p v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText" v-bind:class="{ 'text-left': gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText.length > 60 }" class="my-4" v-dompurify-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
-            </div>
+      <div class="card d-flex shadow img-fluid"
+        v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
 
-            <div v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
-              <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-dompurify-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
+        <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%"
+          v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
+        <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%"
+          v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0) && (!customOptions.cardBackgroundImageAlign)">
+        <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" top
+          v-if="customOptions.cardBackgroundImageAlign == 'top' && roomInfo.currentCardIndex != 0"></b-card-img>
+
+        <div class="card-body justify-content-center mt-4 mx-4"
+          v-if="!roomInfo.xCardIsActive && dataReady && firebaseReady && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)"
+          v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': (customOptions.cardBackgroundImage && (!customOptions.cardBackgroundImageAlign))}">
+          <div class="row mb-4"
+            v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
+            <div class="col-sm">
+              <h2>Instructions</h2>
+              <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction -1" variant="dark"></b-progress>
+            </div>
+          </div>
+
+          <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
+            <h2 class="card-header-text">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h2>
+
+            <p v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"
+              v-bind:class="{ 'text-left': gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText.length > 60 }"
+              class="my-4" v-dompurify-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+          </div>
+
+          <div
+            v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
+            <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-dompurify-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
               </div>-->
-              <h2 class="card-header-text">{{phaseNames[roomInfo.currentPhase]}}</h2>
-              <div v-dompurify-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]"></div>
-              <div v-if="Array.isArray(customOptions.phaseHelpText)" class="my-4">
-                <p class="phase-help-text">
-                  <i class="">{{customOptions.phaseHelpText[roomInfo.currentPhase]}}</i>
-                </p>
-              </div>
+            <h2 class="card-header-text">{{phaseNames[roomInfo.currentPhase]}}</h2>
+            <div
+              v-dompurify-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]">
             </div>
-            
-          </div>
-          
-
-          <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage && !customOptions.cardBackgroundImageAlign }">
-            <div class="mt-5 pt-5 mb-5">
-              <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
-              <div class="safety-card-tet" v-dompurify-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
-            </div>
-            <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
-            <div class="" v-if="!customOptions.safetyCardText">
-              <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
+            <div v-if="Array.isArray(customOptions.phaseHelpText)" class="my-4">
+              <p class="phase-help-text">
+                <i class="">{{customOptions.phaseHelpText[roomInfo.currentPhase]}}</i>
+              </p>
             </div>
           </div>
-
-          <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" bottom v-if="customOptions.cardBackgroundImageAlign == 'bottom' && roomInfo.currentCardIndex != 0"></b-card-img>
 
         </div>
-      
+
+
+        <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive"
+          v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage && !customOptions.cardBackgroundImageAlign }">
+          <div class="mt-5 pt-5 mb-5">
+            <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
+            <div class="safety-card-tet" v-dompurify-html="customOptions.safetyCardText"
+              v-if="customOptions.safetyCardText"></div>
+          </div>
+          <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
+          <div class="" v-if="!customOptions.safetyCardText">
+            <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
+          </div>
+        </div>
+
+        <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" bottom
+          v-if="customOptions.cardBackgroundImageAlign == 'bottom' && roomInfo.currentCardIndex != 0"></b-card-img>
+
+      </div>
+
     </div>
 
     <!-- <div class="btn-container" style>
@@ -174,44 +166,42 @@
       </div>
     </div> -->
 
-    <b-modal
-      id="reshuffleConfirm"
-      title="Restart and Reshuffle"
-      hide-footer
-    >
+    <b-modal id="reshuffleConfirm" title="Restart and Reshuffle" hide-footer>
       <p>Do you want to reshuffle all of the prompts and restart the game?</p>
-      <div
-        class="text-center mb-3"
-      >
-        <b-button
-          variant="dark"
-          v-on:click="shuffle();"
-          >Restart and Reshuffle</b-button
-        >
+      <div class="text-center mb-3">
+        <b-button variant="dark" v-on:click="shuffle();">Restart and Reshuffle</b-button>
       </div>
     </b-modal>
 
     <div v-if="Array.isArray(customOptions.showPastPrompts) && roomInfo.currentCardIndex >= firstNonInstruction">
 
-      <div class="itinerary mb-5 card d-flex shadow"> <!-- style="display: flex; flex-direction: column-reverse;-->
+      <div class="itinerary mb-5 card d-flex shadow">
+        <!-- style="display: flex; flex-direction: column-reverse;-->
         <div class="card-body justify-content-center">
           <div class="row my-2">
             <div class="col-sm game-meta">
-              <h2 v-dompurify-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'"></h2>
+              <h2 v-dompurify-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'">
+              </h2>
             </div>
           </div>
           <div class="row">
-            <div class="col-sm" v-dompurify-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null">
+            <div class="col-sm"
+              v-dompurify-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null">
             </div>
           </div>
           <div v-for="(round, roundIndex) in roomInfo.cardSequence" v-bind:key="roundIndex">
-            <div v-if="Object.prototype.toString.call(round) === '[object Object]' && phaseData.length>0 && roundIndex <= roomInfo.currentCardIndex">
+            <div
+              v-if="Object.prototype.toString.call(round) === '[object Object]' && phaseData.length>0 && roundIndex <= roomInfo.currentCardIndex">
               <div class="row" v-for="(phase, phaseIndex) in numberOfPhases" v-bind:key="phaseIndex">
-                <div class="col-sm" v-if="roundIndex < roomInfo.lastSeenRound || (roundIndex==roomInfo.lastSeenRound && phaseIndex < roomInfo.lastSeenPhase)">
-                  <div v-if="customOptions.showPastPrompts[phaseIndex]==1" style="font-size: .8em;">
-                    {{phaseData[phaseIndex][round[phaseIndex]]}}
-                    <br>|
+                <div class="col-sm"
+                  v-if="roundIndex < roomInfo.lastSeenRound || (roundIndex==roomInfo.lastSeenRound && phaseIndex < roomInfo.lastSeenPhase)">
+                  <div v-if="customOptions.showPastPrompts[phaseIndex]==1" style="font-size: .8em;"
+                    v-dompurify-html="phaseData[phaseIndex][round[phaseIndex]]">
                   </div>
+                  <p v-if="customOptions.showPastPrompts[phaseIndex]==1" style="font-size: .8em;">
+                    |
+                  </p>
+
                 </div>
               </div>
             </div>
