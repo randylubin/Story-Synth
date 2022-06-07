@@ -372,7 +372,6 @@ export default {
     return {
       firstNonInstruction: 0,
       dataReady: false,
-      firebaseCacheError: false,
       gSheet: [{ text: "loading" }],
       orderedCards: [],
       currentDeck: 0,
@@ -446,15 +445,18 @@ export default {
       ],
     };
   },
+  computed: {
+    firebaseCacheError: function () {
+      if (this.roomInfo && this.roomInfo.cardSequence.length !== this.gSheet.length) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
   watch: {
     sheetData: function(){
       this.processSheetData();
-    },
-    firebaseReady: function(){
-      console.log ('ROOOOOOM INFO -> WATCH FB',this.roomInfo)
-      if (this.firebaseReady && !this.roomInfo){
-        this.initialFirebaseSetup()
-      }
     },
     roomInfo: function(){
       if (this.firebaseReady && this.dataReady && this.roomInfo?.cardSequence.length < 4){
@@ -475,7 +477,6 @@ export default {
     }
 
     if (this.firebaseReady && !this.roomInfo){
-      console.log ('ROOOOOOM INFO -> MOUNT',this.roomInfo)
       this.initialFirebaseSetup()
     }
   },
@@ -489,15 +490,6 @@ export default {
           cardSequence: [0, 1, 2],
         }
       )
-      if (this.dataReady && this.roomInfo) {
-        this.shuffleAndResetGame();
-
-        if (this.roomInfo.cardSequence.length !== this.gSheet.length && this.dataReady){
-          this.firebaseCacheError = true;
-        } else if (this.dataReady){
-          this.firebaseCacheError = false;
-        }
-      }
     },
     monetizationStarted() {
       console.log('monetizing')
@@ -671,8 +663,7 @@ export default {
       });
     },
     shuffleAndResetGame() {
-      console.log("shuffling", this.orderedCards, this.unorderedDecks);
-      this.firebaseCacheError = false;
+      console.log("shuffling and resetting", this.orderedCards, this.unorderedDecks);
       this.$bvModal.hide("reshuffleConfirm")
       this.$bvModal.hide("menuModal")	
 
@@ -824,12 +815,6 @@ export default {
         if (this.firebaseReady && this.roomInfo?.cardSequence.length < 4) {
           this.shuffleAndResetGame();
         }
-
-        else if (this.roomInfo?.cardSequence.length !== this.gSheet.length && this.firebaseReady){
-          this.firebaseCacheError = true;
-        } else if (this.firebaseReady){
-          this.firebaseCacheError = false;
-        } 
       }
     },
   },

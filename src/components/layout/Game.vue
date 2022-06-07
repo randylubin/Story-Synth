@@ -41,7 +41,7 @@
       <component :is="formatInfo.componentName" :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData"
         :gSheetID="gSheetID" :gameType="gameType" :userRole="$route.params.userRole" :gameAsExtension="gameAsExtension"
         :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady" @firebase-update="firebaseUpdate($event)"
-        @firebase-set="firebaseSet($event)" v-if="gameType != 'Custom' && dataReady && firebaseReady"></component>
+        @firebase-set="firebaseSet($event)" v-if="gameType != 'Custom' && dataReady && firebaseReady && sheetData"></component>
 
       <!-- Custom Game Sessions -->
       <!-- <app-customGameSessionManager :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData" :gSheetID="gSheetID"
@@ -166,7 +166,7 @@ export default {
     'app-sandbox': () => import('../formats/Sandbox.vue'),
 
     'app-monetization': () => import('../layout/Monetization.vue'),
-    'app-extensionManager': ()=> import('../extensions/ExtensionManager.vue')
+    'app-extensionManager': () => import('../extensions/ExtensionManager.vue'),
   },
   computed: {
     formatInfo: function(){
@@ -232,32 +232,32 @@ export default {
       //   this.fetchAndCleanSheetData(this.gSheetID);
       // }
     },
-    createDefaultRoom(){
-      return {
-        extensionData: {},
-        currentCardIndex: 0,
-        xCardIsActive: false,
-        cardSequence: [0, 1, 2],
-        locationOfLastCard: 0,
-        timeBegan: null, 
-        timeStopped: null, 
-        stoppedDuration: 0, 
-        running: false,
-        roundInfo: "",
-        roundProgress: "",
-        roundTitle: "",
-        currentPhase: 0,
-        skipToEnding: false,
-        lastSeenRound: 0,
-        lastSeenPhase: 0,
-        currentLocation: null,
-        playRandomizerAnimation: false,
-        hexesToAnimate: [],
-        hexesVisible: [],
-        hexesMidreveal: [],
-        currentGeneratorSelection: [0, 1, 2],
-      }
-    },
+    // createDefaultRoom(){
+    //   return {
+    //     extensionData: {},
+    //     currentCardIndex: 0,
+    //     xCardIsActive: false,
+    //     cardSequence: [0, 1, 2],
+    //     locationOfLastCard: 0,
+    //     timeBegan: null, 
+    //     timeStopped: null, 
+    //     stoppedDuration: 0, 
+    //     running: false,
+    //     roundInfo: "",
+    //     roundProgress: "",
+    //     roundTitle: "",
+    //     currentPhase: 0,
+    //     skipToEnding: false,
+    //     lastSeenRound: 0,
+    //     lastSeenPhase: 0,
+    //     currentLocation: null,
+    //     playRandomizerAnimation: false,
+    //     hexesToAnimate: [],
+    //     hexesVisible: [],
+    //     hexesMidreveal: [],
+    //     currentGeneratorSelection: [0, 1, 2],
+    //   }
+    // },
 
     setComponentRoom(room) {
       this.roomInfo = room;
