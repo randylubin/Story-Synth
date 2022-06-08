@@ -487,14 +487,6 @@ export default {
         console.log("done fetching and cleaning data");
         this.dataReady = true;
 
-        if (location.hostname.toString() !== "localhost") {
-          this.$mixpanel.track("Visit Game Session", {
-            game_name: this.customOptions.gameTitle ?? "untitled",
-            session_url: location.hostname.toString() + this.$route.fullPath,
-            format: "Generator",
-          });
-        }
-
         if (this.firebaseReady && this.currentGeneratorSelection == [0, 1, 2]) {
           this.shuffleAll();
         }

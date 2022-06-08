@@ -585,14 +585,6 @@ export default {
         console.log("done fetching and cleaning data");
         this.dataReady = true;
 
-        if (location.hostname.toString() !== "localhost") {
-          this.$mixpanel.track("Visit Game Session", {
-            game_name: this.customOptions.gameTitle ?? "untitled",
-            session_url: location.hostname.toString() + this.$route.fullPath,
-            format: "Hexflower",
-          });
-        }
-
         if (this.firebaseReady && this.roomInfo?.hexesVisible.length == 0) {
           console.log('about to regen', this.roomInfo)
           this.regenerateHexes();

@@ -129,15 +129,6 @@ export default {
         }
 
         this.dataReady = true;
-        
-        if (location.hostname.toString() !== 'localhost'){
-          this.$mixpanel.track('Visit Game Session', {
-            game_name: this.customOptions.gameTitle ?? 'untitled-sandbox',
-            session_url: location.hostname.toString() + this.$route.fullPath,
-            format: 'Sandbox'
-          });
-        }
-
       }     
     }
   }

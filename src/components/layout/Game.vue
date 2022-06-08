@@ -181,6 +181,9 @@ export default {
     roomID: function(){
       if (this.roomID){
         this.bindFirebaseToRoomInfo();
+        if (this.dataReady) {
+          this.logAnalytics()
+        }
       } else {
         this.firebaseIsReady(false)
         // TODO unbind firebase
@@ -416,17 +419,28 @@ export default {
         console.log("done fetching and cleaning data");
         this.dataReady = true;
 
-        // Analytics
-        if (location.hostname.toString() !== "localhost" && this.$route.params.roomID) {
+        document.dispatchEvent(new Event("x-app-rendered"));
+
+        this.logAnalytics();
+      }
+    },
+    logAnalytics() {
+      if (location.hostname.toString() !== "localhost" && !this.gameAsExtension) {
+        if (this.$route.params.roomID) {
           this.$mixpanel.track("Visit Game Session", {
             game_name: this.customOptions.gameTitle ?? "untitled",
             session_url: location.hostname.toString() + this.$route.fullPath,
             format: this.$route.params.gameType,
           });
+        } else {
+          this.$mixpanel.track("Visit Game Launcher", {
+            game_name: this.customOptions.gameTitle ?? "untitled",
+            format: this.$route.params.gameType,
+            launcher_url: location.hostname.toString() + this.$route.fullPath,
+          });
         }
-        
       }
-    }
+    },
   },
   metaInfo() {
     if (!this.gameAsExtension) {
