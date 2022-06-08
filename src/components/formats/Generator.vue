@@ -245,60 +245,6 @@ export default {
       error: false,
     };
   },
-  metaInfo() {
-    if (!this.gameAsExtension){
-      return {
-        title: this.customOptions.gameTitle,
-        meta: [
-          {
-            property: "description",
-            content: this.customOptions.gameBlurb,
-            vmid: "description",
-          },
-          {
-            property: "og:title",
-            content: this.customOptions.gameTitle,
-            vmid: "og:title",
-          },
-          {
-            property: "og:description",
-            content: this.customOptions.gameBlurb,
-            vmid: "og:description",
-          },
-          {
-            property: "og:image",
-            content: this.customOptions.ogImageSquare,
-            vmid: "og:image",
-          },
-          {
-            property: "og:url",
-            content: "https://storysynth.org/#" + this.$route.fullPath,
-            vmid: "og:url",
-          },
-          {
-            property: "twitter:card",
-            content: "summary",
-            vmid: "twitter:card",
-          },
-          {
-            property: "og:site_name",
-            content: "Story Synth",
-            vmid: "og:site_name",
-          },
-          {
-            property: "twitter:image:alt",
-            content: this.customOptions.gameTitle + " logo",
-            vmid: "twitter:image:alt",
-          },
-          {
-            name: "monetization",
-            content: this.selectedWallet,
-            vmid: "monetization",
-          },
-        ],
-      };
-    }
-  },
   watch: {
     sheetData: function(){
       this.processSheetData();

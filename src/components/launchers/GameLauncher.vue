@@ -205,60 +205,6 @@ export default {
       vanityLookup: VanityLookup,
     };
   },
-  metaInfo() {
-    return {
-      title: this.customOptions.gameTitle,
-      meta: [
-        {
-          property: "description",
-          content:
-            this.customOptions.metaDescription ?? this.customOptions.gameBlurb,
-          vmid: "description",
-        },
-        {
-          property: "og:title",
-          content: this.customOptions.gameTitle,
-          vmid: "og:title",
-        },
-        {
-          property: "og:description",
-          content:
-            this.customOptions.metaDescription ?? this.customOptions.gameBlurb,
-          vmid: "og:description",
-        },
-        {
-          property: "og:image",
-          content: this.customOptions.ogImageSquare,
-          vmid: "og:image",
-        },
-        {
-          property: "og:url",
-          content: location.hostname.toString() + "/#" + this.$route.fullPath,
-          vmid: "og:url",
-        },
-        {
-          property: "twitter:card",
-          content: "summary",
-          vmid: "twitter:card",
-        },
-        {
-          property: "og:site_name",
-          content: "Story Synth",
-          vmid: "og:site_name",
-        },
-        {
-          property: "twitter:image:alt",
-          content: this.customOptions.gameTitle + " logo",
-          vmid: "twitter:image:alt",
-        },
-        {
-          name: "monetization",
-          content: this.customOptions.wallet,
-          vmid: "monetization",
-        },
-      ],
-    };
-  },
   mounted() {
     this.$emit('firebase-ready', false);
 
