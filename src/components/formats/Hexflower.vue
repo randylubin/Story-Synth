@@ -222,17 +222,25 @@ export default {
     roomInfo: function (val) {
       if (val?.playRandomizerAnimation === true) {
         setTimeout(() => {
-            this.roomInfo.playRandomizerAnimation = false;
-            this.roomInfo.hexesMidreveal = [];
-          }
+          this.$emit('firebase-update',
+            {
+              playRandomizerAnimation: false,
+              hexesMidreveal: [],
+            }
+          )
+        }
         , 1500)
       } else if (val?.hexesMidreveal){
-        this.roomInfo.hexesMidreveal = [];
+        this.$emit('firebase-update',
+          { hexesMidreveal: [] }
+        )
       }
       if (val?.playResetAnimation === true) {
         setTimeout(() => {
-            this.roomInfo.playResetAnimation = false;
-          }
+          this.$emit('firebase-update',
+            { playResetAnimation: false }
+          )
+        }
         , 1000)
       }
     },
