@@ -147,6 +147,7 @@ export default {
         'Hexflower': 'app-hexflower',
         'Sandbox': 'app-sandbox',
       },
+      unsubscribeFromFirebase: null,
     };
   },
   components: {
@@ -186,7 +187,7 @@ export default {
         }
       } else {
         this.firebaseIsReady(false)
-        // TODO unbind firebase
+        this.unsubscribeFromFirebase && this.unsubscribeFromFirebase()
       }
     }
   },
@@ -229,7 +230,7 @@ export default {
               this.setComponentRoom(room);
             }
           });
-        onRoomUpdate(this.roomID, this.setComponentRoom );
+        this.unsubscribeFromFirebase = onRoomUpdate(this.roomID, this.setComponentRoom );
       }
       // else {
       //   this.fetchAndCleanSheetData(this.gSheetID);

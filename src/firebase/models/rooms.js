@@ -10,10 +10,11 @@ import { db } from "../firestore";
 
 export const roomsCollection = collection(db, "rooms");
 
+// Returns a function you can call to unsubscribe from updates.
 export function onRoomUpdate(roomID, onUpdate) {
   const roomDocument = doc(roomsCollection, roomID);
 
-  onSnapshot(roomDocument, snapshot => {
+  return onSnapshot(roomDocument, snapshot => {
     onUpdate(snapshot.data(), snapshot);
   });
 }
