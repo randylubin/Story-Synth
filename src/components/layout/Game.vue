@@ -404,6 +404,7 @@ export default {
         let styleTemplate =
           "style-template-" + this.customOptions.styleTemplate;
         let body = document.getElementById("app"); // document.body;
+        body.classList.remove(body.classList[0]);
         body.classList.add(styleTemplate);
 
         if (this.customOptions?.style) {

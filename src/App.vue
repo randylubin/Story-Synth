@@ -2,13 +2,14 @@
   <div id="app">
     <!-- <router-view></router-view>-->
     <div v-if="$route.path !== '/about'">
-      
+
       <app-header class=""></app-header>
-      
+
       <div class="non-footer-content">
-        
+
         <div v-if="$route.fullPath == '/'">
-          <app-homepage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-homepage>
+          <app-homepage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID"
+            :routeGameType="$route.params.gameType"></app-homepage>
         </div>
 
         <div v-if="$route.fullPath == '/Formats/'">
@@ -28,16 +29,15 @@
         </div>
 
         <div v-if="$route.fullPath == '/Upload/'">
-          <app-uploadPage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-uploadPage>
+          <app-uploadPage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID"
+            :routeGameType="$route.params.gameType"></app-uploadPage>
         </div>
-        
-        <app-game 
-          v-if="!['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
-          :roomID="$route.params.roomID"
-          :gSheetID="$route.params.gSheetID"
-        ></app-game>
+
+        <app-game
+          v-if="$route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID"></app-game>
       </div>
-      
+
       <app-footer v-if="$route.params.roomID && ['Timed', 'SecretCards'].includes($route.params.gameType)"></app-footer>
       <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx">
     </div>

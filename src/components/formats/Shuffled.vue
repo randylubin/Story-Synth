@@ -679,7 +679,8 @@ export default {
           let row = this.sheetData[i]
           if (row[0]) {
             // Handle options
-            if (row[0] == "option") {
+            if (row[0] == "option" && row[1] && row[2]) {
+              console.log('parsing', row[2])
               this.customOptions[row[1]] =
                 this.$markdownFriendlyOptions.includes(row[1]) ? this.$marked(row[2]) : row[2];
             }
