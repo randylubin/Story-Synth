@@ -13,19 +13,18 @@
       </template>
     </b-overlay>
 
+    <!-- Game Launcher -->
     <app-gameLauncher :routeGSheetID="gSheetID" :routeGameType="gameType" :customOptions="customOptions"
        v-if="dataReady && !roomID && gSheetID && !gameAsExtension">
     </app-gameLauncher>
 
-    <!-- <app-customGameLauncher :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"
-      :customOptions="customOptions" v-if="dataReady && !roomID && !gameAsExtension && (gameType == 'Custom')">
-    </app-customGameLauncher> -->
-
+    <!-- Game Session -->
     <div v-if="roomID && gSheetID">
       <div class="full-page-background"></div>
       <div v-dompurify-html="customOptions.style"></div>
       <app-monetization :customOptions="customOptions" :roomMonetized="roomMonetized"></app-monetization>
 
+      <!-- Upper Extension -->
       <div v-if="
             dataReady &&
             firebaseReady &&
@@ -43,25 +42,7 @@
         :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady" @firebase-update="firebaseUpdate($event)"
         @firebase-set="firebaseSet($event)" v-if="gameType != 'Custom' && dataReady && firebaseReady && sheetData"></component>
 
-      <!-- Custom Game Sessions -->
-      <!-- <app-customGameSessionManager :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData" :gSheetID="gSheetID"
-        :routeGSheetID="gSheetID" :gameType="gameType" :userRole="$route.params.userRole"
-        :gameAsExtension="gameAsExtension" :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady"
-        @firebase-update="firebaseUpdate($event)" @firebase-set="firebaseSet($event)"
-        v-if="gameType == 'Custom' && dataReady && firebaseReady"></app-customGameSessionManager> -->
-
-      <!-- <app-timed :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Timed'"></app-timed>
-        <app-shuffled ref="shuffled" :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" :userRole="$route.params.userRole" v-if="$route.params.gameType=='Shuffled'"></app-shuffled>
-        <app-monster :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Monster'"></app-monster>
-        <app-secretCards :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='SecretCards'"></app-secretCards>
-        <app-slotMachine :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="($route.params.gameType=='SlotMachine' || $route.params.gameType=='Composite')"></app-slotMachine>
-        <app-phases :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Phases'"></app-phases>
-        <app-generator :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Generator'"></app-generator>
-        <app-hexflower :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Hexflower'"></app-hexflower>
-        <app-gridmap :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Gridmap'"></app-gridmap>
-
-        <app-sandbox :roomID="$route.params.roomID" :sheetData="sheetData" @firebase-ready="firebaseIsReady($event)" :gSheetID="$route.params.gSheetID" v-if="$route.params.gameType=='Sandbox'"></app-sandbox> -->
-
+      <!-- Lower Extension -->
       <div v-if="
             dataReady &&
             firebaseReady &&
@@ -187,7 +168,10 @@ export default {
         }
       } else {
         this.firebaseIsReady(false)
-        this.unsubscribeFromFirebase && this.unsubscribeFromFirebase()
+
+        if (this.unsubscribeFromFirebase) {
+          this.unsubscribeFromFirebase()
+        }
       }
     }
   },
@@ -209,60 +193,14 @@ export default {
         getRoom(this.roomID)
           .then(room => {
             if(!room){
-              // setRoom(this.roomID, this.createDefaultRoom())
-              // .then(() => {
-              //   console.log("setRoom ok")
-              //   // if (this.gameType != 'Games') {  
-              //   //   this.fetchAndCleanSheetData(this.gSheetID);
-              //   // }
-              // })
-              // .catch(err => {
-              //   if (err.code == "permission-denied"){
-              //     this.permissionDenied = true
-              //   }
-              // });
+              // No need to do anything
             } else {
-              // We must do this before setting the room other wise things break. Yay.
-              // We found that once we introduce auth, it can get in an infinite loop when a client isn't authorised.
-              // if (this.gameType != 'Games') {
-              //   this.fetchAndCleanSheetData(this.gSheetID);
-              // }
               this.setComponentRoom(room);
             }
           });
         this.unsubscribeFromFirebase = onRoomUpdate(this.roomID, this.setComponentRoom );
       }
-      // else {
-      //   this.fetchAndCleanSheetData(this.gSheetID);
-      // }
     },
-    // createDefaultRoom(){
-    //   return {
-    //     extensionData: {},
-    //     currentCardIndex: 0,
-    //     xCardIsActive: false,
-    //     cardSequence: [0, 1, 2],
-    //     locationOfLastCard: 0,
-    //     timeBegan: null, 
-    //     timeStopped: null, 
-    //     stoppedDuration: 0, 
-    //     running: false,
-    //     roundInfo: "",
-    //     roundProgress: "",
-    //     roundTitle: "",
-    //     currentPhase: 0,
-    //     skipToEnding: false,
-    //     lastSeenRound: 0,
-    //     lastSeenPhase: 0,
-    //     currentLocation: null,
-    //     playRandomizerAnimation: false,
-    //     hexesToAnimate: [],
-    //     hexesVisible: [],
-    //     hexesMidreveal: [],
-    //     currentGeneratorSelection: [0, 1, 2],
-    //   }
-    // },
-
     setComponentRoom(room) {
       this.roomInfo = room;
       this.firebaseIsReady(true);

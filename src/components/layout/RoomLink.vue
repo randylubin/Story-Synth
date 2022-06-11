@@ -148,10 +148,6 @@ export default {
 </script>
 
 <style scoped>
-.room-link {
-
-}
-
 .live-player-counter {
   color: #343a40
 }
