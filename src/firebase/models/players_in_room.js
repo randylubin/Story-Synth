@@ -1,4 +1,4 @@
-import { ref, onValue, onDisconnect, set, child } from "firebase/database";
+import {ref, onValue, onDisconnect, set, child, get} from "firebase/database";
 import rtdb from "../rtdb";
 
 const rooms = ref(rtdb, "rooms");
@@ -20,10 +20,18 @@ export function notifyMyOnlineStatus(routeRoomID) {
   onValue(amOnline, (snapshot) => {
     if (snapshot.val()) {
       onDisconnect(userRef).remove();
-      set(userRef, true);
+      set(userRef, {here: true});
     }
   });
   return userRef;
+}
+
+// Gets the current db state, merges data with it and sets the db to the new value.
+export function setMyOnlineData(userRef, data) {
+  get(userRef).then(snapshot => {
+    const newData = Object.assign({}, snapshot.val(), data)
+    set(userRef, newData);
+  })
 }
 
 export function onRoomInfoUpdate(routeRoomID, onUpdate) {

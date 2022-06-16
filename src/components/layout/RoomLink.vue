@@ -48,7 +48,7 @@
 
 <script>
 
-import {notifyMyOnlineStatus, onRoomInfoUpdate} from "../../firebase/models/players_in_room.js";
+import {notifyMyOnlineStatus, onRoomInfoUpdate, setMyOnlineData} from "../../firebase/models/players_in_room.js";
 
 export default {
   name: "app-roomLink",
@@ -67,6 +67,7 @@ export default {
       context: null,
       userID: null,
       atLeastOneMonetizedUser: false,
+      userRef: null
     };
   },
   mounted() {
@@ -90,17 +91,11 @@ export default {
     }
   },
   watch: {
-    // TODO
-    //monetizedByUser: function(){
-    //  var userRef = rtdb.ref(this.userID)
-    //  let selfMonetized = this.monetizedByUser ?? false
-    //  amOnline.on("value", function (snapshot) {
-    //    if (snapshot.val()) {
-    //      userRef.onDisconnect().remove();
-    //      userRef.set({here:true, monetized: selfMonetized});
-    //    }
-    //  });
-    //},
+    monetizedByUser: function(){
+      if (this.userRef) {
+        setMyOnlineData({monetized: this.monetizedByUser})
+      }
+    },
     stringyRoomInfo: function(){
       for (const user in this.roomInfo){
         if (this.roomInfo[user].monetized || this.monetizedByUser){
@@ -111,7 +106,7 @@ export default {
     },
     $route() {
       if (this.routeRoomID) {
-        notifyMyOnlineStatus(this.routeRoomID);
+        this.userRef = notifyMyOnlineStatus(this.routeRoomID);
         onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
             console.log({roomInfo})
             this.roomInfo = roomInfo
