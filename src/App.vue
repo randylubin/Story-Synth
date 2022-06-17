@@ -34,7 +34,7 @@
         </div>
 
         <app-game
-          v-if="$route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          v-if="firebaseAuth && $route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
           :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID"></app-game>
       </div>
 
@@ -69,6 +69,7 @@
     },
     data () {
       return {
+        firebaseAuth: false,
       }
     },
     metaInfo () {
@@ -127,13 +128,14 @@
     mounted () {
       anonymousSignIn()
       .then(() => {
-        //console.log('anon auth')
+        // console.log('anon auth')
+        this.firebaseAuth = true;
       })
       .catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode, errorMessage)
-        // ...
+        // TODO display error message
       });
 
     },
