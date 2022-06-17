@@ -20,7 +20,7 @@ export function notifyMyOnlineStatus(routeRoomID) {
   onValue(amOnline, (snapshot) => {
     if (snapshot.val()) {
       onDisconnect(userRef).remove();
-      set(userRef, {here: true});
+      setMyOnlineData(userRef, {here: true})
     }
   });
   return userRef;
