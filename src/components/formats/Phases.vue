@@ -475,7 +475,7 @@ export default {
             // Handle options
             if (item[0] == "option"){
               this.customOptions[item[1]] =
-                this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+                this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
               if (item[1] == "phaseHelpText"){
                 this.customOptions.phaseHelpText = this.customOptions.phaseHelpText.split('|')
               } else if (item[1] == "showPastPrompts") {
