@@ -15,22 +15,23 @@
 
     <!-- Game Launcher -->
     <app-gameLauncher :routeGSheetID="gSheetID" :routeGameType="gameType" :customOptions="customOptions"
-       v-if="dataReady && !roomID && gSheetID && !gameAsExtension">
+      v-if="dataReady && !roomID && gSheetID && !gameAsExtension">
     </app-gameLauncher>
 
     <!-- Game Session -->
     <div v-if="roomID && gSheetID">
       <div class="full-page-background"></div>
       <div v-dompurify-html="customOptions.style"></div>
-      <app-monetization :customOptions="customOptions" :roomMonetized="roomMonetized"></app-monetization>
+      <app-monetization class="monetization-component" :customOptions="customOptions" :roomMonetized="roomMonetized">
+      </app-monetization>
 
       <!-- Upper Extension -->
       <div v-if="
-            dataReady &&
-            firebaseReady &&
-            roomInfo &&
-            Object.keys(roomInfo.extensionData) != 0
-          ">
+        dataReady &&
+        firebaseReady &&
+        roomInfo &&
+        Object.keys(roomInfo.extensionData) != 0
+      ">
         <app-extensionManager @sync-extension="syncExtension($event)" :extensionData="roomInfo.extensionData"
           :extensionList="tempExtensionData" :roomInfo="roomInfo" :extensionLocation="'upper'" class="extension-upper">
         </app-extensionManager>
@@ -39,16 +40,17 @@
       <!-- The Main Format Component -->
       <component :is="formatInfo.componentName" :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData"
         :gSheetID="gSheetID" :gameType="gameType" :userRole="$route.params.userRole" :gameAsExtension="gameAsExtension"
-        :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady" @firebase-update="firebaseUpdate($event)"
-        @firebase-set="firebaseSet($event)" v-if="gameType != 'Custom' && dataReady && firebaseReady && sheetData"></component>
+        :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady" :monetizedByUser="monetizedByUser" :roomMonetized="roomMonetized" @firebase-update="firebaseUpdate($event)"
+        @firebase-set="firebaseSet($event)" @roomMonetized="updateRoomMonetization($event)"
+        v-if="gameType != 'Custom' && dataReady && firebaseReady && sheetData"></component>
 
       <!-- Lower Extension -->
       <div v-if="
-            dataReady &&
-            firebaseReady &&
-            roomInfo &&
-            Object.keys(roomInfo.extensionData) != 0
-          " class="extension-container">
+        dataReady &&
+        firebaseReady &&
+        roomInfo &&
+        Object.keys(roomInfo.extensionData) != 0
+      " class="extension-container">
         <app-extensionManager @sync-extension="syncExtension($event)" :extensionData="roomInfo.extensionData"
           :extensionList="tempExtensionData" :roomInfo="roomInfo" :extensionLocation="'lower'" class="extension-lower">
         </app-extensionManager>
@@ -114,6 +116,7 @@ export default {
       firebaseReady: null,
       selectedWallet: null,
       roomMonetized: null,
+      monetizedByUser: false,
       vanityLookup: VanityLookup,
       customGameData: customGameData,
       componentList: {
@@ -182,6 +185,13 @@ export default {
     } else {
       this.gameType = this.customGameData[this.gSheetID]?.gameType ?? "Custom";
     }
+
+    if (document.monetization?.state == "started") {
+      this.monetizationStarted()
+    }
+    document.monetization?.addEventListener('monetizationstart', () => {
+      this.monetizationStarted()
+    })
   },
   methods: {
     bindFirebaseToRoomInfo(){
@@ -376,6 +386,15 @@ export default {
           });
         }
       }
+    },
+    updateRoomMonetization(monetizationValue) {
+      this.roomMonetized = monetizationValue;
+      console.log("room is now monetizied")
+    },
+    monetizationStarted() {
+      console.log('monetizing')
+      this.monetizedByUser = true;
+      this.roomMonetized = true;
     },
   },
   metaInfo() {
