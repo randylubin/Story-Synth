@@ -71,19 +71,10 @@ export default {
     };
   },
   mounted() {
+
+    // TODO move this and the same code in watch into its own function
     if (this.routeRoomID) {
-      
-      this.userRef = notifyMyOnlineStatus(this.routeRoomID);
-      onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
-        console.log(roomInfo)
-        this.roomInfo = roomInfo
-      })
-      this.$gtag.event("reachedGameSession", {
-        sheetID: this.$route.gSheetID,
-        gameSessionURL: this.currentUrl,
-      });
-      setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
-      this.updateUrl();
+      this.bindToFirebaseRTDB()
     }
   },
   computed: {
@@ -107,16 +98,7 @@ export default {
     },
     $route() {
       if (this.routeRoomID) {
-        this.userRef = notifyMyOnlineStatus(this.routeRoomID);
-        onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
-            console.log({roomInfo})
-            this.roomInfo = roomInfo
-        });
-        this.$gtag.event("reachedGameSession", {
-          sheetID: this.$route.gSheetID,
-          gameSessionURL: this.currentUrl,
-        });
-        setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
+        this.bindToFirebaseRTDB()
       }
     },
   },
@@ -124,6 +106,19 @@ export default {
     this.updateUrl();
   },
   methods: {
+    bindToFirebaseRTDB() {
+      this.userRef = notifyMyOnlineStatus(this.routeRoomID);
+      onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
+        console.log(roomInfo)
+        this.roomInfo = roomInfo
+      })
+      this.$gtag.event("reachedGameSession", {
+        sheetID: this.$route.gSheetID,
+        gameSessionURL: this.currentUrl,
+      });
+      setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
+      this.updateUrl();
+    },
     updateUrl() {
       if (!this.$route.params.userRole){
         this.currentUrl =
