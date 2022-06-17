@@ -23,7 +23,9 @@ export default {
     extensionData: Object,
   },
   data: function() {
+    const isRenderUpper = this.extensionData["chapterNavigation + Location"] === 'upper';
     return {
+      isRenderUpper,
       error: null
     };
   },
