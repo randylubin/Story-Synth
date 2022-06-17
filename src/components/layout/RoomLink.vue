@@ -73,7 +73,7 @@ export default {
   mounted() {
     if (this.routeRoomID) {
       
-      notifyMyOnlineStatus(this.routeRoomID);
+      this.userRef = notifyMyOnlineStatus(this.routeRoomID);
       onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
         console.log(roomInfo)
         this.roomInfo = roomInfo
@@ -82,6 +82,7 @@ export default {
         sheetID: this.$route.gSheetID,
         gameSessionURL: this.currentUrl,
       });
+      setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
       this.updateUrl();
     }
   },
@@ -93,7 +94,7 @@ export default {
   watch: {
     monetizedByUser: function(){
       if (this.userRef) {
-        setMyOnlineData({monetized: this.monetizedByUser})
+        setMyOnlineData(this.userRef, {monetized: this.monetizedByUser})
       }
     },
     stringyRoomInfo: function(){
@@ -115,6 +116,7 @@ export default {
           sheetID: this.$route.gSheetID,
           gameSessionURL: this.currentUrl,
         });
+        setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
       }
     },
   },
