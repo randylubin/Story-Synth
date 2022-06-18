@@ -35,7 +35,8 @@
             v-if="(extensionList['journalEntries'] || extensionList.journalUpperText) && ((!extensionList.journalEntiresLocation && extensionLocation == 'lower') || (extensionList.journalEntriesLocation == extensionLocation)) && (!extensionList.journalFirstVisible || extensionList.journalFirstVisible <= roomInfo.currentCardIndex)"></app-journal>
           <app-currentPlayerHeader class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :currentPlayerHeader="extensionList.currentPlayerHeader" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['currentPlayerHeader'] && extensionList['playerTurnOrder'] && extensionLocation == 'upper'"></app-currentPlayerHeader>
           <app-embedWebsite class="extension" :hardcodedWebsiteURL="extensionData.hardcodedWebsiteURL" :selectedWebsiteURL="extensionData.selectedWebsiteURL" :embedWebsiteMessage="extensionData.embedWebsiteMessage" @process-extension-update="processExtensionUpdate($event)" v-if="(extensionList['hardcodedWebsiteURL'] || extensionList['embedWebsiteMessage']) && ((!extensionList.embededWebsiteLocation && extensionLocation == 'lower') || (extensionList.embededWebsiteLocation == extensionLocation))"></app-embedWebsite>
-          <app-chapterNavigation :extensionLocation="extensionLocation" :extensionData="extensionData"></app-chapterNavigation>
+          <app-chapterNavigation :extensionLocation="extensionLocation" :extensionData="extensionData" @process-extension-update="processExtensionUpdate($event)"></app-chapterNavigation>
+
           <!-- <app-downloadExtensionData :extensionData="extensionData" :gameTitle="gameTitle" v-if="(extensionList['journalEntries'] || extensionList['multiEditableLists'] || extensionList['editableList']) && ((!extensionList.downloadExtensionDataLocation && extensionLocation == 'lower') || (extensionList.downloadExtensionDataLocation == extensionLocation))"></app-downloadExtensionData> -->
         </div>
       </div>
@@ -105,7 +106,8 @@ export default {
   },
   methods: {
     processExtensionUpdate(newData){
-      // console.log('processing extension update',newData)
+      console.log('processing extension update',newData)
+
       this.$set(this.extensionData, newData[0], newData[1])
       this.$emit('sync-extension', this.extensionData)
     },

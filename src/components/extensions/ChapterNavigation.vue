@@ -6,10 +6,11 @@
           <div class="card-body">
             <h2>Chapter Navigation</h2>
             <p>You can jump around!</p>
-            <li v-for="chapter in chapters" :key="chapter.label">
-              {{ chapter.label }}
-              {{ chapter.firstcard }}
-            </li>
+            <span v-for="chapter in chapters" :key="chapter.label">
+              <button @click="emitGotoCardMessage(chapter.firstcard)">
+                {{ chapter.label }}
+              </button>
+            </span>
           </div>
         </div>
       </div>
@@ -23,7 +24,7 @@ export default {
   props: {
     templateData: Array,
     extensionLocation: String,
-    // Assumes that props.extensionData 
+    // Assumes that props.extensionData
     // - will have keys that match the pattern `chapter-{chapterNumber}-label` and `chapter-{chapterNumber}-firstcard`
     // - will set "chapterNavigation + Location" to either "upper" or "lower" to set the position of the component
     extensionData: Object,
@@ -42,9 +43,13 @@ export default {
       error: null,
     };
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
+    emitGotoCardMessage: function (cardIndex) {
+      console.log(`emit new card index: ${cardIndex}`);
+
+      this.$emit("process-extension-update", ["currentCardIndex", cardIndex]);
+    },
     parseChaptersFromExtensionData: function () {
       const regex = /^chapter-(\d)-(\w+)$/;
 
@@ -53,7 +58,7 @@ export default {
         .reduce((arr, [key, value]) => {
           const match = key.match(regex);
 
-          // The chapter numbers are 1 based because it should be human readable in the gsheet, but we need to subtract on to make them 0 based for the array
+          // The chapter numbers are 1 based because it should be human readable in the gsheet, but we need to subtract one to make them 0 based for the array
           const index = Number.parseInt(match[1]) - 1;
           const chapterKey = match[2];
 
