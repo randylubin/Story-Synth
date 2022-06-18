@@ -263,10 +263,6 @@
 
       </div>
     </div>
-    <!-- <div v-if="customOptions.wallet">
-      <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" v-bind:href="wallet">
-    </div> -->
-    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -330,13 +326,6 @@ export default {
     }
   },
   mounted() {
-    if (document.monetization?.state == "started") {
-      this.monetizationStarted()
-    }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
-
     if (this.sheetData){
       this.processSheetData();
     }
@@ -355,17 +344,6 @@ export default {
           cardSequence: [0, 1, 2],
         }
       )
-    },
-    monetizationStarted() {
-      // console.log('monetizing')
-      // this.monetizedByUser = true;
-      // this.roomMonetized = true;
-      this.$emit('roomMonetized', true)
-    },
-    updateRoomMonetization(monetizationValue){
-      // this.roomMonetized = monetizationValue;
-      // console.log("room is now monetizied")
-      this.$emit('roomMonetized', monetizationValue)
     },
     goToCard(index){
       this.$emit('firebase-update',{
@@ -599,7 +577,7 @@ export default {
           if (row[0]) {
             // Handle options
             if (row[0] == "option" && row[1] && row[2]) {
-              console.log('parsing', row[2])
+              // console.log('parsing options', row[2])
               this.customOptions[row[1]] =
                 this.$markdownFriendlyOptions.includes(row[1]) ? this.$marked(row[2]) : row[2];
             }

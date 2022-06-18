@@ -91,12 +91,8 @@
         </transition>
       </div>
     </div>
-
-    <link v-bind:href="selectedWallet">
-  </div>
     <!-- Timer code remixed from https://codepen.io/raphael_octau by raphael_octau -->
-
-
+  </div>
 </template>
 
 <script>
@@ -112,6 +108,8 @@ export default {
     roomInfo: Object,
     tempExtensionData: Object,
     firebaseReady: Boolean,
+    roomMonetized: Boolean,
+    monetizedByUser: Boolean,
   },
   data: function(){
     return {
@@ -133,8 +131,6 @@ export default {
       },
       dataReady: false,
       selectedWallet: undefined,
-      roomMonetized: null,
-      monetizedByUser: false,
       error: false,
     }
   },
@@ -149,13 +145,6 @@ export default {
     },
   },
   mounted(){
-    if (document.monetization?.state == "started") {
-      this.monetizationStarted()
-    }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
-
     if (this.sheetData){
       this.processSheetData();
     }
@@ -183,13 +172,8 @@ export default {
         }
       )
     },
-    monetizationStarted() {
-      console.log('monetizing')
-      this.monetizedByUser = true;
-    },
-    updateRoomMonetization(monetizationValue){
-      this.roomMonetized = monetizationValue;
-      console.log("room is now monetizied")
+    closeMenu() {
+      this.$bvModal.hide("menuModal");
     },
     start() {
       if(this.roomInfo.running) return;
@@ -261,9 +245,6 @@ export default {
           this.zeroPrefix(min, 2) + ":" +
           this.zeroPrefix(sec, 2)
       }
-    },
-    closeMenu(){
-      this.$bvModal.hide("menuModal");
     },
     zeroPrefix(num, digit) {
       var zero = '';

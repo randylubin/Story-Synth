@@ -40,8 +40,9 @@
       <!-- The Main Format Component -->
       <component :is="formatInfo.componentName" :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData"
         :gSheetID="gSheetID" :gameType="gameType" :userRole="$route.params.userRole" :gameAsExtension="gameAsExtension"
-        :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady" :monetizedByUser="monetizedByUser" :roomMonetized="roomMonetized" @firebase-update="firebaseUpdate($event)"
-        @firebase-set="firebaseSet($event)" @roomMonetized="updateRoomMonetization($event)"
+        :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady" :monetizedByUser="monetizedByUser"
+        :roomMonetized="roomMonetized" @firebase-update="firebaseUpdate($event)" @firebase-set="firebaseSet($event)"
+        @roomMonetized="updateRoomMonetization($event)"
         v-if="gameType != 'Custom' && dataReady && firebaseReady && sheetData"></component>
 
       <!-- Lower Extension -->
@@ -56,7 +57,10 @@
         </app-extensionManager>
       </div>
     </div>
-
+    <!-- <div v-if="customOptions.wallet">
+      <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" v-bind:href="wallet">
+    </div> -->
+    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -188,10 +192,11 @@ export default {
 
     if (document.monetization?.state == "started") {
       this.monetizationStarted()
+    } else {
+      document.monetization?.addEventListener('monetizationstart', () => {
+        this.monetizationStarted()
+      })
     }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
   },
   methods: {
     bindFirebaseToRoomInfo(){

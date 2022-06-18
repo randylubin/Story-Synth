@@ -18,8 +18,6 @@
         <h1 class="game-meta">Sandbox</h1>
       </div>
     </div>
-
-    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -37,6 +35,8 @@ export default {
     roomInfo: Object,
     tempExtensionData: Object,
     firebaseReady: Boolean,
+    roomMonetized: Boolean,
+    monetizedByUser: Boolean,
   },
   data: function() {
     return {
@@ -50,8 +50,6 @@ export default {
       },
       dataReady: false,
       selectedWallet: undefined,
-      roomMonetized: null,
-      monetizedByUser: false,
     };
   },
   watch: {
@@ -65,13 +63,6 @@ export default {
     }
   },
   mounted(){
-    if (document.monetization?.state == "started") {
-      this.monetizationStarted()
-    }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
-
     if (this.sheetData){
       this.processSheetData();
     }
@@ -90,14 +81,6 @@ export default {
             xCardIsActive: false,
           }
         )
-    },
-    monetizationStarted() {
-      console.log('monetizing')
-      this.monetizedByUser = true;
-    },
-    updateRoomMonetization(monetizationValue){
-      this.roomMonetized = monetizationValue;
-      console.log("room is now monetizied")
     },
     syncExtension(){
       this.$emit('firebase-update',

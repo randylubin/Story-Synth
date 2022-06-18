@@ -179,8 +179,6 @@
           >
         </div>
       </b-modal>
-
-    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -197,6 +195,8 @@ export default {
     roomInfo: Object,
     tempExtensionData: Object,
     firebaseReady: Boolean,
+    roomMonetized: Boolean,
+    monetizedByUser: Boolean,
   },
   data: function(){
     return {
@@ -216,8 +216,6 @@ export default {
         revShare: 0.2,
       },
       selectedWallet: undefined,
-      roomMonetized: null,
-      monetizedByUser: false,
       error: false,
     }
   },
@@ -232,13 +230,6 @@ export default {
     },
   },
   mounted(){
-    if (document.monetization?.state == "started") {
-      this.monetizationStarted()
-    }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
-
     if (this.sheetData){
       this.processSheetData();
     }
@@ -260,14 +251,6 @@ export default {
       if (this.dataReady) {
         this.shuffle();
       }
-    },
-    monetizationStarted() {
-      console.log('monetizing')
-      this.monetizedByUser = true;
-    },
-    updateRoomMonetization(monetizationValue){
-      this.roomMonetized = monetizationValue;
-      console.log("room is now monetizied")
     },
     closeMenu(){
       this.$bvModal.hide("menuModal");
