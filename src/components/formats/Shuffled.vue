@@ -308,7 +308,7 @@ export default {
   },
   computed: {
     firebaseCacheError: function () {
-      if (this.roomInfo && this.roomInfo.cardSequence.length !== this.gSheet.length) {
+      if (this.roomInfo && this.roomInfo?.cardSequence?.length !== this.gSheet.length) {
         return true;
       } else {
         return false;

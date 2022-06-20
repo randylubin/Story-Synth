@@ -2,7 +2,7 @@
   <div class="phases game-room" v-if="roomInfo">
     <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
-      :firebaseReady="firebaseReady" @roomMonetized="updateRoomMonetization">
+      :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
         <b-button v-b-modal.reshuffleConfirm v-on:click="closeMenu();" class="control-button-restart btn-lg btn-block"
           variant="outline-dark" :disabled="roomInfo.xCardIsActive"
@@ -499,7 +499,6 @@ export default {
         // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData
 
-        console.log('done fetching and cleaning data')
         this.dataReady = true;
         
         if(this.firebaseReady && this.roomInfo?.cardSequence.length < 4){this.shuffle();}

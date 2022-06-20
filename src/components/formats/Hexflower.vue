@@ -1,23 +1,15 @@
 <template>
-  <div
-    class="hexflower game-room"
-    v-if="roomInfo"
-    v-bind:class="{'px-0': gameAsExtension, styleTemplate: styleTemplate}"
-  >
+  <div class="hexflower game-room" v-if="roomInfo"
+    v-bind:class="{'px-0': gameAsExtension, styleTemplate: styleTemplate}">
 
-    <app-menuBar
-      :roomInfo="roomInfo"
-      :tempExtensionData="tempExtensionData"
-      :customOptions="customOptions"
-      :monetizedByUser="monetizedByUser"
-      :routeRoomID="$route.params.roomID"
-      :dataReady="dataReady"
-      :firebaseReady="firebaseReady"
-      @roomMonetized="updateRoomMonetization"
-      v-if="!gameAsExtension"
-    ></app-menuBar>
+    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
+      :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)" v-if="!gameAsExtension">
+    </app-menuBar>
 
-    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
+        :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
+      it to design your own game!</b-alert>
 
     <div class="game-meta">
       <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
@@ -36,10 +28,7 @@
     </div>
 
     <div class="upper-text row" v-if="customOptions.upperText">
-      <div
-        class="col-sm"
-        v-dompurify-html="customOptions.upperText"
-      ></div>
+      <div class="col-sm" v-dompurify-html="customOptions.upperText"></div>
     </div>
 
     <div class="mb-4">
@@ -51,64 +40,49 @@
 
         <div class="row">
           <div class="regenerate-button my-4 col-sm-12 justify-content-center generator">
-              <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
-                <span>{{ roomInfo.playRandomizerAnimation ? 'Rolling' : 'Move' }}</span> <b-icon class='hexflower-reroll-icon' icon="arrows-move"></b-icon>
-              </b-button>              
-              <b-button v-if="customOptions.randomizeHexes == 'randomWithCopies' || customOptions.randomizeHexes == 'randomNoCopies'" v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
-                <span>Regenerate</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
-              </b-button>
+            <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
+              <span>{{ roomInfo.playRandomizerAnimation ? 'Rolling' : 'Move' }}</span>
+              <b-icon class='hexflower-reroll-icon' icon="arrows-move"></b-icon>
+            </b-button>
+            <b-button
+              v-if="customOptions.randomizeHexes == 'randomWithCopies' || customOptions.randomizeHexes == 'randomNoCopies'"
+              v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
+              <span>Regenerate</span>
+              <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
+            </b-button>
           </div>
         </div>
 
         <div class="row justify-content-center">
-          <div 
-            class='hexflower-body' 
-            v-bind:class="{
+          <div class='hexflower-body' v-bind:class="{
               'pointy-top':customOptions.hexOrientation == 'pointyTop',
               'hex-randomizing': roomInfo.playRandomizerAnimation === true,
               'hex-resetting': roomInfo.playResetAnimation === true,              
-            }"
-          >
-            <template
-              v-for="(hexRow, hexRowIndex) in updatedHexMapRows"
-            >
-              <button
-                class="hex-tile"
-                v-for="(hex, hexIndex) in hexRow"
-                v-on:click="goToHex(hex.hexID, false)"
-                v-bind:key="`${hexIndex}_${hexRowIndex}`"
-                v-bind:class="{
+            }">
+            <template v-for="(hexRow, hexRowIndex) in updatedHexMapRows">
+              <button class="hex-tile" v-for="(hex, hexIndex) in hexRow" v-on:click="goToHex(hex.hexID, false)"
+                v-bind:key="`${hexIndex}_${hexRowIndex}`" v-bind:class="{
                   'hex-tile-active': (hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex),
                   'hex-tile-previous-active': (hex.hexID == roomInfo.previousLocation),
-                }"
-                v-bind:style="{
+                }" v-bind:style="{
                   transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`                  
-                }"
-              >
+                }">
                 <transition appear name="reroll-current-hex" mode="out-in">
-                  <div 
-                    class="hex-tile-inner"
-                    :key="hex.hexID"
-                    v-bind:style="{
+                  <div class="hex-tile-inner" :key="hex.hexID" v-bind:style="{
                         backgroundColor: hex.backgroundColor, 
                         backgroundImage: hex.backgroundImage,
-                    }"
-                    v-bind:class="{
+                    }" v-bind:class="{
                       'hex-tile-animate-randomization': (roomInfo.hexesToAnimate.includes(hex.hexID)),
                       'hex-tile-foggy': ((customOptions.fogOfWar && roomInfo.hexesVisible[hex.hexID] == 0) || roomInfo.hexesMidreveal.includes(hex.hexID))
-                    }"
-                  >
-                    <div 
-                      class="hex-tile-inner-content"
+                    }">
+                    <div class="hex-tile-inner-content"
                       v-if="!((customOptions.fogOfWar && roomInfo.hexesVisible[hex.hexID] == 0) || roomInfo.hexesMidreveal.includes(hex.hexID))"
                       v-bind:class="{
                         'hex-tile-inner-content-lg': countGraphemes(hex.summary) == 1,
                         'hex-tile-inner-content-md': countGraphemes(hex.summary) >= 2 && countGraphemes(hex.summary) < 5,
                         'hex-tile-inner-content-sm': countGraphemes(hex.summary) >= 5 && countGraphemes(hex.summary) < 25,
                         'hex-tile-inner-content-xs': countGraphemes(hex.summary) >= 25
-                      }"
-                      v-dompurify-html="hex.summary"
-                    >
+                      }" v-dompurify-html="hex.summary">
                     </div>
                   </div>
                 </transition>
@@ -117,23 +91,22 @@
           </div>
         </div>
 
-        <transition name="fade-full-content" mode="out-in"><!--TODO fix this-->
-          <div 
-            class="row mt-4 mb-4 p-2 full-content" 
+        <transition name="fade-full-content" mode="out-in">
+          <!--TODO fix this-->
+          <div class="row mt-4 mb-4 p-2 full-content"
             :key="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent"
             v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent && !roomInfo.tempSameHex"
-            v-bind:class="{'invisible':roomInfo.playRandomizerAnimation}"
-          >
+            v-bind:class="{'invisible':roomInfo.playRandomizerAnimation}">
             <div class="col-sm-12" v-dompurify-html="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent">
             </div>
           </div>
         </transition>
 
       </div>
-      
+
 
       <div class="lower-text row mt-4" v-if="customOptions.lowerText">
-        <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>          
+        <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>
       </div>
 
     </div>

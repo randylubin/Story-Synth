@@ -1,20 +1,15 @@
 <template>
   <div class="game-room sandbox">
 
-    <app-menuBar
-      :roomInfo="roomInfo"
-      :tempExtensionData="tempExtensionData"
-      :customOptions="customOptions"
-      :monetizedByUser="monetizedByUser"
-      :routeRoomID="$route.params.roomID"
-      :dataReady="dataReady"
-      :firebaseReady="firebaseReady"
-      @roomMonetized="updateRoomMonetization"
-    ></app-menuBar>
+    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
+      :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)"></app-menuBar>
 
     <div class="row">
       <div class="col-sm">
-        <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+        <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
+            :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start
+          editing it to design your own game!</b-alert>
         <h1 class="game-meta">Sandbox</h1>
       </div>
     </div>

@@ -71,10 +71,9 @@ export default {
     };
   },
   mounted() {
-
-    // TODO move this and the same code in watch into its own function
     if (this.routeRoomID) {
       this.bindToFirebaseRTDB()
+      this.checkMonetization();
     }
   },
   computed: {
@@ -89,12 +88,7 @@ export default {
       }
     },
     stringyRoomInfo: function(){
-      for (const user in this.roomInfo){
-        if (this.roomInfo[user].monetized || this.monetizedByUser){
-          this.atLeastOneMonetizedUser = true; // currently set to be a one way switch – if you shared this room with a monetized user, then you can keep playing if they leave
-          this.$emit('roomMonetized', true)
-        }
-      }
+      this.checkMonetization();
     },
     $route() {
       if (this.routeRoomID) {
@@ -109,7 +103,7 @@ export default {
     bindToFirebaseRTDB() {
       this.userRef = notifyMyOnlineStatus(this.routeRoomID);
       onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
-        console.log(roomInfo)
+        // console.log(roomInfo)
         this.roomInfo = roomInfo
       })
       this.$gtag.event("reachedGameSession", {
@@ -119,6 +113,14 @@ export default {
       setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
       this.updateUrl();
     },
+    checkMonetization() {
+      for (const user in this.roomInfo) {
+        if (this.roomInfo[user].monetized || this.monetizedByUser) {
+          this.atLeastOneMonetizedUser = true; // currently set to be a one way switch – if you shared this room with a monetized user, then you can keep playing if they leave
+          this.$emit('roomMonetized', true)
+        }
+      }
+    },
     updateUrl() {
       if (!this.$route.params.userRole){
         this.currentUrl =
@@ -126,7 +128,7 @@ export default {
       } else {
         this.currentUrl = "https://" + location.hostname.toString() + '/' + this.$route.params.gameType + '/' + this.$route.params.gSheetID + '/' + this.$route.params.roomID + '/player/'
       }
-      console.log('current URL is now', this.$route.params.userRole, this.currentUrl)
+      // console.log('current URL is now', this.$route.params.userRole, this.currentUrl)
     },
     copyTextToClipboard() {
       navigator.clipboard.writeText(this.currentUrl).then(function() {
