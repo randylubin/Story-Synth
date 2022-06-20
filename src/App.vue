@@ -38,7 +38,6 @@
           :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" :gameType="gameType"></app-game>
       </div>
 
-      <app-footer v-if="$route.params.roomID && ['Timed', 'SecretCards'].includes($route.params.gameType)"></app-footer>
       <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx"
         onmonetization="console.log('monetization event triggered')"
         v-if="['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
@@ -55,7 +54,6 @@
     name: 'app',
     components: {
       'app-header': () => import('./components/layout/Header.vue'),
-      'app-footer': () => import('./components/layout/Footer.vue'),
 
       'app-homepage': () => import('./components/other/Homepage.vue'),
       'app-gallery': () => import('./components/other/Gallery.vue'),
