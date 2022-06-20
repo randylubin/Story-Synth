@@ -36,6 +36,14 @@
         <app-game
           v-if="firebaseAuth && $route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
           :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" :gameType="gameType"></app-game>
+        <b-overlay
+          :show="!firebaseAuth && $route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          no-wrap>
+          <template #overlay>
+            <h1>Loading</h1>
+            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+          </template>
+        </b-overlay>
       </div>
 
       <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx"
@@ -46,7 +54,8 @@
 </template>
 
 <script>
-  import {anonymousSignIn } from './firebase/auth.js';
+  import { anonymousSignIn } from './firebase/auth.js';
+  import customGameData from './misc/customGameData'
  
   // import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue' // TODO push this to components
 
@@ -77,7 +86,7 @@
         if (this.$route.params.gameType != "Games") {
           return this.$route.params.gameType;
         } else {
-          return this.customGameData[this.gSheetID]?.gameType ?? "Custom";
+          return customGameData[this.$route.params.gSheetID]?.gameType ?? "Custom";
         }
       }  
     },
