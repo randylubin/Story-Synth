@@ -35,11 +35,13 @@
 
         <app-game
           v-if="firebaseAuth && $route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
-          :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID"></app-game>
+          :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" :gameType="gameType"></app-game>
       </div>
 
       <app-footer v-if="$route.params.roomID && ['Timed', 'SecretCards'].includes($route.params.gameType)"></app-footer>
-      <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx">
+      <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx"
+        onmonetization="console.log('monetization event triggered')"
+        v-if="['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
     </div>
   </div>
 </template>
@@ -71,6 +73,15 @@
       return {
         firebaseAuth: false,
       }
+    },
+    computed: {
+      gameType: function () {
+        if (this.$route.params.gameType != "Games") {
+          return this.$route.params.gameType;
+        } else {
+          return this.customGameData[this.gSheetID]?.gameType ?? "Custom";
+        }
+      }  
     },
     metaInfo () {
     return {

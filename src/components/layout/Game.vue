@@ -20,7 +20,7 @@
 
     <!-- Game Session -->
     <div v-if="roomID && gSheetID">
-      <div class="full-page-background"></div>
+      <div class="full-page-background" v-if="!gameAsExtension"></div>
       <div v-dompurify-html="customOptions.style"></div>
       <app-monetization class="monetization-component" :customOptions="customOptions" :roomMonetized="roomMonetized">
       </app-monetization>
@@ -60,7 +60,7 @@
     <!-- <div v-if="customOptions.wallet">
       <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" v-bind:href="wallet">
     </div> -->
-    <link v-bind:href="selectedWallet">
+    <link v-bind:href="selectedWallet" rel="monetization" onmonetization="console.log('monetization event triggered')">
   </div>
 </template>
 
@@ -76,6 +76,7 @@ export default {
     roomID: String,
     gSheetID: String,
     gameAsExtension: Boolean,
+    gameType: String,
   },
   data: function() {
     return {
@@ -113,7 +114,6 @@ export default {
         currentGeneratorSelection: [0, 1, 2], 
       },
       tempExtensionData: {},
-      gameType: null,
       error: null,
       sheetData: null,
       dataReady: null,
@@ -184,11 +184,11 @@ export default {
       this.bindFirebaseToRoomInfo()
     }
 
-    if (this.$route.params.gameType != "Games") {
-      this.gameType = this.$route.params.gameType;
-    } else {
-      this.gameType = this.customGameData[this.gSheetID]?.gameType ?? "Custom";
-    }
+    // if (this.$route.params.gameType != "Games") {
+    //   this.gameType = this.$route.params.gameType;
+    // } else {
+    //   this.gameType = this.customGameData[this.gSheetID]?.gameType ?? "Custom";
+    // }
 
     if (document.monetization?.state == "started") {
       this.monetizationStarted()
@@ -359,10 +359,8 @@ export default {
 
         if (this.customOptions?.style) {
           if (this.customOptions.style.substring(0, 7) != "<style>" && this.customOptions.style.substring(0, 5) != "<link") {
-            console.log('adding style tags')
             this.customOptions.style = "<style>" + this.customOptions.style + "</style>"
           } else {
-            console.log('adding div wrapper')
             this.customOptions.style = "<div>" + this.customOptions.style + "</div>"
           }
         }
@@ -397,7 +395,7 @@ export default {
       console.log("room is now monetizied")
     },
     monetizationStarted() {
-      console.log('monetizing')
+      console.log('web monetization stream started')
       this.monetizedByUser = true;
       this.roomMonetized = true;
     },
