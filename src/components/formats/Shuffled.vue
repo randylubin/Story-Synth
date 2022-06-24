@@ -253,7 +253,7 @@
                 <div class="card-body">
                   <h2 v-if="customOptions.chaptersHeader">{{ customOptions.chaptersHeader }}</h2>
                   <span v-for="chapter in chapters" :key="chapter.label">
-                    <button @click="goToCard(parseInt(chapter.firstcard))">
+                    <button @click="goToCard(parseInt(chapter.firstcard))" :disabled="roomInfo.xCardIsActive">
                       {{ chapter.label }}
                     </button>
                   </span>
