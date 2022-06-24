@@ -251,7 +251,7 @@
             <div class="col-sm">
               <div class="card d-flex shadow">
                 <div class="card-body">
-                  <h2>Chapter Navigation</h2>
+                  <h2 v-if="customOptions.chaptersHeader">{{ customOptions.chaptersHeader }}</h2>
                   <span v-for="chapter in chapters" :key="chapter.label">
                     <button @click="goToCard(parseInt(chapter.firstcard))">
                       {{ chapter.label }}
