@@ -243,15 +243,15 @@
         <!-- </transition> -->
       </div>
 
-
+      <!-- TODO: Consider cleaner way to manage the v-if using shouldRenderChapterNavigation -->
       <div class="after-game-card">
-        <div class="mb-4 template" v-if="shouldRenderChapterNavigation">
+        <div class="mb-4 template" v-if="shouldRenderChapterNavigation &&
+              (!customOptions.facilitatorMode || userRole == 'facilitator')">
           <div class="row">
             <div class="col-sm">
               <div class="card d-flex shadow">
                 <div class="card-body">
                   <h2>Chapter Navigation</h2>
-                  <p>You can jump around!</p>
                   <span v-for="chapter in chapters" :key="chapter.label">
                     <button @click="goToCard(parseInt(chapter.firstcard))">
                       {{ chapter.label }}
