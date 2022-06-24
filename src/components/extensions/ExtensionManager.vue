@@ -1,44 +1,69 @@
 <template>
   <div class="extension-manager">
-      <div class="row">
-        <div class="col-sm">
-          <app-game class="extension"
-            :gameAsExtension="Boolean(extensionData.hexflowerAsExtension)"
-            :gSheetID="extensionData.hexflowerAsExtension.substring(extensionData.hexflowerAsExtension.indexOf('/d/') + 3, extensionData.hexflowerAsExtension.indexOf('/edit'))"
-            :gameType="'Hexflower'"
-            :roomID="$route.params.roomID + '-hexflower-extensions'" v-if="Boolean(extensionData.hexflowerAsExtension) && ((!extensionList.hexflowerAsExtensionLocation && extensionLocation == 'lower') || (extensionList.hexflowerAsExtensionLocation == extensionLocation))"></app-game>
-          <app-game class="extension"
-            :gameAsExtension="Boolean(extensionData.generatorAsExtension)"
-            :gSheetID="extensionData.generatorAsExtension.substring(extensionData.generatorAsExtension.indexOf('/d/') + 3, extensionData.generatorAsExtension.indexOf('/edit'))"
-            :gameType="'Generator'"
-            :roomID="$route.params.roomID + '-generator-extensions'"
-            v-if="Boolean(extensionData.generatorAsExtension) && ((!extensionList.generatorAsExtensionLocation && extensionLocation == 'lower') || (extensionList.generatorAsExtensionLocation == extensionLocation))"></app-game>
-          <app-staticBox class="extension" :staticBoxContent="extensionData.staticBoxContent" v-if="extensionData.staticBoxContent && ((!extensionList.staticBoxLocation && extensionLocation == 'lower') || (extensionList.staticBoxLocation == extensionLocation))"></app-staticBox>
-          <app-playerTurnOrder class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :playerTurnOrderHeader="extensionData.playerTurnOrderHeader" :playerTurnOrderButtonLabel="extensionData.playerTurnOrderButtonLabel" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['playerTurnOrder'] && ((!extensionList.playerTurnOrderLocation && extensionLocation == 'lower') || (extensionList.playerTurnOrderLocation == extensionLocation))"></app-playerTurnOrder>
-          <app-plusMinus class="extension" :plusMinus="JSON.parse(extensionData.plusMinus)" :plusMinusTitle="extensionData.plusMinusTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['plusMinus'] && ((!extensionList.plusMinusLocation && extensionLocation == 'lower') || (extensionList.plusMinusLocation == extensionLocation))"></app-plusMinus>
-          <app-editableList class="extension" 
-            :editableList="extensionData.editableList.split(',')" 
-            :editableListTitle="extensionData.editableListTitle" 
-            @process-extension-update="processExtensionUpdate($event)" 
-            v-if="(extensionList['editableList'] || extensionList.editableListFirstVisible || extensionList.editableListTitle) && (!extensionList.editableListFirstVisible || extensionList.editableListFirstVisible <= roomInfo.currentCardIndex ) && ((!extensionList.editableListLocation && extensionLocation == 'lower') || (extensionList.editableListLocation == extensionLocation))"></app-editableList>
-          <app-multiEditableLists class="extension" 
-            :multiEditableLists="JSON.parse(extensionData.multiEditableLists)" 
-            @process-extension-update="processExtensionUpdate($event)" 
-            v-if="extensionList['multiEditableLists'] && (!extensionList.multiEditableListsFirstVisible || extensionList.multiEditableListsFirstVisible <= roomInfo.currentCardIndex) && ((!extensionList.multiEditableListsLocation && extensionLocation == 'lower') || (extensionList.multiEditableListsLocation == extensionLocation))"></app-multiEditableLists>
-          <app-diceRoller class="extension" :diceResults="extensionData.diceRoller.split(',')" :diceRollerTitle="extensionData.diceRollerTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['diceRoller'] && ((!extensionList.diceRollerLocation && extensionLocation == 'lower') || (extensionList.diceRollerLocation == extensionLocation))"></app-diceRoller>
-          <app-standardDeck class="extension" :standardDeck="JSON.parse(extensionData.standardDeck)" :standardDeckTitle="extensionData.standardDeckTitle" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['standardDeck'] && ((!extensionList.standardDeckLocation && extensionLocation == 'lower') || (extensionList.standardDeckLocation == extensionLocation))"></app-standardDeck>
-          <app-journal class="extension"
-            :journalEntries="JSON.parse(extensionData.journalEntries)"
-            :journalUpperText="extensionData.journalUpperText"
-            :journalOrder="extensionData.journalOrder"
-            @process-extension-update="processExtensionUpdate($event)"
-            v-if="(extensionList['journalEntries'] || extensionList.journalUpperText) && ((!extensionList.journalEntiresLocation && extensionLocation == 'lower') || (extensionList.journalEntriesLocation == extensionLocation)) && (!extensionList.journalFirstVisible || extensionList.journalFirstVisible <= roomInfo.currentCardIndex)"></app-journal>
-          <app-currentPlayerHeader class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)" :currentPlayerHeader="extensionList.currentPlayerHeader" :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)" :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)" v-if="extensionList['currentPlayerHeader'] && extensionList['playerTurnOrder'] && extensionLocation == 'upper'"></app-currentPlayerHeader>
-          <app-embedWebsite class="extension" :hardcodedWebsiteURL="extensionData.hardcodedWebsiteURL" :selectedWebsiteURL="extensionData.selectedWebsiteURL" :embedWebsiteMessage="extensionData.embedWebsiteMessage" @process-extension-update="processExtensionUpdate($event)" v-if="(extensionList['hardcodedWebsiteURL'] || extensionList['embedWebsiteMessage']) && ((!extensionList.embededWebsiteLocation && extensionLocation == 'lower') || (extensionList.embededWebsiteLocation == extensionLocation))"></app-embedWebsite>
-
-          <!-- <app-downloadExtensionData :extensionData="extensionData" :gameTitle="gameTitle" v-if="(extensionList['journalEntries'] || extensionList['multiEditableLists'] || extensionList['editableList']) && ((!extensionList.downloadExtensionDataLocation && extensionLocation == 'lower') || (extensionList.downloadExtensionDataLocation == extensionLocation))"></app-downloadExtensionData> -->
-        </div>
+    <div class="row">
+      <div class="col-sm">
+        <app-game class="extension" :gameAsExtension="Boolean(extensionData.hexflowerAsExtension)"
+          :gSheetID="extensionData.hexflowerAsExtension.substring(extensionData.hexflowerAsExtension.indexOf('/d/') + 3, extensionData.hexflowerAsExtension.indexOf('/edit'))"
+          :gameType="'Hexflower'" :roomID="$route.params.roomID + '-hexflower-extensions'"
+          v-if="Boolean(extensionData.hexflowerAsExtension) && (!extensionList.hexflowerFirstVisible || extensionList.hexflowerFirstVisible <= roomInfo.currentCardIndex) && ((!extensionList.hexflowerAsExtensionLocation && extensionLocation == 'lower') || (extensionList.hexflowerAsExtensionLocation == extensionLocation))">
+        </app-game>
+        <app-game class="extension" :gameAsExtension="Boolean(extensionData.generatorAsExtension)"
+          :gSheetID="extensionData.generatorAsExtension.substring(extensionData.generatorAsExtension.indexOf('/d/') + 3, extensionData.generatorAsExtension.indexOf('/edit'))"
+          :gameType="'Generator'" :roomID="$route.params.roomID + '-generator-extensions'"
+          v-if="Boolean(extensionData.generatorAsExtension) && ((!extensionList.generatorAsExtensionLocation && extensionLocation == 'lower') || (extensionList.generatorAsExtensionLocation == extensionLocation))">
+        </app-game>
+        <app-staticBox class="extension" :staticBoxContent="extensionData.staticBoxContent"
+          v-if="extensionData.staticBoxContent && ((!extensionList.staticBoxLocation && extensionLocation == 'lower') || (extensionList.staticBoxLocation == extensionLocation))">
+        </app-staticBox>
+        <app-playerTurnOrder class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)"
+          :playerTurnOrderHeader="extensionData.playerTurnOrderHeader"
+          :playerTurnOrderButtonLabel="extensionData.playerTurnOrderButtonLabel"
+          :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)"
+          :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)"
+          v-if="extensionList['playerTurnOrder'] && ((!extensionList.playerTurnOrderLocation && extensionLocation == 'lower') || (extensionList.playerTurnOrderLocation == extensionLocation))">
+        </app-playerTurnOrder>
+        <app-plusMinus class="extension" :plusMinus="JSON.parse(extensionData.plusMinus)"
+          :plusMinusTitle="extensionData.plusMinusTitle" @process-extension-update="processExtensionUpdate($event)"
+          v-if="extensionList['plusMinus'] && ((!extensionList.plusMinusLocation && extensionLocation == 'lower') || (extensionList.plusMinusLocation == extensionLocation))">
+        </app-plusMinus>
+        <app-editableList class="extension" :editableList="extensionData.editableList.split(',')"
+          :editableListTitle="extensionData.editableListTitle"
+          @process-extension-update="processExtensionUpdate($event)"
+          v-if="(extensionList['editableList'] || extensionList.editableListFirstVisible || extensionList.editableListTitle) && (!extensionList.editableListFirstVisible || extensionList.editableListFirstVisible <= roomInfo.currentCardIndex ) && ((!extensionList.editableListLocation && extensionLocation == 'lower') || (extensionList.editableListLocation == extensionLocation))">
+        </app-editableList>
+        <app-multiEditableLists class="extension" :multiEditableLists="JSON.parse(extensionData.multiEditableLists)"
+          @process-extension-update="processExtensionUpdate($event)"
+          v-if="extensionList['multiEditableLists'] && (!extensionList.multiEditableListsFirstVisible || extensionList.multiEditableListsFirstVisible <= roomInfo.currentCardIndex) && ((!extensionList.multiEditableListsLocation && extensionLocation == 'lower') || (extensionList.multiEditableListsLocation == extensionLocation))">
+        </app-multiEditableLists>
+        <app-diceRoller class="extension" :diceResults="extensionData.diceRoller.split(',')"
+          :diceRollerTitle="extensionData.diceRollerTitle" @process-extension-update="processExtensionUpdate($event)"
+          v-if="extensionList['diceRoller'] && ((!extensionList.diceRollerLocation && extensionLocation == 'lower') || (extensionList.diceRollerLocation == extensionLocation))">
+        </app-diceRoller>
+        <app-standardDeck class="extension" :standardDeck="JSON.parse(extensionData.standardDeck)"
+          :standardDeckTitle="extensionData.standardDeckTitle"
+          @process-extension-update="processExtensionUpdate($event)"
+          v-if="extensionList['standardDeck'] && ((!extensionList.standardDeckLocation && extensionLocation == 'lower') || (extensionList.standardDeckLocation == extensionLocation))">
+        </app-standardDeck>
+        <app-journal class="extension" :journalEntries="JSON.parse(extensionData.journalEntries)"
+          :journalUpperText="extensionData.journalUpperText" :journalOrder="extensionData.journalOrder"
+          @process-extension-update="processExtensionUpdate($event)"
+          v-if="(extensionList['journalEntries'] || extensionList.journalUpperText) && ((!extensionList.journalEntiresLocation && extensionLocation == 'lower') || (extensionList.journalEntriesLocation == extensionLocation)) && (!extensionList.journalFirstVisible || extensionList.journalFirstVisible <= roomInfo.currentCardIndex)">
+        </app-journal>
+        <app-currentPlayerHeader class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)"
+          :currentPlayerHeader="extensionList.currentPlayerHeader"
+          :playerTurnOrderFirstVisible="parseInt(extensionData.playerTurnOrderFirstVisible)"
+          :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)"
+          v-if="extensionList['currentPlayerHeader'] && extensionList['playerTurnOrder'] && extensionLocation == 'upper'">
+        </app-currentPlayerHeader>
+        <app-embedWebsite class="extension" :hardcodedWebsiteURL="extensionData.hardcodedWebsiteURL"
+          :selectedWebsiteURL="extensionData.selectedWebsiteURL"
+          :embedWebsiteMessage="extensionData.embedWebsiteMessage"
+          @process-extension-update="processExtensionUpdate($event)"
+          v-if="(extensionList['hardcodedWebsiteURL'] || extensionList['embedWebsiteMessage']) && ((!extensionList.embededWebsiteLocation && extensionLocation == 'lower') || (extensionList.embededWebsiteLocation == extensionLocation))">
+        </app-embedWebsite>
+        <!-- <app-downloadExtensionData :extensionData="extensionData" :gameTitle="gameTitle" v-if="(extensionList['journalEntries'] || extensionList['multiEditableLists'] || extensionList['editableList']) && ((!extensionList.downloadExtensionDataLocation && extensionLocation == 'lower') || (extensionList.downloadExtensionDataLocation == extensionLocation))"></app-downloadExtensionData> -->
       </div>
+    </div>
   </div>
 </template>
 

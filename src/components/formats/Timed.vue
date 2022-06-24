@@ -1,30 +1,19 @@
 <template>
   <div class="game-room">
 
-    <app-menuBar
-      :roomInfo="roomInfo"
-      :tempExtensionData="tempExtensionData"
-      :customOptions="customOptions"
-      :monetizedByUser="monetizedByUser"
-      :routeRoomID="$route.params.roomID"
-      :dataReady="dataReady"
-      :firebaseReady="firebaseReady"
-      @roomMonetized="updateRoomMonetization"
-    >
+    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
+      :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button
-          variant="outline-dark"
-          class="control-button-safety-card btn-lg btn-block"
-          v-on:click="stop(); closeMenu();"
-          v-dompurify-html="
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+          v-on:click="stop(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
                 ? customOptions.safetyCardButton
-                : 'Pause'
-          "
-          ></b-button>
+    : 'Pause'
+          "></b-button>
       </div>
     </app-menuBar>
-    
+
 
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
@@ -39,33 +28,39 @@
         </div>
       </div>
     </div>
-    
-    <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+
+    <b-alert show class="" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
+        :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
+      it to design your own game!</b-alert>
 
     <div v-if="timerSynced">
       <div v-if="!playerSelected" class="row my-4">
         <div class="btn-group col-sm" role="group" aria-label="Role Controls">
-          <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>
+          <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player"
+            v-on:click="selectPlayer(player)">{{player}}</button>
         </div>
       </div>
       <div class="player-label text-center row my-4" v-if="playerSelected">
         <div class="col-sm">
           Role: {{playerSelected}}
-        <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
+          <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
         </div>
       </div>
 
-    <div class="timer-box mb-4 pt-4">
-      <span class="time">{{ time }}</span>
-      <div class="btn-container px-1">
+      <div class="timer-box mb-4 pt-4">
+        <span class="time">{{ time }}</span>
+        <div class="btn-container px-1">
 
 
 
           <div v-if="playerSelected" class="row mb-4">
             <div class="btn-group col-sm-6 offset-sm-3" role="group" aria-label="Timer Controls">
-              <button type="button" class="btn btn-outline-dark" :disabled="roomInfo.running" v-on:click="start()">Start</button>
-              <button type="button" class="btn btn-outline-dark" :disabled="!roomInfo.running" v-on:click="stop()">Pause</button>
-              <button type="button" class="btn btn-outline-danger" :disabled="!roomInfo.timeBegan" v-on:click="reset()">Reset</button>
+              <button type="button" class="btn btn-outline-dark" :disabled="roomInfo.running"
+                v-on:click="start()">Start</button>
+              <button type="button" class="btn btn-outline-dark" :disabled="!roomInfo.running"
+                v-on:click="stop()">Pause</button>
+              <button type="button" class="btn btn-outline-danger" :disabled="!roomInfo.timeBegan"
+                v-on:click="reset()">Reset</button>
             </div>
           </div>
 
@@ -91,12 +86,8 @@
         </transition>
       </div>
     </div>
-
-    <link v-bind:href="selectedWallet">
-  </div>
     <!-- Timer code remixed from https://codepen.io/raphael_octau by raphael_octau -->
-
-
+  </div>
 </template>
 
 <script>
@@ -112,6 +103,8 @@ export default {
     roomInfo: Object,
     tempExtensionData: Object,
     firebaseReady: Boolean,
+    roomMonetized: Boolean,
+    monetizedByUser: Boolean,
   },
   data: function(){
     return {
@@ -133,8 +126,6 @@ export default {
       },
       dataReady: false,
       selectedWallet: undefined,
-      roomMonetized: null,
-      monetizedByUser: false,
       error: false,
     }
   },
@@ -149,13 +140,6 @@ export default {
     },
   },
   mounted(){
-    if (document.monetization?.state == "started") {
-      this.monetizationStarted()
-    }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
-
     if (this.sheetData){
       this.processSheetData();
     }
@@ -183,13 +167,8 @@ export default {
         }
       )
     },
-    monetizationStarted() {
-      console.log('monetizing')
-      this.monetizedByUser = true;
-    },
-    updateRoomMonetization(monetizationValue){
-      this.roomMonetized = monetizationValue;
-      console.log("room is now monetizied")
+    closeMenu() {
+      this.$bvModal.hide("menuModal");
     },
     start() {
       if(this.roomInfo.running) return;
@@ -262,9 +241,6 @@ export default {
           this.zeroPrefix(sec, 2)
       }
     },
-    closeMenu(){
-      this.$bvModal.hide("menuModal");
-    },
     zeroPrefix(num, digit) {
       var zero = '';
       for(var i = 0; i < digit; i++) {
@@ -295,7 +271,7 @@ export default {
           // Handle options
           if (item[0] == "option"){
             this.customOptions[item[1]] =
-                  this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+              this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
             console.log(item[2])
           }
 

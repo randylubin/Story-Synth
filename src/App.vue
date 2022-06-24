@@ -34,18 +34,28 @@
         </div>
 
         <app-game
-          v-if="$route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
-          :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID"></app-game>
+          v-if="firebaseAuth && $route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" :gameType="gameType"></app-game>
+        <b-overlay
+          :show="!firebaseAuth && $route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          no-wrap>
+          <template #overlay>
+            <h1>Loading</h1>
+            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+          </template>
+        </b-overlay>
       </div>
 
-      <app-footer v-if="$route.params.roomID && ['Timed', 'SecretCards'].includes($route.params.gameType)"></app-footer>
-      <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx">
+      <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx"
+        onmonetization="console.log('monetization event triggered')"
+        v-if="['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
     </div>
   </div>
 </template>
 
 <script>
-  import {anonymousSignIn } from './firebase/auth.js';
+  import { anonymousSignIn } from './firebase/auth.js';
+  import customGameData from './misc/customGameData'
  
   // import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue' // TODO push this to components
 
@@ -53,7 +63,6 @@
     name: 'app',
     components: {
       'app-header': () => import('./components/layout/Header.vue'),
-      'app-footer': () => import('./components/layout/Footer.vue'),
 
       'app-homepage': () => import('./components/other/Homepage.vue'),
       'app-gallery': () => import('./components/other/Gallery.vue'),
@@ -69,7 +78,17 @@
     },
     data () {
       return {
+        firebaseAuth: false,
       }
+    },
+    computed: {
+      gameType: function () {
+        if (this.$route.params.gameType != "Games") {
+          return this.$route.params.gameType;
+        } else {
+          return customGameData[this.$route.params.gSheetID]?.gameType ?? "Custom";
+        }
+      }  
     },
     metaInfo () {
     return {
@@ -127,13 +146,14 @@
     mounted () {
       anonymousSignIn()
       .then(() => {
-        //console.log('anon auth')
+        // console.log('anon auth')
+        this.firebaseAuth = true;
       })
       .catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode, errorMessage)
-        // ...
+        // TODO display error message
       });
 
     },

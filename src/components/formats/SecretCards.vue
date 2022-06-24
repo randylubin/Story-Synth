@@ -1,27 +1,16 @@
 <template>
   <div class="secretCards game-room" v-if="roomInfo">
 
-    <app-menuBar
-      :roomInfo="roomInfo"
-      :tempExtensionData="tempExtensionData"
-      :customOptions="customOptions"
-      :monetizedByUser="monetizedByUser"
-      :routeRoomID="$route.params.roomID"
-      :dataReady="dataReady"
-      :firebaseReady="firebaseReady"
-      @roomMonetized="updateRoomMonetization"
-    >
+    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
+      :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button
-          variant="outline-dark"
-          class="control-button-safety-card btn-lg btn-block"
-          v-on:click="xCard(); closeMenu();"
-          v-dompurify-html="
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+          v-on:click="xCard(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
                 ? customOptions.safetyCardButton
-                : 'Pause'
-          "
-          ></b-button>
+    : 'Pause'
+          "></b-button>
       </div>
     </app-menuBar>
 
@@ -38,11 +27,13 @@
         </div>
       </div>
     </div>
-    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
+        :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
+      it to design your own game!</b-alert>
 
     <div>
 
-      
+
 
       <div v-if="!playerSelected" class="mb-4">
         <div class="row align-center mb-3">
@@ -53,7 +44,8 @@
         </div>
         <div class="row">
           <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
-            <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>
+            <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player"
+              v-on:click="selectPlayer(player)">{{player}}</button>
           </div>
         </div>
       </div>
@@ -69,8 +61,10 @@
     <div class="btn-container" v-if="playerSelected">
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-outline-dark" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length-2">
+          <button class="btn btn-outline-dark" v-on:click="previousCard()"
+            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
+          <button class="btn btn-outline-dark" v-on:click="nextCard()"
+            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length-2">
             <span v-if="roomInfo.currentCardIndex == 0">Start</span>
             <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
           </button>
@@ -87,11 +81,13 @@
           </div>
           <div class="card-body align-items-center d-flex justify-content-center">
             <h4>
-              Talk about the direction of story, or revise some content, or adjust the tone. Once everyone is on the same page, resume play.
+              Talk about the direction of story, or revise some content, or adjust the tone. Once everyone is on the
+              same page, resume play.
             </h4>
           </div>
 
-          <button class="btn btn-outline-dark mb-3" style="width:100px;" type="button" v-on:click="xCard()">Continue</button>
+          <button class="btn btn-outline-dark mb-3" style="width:100px;" type="button"
+            v-on:click="xCard()">Continue</button>
         </div>
       </transition>
     </div>
@@ -118,8 +114,6 @@
         </transition>
       </div>
     </div>
-
-    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -136,6 +130,8 @@ export default {
     roomInfo: Object,
     tempExtensionData: Object,
     firebaseReady: Boolean,
+    roomMonetized: Boolean,
+    monetizedByUser: Boolean,
   },
   data: function(){
     return {
@@ -158,8 +154,6 @@ export default {
         revShare: 0.2,
       },
       selectedWallet: undefined,
-      roomMonetized: null,
-      monetizedByUser: false,
     }
   },
   watch: {
@@ -173,13 +167,6 @@ export default {
     },
   },
   mounted(){
-    if (document.monetization?.state == "started") {
-      this.monetizationStarted()
-    }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
-
     if (this.sheetData){
       this.processSheetData();
     }
@@ -198,14 +185,6 @@ export default {
           extensionData: this.tempExtensionData,
         }
       )
-    },
-    monetizationStarted() {
-      console.log('monetizing')
-      this.monetizedByUser = true;
-    },
-    updateRoomMonetization(monetizationValue){
-      this.roomMonetized = monetizationValue;
-      console.log("room is now monetizied")
     },
     closeMenu(){
       this.$bvModal.hide("menuModal");
@@ -306,12 +285,10 @@ export default {
         });
 
         this.sheetData.forEach((item) => {
-          console.log(item[0])
-
           // Handle options
           if (item[0] == "option"){
             this.customOptions[item[1]] =
-              this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+              this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
             console.log(item[2])
           }
 

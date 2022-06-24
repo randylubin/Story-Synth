@@ -2,7 +2,7 @@
   <div class="phases game-room" v-if="roomInfo">
     <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
-      :firebaseReady="firebaseReady" @roomMonetized="updateRoomMonetization">
+      :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
         <b-button v-b-modal.reshuffleConfirm v-on:click="closeMenu();" class="control-button-restart btn-lg btn-block"
           variant="outline-dark" :disabled="roomInfo.xCardIsActive"
@@ -213,8 +213,6 @@
         </div>
       </div>
     </div>
-
-    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -231,6 +229,8 @@ export default {
     roomInfo: Object,
     tempExtensionData: Object,
     firebaseReady: Boolean,
+    roomMonetized: Boolean,
+    monetizedByUser: Boolean,
   },
   data: function(){
     return {
@@ -252,8 +252,6 @@ export default {
       firstNonInstruction: 0,
       endingIndex: 0,
       selectedWallet: undefined,
-      roomMonetized: null,
-      monetizedByUser: false,
       error: false,
     }
   },
@@ -268,13 +266,6 @@ export default {
     },
   },
   mounted(){
-    if (document.monetization?.state == "started") {
-      this.monetizationStarted()
-    }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
-
     if (this.sheetData){
       this.processSheetData();
     }
@@ -291,14 +282,6 @@ export default {
       if (this.dataReady) {
         this.shuffle();
       }
-    },
-    monetizationStarted() {
-      console.log('monetizing')
-      this.monetizedByUser = true;
-    },
-    updateRoomMonetization(monetizationValue){
-      this.roomMonetized = monetizationValue;
-      console.log("room is now monetizied")
     },
     closeMenu(){
       this.$bvModal.hide("menuModal");
@@ -475,7 +458,7 @@ export default {
             // Handle options
             if (item[0] == "option"){
               this.customOptions[item[1]] =
-                this.$markdownFriendlyOptions.includes(item[1]) ? this.$marked(item[2]) : item[2];
+                this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
               if (item[1] == "phaseHelpText"){
                 this.customOptions.phaseHelpText = this.customOptions.phaseHelpText.split('|')
               } else if (item[1] == "showPastPrompts") {
@@ -516,7 +499,6 @@ export default {
         // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData
 
-        console.log('done fetching and cleaning data')
         this.dataReady = true;
         
         if(this.firebaseReady && this.roomInfo?.cardSequence.length < 4){this.shuffle();}
