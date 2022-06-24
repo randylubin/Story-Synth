@@ -1,23 +1,15 @@
 <template>
-  <div
-    class="hexflower game-room"
-    v-if="roomInfo"
-    v-bind:class="{'px-0': gameAsExtension, styleTemplate: styleTemplate}"
-  >
+  <div class="hexflower game-room" v-if="roomInfo"
+    v-bind:class="{'px-0': gameAsExtension, styleTemplate: styleTemplate}">
 
-    <app-menuBar
-      :roomInfo="roomInfo"
-      :tempExtensionData="tempExtensionData"
-      :customOptions="customOptions"
-      :monetizedByUser="monetizedByUser"
-      :routeRoomID="$route.params.roomID"
-      :dataReady="dataReady"
-      :firebaseReady="firebaseReady"
-      @roomMonetized="updateRoomMonetization"
-      v-if="!gameAsExtension"
-    ></app-menuBar>
+    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
+      :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)" v-if="!gameAsExtension">
+    </app-menuBar>
 
-    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
+        :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
+      it to design your own game!</b-alert>
 
     <div class="game-meta">
       <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
@@ -36,10 +28,7 @@
     </div>
 
     <div class="upper-text row" v-if="customOptions.upperText">
-      <div
-        class="col-sm"
-        v-dompurify-html="customOptions.upperText"
-      ></div>
+      <div class="col-sm" v-dompurify-html="customOptions.upperText"></div>
     </div>
 
     <div class="mb-4">
@@ -51,64 +40,49 @@
 
         <div class="row">
           <div class="regenerate-button my-4 col-sm-12 justify-content-center generator">
-              <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
-                <span>{{ roomInfo.playRandomizerAnimation ? 'Rolling' : 'Move' }}</span> <b-icon class='hexflower-reroll-icon' icon="arrows-move"></b-icon>
-              </b-button>              
-              <b-button v-if="customOptions.randomizeHexes == 'randomWithCopies' || customOptions.randomizeHexes == 'randomNoCopies'" v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
-                <span>Regenerate</span> <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
-              </b-button>
+            <b-button v-on:click="randomlyMoveOnHexflower()" class="btn btn-dark mx-2 my-1">
+              <span>{{ roomInfo.playRandomizerAnimation ? 'Rolling' : 'Move' }}</span>
+              <b-icon class='hexflower-reroll-icon' icon="arrows-move"></b-icon>
+            </b-button>
+            <b-button
+              v-if="customOptions.randomizeHexes == 'randomWithCopies' || customOptions.randomizeHexes == 'randomNoCopies'"
+              v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
+              <span>Regenerate</span>
+              <b-icon class='hexflower-reroll-icon' icon="arrow-clockwise"></b-icon>
+            </b-button>
           </div>
         </div>
 
         <div class="row justify-content-center">
-          <div 
-            class='hexflower-body' 
-            v-bind:class="{
+          <div class='hexflower-body' v-bind:class="{
               'pointy-top':customOptions.hexOrientation == 'pointyTop',
               'hex-randomizing': roomInfo.playRandomizerAnimation === true,
               'hex-resetting': roomInfo.playResetAnimation === true,              
-            }"
-          >
-            <template
-              v-for="(hexRow, hexRowIndex) in updatedHexMapRows"
-            >
-              <button
-                class="hex-tile"
-                v-for="(hex, hexIndex) in hexRow"
-                v-on:click="goToHex(hex.hexID, false)"
-                v-bind:key="`${hexIndex}_${hexRowIndex}`"
-                v-bind:class="{
+            }">
+            <template v-for="(hexRow, hexRowIndex) in updatedHexMapRows">
+              <button class="hex-tile" v-for="(hex, hexIndex) in hexRow" v-on:click="goToHex(hex.hexID, false)"
+                v-bind:key="`${hexIndex}_${hexRowIndex}`" v-bind:class="{
                   'hex-tile-active': (hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex),
                   'hex-tile-previous-active': (hex.hexID == roomInfo.previousLocation),
-                }"
-                v-bind:style="{
+                }" v-bind:style="{
                   transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`                  
-                }"
-              >
+                }">
                 <transition appear name="reroll-current-hex" mode="out-in">
-                  <div 
-                    class="hex-tile-inner"
-                    :key="hex.hexID"
-                    v-bind:style="{
+                  <div class="hex-tile-inner" :key="hex.hexID" v-bind:style="{
                         backgroundColor: hex.backgroundColor, 
                         backgroundImage: hex.backgroundImage,
-                    }"
-                    v-bind:class="{
+                    }" v-bind:class="{
                       'hex-tile-animate-randomization': (roomInfo.hexesToAnimate.includes(hex.hexID)),
                       'hex-tile-foggy': ((customOptions.fogOfWar && roomInfo.hexesVisible[hex.hexID] == 0) || roomInfo.hexesMidreveal.includes(hex.hexID))
-                    }"
-                  >
-                    <div 
-                      class="hex-tile-inner-content"
+                    }">
+                    <div class="hex-tile-inner-content"
                       v-if="!((customOptions.fogOfWar && roomInfo.hexesVisible[hex.hexID] == 0) || roomInfo.hexesMidreveal.includes(hex.hexID))"
                       v-bind:class="{
                         'hex-tile-inner-content-lg': countGraphemes(hex.summary) == 1,
                         'hex-tile-inner-content-md': countGraphemes(hex.summary) >= 2 && countGraphemes(hex.summary) < 5,
                         'hex-tile-inner-content-sm': countGraphemes(hex.summary) >= 5 && countGraphemes(hex.summary) < 25,
                         'hex-tile-inner-content-xs': countGraphemes(hex.summary) >= 25
-                      }"
-                      v-dompurify-html="hex.summary"
-                    >
+                      }" v-dompurify-html="hex.summary">
                     </div>
                   </div>
                 </transition>
@@ -117,28 +91,25 @@
           </div>
         </div>
 
-        <transition name="fade-full-content" mode="out-in"><!--TODO fix this-->
-          <div 
-            class="row mt-4 mb-4 p-2 full-content" 
+        <transition name="fade-full-content" mode="out-in">
+          <!--TODO fix this-->
+          <div class="row mt-4 mb-4 p-2 full-content"
             :key="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent"
             v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent && !roomInfo.tempSameHex"
-            v-bind:class="{'invisible':roomInfo.playRandomizerAnimation}"
-          >
+            v-bind:class="{'invisible':roomInfo.playRandomizerAnimation}">
             <div class="col-sm-12" v-dompurify-html="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent">
             </div>
           </div>
         </transition>
 
       </div>
-      
+
 
       <div class="lower-text row mt-4" v-if="customOptions.lowerText">
-        <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>          
+        <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>
       </div>
 
     </div>
-
-    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -157,7 +128,10 @@ export default {
     gameAsExtension: Boolean,
     gSheetForExtension: String,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
+    roomMonetized: Boolean,
+    monetizedByUser: Boolean,
   },
   data: function () {
     return {
@@ -195,75 +169,11 @@ export default {
         wallet: undefined,
         revShare: 0.2,
       },
-      tempExtensionData: { test: null },
       selectedWallet: undefined,
-      roomMonetized: null,
-      monetizedByUser: false,
       error: false,
     };
   },
-  metaInfo() {
-    if(!this.gameAsExtension){
-      return {
-        title: this.customOptions.gameTitle,
-        meta: [
-          {
-            property: "description",
-            content: this.customOptions.gameBlurb,
-            vmid: "description",
-          },
-          {
-            property: "og:title",
-            content: this.customOptions.gameTitle,
-            vmid: "og:title",
-          },
-          {
-            property: "og:description",
-            content: this.customOptions.gameBlurb,
-            vmid: "og:description",
-          },
-          {
-            property: "og:image",
-            content: this.customOptions.ogImageSquare,
-            vmid: "og:image",
-          },
-          {
-            property: "og:url",
-            content: "https://storysynth.org/#" + this.$route.fullPath,
-            vmid: "og:url",
-          },
-          {
-            property: "twitter:card",
-            content: "summary",
-            vmid: "twitter:card",
-          },
-          {
-            property: "og:site_name",
-            content: "Story Synth",
-            vmid: "og:site_name",
-          },
-          {
-            property: "twitter:image:alt",
-            content: this.customOptions.gameTitle + " logo",
-            vmid: "twitter:image:alt",
-          },
-          {
-            name: "monetization",
-            content: this.selectedWallet,
-            vmid: "monetization",
-          },
-        ],
-      };
-    }
-  },
   mounted() {
-    if (document.monetization?.state == "started") {
-      this.monetizationStarted()
-    }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
-
     if (this.sheetData){
       this.processSheetData();
     }
@@ -276,17 +186,25 @@ export default {
     roomInfo: function (val) {
       if (val?.playRandomizerAnimation === true) {
         setTimeout(() => {
-            this.roomInfo.playRandomizerAnimation = false;
-            this.roomInfo.hexesMidreveal = [];
-          }
+          this.$emit('firebase-update',
+            {
+              playRandomizerAnimation: false,
+              hexesMidreveal: [],
+            }
+          )
+        }
         , 1500)
       } else if (val?.hexesMidreveal){
-        this.roomInfo.hexesMidreveal = [];
+        this.$emit('firebase-update',
+          { hexesMidreveal: [] }
+        )
       }
       if (val?.playResetAnimation === true) {
         setTimeout(() => {
-            this.roomInfo.playResetAnimation = false;
-          }
+          this.$emit('firebase-update',
+            { playResetAnimation: false }
+          )
+        }
         , 1000)
       }
     },
@@ -331,14 +249,6 @@ export default {
       if (this.dataReady) {
         this.regenerateHexes();
       }
-    },
-    monetizationStarted() {
-      console.log('monetizing')
-      this.monetizedByUser = true;
-    },
-    updateRoomMonetization(monetizationValue){
-      this.roomMonetized = monetizationValue;
-      console.log("room is now monetizied")
     },
     closeMenu(){
       this.$bvModal.hide("menuModal");
@@ -564,39 +474,27 @@ export default {
 
       if (this.sheetData){
         this.sheetData.forEach((item, i) => {
-          if (i !== 0 && item.values[0].formattedValue) {
+          if (i !== 0 && item[0]) {
             // Handle options
-            if (item.values[0].formattedValue == "option") {
-              this.customOptions[item.values[1].formattedValue] =
-                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-              console.log(item.values[2].formattedValue);
-            }
-
-            // Handle extensions
-            if (item.values[0].formattedValue == "extension") {
-              this.tempExtensionData[item.values[1].formattedValue] =
-                item.values[2].formattedValue;
-
-              console.log(
-                "extension -",
-                item.values[1].formattedValue,
-                item.values[2].formattedValue
-              );
+            if (item[0] == "option") {
+              this.customOptions[item[1]] =
+                this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
+              console.log(item[2]);
             }
 
             if (
-              item.values[0].formattedValue !== "option" &&
-              item.values[0].formattedValue !== "extension"
+              item[0] !== "option" &&
+              item[0] !== "extension"
             ) {
               let hexInfo = {};
-              if (item.values[0].formattedValue >= 0) {
+              if (item[0] >= 0) {
                 // initial hex info
                 hexInfo = {
-                  hexID: parseInt(item.values[0].formattedValue),
-                  summary: item.values[3].formattedValue,
-                  fullContent: item.values[4]?.formattedValue ? this.$marked(item.values[4]?.formattedValue) : null,
-                  probability: item.values[5]?.formattedValue,
-                  background: item.values[6]?.formattedValue,
+                  hexID: parseInt(item[0]),
+                  summary: item[3],
+                  fullContent: item[4] ? this.$marked(item[4]) : null,
+                  probability: item[5],
+                  background: item[6],
                 };
 
                 // check for background
@@ -639,13 +537,6 @@ export default {
           ]
         }
 
-        if (
-          this.firebaseReady &&
-          Object.keys(this.tempExtensionData).length > 1
-        ) {
-          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
-        }
-
         if (this.customOptions.wallet) {
           if (Math.random() <= this.customOptions.revShare) {
             this.customOptions.wallet = "$ilp.uphold.com/WMbkRBiZFgbx";
@@ -658,15 +549,7 @@ export default {
         console.log("done fetching and cleaning data");
         this.dataReady = true;
 
-        if (location.hostname.toString() !== "localhost") {
-          this.$mixpanel.track("Visit Game Session", {
-            game_name: this.customOptions.gameTitle ?? "untitled",
-            session_url: location.hostname.toString() + this.$route.fullPath,
-            format: "Hexflower",
-          });
-        }
-
-        if (this.firebaseReady && this.roomInfo.hexesVisible.length == 0) {
+        if (this.firebaseReady && this.roomInfo?.hexesVisible.length == 0) {
           console.log('about to regen', this.roomInfo)
           this.regenerateHexes();
         }

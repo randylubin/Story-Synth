@@ -1,27 +1,16 @@
 <template>
   <div class="secretCards game-room" v-if="roomInfo">
 
-    <app-menuBar
-      :roomInfo="roomInfo"
-      :tempExtensionData="tempExtensionData"
-      :customOptions="customOptions"
-      :monetizedByUser="monetizedByUser"
-      :routeRoomID="$route.params.roomID"
-      :dataReady="dataReady"
-      :firebaseReady="firebaseReady"
-      @roomMonetized="updateRoomMonetization"
-    >
+    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
+      :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button
-          variant="outline-dark"
-          class="control-button-safety-card btn-lg btn-block"
-          v-on:click="xCard(); closeMenu();"
-          v-dompurify-html="
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+          v-on:click="xCard(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
                 ? customOptions.safetyCardButton
-                : 'Pause'
-          "
-          ></b-button>
+    : 'Pause'
+          "></b-button>
       </div>
     </app-menuBar>
 
@@ -38,11 +27,13 @@
         </div>
       </div>
     </div>
-    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
+        :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
+      it to design your own game!</b-alert>
 
     <div>
 
-      
+
 
       <div v-if="!playerSelected" class="mb-4">
         <div class="row align-center mb-3">
@@ -53,7 +44,8 @@
         </div>
         <div class="row">
           <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
-            <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player" v-on:click="selectPlayer(player)">{{player}}</button>
+            <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player"
+              v-on:click="selectPlayer(player)">{{player}}</button>
           </div>
         </div>
       </div>
@@ -69,8 +61,10 @@
     <div class="btn-container" v-if="playerSelected">
       <div class="row mb-4">
         <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-outline-dark" v-on:click="previousCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-outline-dark" v-on:click="nextCard()" :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length-2">
+          <button class="btn btn-outline-dark" v-on:click="previousCard()"
+            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
+          <button class="btn btn-outline-dark" v-on:click="nextCard()"
+            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length-2">
             <span v-if="roomInfo.currentCardIndex == 0">Start</span>
             <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
           </button>
@@ -87,11 +81,13 @@
           </div>
           <div class="card-body align-items-center d-flex justify-content-center">
             <h4>
-              Talk about the direction of story, or revise some content, or adjust the tone. Once everyone is on the same page, resume play.
+              Talk about the direction of story, or revise some content, or adjust the tone. Once everyone is on the
+              same page, resume play.
             </h4>
           </div>
 
-          <button class="btn btn-outline-dark mb-3" style="width:100px;" type="button" v-on:click="xCard()">Continue</button>
+          <button class="btn btn-outline-dark mb-3" style="width:100px;" type="button"
+            v-on:click="xCard()">Continue</button>
         </div>
       </transition>
     </div>
@@ -118,8 +114,6 @@
         </transition>
       </div>
     </div>
-
-    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -134,7 +128,10 @@ export default {
     gSheetID: String,
     sheetData: Array,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
+    roomMonetized: Boolean,
+    monetizedByUser: Boolean,
   },
   data: function(){
     return {
@@ -157,62 +154,7 @@ export default {
         revShare: 0.2,
       },
       selectedWallet: undefined,
-      roomMonetized: null,
-      monetizedByUser: false,
-      tempExtensionData: { test: null },
     }
-  },
-  metaInfo() {
-    return {
-      title: this.customOptions.gameTitle,
-      meta: [
-        {
-          property: "description",
-          content: this.customOptions.gameBlurb,
-          vmid: "description",
-        },
-        {
-          property: "og:title",
-          content: this.customOptions.gameTitle,
-          vmid: "og:title",
-        },
-        {
-          property: "og:description",
-          content: this.customOptions.gameBlurb,
-          vmid: "og:description",
-        },
-        {
-          property: "og:image",
-          content: this.customOptions.ogImageSquare,
-          vmid: "og:image",
-        },
-        {
-          property: "og:url",
-          content: "https://storysynth.org/#" + this.$route.fullPath,
-          vmid: "og:url",
-        },
-        {
-          property: "twitter:card",
-          content: "summary",
-          vmid: "twitter:card",
-        },
-        {
-          property: "og:site_name",
-          content: "Story Synth",
-          vmid: "og:site_name",
-        },
-        {
-          property: "twitter:image:alt",
-          content: this.customOptions.gameTitle + " logo",
-          vmid: "twitter:image:alt",
-        },
-        {
-          name: "monetization",
-          content: this.selectedWallet,
-          vmid: "monetization",
-        },
-      ],
-    };
   },
   watch: {
     sheetData: function(){
@@ -225,13 +167,6 @@ export default {
     },
   },
   mounted(){
-    if (document.monetization?.state == "started") {
-      this.monetizationStarted()
-    }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
-
     if (this.sheetData){
       this.processSheetData();
     }
@@ -250,14 +185,6 @@ export default {
           extensionData: this.tempExtensionData,
         }
       )
-    },
-    monetizationStarted() {
-      console.log('monetizing')
-      this.monetizedByUser = true;
-    },
-    updateRoomMonetization(monetizationValue){
-      this.roomMonetized = monetizationValue;
-      console.log("room is now monetizied")
     },
     closeMenu(){
       this.$bvModal.hide("menuModal");
@@ -347,52 +274,38 @@ export default {
       let cleanData = [];
 
       if (this.sheetData){
-        var headers = this.sheetData[0].values
+        var headers = this.sheetData[0]
 
         var playerArray = []
 
         headers.forEach((item, i) => {
           if (i>=2) {
-            playerArray.push(item.formattedValue)
+            playerArray.push(item)
           }
         });
 
         this.sheetData.forEach((item) => {
-          console.log(item.values[0].formattedValue)
-
           // Handle options
-          if (item.values[0].formattedValue == "option"){
-            this.customOptions[item.values[1].formattedValue] =
-              this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-            console.log(item.values[2].formattedValue)
+          if (item[0] == "option"){
+            this.customOptions[item[1]] =
+              this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
+            console.log(item[2])
           }
 
-          // Handle extensions
-              if (item.values[0].formattedValue == "extension") {
-                this.tempExtensionData[item.values[1].formattedValue] =
-                  item.values[2].formattedValue;
-
-                console.log(
-                  "extension -",
-                  item.values[1].formattedValue,
-                  item.values[2].formattedValue
-                );
-              }
-
-          if (item.values[0].formattedValue !== "option" && item.values[0].formattedValue !== "extension"){
+          if (item[0] !== "option" && item[0] !== "extension"){
 
             var rowInfo = {
-              order: item.values[0].formattedValue,
-              publicText: this.$marked(item.values[1].formattedValue ?? null)
+              order: item[0],
+              publicText: this.$marked(item[1] ?? null)
             }
 
             for (var p = 0; p < playerArray.length; p++) {
-              rowInfo[playerArray[p]] = this.$marked(item.values[p+2].formattedValue ?? null)
+              rowInfo[playerArray[p]] = this.$marked(item[p+2] ?? null)
             }
 
             /*
             playerArray.forEach((player, i)=>{
-              rowInfo[player] = parseInt(item.values[i+2].formattedValue);
+              rowInfo[player] = parseInt(item[i+2]);
             });
             */
 
@@ -400,24 +313,10 @@ export default {
           }
         });
 
-        if (
-          this.firebaseReady &&
-          Object.keys(this.tempExtensionData).length > 1
-        ) {
-          this.$emit('firebase-update',{ extensionData: this.tempExtensionData });
-        }
-
         this.gSheet = cleanData.slice().reverse();
         this.playerArray = playerArray
         this.dataReady = true;
 
-        if (location.hostname.toString() !== 'localhost'){
-          this.$mixpanel.track('Visit Game Session', {
-            game_name: this.customOptions.gameTitle ?? 'untitled',
-            session_url: location.hostname.toString() + this.$route.fullPath,
-            format: 'Secret Cards'
-          });
-        }
       }
     }
   }

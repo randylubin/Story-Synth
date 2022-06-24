@@ -47,9 +47,8 @@
 </template>
 
 <script>
-import { rtdb } from "../../firebase";
-var rooms = rtdb.ref("rooms");
-var amOnline = rtdb.ref(".info/connected");
+
+import {notifyMyOnlineStatus, onRoomInfoUpdate, setMyOnlineData} from "../../firebase/models/players_in_room.js";
 
 export default {
   name: "app-roomLink",
@@ -68,36 +67,13 @@ export default {
       context: null,
       userID: null,
       atLeastOneMonetizedUser: false,
+      userRef: null
     };
   },
-  firebase: {
-    roomInfo: rtdb.ref("documents"),
-  },
   mounted() {
-    if (this.routeRoomID  && !this.userID) {
-      this.userID =
-        "rooms/" +
-        this.routeRoomID +
-        "/" +
-        Math.trunc(Math.random() * 100000).toString();
-
-      let userRef = rtdb.ref(this.userID);
-
-      amOnline.on("value", function (snapshot) {
-        if (snapshot.val()) {
-          userRef.onDisconnect().remove();
-          userRef.set({here:true});
-        }
-      });
-
-      this.$rtdbBind("roomInfo", rooms.child(this.routeRoomID)).then(() => {});
-
-      this.$gtag.event("reachedGameSession", {
-        sheetID: this.$route.gSheetID,
-        gameSessionURL: this.currentUrl,
-      });
-
-      this.updateUrl()
+    if (this.routeRoomID) {
+      this.bindToFirebaseRTDB()
+      this.checkMonetization();
     }
   },
   computed: {
@@ -107,48 +83,16 @@ export default {
   },
   watch: {
     monetizedByUser: function(){
-      var userRef = rtdb.ref(this.userID)
-      let selfMonetized = this.monetizedByUser ?? false
-      amOnline.on("value", function (snapshot) {
-        if (snapshot.val()) {
-          userRef.onDisconnect().remove();
-          userRef.set({here:true, monetized: selfMonetized});
-        }
-      });
-    },
-    stringyRoomInfo: function(){
-      for (const user in this.roomInfo){
-        if (this.roomInfo[user].monetized || this.monetizedByUser){
-          this.atLeastOneMonetizedUser = true; // currently set to be a one way switch – if you shared this room with a monetized user, then you can keep playing if they leave
-          this.$emit('roomMonetized', true)
-        }
+      if (this.userRef) {
+        setMyOnlineData(this.userRef, {monetized: this.monetizedByUser})
       }
     },
+    stringyRoomInfo: function(){
+      this.checkMonetization();
+    },
     $route() {
-      if (this.routeRoomID && !this.userID) {
-        this.userID =
-          "rooms/" +
-          this.routeRoomID +
-          "/" +
-          Math.trunc(Math.random() * 1000).toString();
-
-        var userRef = rtdb.ref(this.userID);
-
-        amOnline.on("value", function (snapshot) {
-          if (snapshot.val()) {
-            userRef.onDisconnect().remove();
-            userRef.set({here:true});
-          }
-        });
-
-        this.$rtdbBind("roomInfo", rooms.child(this.routeRoomID)).then(
-          () => {}
-        );
-
-        this.$gtag.event("reachedGameSession", {
-          sheetID: this.$route.gSheetID,
-          gameSessionURL: this.currentUrl,
-        });
+      if (this.routeRoomID) {
+        this.bindToFirebaseRTDB()
       }
     },
   },
@@ -156,6 +100,27 @@ export default {
     this.updateUrl();
   },
   methods: {
+    bindToFirebaseRTDB() {
+      this.userRef = notifyMyOnlineStatus(this.routeRoomID);
+      onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
+        // console.log(roomInfo)
+        this.roomInfo = roomInfo
+      })
+      this.$gtag.event("reachedGameSession", {
+        sheetID: this.$route.gSheetID,
+        gameSessionURL: this.currentUrl,
+      });
+      setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
+      this.updateUrl();
+    },
+    checkMonetization() {
+      for (const user in this.roomInfo) {
+        if (this.roomInfo[user].monetized || this.monetizedByUser) {
+          this.atLeastOneMonetizedUser = true; // currently set to be a one way switch – if you shared this room with a monetized user, then you can keep playing if they leave
+          this.$emit('roomMonetized', true)
+        }
+      }
+    },
     updateUrl() {
       if (!this.$route.params.userRole){
         this.currentUrl =
@@ -163,7 +128,7 @@ export default {
       } else {
         this.currentUrl = "https://" + location.hostname.toString() + '/' + this.$route.params.gameType + '/' + this.$route.params.gSheetID + '/' + this.$route.params.roomID + '/player/'
       }
-      console.log('current URL is now', this.$route.params.userRole, this.currentUrl)
+      // console.log('current URL is now', this.$route.params.userRole, this.currentUrl)
     },
     copyTextToClipboard() {
       navigator.clipboard.writeText(this.currentUrl).then(function() {
@@ -177,10 +142,6 @@ export default {
 </script>
 
 <style scoped>
-.room-link {
-
-}
-
 .live-player-counter {
   color: #343a40
 }

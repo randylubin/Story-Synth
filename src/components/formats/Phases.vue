@@ -1,60 +1,40 @@
 <template>
-  <div class="phases game-room" v-if="roomInfo">      
-    <app-menuBar
-      :roomInfo="roomInfo"
-      :tempExtensionData="tempExtensionData"
-      :customOptions="customOptions"
-      :monetizedByUser="monetizedByUser"
-      :routeRoomID="$route.params.roomID"
-      :dataReady="dataReady"
-      :firebaseReady="firebaseReady"
-      @roomMonetized="updateRoomMonetization"
-    >
+  <div class="phases game-room" v-if="roomInfo">
+    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
+      :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button
-          v-b-modal.reshuffleConfirm
-          v-on:click="closeMenu();"
-          class="control-button-restart btn-lg btn-block"
-          variant="outline-dark"
-          :disabled="roomInfo.xCardIsActive"
-          v-if="!customOptions.facilitatorMode || userRole == 'facilitator'"
-          color="rgb(187, 138, 200)"
-          >Restart</b-button
-        >
+        <b-button v-b-modal.reshuffleConfirm v-on:click="closeMenu();" class="control-button-restart btn-lg btn-block"
+          variant="outline-dark" :disabled="roomInfo.xCardIsActive"
+          v-if="!customOptions.facilitatorMode || userRole == 'facilitator'" color="rgb(187, 138, 200)">Restart
+        </b-button>
       </div>
       <div class="row menu-row">
-        <b-button
-          variant="outline-dark"
-          class="control-button-safety-card btn-lg btn-block"
-          v-on:click="xCard(); closeMenu();"
-          v-dompurify-html="
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+          v-on:click="xCard(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
               ? customOptions.safetyCardButton
               : 'X-Card'
-          "
-          ></b-button>
+          "></b-button>
       </div>
       <div class="row menu-row" v-if="roomInfo.currentCardIndex < firstNonInstruction">
-        <b-button
-          variant="outline-dark"
-          class="btn-lg btn-block"
-          v-on:click="skipInstructions(); closeMenu();" 
-          >
-            Skip Instructions
-          </b-button>
+        <b-button variant="outline-dark" class="btn-lg btn-block" v-on:click="skipInstructions(); closeMenu();">
+          Skip Instructions
+        </b-button>
       </div>
       <div class="row menu-row" v-if="roomInfo.currentCardIndex >= firstNonInstruction">
-        <b-button
-          variant="outline-dark"
-          class="btn-lg btn-block"
-          :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive" v-on:click="ending(); closeMenu();">
+        <b-button variant="outline-dark" class="btn-lg btn-block"
+          :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive"
+          v-on:click="ending(); closeMenu();">
           Ending
         </b-button>
       </div>
     </app-menuBar>
-  
-    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing it to design your own game!</b-alert>
-    
+
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
+        :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
+      it to design your own game!</b-alert>
+
     <!-- <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
         <div class="col-sm">
@@ -77,90 +57,102 @@
     </div> -->
 
     <transition name="fade">
-      <div class="fab-buttons container" v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
-          <button
-            class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
-            v-on:click="previousCard()"
-            v-b-tooltip.hover title="Previous Card"
-            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0"
-          >
-            <!-- Previous Card -->
-            <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
-            <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
-          </button>
-          <button
-            class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow"
-            v-b-tooltip.hover title="Next Card"
-            v-on:click="nextCard()"
-            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)"
-          >
-            <!-- Next Card -->
-            <div v-if="roomInfo.currentCardIndex == 0">
-              <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
-              <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
-            </div>
-            <div v-else>
-              <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
-              <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>              
-            </div>                
-          </button>
-      </div>        
+      <div class="fab-buttons container"
+        v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
+        <button class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
+          v-on:click="previousCard()" v-b-tooltip.hover title="Previous Card"
+          :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">
+          <!-- Previous Card -->
+          <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
+          <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+        </button>
+        <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
+          title="Next Card" v-on:click="nextCard()"
+          :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)">
+          <!-- Next Card -->
+          <div v-if="roomInfo.currentCardIndex == 0">
+            <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
+            <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
+          </div>
+          <div v-else>
+            <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
+            <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>
+          </div>
+        </button>
+      </div>
     </transition>
 
 
 
-    <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'" class="mb-4">
-      
-        <div class="card d-flex shadow img-fluid" v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
-          
-          <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%" v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
-          <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%" v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0) && (!customOptions.cardBackgroundImageAlign)">
-          <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" top v-if="customOptions.cardBackgroundImageAlign == 'top' && roomInfo.currentCardIndex != 0"></b-card-img>
+    <div
+      v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'"
+      class="mb-4">
 
-          <div class="card-body justify-content-center mt-4 mx-4" v-if="!roomInfo.xCardIsActive && dataReady && firebaseReady && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': (customOptions.cardBackgroundImage && (!customOptions.cardBackgroundImageAlign))}">
-            <div class="row mb-4" v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
-              <div class="col-sm">
-                <h2>Instructions</h2>
-                <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction -1" variant="dark"></b-progress>
-              </div>
-            </div>
-            
-            <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
-              <h2 class="card-header-text">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h2>
-              
-              <p v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText" v-bind:class="{ 'text-left': gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText.length > 60 }" class="my-4" v-dompurify-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
-            </div>
+      <div class="card d-flex shadow img-fluid"
+        v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
 
-            <div v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
-              <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-dompurify-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
+        <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%"
+          v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
+        <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%"
+          v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0) && (!customOptions.cardBackgroundImageAlign)">
+        <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" top
+          v-if="customOptions.cardBackgroundImageAlign == 'top' && roomInfo.currentCardIndex != 0"></b-card-img>
+
+        <div class="card-body justify-content-center mt-4 mx-4"
+          v-if="!roomInfo.xCardIsActive && dataReady && firebaseReady && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)"
+          v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': (customOptions.cardBackgroundImage && (!customOptions.cardBackgroundImageAlign))}">
+          <div class="row mb-4"
+            v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
+            <div class="col-sm">
+              <h2>Instructions</h2>
+              <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction -1" variant="dark"></b-progress>
+            </div>
+          </div>
+
+          <div v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]">
+            <h2 class="card-header-text">{{ gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].headerText }}</h2>
+
+            <p v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"
+              v-bind:class="{ 'text-left': gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText.length > 60 }"
+              class="my-4" v-dompurify-html="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]].bodyText"></p>
+          </div>
+
+          <div
+            v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
+            <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-dompurify-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
               </div>-->
-              <h2 class="card-header-text">{{phaseNames[roomInfo.currentPhase]}}</h2>
-              <div v-dompurify-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]"></div>
-              <div v-if="Array.isArray(customOptions.phaseHelpText)" class="my-4">
-                <p class="phase-help-text">
-                  <i class="">{{customOptions.phaseHelpText[roomInfo.currentPhase]}}</i>
-                </p>
-              </div>
+            <h2 class="card-header-text">{{phaseNames[roomInfo.currentPhase]}}</h2>
+            <div
+              v-dompurify-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]">
             </div>
-            
-          </div>
-          
-
-          <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive" v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage && !customOptions.cardBackgroundImageAlign }">
-            <div class="mt-5 pt-5 mb-5">
-              <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
-              <div class="safety-card-tet" v-dompurify-html="customOptions.safetyCardText" v-if="customOptions.safetyCardText"></div> 
-            </div>
-            <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
-            <div class="" v-if="!customOptions.safetyCardText">
-              <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
+            <div v-if="Array.isArray(customOptions.phaseHelpText)" class="my-4">
+              <p class="phase-help-text">
+                <i class="">{{customOptions.phaseHelpText[roomInfo.currentPhase]}}</i>
+              </p>
             </div>
           </div>
-
-          <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" bottom v-if="customOptions.cardBackgroundImageAlign == 'bottom' && roomInfo.currentCardIndex != 0"></b-card-img>
 
         </div>
-      
+
+
+        <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive"
+          v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage && !customOptions.cardBackgroundImageAlign }">
+          <div class="mt-5 pt-5 mb-5">
+            <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
+            <div class="safety-card-tet" v-dompurify-html="customOptions.safetyCardText"
+              v-if="customOptions.safetyCardText"></div>
+          </div>
+          <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">Continue</button>
+          <div class="" v-if="!customOptions.safetyCardText">
+            <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
+          </div>
+        </div>
+
+        <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" bottom
+          v-if="customOptions.cardBackgroundImageAlign == 'bottom' && roomInfo.currentCardIndex != 0"></b-card-img>
+
+      </div>
+
     </div>
 
     <!-- <div class="btn-container" style>
@@ -174,44 +166,42 @@
       </div>
     </div> -->
 
-    <b-modal
-      id="reshuffleConfirm"
-      title="Restart and Reshuffle"
-      hide-footer
-    >
+    <b-modal id="reshuffleConfirm" title="Restart and Reshuffle" hide-footer>
       <p>Do you want to reshuffle all of the prompts and restart the game?</p>
-      <div
-        class="text-center mb-3"
-      >
-        <b-button
-          variant="dark"
-          v-on:click="shuffle();"
-          >Restart and Reshuffle</b-button
-        >
+      <div class="text-center mb-3">
+        <b-button variant="dark" v-on:click="shuffle();">Restart and Reshuffle</b-button>
       </div>
     </b-modal>
 
     <div v-if="Array.isArray(customOptions.showPastPrompts) && roomInfo.currentCardIndex >= firstNonInstruction">
 
-      <div class="itinerary mb-5 card d-flex shadow"> <!-- style="display: flex; flex-direction: column-reverse;-->
+      <div class="itinerary mb-5 card d-flex shadow">
+        <!-- style="display: flex; flex-direction: column-reverse;-->
         <div class="card-body justify-content-center">
           <div class="row my-2">
             <div class="col-sm game-meta">
-              <h2 v-dompurify-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'"></h2>
+              <h2 v-dompurify-html="customOptions.pastPromptHeader ? customOptions.pastPromptHeader : 'Past Prompts'">
+              </h2>
             </div>
           </div>
           <div class="row">
-            <div class="col-sm" v-dompurify-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null">
+            <div class="col-sm"
+              v-dompurify-html="customOptions.pastPromptPrecursor ? customOptions.pastPromptPrecursor : null">
             </div>
           </div>
           <div v-for="(round, roundIndex) in roomInfo.cardSequence" v-bind:key="roundIndex">
-            <div v-if="Object.prototype.toString.call(round) === '[object Object]' && phaseData.length>0 && roundIndex <= roomInfo.currentCardIndex">
+            <div
+              v-if="Object.prototype.toString.call(round) === '[object Object]' && phaseData.length>0 && roundIndex <= roomInfo.currentCardIndex">
               <div class="row" v-for="(phase, phaseIndex) in numberOfPhases" v-bind:key="phaseIndex">
-                <div class="col-sm" v-if="roundIndex < roomInfo.lastSeenRound || (roundIndex==roomInfo.lastSeenRound && phaseIndex < roomInfo.lastSeenPhase)">
-                  <div v-if="customOptions.showPastPrompts[phaseIndex]==1" style="font-size: .8em;">
-                    {{phaseData[phaseIndex][round[phaseIndex]]}}
-                    <br>|
+                <div class="col-sm"
+                  v-if="roundIndex < roomInfo.lastSeenRound || (roundIndex==roomInfo.lastSeenRound && phaseIndex < roomInfo.lastSeenPhase)">
+                  <div v-if="customOptions.showPastPrompts[phaseIndex]==1" style="font-size: .8em;"
+                    v-dompurify-html="phaseData[phaseIndex][round[phaseIndex]]">
                   </div>
+                  <p v-if="customOptions.showPastPrompts[phaseIndex]==1" style="font-size: .8em;">
+                    |
+                  </p>
+
                 </div>
               </div>
             </div>
@@ -223,8 +213,6 @@
         </div>
       </div>
     </div>
-
-    <link v-bind:href="selectedWallet">
   </div>
 </template>
 
@@ -239,7 +227,10 @@ export default {
     gSheetID: String,
     sheetData: Array,
     roomInfo: Object,
+    tempExtensionData: Object,
     firebaseReady: Boolean,
+    roomMonetized: Boolean,
+    monetizedByUser: Boolean,
   },
   data: function(){
     return {
@@ -252,7 +243,6 @@ export default {
         revShare: 0.2,
       },
       dataReady: false,
-      tempExtensionData: { test: null },
       gSheet: [{text:"loading"}],
       numberOfPhases: 0,
       phaseNames: [],
@@ -262,62 +252,8 @@ export default {
       firstNonInstruction: 0,
       endingIndex: 0,
       selectedWallet: undefined,
-      roomMonetized: null,
-      monetizedByUser: false,
       error: false,
     }
-  },
-  metaInfo() {
-    return {
-      title: this.customOptions.gameTitle,
-      meta: [
-        {
-          property: "description",
-          content: this.customOptions.gameBlurb,
-          vmid: "description",
-        },
-        {
-          property: "og:title",
-          content: this.customOptions.gameTitle,
-          vmid: "og:title",
-        },
-        {
-          property: "og:description",
-          content: this.customOptions.gameBlurb,
-          vmid: "og:description",
-        },
-        {
-          property: "og:image",
-          content: this.customOptions.ogImageSquare,
-          vmid: "og:image",
-        },
-        {
-          property: "og:url",
-          content: "https://storysynth.org/#" + this.$route.fullPath,
-          vmid: "og:url",
-        },
-        {
-          property: "twitter:card",
-          content: "summary",
-          vmid: "twitter:card",
-        },
-        {
-          property: "og:site_name",
-          content: "Story Synth",
-          vmid: "og:site_name",
-        },
-        {
-          property: "twitter:image:alt",
-          content: this.customOptions.gameTitle + " logo",
-          vmid: "twitter:image:alt",
-        },
-        {
-          name: "monetization",
-          content: this.selectedWallet,
-          vmid: "monetization",
-        },
-      ],
-    };
   },
   watch: {
     sheetData: function(){
@@ -330,13 +266,6 @@ export default {
     },
   },
   mounted(){
-    if (document.monetization?.state == "started") {
-      this.monetizationStarted()
-    }
-    document.monetization?.addEventListener('monetizationstart', () => {
-      this.monetizationStarted()
-    })
-
     if (this.sheetData){
       this.processSheetData();
     }
@@ -353,14 +282,6 @@ export default {
       if (this.dataReady) {
         this.shuffle();
       }
-    },
-    monetizationStarted() {
-      console.log('monetizing')
-      this.monetizedByUser = true;
-    },
-    updateRoomMonetization(monetizationValue){
-      this.roomMonetized = monetizationValue;
-      console.log("room is now monetizied")
     },
     closeMenu(){
       this.$bvModal.hide("menuModal");
@@ -522,64 +443,52 @@ export default {
       let cleanData = [];
 
       if (this.sheetData){
-        this.numberOfPhases = this.sheetData[0].values.length - 3
+        this.numberOfPhases = this.sheetData[0].length - 3
         
         for (var w = 0; w < this.numberOfPhases; w++) {
           this.phaseData.push([])
-          this.phaseNames.push(this.sheetData[0].values[w+3].formattedValue)
+          this.phaseNames.push(this.sheetData[0][w+3])
         }
 
         var newEndingIndex = 0
         
         this.sheetData.forEach((item, i) => {
-          if (i !== 0 && item.values[0].formattedValue){
+          if (i !== 0 && item[0]){
             
             // Handle options
-            if (item.values[0].formattedValue == "option"){
-              this.customOptions[item.values[1].formattedValue] =
-                this.$markdownFriendlyOptions.includes(item.values[1].formattedValue) ? this.$marked(item.values[2].formattedValue) : item.values[2].formattedValue;
-              if (item.values[1].formattedValue == "phaseHelpText"){
+            if (item[0] == "option"){
+              this.customOptions[item[1]] =
+                this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
+              if (item[1] == "phaseHelpText"){
                 this.customOptions.phaseHelpText = this.customOptions.phaseHelpText.split('|')
-              } else if (item.values[1].formattedValue == "showPastPrompts") {
+              } else if (item[1] == "showPastPrompts") {
                 this.customOptions.showPastPrompts = this.customOptions.showPastPrompts.split(',')
               }
             }
 
-            // Handle extensions
-            if (item.values[0].formattedValue == "extension") {
-              this.tempExtensionData[item.values[1].formattedValue] =
-                item.values[2].formattedValue;
-
-              console.log(
-                "extension -",
-                item.values[1].formattedValue,
-                item.values[2].formattedValue
-              );
-            }
-
             // Get count of instruction cards
-            if (item.values[0].formattedValue == 0){
+            if (item[0] == 0){
               this.firstNonInstruction += 1
             }
 
             // Get ending index
-            if ((item.values[0].formattedValue == 0 || item.values[0].formattedValue == 1) && this.endingIndex == 0){
+            if ((item[0] == 0 || item[0] == 1) && this.endingIndex == 0){
               newEndingIndex += 1
             }
 
             var rowInfo = {}
-            if (item.values[0].formattedValue >= 0){
+            if (item[0] >= 0){
               rowInfo = {
-                ordered: item.values[0].formattedValue,
-                headerText: item.values[1].formattedValue,
-                bodyText: this.$marked(item.values[2].formattedValue ?? null)
+                ordered: item[0],
+                headerText: item[1],
+                bodyText: this.$marked(item[2] ?? null)
               }
               cleanData.push(rowInfo)
             }
 
-            if (item.values[0].formattedValue == 1){
-              for (var j = 3; j < item.values.length; j++) {
-                this.phaseData[j-3].push(this.$marked(item.values[j].formattedValue ?? null))
+            if (item[0] == 1){
+              for (var j = 3; j < item.length; j++) {
+                this.phaseData[j-3].push(this.$marked(item[j] ?? null))
               }
             }
           }
@@ -590,18 +499,9 @@ export default {
         // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData
 
-        console.log('done fetching and cleaning data')
         this.dataReady = true;
-
-        if (location.hostname.toString() !== 'localhost'){
-          this.$mixpanel.track('Visit Game Session', {
-            game_name: this.customOptions.gameTitle ?? 'untitled',
-            session_url: location.hostname.toString() + this.$route.fullPath,
-            format: 'Phases'
-          });
-        }
         
-        if(this.firebaseReady && this.roomInfo.cardSequence.length < 4){this.shuffle();}
+        if(this.firebaseReady && this.roomInfo?.cardSequence.length < 4){this.shuffle();}
 
       }     
     }

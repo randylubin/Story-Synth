@@ -11,7 +11,6 @@ var VanityLookup = {
   // Games
   "Compersion": "1XVd4Kgq3X3utOm25JXOsDbhI_jLjAHX8mGzpiT6Sgho",
   "Cute-Games-For-First-Dates": "1jaGlSVeBBCfRvY5j_lLrz5YC_psGOVURn_OaXbr2JH0",
-  // "For-The-Awesome": "1ghm-XOUZlYaOeHcl0zer4KSpCMaoN5u_X7iWmN2TrjY",
   "Reunion": "1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc",
   "This-Heart-Within-Me-Burns": "1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA",
 
