@@ -245,6 +245,23 @@
 
 
       <div class="after-game-card">
+        <div class="mb-4 template" v-if="shouldRenderChapterNavigation">
+          <div class="row">
+            <div class="col-sm">
+              <div class="card d-flex shadow">
+                <div class="card-body">
+                  <h2>Chapter Navigation</h2>
+                  <p>You can jump around!</p>
+                  <span v-for="chapter in chapters" :key="chapter.label">
+                    <button @click="goToCard(parseInt(chapter.firstcard))">
+                      {{ chapter.label }}
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <b-modal id="modalNextDeckConfirm" title="Advance?" hide-footer>
           <p></p>
@@ -260,9 +277,9 @@
             <b-button variant="dark" v-on:click="shuffleAndResetGame()">Restart and Reshuffle</b-button>
           </div>
         </b-modal>
-
       </div>
     </div>
+
     <!-- <div v-if="customOptions.wallet">
       <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" v-bind:href="wallet">
     </div> -->
@@ -308,6 +325,7 @@ export default {
       deckTransitionArray: null,
       selectedWallet: undefined,
       error: false,
+      shouldRenderChapterNavigation: false
     };
   },
   computed: {
@@ -590,6 +608,33 @@ export default {
       
       this.shuffleLastCard(tempLastCardIndex, newCardSequence);
     },
+    setupChapterNavigation(){
+        this.chapters = this.parseChaptersFromCustomOptions();
+        if(this.chapters.length > 0){
+          this.shouldRenderChapterNavigation = true
+        }
+    },
+    parseChaptersFromCustomOptions() {
+      const regex = /^chapter-(\d)-(\w+)$/;
+
+      return Object.entries(this.customOptions)
+        .filter(([key]) => regex.test(key))
+        .reduce((arr, [key, value]) => {
+          const match = key.match(regex);
+
+          // The chapter numbers are 1 based because it should be human readable in the gsheet, but we need to subtract one to make them 0 based for the array
+          const index = Number.parseInt(match[1]) - 1;
+          const chapterKey = match[2];
+
+          if (!arr[index]) {
+            arr[index] = {};
+          }
+          arr[index][chapterKey] = value;
+
+          return arr;
+        }, []);
+    },
+
     processSheetData() {
       let cleanData = [];
 
@@ -669,9 +714,10 @@ export default {
           }
         }
 
+        this.setupChapterNavigation();
+
         console.log("done fetching and cleaning data", "FB: ", this.firebaseReady);
         this.dataReady = true;
-
         if (this.firebaseReady && this.roomInfo?.cardSequence.length < 4) {
           this.shuffleAndResetGame();
         }
