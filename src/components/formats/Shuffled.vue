@@ -24,10 +24,7 @@
           >Restart</b-button
         >
       </div>
-      <div
-        class="row menu-row"
-        v-if="!roomInfo.xCardIsActive && !roomInfo.popCardIsActive"
-      >
+      <div class="row menu-row" v-if="!roomInfo.xCardIsActive">
         <b-button
           variant="outline-dark"
           class="control-button-safety-card btn-lg btn-block"
@@ -517,10 +514,7 @@
           </div>
         </div>
 
-        <div
-          class="mb-4 template"
-          v-if="shouldRenderPopCards && !roomInfo.xCardIsActive"
-        >
+        <div class="mb-4 template" v-if="shouldRenderPopCards">
           <div class="row">
             <div class="col-sm">
               <div class="card d-flex shadow">
@@ -528,7 +522,10 @@
                   <h2>Popcards</h2>
                   <p>You can jump around!</p>
                   <span v-for="card in popcards" :key="card.label">
-                    <button @click="setPopCard(card.text)">
+                    <button
+                      @click="setPopCard(card.text)"
+                      :disabled="roomInfo.xCardIsActive"
+                    >
                       {{ card.label }}
                     </button>
                   </span>
