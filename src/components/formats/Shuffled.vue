@@ -497,19 +497,20 @@
         >
           <div class="row">
             <div class="col-sm">
-              <div class="card d-flex shadow">
+              <div class="card d-flex">
                 <div class="card-body">
                   <h2 v-if="customOptions.chaptersHeader">
                     {{ customOptions.chaptersHeader }}
                   </h2>
-                  <span v-for="chapter in chapters" :key="chapter.label">
-                    <button
+                  <div v-for="chapter in chapters" :key="chapter.label">
+                    <b-button
+                      class="btn-block btn-default my-2"
                       @click="goToCard(parseInt(chapter.firstcard))"
                       :disabled="roomInfo.xCardIsActive"
                     >
                       {{ chapter.label }}
-                    </button>
-                  </span>
+                    </b-button>
+                  </div>
                 </div>
               </div>
             </div>
