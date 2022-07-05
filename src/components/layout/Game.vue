@@ -283,7 +283,7 @@ export default {
 
             rawSheetData.forEach((item, i) => {
               cleanData.push([])
-              if (item.values[0]) {
+              if (item.values && item.values[0]) {
                 for (let v = 0; v < item.values.length; v++){
                   if (item.values[v] && item.values[v].formattedValue) {
                     cleanData[i].push(item.values[v].formattedValue)
