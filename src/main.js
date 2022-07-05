@@ -34,7 +34,7 @@ Vue.use(VueDOMPurifyHTML, {
       "y",
       "d",
     ],
-    ADD_TAGS: ["link", "svg", "g", "style", "img"],
+    ADD_TAGS: ["link", "svg", "g", "style", "img", "blockquote", "pre", "span"],
   },
 });
 
