@@ -19,6 +19,7 @@ Vue.use(VueDOMPurifyHTML, {
       "path",
       "src",
       "style",
+      "target",
       "title",
       "transform",
       "type",
