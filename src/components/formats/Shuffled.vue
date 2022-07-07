@@ -10,11 +10,9 @@
       </div>
       <div class="row menu-row" v-if="!roomInfo.xCardIsActive">
         <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
-          v-on:click="xCard(); closeMenu();" v-dompurify-html="
-            customOptions.safetyCardButton
-              ? customOptions.safetyCardButton
-              : 'X-Card'
-          "></b-button>
+          v-on:click="xCard(); closeMenu();">{{customOptions.safetyCardButton
+          ? customOptions.safetyCardButton
+          : 'X-Card'}}</b-button>
       </div>
       <div class="row menu-row">
         <b-button v-on:click="nextDeck(); closeMenu();" variant="outline-dark"
@@ -23,11 +21,9 @@
           :disabled="
             roomInfo.xCardIsActive ||
               roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
-          " v-dompurify-html="
-            customOptions.showNextDeckButton
-              ? customOptions.showNextDeckButton
-              : 'Next Deck'
-          "></b-button>
+          ">{{customOptions.showNextDeckButton
+          ? customOptions.showNextDeckButton
+          : 'Next Deck'}}</b-button>
       </div>
       <div v-if="customOptions.treatLastCardAsLastDeck"
         :disabled="roomInfo.currentCardIndex >= roomInfo.locationOfLastCard" class="row menu-row">
