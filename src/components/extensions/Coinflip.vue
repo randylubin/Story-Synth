@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     flipCoin() {
-      let coinSides = this.coinflipValues.includes(',') ? ['Heads','Tails'] : this.coinflipValues?.split(',')
+      let coinSides = !this.coinflipValues.includes(',') ? ['Heads','Tails'] : this.coinflipValues?.split(',')
       let newFlip = ""
       if (Math.random() > .5) {
         newFlip = coinSides[0]
