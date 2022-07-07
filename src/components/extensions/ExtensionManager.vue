@@ -39,6 +39,10 @@
           :diceRollerTitle="extensionData.diceRollerTitle" @process-extension-update="processExtensionUpdate($event)"
           v-if="extensionList['diceRoller'] && ((!extensionList.diceRollerLocation && extensionLocation == 'lower') || (extensionList.diceRollerLocation == extensionLocation))">
         </app-diceRoller>
+        <app-coinflip class="extension" :flipResult="extensionData.flipResult" :coinflipValues="extensionData.coinflip" :coinflipTitle="extensionData.coinflipTitle" :coinflipButtonLabel="extensionData.coinflipButtonLabel"
+          @process-extension-update="processExtensionUpdate($event)"
+          v-if="extensionList['coinflip'] && ((!extensionList.coinflipLocation && extensionLocation == 'lower') || (extensionList.coinflipLocation == extensionLocation))">
+        </app-coinflip>
         <app-standardDeck class="extension" :standardDeck="JSON.parse(extensionData.standardDeck)"
           :standardDeckTitle="extensionData.standardDeckTitle"
           @process-extension-update="processExtensionUpdate($event)"
@@ -76,6 +80,7 @@ export default {
     'app-game': () => import('../layout/Game.vue'),
     'app-currentPlayerHeader': () => import('./CurrentPlayerHeader.vue'),
     'app-diceRoller': () => import('./DiceRoller.vue'),
+    'app-coinflip': () => import('./Coinflip'),
     'app-editableList': () => import('./EditableList.vue'),
     'app-embedWebsite': () => import('./EmbedWebsite.vue'),
     // 'app-generatorAsExtension': () => import('../formats/Generator.vue'),
