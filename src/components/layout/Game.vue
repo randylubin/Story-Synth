@@ -91,6 +91,7 @@ export default {
       roomInfo: {
         extensionData: {},
         currentCardIndex: 0,
+        previousCardsArray: [0],
         xCardIsActive: false,
         cardSequence: [0, 1, 2],
         locationOfLastCard: 0,

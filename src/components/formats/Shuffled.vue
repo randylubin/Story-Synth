@@ -348,8 +348,13 @@ export default {
       });
     },
     previousCard() {
+      let updatedPreviousCardsArray = this.roomInfo.previousCardsArray
+      updatedPreviousCardsArray.pop()
+      let nextCard = updatedPreviousCardsArray[updatedPreviousCardsArray.length-1]
+
       this.$emit('firebase-update',{
-        currentCardIndex: (this.roomInfo.currentCardIndex -= 1),
+        previousCardsArray: updatedPreviousCardsArray,
+        currentCardIndex: nextCard,
         showCardBack: false,
       });
     },
@@ -370,8 +375,11 @@ export default {
         } 
       }
       
-      if (destinationCard){
+      if (destinationCard) {
+        let updatedPreviousCardsArray = this.roomInfo.previousCardsArray
+        updatedPreviousCardsArray.push(destinationCard)
         this.$emit('firebase-update',{
+          previousCardsArray: updatedPreviousCardsArray,
           currentCardIndex: destinationCard,
           showCardBack: false,
         });
@@ -387,9 +395,13 @@ export default {
 
       if (this.customOptions.treatLastCardAsLastDeck){
         tempLastCardLocation = this.roomInfo.cardSequence.indexOf(this.unorderedDecks[this.unorderedDecks.length-1][0])
-      } 
+      }
 
-      this.$emit('firebase-update',{
+      let updatedPreviousCardsArray = this.roomInfo.previousCardsArray
+      updatedPreviousCardsArray.push(tempLastCardLocation)
+
+      this.$emit('firebase-update', {
+        previousCardsArray: updatedPreviousCardsArray,
         currentCardIndex: tempLastCardLocation,
         locationOfLastCard: tempLastCardLocation,
         showCardBack: false,
@@ -430,7 +442,11 @@ export default {
         }
       }
 
-      this.$emit('firebase-update',{
+      let updatedPreviousCardsArray = this.roomInfo.previousCardsArray
+      updatedPreviousCardsArray.push(newCardIndex)
+
+      this.$emit('firebase-update', {
+        previousCardsArray: updatedPreviousCardsArray,
         currentCardIndex: newCardIndex,
         showCardBack: false,
       });
@@ -558,6 +574,7 @@ export default {
 
       // sync the shuffled array
       this.$emit('firebase-update',{
+        previousCardsArray: [0],
         cardSequence: newCardSequence,
         locationOfLastCard: newCardSequence.length-1,
       })
