@@ -38,7 +38,12 @@
           </div>
         </div>
       </div>
+    </div>
 
+    <div class="row">
+      <div class="col-sm">
+        <h3 class="mb-3 mt-5">Full Gallery</h3>
+      </div>
     </div>
 
     <div class="row">
@@ -46,13 +51,13 @@
         <div class="card shadow mb-2">
           <iframe class="airtable-embed"
             src="https://airtable.com/embed/shrAbAkmabsF7oxZv?backgroundColor=green&viewControls=on" frameborder="0"
-            onmousewheel="" width="100%" height="533" style="background: transparent; border: 1px solid #ccc;"></iframe>
+            onmousewheel="" width="100%" height="800" style="background: transparent; border: 1px solid #ccc;"></iframe>
         </div>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-xl-8 offset-xl-2 offset-lg-0 col-lg-12 col-sm-12 mb-1">
+      <div class="col-xl-8 offset-xl-2 offset-lg-0 col-lg-12 col-sm-12 mb-1 mt-5">
         <div class="card shadow">
           <div class="card-body text-center">
             <h2>Story Synth Summer Jam 2021</h2>
