@@ -279,7 +279,7 @@ export default {
         var playerArray = []
 
         headers.forEach((item, i) => {
-          if (i>=2) {
+          if (i>=2 && item) {
             playerArray.push(item)
           }
         });
@@ -292,15 +292,17 @@ export default {
             console.log(item[2])
           }
 
-          if (item[0] !== "option" && item[0] !== "extension"){
-
+          if (item[0] && item[0] !== "option" && item[0] !== "extension"){
+            console.log(item[1])
             var rowInfo = {
               order: item[0],
               publicText: this.$marked(item[1] ?? null)
             }
 
             for (var p = 0; p < playerArray.length; p++) {
-              rowInfo[playerArray[p]] = this.$marked(item[p+2] ?? null)
+              if (item[p + 2]) {                
+                rowInfo[playerArray[p]] = this.$marked(item[p + 2] ?? null)
+              }
             }
 
             /*
