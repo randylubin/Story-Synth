@@ -14,7 +14,7 @@
       </div>
     </app-menuBar>
 
-    <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
+    <div class="mb-4 game-meta" v-if="!customOptions.coverImage && (customOptions.gameTitle || customOptions.byline)">
       <div class="row text-center" v-if="customOptions.gameTitle">
         <div class="col-sm">
           <h1>{{customOptions.gameTitle}}</h1>
