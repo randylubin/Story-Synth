@@ -13,6 +13,9 @@ var VanityLookup = {
   "Cute-Games-For-First-Dates": "1jaGlSVeBBCfRvY5j_lLrz5YC_psGOVURn_OaXbr2JH0",
   "Reunion": "1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc",
   "This-Heart-Within-Me-Burns": "1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA",
+  "A-Plague-Among-Us": "1PCrllhqjllGM4PAEZz7msxQveTVBRDw4cfH2QjJPss0",
+  "Prom-Queen": "1jnrm_6xwsNC-as1zxEc05vQiNmKQBwFPLQfElZ4dfXs",
+
 
 }
 
