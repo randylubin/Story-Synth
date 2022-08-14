@@ -369,7 +369,10 @@ export default {
         console.log("done fetching and cleaning data");
         this.dataReady = true;
 
-        document.dispatchEvent(new Event("x-app-rendered"));
+        setTimeout(
+          document.dispatchEvent(new Event("x-app-rendered")),
+          100
+        );
 
         this.logAnalytics();
       }
@@ -402,7 +405,7 @@ export default {
     },
   },
   metaInfo() {
-    if (!this.gameAsExtension) {
+    if (!this.gameAsExtension && this.customOptions) {
       return {
         title: this.customOptions?.gameTitle,
         meta: [
