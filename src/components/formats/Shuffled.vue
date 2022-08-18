@@ -1,4 +1,5 @@
 <template>
+
   <div class="shuffled game-room" v-if="roomInfo">
     <app-menuBar
       :roomInfo="roomInfo"
@@ -162,6 +163,9 @@
         </div>
       </div>
     </app-menuBar>
+
+    <slot name="upper-extensions">
+    </slot>
 
     <b-alert show class="" variant="danger" v-if="firebaseCacheError"
       >Warning: the length of the deck has changed since this room was first
@@ -486,6 +490,9 @@
         <!-- </transition> -->
       </div>
 
+      <slot name="lower-extensions">
+      </slot>
+
       <!-- TODO: Consider cleaner way to manage the v-if using shouldRenderChapterNavigation -->
       <div class="after-game-card">
         <div
@@ -546,6 +553,7 @@
         </b-modal>
       </div>
     </div>
+
   </div>
 </template>
 
