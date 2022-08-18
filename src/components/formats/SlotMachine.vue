@@ -361,7 +361,7 @@ export default {
                 rowInfo = {
                   ordered: item[0],
                   headerText: item[1],
-                  bodyText: this.$marked(item[2] ?? null)
+                  bodyText: item[2] ? this.$marked(item[2]) : null
                 }
                 cleanData.push(rowInfo)
 
@@ -371,7 +371,9 @@ export default {
 
                 if (item[0] == 1){
                   for (var j = 3; j < item.length; j++) {
-                    this.wheels[j-3].push(this.$marked(item[j]))
+                    if (item[j]) {
+                      this.wheels[j - 3].push(this.$marked(item[j]))
+                    }
                   }
                 }
               }

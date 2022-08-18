@@ -113,6 +113,7 @@ var customGameData = {
       ["extension","playerTurnOrder","{}"  ],
       ["option","hideTitleInSession","TRUE"  ],
       ["option","instructionsProgressBar","6"  ],
+      ["option","menuColor","white"  ],
       ["option","style","<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\">\n<link href=\"https://fonts.googleapis.com/css2?family=Kelly+Slab&display=swap\" rel=\"stylesheet\">\n\n<style>\n\nh1, h2 { font-family: 'Kelly Slab', sans-serif; }\n\n.full-page-background {\n\nbackground: #23074d;  /* fallback for old browsers */\nbackground: -webkit-linear-gradient(to top, #cc5333, #23074d);  /* Chrome 10-25, Safari 5.1-6 */\nbackground: linear-gradient(to top, #cc5333, #23074d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */\n\n}\n\n.card {\n    background: url(/img/paper.png);\n    border: 0px;\n}\n\n\n</style>"  ],
       ["0","Clash at Ikara","One player should hit NEXT CARD and then players should take turns reading each card aloud.\n<style> .main-card {filter:invert()}</style>"  ],
       ["0","The Pitch","Play as a group of heroes who have agreed to protect the defenseless community of Ikara from an imminent bandit raid.\n\nOne player should hit NEXT CARD and then players should take turns reading each card aloud."  ],

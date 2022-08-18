@@ -11,10 +11,7 @@
       <div class="homepage-gif row rounded-m clipped mb-4 shadow">
         <div class="embed-responsive embed-responsive-16by9">
           <video class="embed-responsive-item" autoplay loop controls muted>
-            <source
-              src="https://diegeticgames.com/uploads/story-synth-teaser.mp4"
-              type="video/mp4"
-            />
+            <source src="https://diegeticgames.com/uploads/story-synth-teaser.mp4" type="video/mp4" />
           </video>
         </div>
       </div>
@@ -22,7 +19,8 @@
       <div class="homepage-about margin-between-sections">
         <div class="row margin-between-sections">
           <h3 class="col-sm mb-4">
-            Story Synth is a free web platform for making, playing, and sharing storytelling games. Just design in Google Sheets and publish here!
+            Story Synth is a free web platform for making, playing, and sharing storytelling games. Just design in
+            Google Sheets and publish here!
           </h3>
         </div>
         <div class="row">
@@ -30,18 +28,21 @@
             <h3>Easy to start</h3>
             <div>Jump start your design with dozens of templates, formats, and extensions</div>
             <!-- Formats by Bart van der Griendt from NounProject.com https://thenounproject.com/icon/formats-687218/ -->
-            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform:scale(0.9);" src="/img/options.svg" alt="an icon of several pages, representing different formats and templates">
+            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform:scale(0.9);"
+              src="/img/options.svg" alt="an icon of several pages, representing different formats and templates">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Design in Sheets</h3>
             <div>Your content lives in Google Sheets, so designing is quick and iteration is instantaneous</div>
-            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform: translateY(1.5%);" src="/img/sheet-to-synth.svg" alt="an icon of a sheet turning into a Story Synth session">
+            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px; transform: translateY(1.5%);"
+              src="/img/sheet-to-synth.svg" alt="an icon of a sheet turning into a Story Synth session">
           </div>
           <div class="col-md-4 col-sm-12 d-flex flex-column">
             <h3>Multiplayer</h3>
             <div>Game sessions have realtime multiplayer, perfect for online playtesting and publishing</div>
             <!-- icon by Iconathon https://thenounproject.com/icon/networking-2909312/-->
-            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg" alt="an icon of people connected around the globe, signifying the realtime multiplayer of Story Synth">
+            <img class="img img-fluid mx-auto mt-auto px-3 py-1" style="max-width: 250px;" src="/img/connection.svg"
+              alt="an icon of people connected around the globe, signifying the realtime multiplayer of Story Synth">
           </div>
         </div>
       </div>
@@ -56,58 +57,62 @@
               <div class="row no-gutters">
                 <div class="col-lg-4">
                   <a href="/Games/Around-The-Realm">
-                    <img src="https://img.itch.zone/aW1nLzQ4MzI3NjAucG5n/315x250%23cb/Kb6Vr8.png" 
-                    alt="Around the Realm logo" class="card-img">
+                    <img src="https://img.itch.zone/aW1nLzQ4MzI3NjAucG5n/315x250%23cb/Kb6Vr8.png"
+                      alt="Around the Realm logo" class="card-img">
                   </a>
                 </div>
                 <div class="col-lg-8">
                   <div class="card-body d-flex flex-column h-100">
                     <h5 class="card-title">Around the Realm</h5>
                     <h6 class="card-subtitle text-muted mb-2">By Randy Lubin</h6>
-                    <div class="card-text">Tell the story of two companions racing around a fantasy world in order to win a wager.</div>
-                    <a href="/Games/Around-The-Realm" target="_self" class="btn mt-auto align-self-start stretched-link ">Play game</a>
+                    <div class="card-text">Tell the story of two companions racing around a fantasy world in order to
+                      win a wager.</div>
+                    <a href="/Games/Around-The-Realm" target="_self"
+                      class="btn mt-auto align-self-start stretched-link ">Play game</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        
+
           <div class="offset-lg-0 col-lg-12 col-md-4 mb-2">
             <div class="card shadow h-100">
               <div class="row no-gutters">
                 <div class="col-lg-4">
-                  <a href="/Games/Raised-By-Mechs/">
-                    <img src="https://iili.io/f1F7F1.png" 
-                    alt="Raised by Mechs logo" class="card-img">
+                  <a href="/Monster/1ARqKs4GQP023DqHBEGFxOu2nwRScCR_FgFPrX67JClk/">
+                    <img src="https://iili.io/jAMajf.png" alt="Fedora Noir logo" class="card-img">
                   </a>
                 </div>
                 <div class="col-lg-8">
                   <div class="card-body d-flex flex-column h-100">
-                    <h5 class="card-title">Raised by Mechs</h5>
-                    <h6 class="card-subtitle text-muted mb-2">By Raph D'Amico</h6>
-                    <div class="card-text">Tell the story of a group of children raised by their mech mother.</div>
-                    <a href="/Games/Raised-By-Mechs/" target="_self" class="btn mt-auto align-self-start stretched-link ">Play game</a>
+                    <h5 class="card-title">Fedora Noir</h5>
+                    <h6 class="card-subtitle text-muted mb-2">By Caroline Hobbs & Morgan Stinson</h6>
+                    <div class="card-text">A game about a detective and their hat.</div>
+                    <a href="/Monster/1ARqKs4GQP023DqHBEGFxOu2nwRScCR_FgFPrX67JClk/" target="_self"
+                      class="btn mt-auto align-self-start stretched-link ">Play game</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        
+
           <div class="offset-lg-0 col-lg-12 col-md-4 mb-2">
             <div class="card shadow h-100">
               <div class="row no-gutters">
                 <div class="col-lg-4">
                   <a href="/Games/Umberdred-Institute/">
-                    <img src="https://img.itch.zone/aW1nLzY3NzQzNTIuanBn/315x250%23c/XQicpj.jpg" 
-                    alt="Umberdred Institute for Emerging Evildoers logo" class="card-img">
+                    <img src="https://img.itch.zone/aW1nLzY3NzQzNTIuanBn/315x250%23c/XQicpj.jpg"
+                      alt="Umberdred Institute for Emerging Evildoers logo" class="card-img">
                   </a>
                 </div>
                 <div class="col-lg-8">
                   <div class="card-body d-flex flex-column h-100">
                     <h5 class="card-title">Umberdred Institute for Emerging Evildoers</h5>
                     <h6 class="card-subtitle text-muted mb-2">By Amble Studio</h6>
-                    <div class="card-text">Tell silly stories about how aspiring villains accept unlikely quests to earn dubious certifications in evildoing skills.</div>
-                    <a href="/Games/Umberdred-Institute/" target="_self" class="btn mt-auto align-self-start stretched-link ">Play game</a>
+                    <div class="card-text">Tell silly stories about how aspiring villains accept unlikely quests to earn
+                      dubious certifications in evildoing skills.</div>
+                    <a href="/Games/Umberdred-Institute/" target="_self"
+                      class="btn mt-auto align-self-start stretched-link ">Play game</a>
                   </div>
                 </div>
               </div>
@@ -117,7 +122,7 @@
 
         <div class="row mt-3">
           <div class="col-sm">
-            <a href="/Gallery" class="btn py-3 px-4 btn-lg">See all games</a>            
+            <a href="/Gallery" class="btn py-3 px-4 btn-lg">See all games</a>
           </div>
         </div>
       </div>
@@ -131,7 +136,8 @@
         </div>
         <div class="row">
           <div class="col">
-            <p>Apply for a grant to make a game with Story Synth. This microgrant program is run by Big Bad Con and funded by Grant for the Web. <a href="/Grants/">Learn more and apply</a>.</p>
+            <p>Apply for a grant to make a game with Story Synth. This microgrant program is run by Big Bad Con and
+              funded by Grant for the Web. <a href="/Grants/">Learn more and apply</a>.</p>
           </div>
         </div>
 
@@ -139,7 +145,8 @@
           <div class="col-12 mb-2">
             <div class="card shadow">
               <a href="/Grants/">
-                <img class="img img-fluid" src="/img/microgrant-banner.png" alt="microgrant banner - click it to learn more and apply">
+                <img class="img img-fluid" src="/img/microgrant-banner.png"
+                  alt="microgrant banner - click it to learn more and apply">
               </a>
             </div>
           </div>
@@ -151,11 +158,12 @@
         <div class="row">
           <div class="col-12">
             <h2>Create a new game</h2>
-          </div>  
+          </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <p>Story Synth has many formats and templates. Check out these demos and copy a template to it as the basis for your game</p>
+            <p>Story Synth has many formats and templates. Check out these demos and copy a template to it as the basis
+              for your game</p>
           </div>
         </div>
 
@@ -192,7 +200,8 @@
         <div class="row mt-3">
           <div class="col-sm">
             <a href="/Formats/" class="btn mb-5 py-3 px-4 btn-lg">More templates</a>
-            <a href="https://docs.storysynth.org/guide/" class="btn ml-2 mb-5 py-3 px-4 btn-lg">Learn how to make your first game</a>
+            <a href="https://docs.storysynth.org/guide/" class="btn ml-2 mb-5 py-3 px-4 btn-lg">Learn how to make your
+              first game</a>
           </div>
         </div>
 
@@ -203,19 +212,16 @@
         <div class="row">
           <div class="col-12">
             <h2 class='mb-3'>Get a playable link</h2>
-          </div>  
+          </div>
         </div>
         <div class="row">
           <div class="col-12">
             <p>Upload your game to Storysynth at a secret but shareable link.</p>
           </div>
-          <app-gameMaker v-if="!launcherOnHomepage"
-          :routeRoomID="$route.params.roomID"
-          :routeGSheetID="$route.params.gSheetID"
-          :routeGameType="$route.params.gameType"
-        ></app-gameMaker>
+          <app-gameMaker v-if="!launcherOnHomepage" :routeRoomID="$route.params.roomID"
+            :routeGSheetID="$route.params.gSheetID" :routeGameType="$route.params.gameType"></app-gameMaker>
         </div>
-      
+
       </div>
 
       <!-- Section: publish -->
@@ -223,26 +229,29 @@
         <div class="row">
           <div class="col-12">
             <h2 class="mb-3">Publish your game</h2>
-          </div>  
+          </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <p>When you’re ready, fill out <a href="https://forms.gle/CizjsyFsR6sVCYEX7">this form</a> to add your game to the gallery!</p>
+            <p>When you’re ready, fill out <a href="https://forms.gle/CizjsyFsR6sVCYEX7">this form</a> to add your game
+              to the gallery!</p>
           </div>
           <div class="card shadow">
             <a href="/Gallery/">
-              <img class="img img-fluid rounded-m clipped" src="/img/story-synth-gallery-banner.png" alt="Collage of Story Synth Games">
+              <img class="img img-fluid rounded-m clipped" src="/img/story-synth-gallery-banner.png"
+                alt="Collage of Story Synth Games">
             </a>
           </div>
         </div>
-      
+
       </div>
 
-      
+
     </div>
 
-    <app-gameLauncherSingleGame v-if="launcherOnHomepage" :gameRoute="String(launcherOnHomepage)"></app-gameLauncherSingleGame>
-  
+    <app-gameLauncherSingleGame v-if="launcherOnHomepage" :gameRoute="String(launcherOnHomepage)">
+    </app-gameLauncherSingleGame>
+
     <div class="homepage-made-by">
       Story Synth is made and by <a href="https://randylubin.com">Randy Lubin</a> with the help of an awesome community!
     </div>

@@ -7,10 +7,10 @@
               <h2 v-dompurify-html="journalUpperText" v-if="journalUpperText != undefined"></h2>
               <h2 v-else>Journal Entries</h2>
 
-              <form>
+              <div>
                 <textarea title="new journal entry input field" v-model="newItem" type="text" maxlength="250" rows="5" class="form-control"></textarea>
                 <button :disabled="!newItem" class="btn btn-outline-dark m-3" v-on:click="addItem(newItem)">Post</button>
-              </form>
+              </div>
 
               <div v-if="journalEntries != []">
                 <div v-for="(entry, index) in markdownRenderedEntries" v-bind:key="index">
@@ -96,10 +96,14 @@ export default {
     },
     editItem(index){
       this.currentEditIndex = index;
-      this.currentEditText = this.journalEntries[this.journalEntries.length - index -1]
+      this.currentEditText = this.sortedJournalEntries[index]
     },
-    saveEditedItem(index){
-      this.journalEntries[this.journalEntries.length - index -1] = this.currentEditText
+    saveEditedItem(index) {
+      if (this.journalOrder == "oldestFirst") {
+        this.journalEntries[index] = this.currentEditText
+      } else {
+        this.journalEntries[this.journalEntries.length - index -1] = this.currentEditText
+      }
 
       this.$emit('process-extension-update', ['journalEntries',JSON.stringify(this.journalEntries)])
 
@@ -107,10 +111,15 @@ export default {
       this.currentEditText = ""
     },
     deleteItem(index){
-      
+
+      let tempIndex = index
       let tempNewList = this.journalEntries
 
-      tempNewList.length == 0 ? tempNewList = ['EMPTY'] : tempNewList.splice(index, 1)
+      if (this.journalOrder == "oldestFirst") {
+       tempIndex = this.journalEntries.length - index - 1
+      }
+
+      tempNewList.length == 0 ? tempNewList = ['EMPTY'] : tempNewList.splice(tempIndex, 1)
 
       this.currentEditIndex = null
       this.currentEditText = ""

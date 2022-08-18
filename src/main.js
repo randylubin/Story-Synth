@@ -19,6 +19,7 @@ Vue.use(VueDOMPurifyHTML, {
       "path",
       "src",
       "style",
+      "target",
       "title",
       "transform",
       "type",
@@ -33,7 +34,7 @@ Vue.use(VueDOMPurifyHTML, {
       "y",
       "d",
     ],
-    ADD_TAGS: ["link", "svg", "g", "style", "img"],
+    ADD_TAGS: ["link", "svg", "g", "style", "img", "blockquote", "pre", "span"],
   },
 });
 
@@ -146,7 +147,6 @@ var vm = new Vue({
   el: "#app",
   router,
   render: (h) => h(App),
-  //mounted: () => document.dispatchEvent(new Event("x-app-rendered")),
   data() {
     return {
       gSheet: null,

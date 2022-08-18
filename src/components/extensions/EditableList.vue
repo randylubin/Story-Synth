@@ -29,10 +29,10 @@
                   </div>
                 </div>
               </div>
-              <form>
+              <div>
                 <input title="add new list item" v-model="newItem" type="text" maxlength="50">
                 <button :disabled="!newItem" class="btn btn-outline-dark m-3" v-on:click="addItem(newItem)">Add</button>
-              </form>
+              </div>
             </div>
           </div>
         </div>

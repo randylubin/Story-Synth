@@ -30,10 +30,10 @@
                       </div>
                     </div>
                   </div>
-                  <form class="mb-4">
+                  <div class="mb-4">
                     <input title="add new list item" v-model="newItemArray[listIndex]" type="text" maxlength="50">
                     <button :disabled="!newItemArray[listIndex]" class="btn btn-outline-dark m-3" v-on:click="addItem(listIndex, newItemArray[listIndex])">Add</button>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>

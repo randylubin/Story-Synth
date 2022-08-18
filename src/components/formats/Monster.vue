@@ -110,10 +110,8 @@
 
                   </div>
 
-                  <h4 class="card-title" v-if="row.subtitle">
-                    {{row.archetype}}
-                  </h4>
-                  <h5 class="card-subtitle mb-4 text-muted">{{row.subtitle}}</h5>
+                  <div class="card-title" v-if="row.subtitle" v-dompurify-html="row.archetype"></div>
+                  <div class="card-subtitle mb-4 text-muted" v-dompurify-html="row.subtitle"></div>
 
                   <div class="card-text text-left"
                     v-if="clickedCard == index || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
@@ -315,7 +313,7 @@ export default {
               var rowInfo = {
                 ordered: item[0],
                 archetype: (item[1] && !item[2]) ? this.$marked(item[1]) : item[1],
-                subtitle: item[2],
+                subtitle: item[2] ? this.$marked(item[2]) : item[2],
                 characterQuestion: item[3],
                 characterDetail: item[4] ? this.$marked(item[4]) : item[4],
                 keyQuestion: item[5],

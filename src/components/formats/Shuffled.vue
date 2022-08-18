@@ -26,19 +26,10 @@
         >
       </div>
       <div class="row menu-row" v-if="!roomInfo.xCardIsActive">
-        <b-button
-          variant="outline-dark"
-          class="control-button-safety-card btn-lg btn-block"
-          v-on:click="
-            xCard();
-            closeMenu();
-          "
-          v-dompurify-html="
-            customOptions.safetyCardButton
-              ? customOptions.safetyCardButton
-              : 'X-Card'
-          "
-        ></b-button>
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+          v-on:click="xCard(); closeMenu();">{{customOptions.safetyCardButton
+          ? customOptions.safetyCardButton
+          : 'X-Card'}}</b-button>
       </div>
       <div class="row menu-row">
         <b-button
@@ -54,14 +45,10 @@
           "
           :disabled="
             roomInfo.xCardIsActive ||
-            roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
-          "
-          v-dompurify-html="
-            customOptions.showNextDeckButton
-              ? customOptions.showNextDeckButton
-              : 'Next Deck'
-          "
-        ></b-button>
+              roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+          ">{{customOptions.showNextDeckButton
+          ? customOptions.showNextDeckButton
+          : 'Next Deck'}}</b-button>
       </div>
       <div
         v-if="customOptions.treatLastCardAsLastDeck"
@@ -649,8 +636,13 @@ export default {
       });
     },
     previousCard() {
-      this.$emit("firebase-update", {
-        currentCardIndex: (this.roomInfo.currentCardIndex -= 1),
+      let updatedPreviousCardsArray = this.roomInfo.previousCardsArray
+      updatedPreviousCardsArray.pop()
+      let nextCard = updatedPreviousCardsArray[updatedPreviousCardsArray.length-1]
+
+      this.$emit('firebase-update',{
+        previousCardsArray: updatedPreviousCardsArray,
+        currentCardIndex: nextCard,
         showCardBack: false,
       });
     },
@@ -672,9 +664,12 @@ export default {
           this.nextDeck();
         }
       }
-
+      
       if (destinationCard) {
-        this.$emit("firebase-update", {
+        let updatedPreviousCardsArray = this.roomInfo.previousCardsArray
+        updatedPreviousCardsArray.push(destinationCard)
+        this.$emit('firebase-update',{
+          previousCardsArray: updatedPreviousCardsArray,
           currentCardIndex: destinationCard,
           showCardBack: false,
         });
@@ -687,13 +682,15 @@ export default {
 
       let tempLastCardLocation = this.roomInfo.locationOfLastCard;
 
-      if (this.customOptions.treatLastCardAsLastDeck) {
-        tempLastCardLocation = this.roomInfo.cardSequence.indexOf(
-          this.unorderedDecks[this.unorderedDecks.length - 1][0]
-        );
+      if (this.customOptions.treatLastCardAsLastDeck){
+        tempLastCardLocation = this.roomInfo.cardSequence.indexOf(this.unorderedDecks[this.unorderedDecks.length-1][0])
       }
 
-      this.$emit("firebase-update", {
+      let updatedPreviousCardsArray = this.roomInfo.previousCardsArray
+      updatedPreviousCardsArray.push(tempLastCardLocation)
+
+      this.$emit('firebase-update', {
+        previousCardsArray: updatedPreviousCardsArray,
         currentCardIndex: tempLastCardLocation,
         locationOfLastCard: tempLastCardLocation,
         showCardBack: false,
@@ -736,7 +733,11 @@ export default {
         }
       }
 
-      this.$emit("firebase-update", {
+      let updatedPreviousCardsArray = this.roomInfo.previousCardsArray
+      updatedPreviousCardsArray.push(newCardIndex)
+
+      this.$emit('firebase-update', {
+        previousCardsArray: updatedPreviousCardsArray,
         currentCardIndex: newCardIndex,
         showCardBack: false,
       });
@@ -869,7 +870,8 @@ export default {
       }
 
       // sync the shuffled array
-      this.$emit("firebase-update", {
+      this.$emit('firebase-update',{
+        previousCardsArray: [0],
         cardSequence: newCardSequence,
         locationOfLastCard: newCardSequence.length - 1,
       });

@@ -148,6 +148,7 @@ export default {
       roomInfo: {
         extensionData: {},
         currentCardIndex: 0,
+        previousCardsArray: [0],
         xCardIsActive: false,
         cardSequence: [0, 1, 2],
         locationOfLastCard: 0,
@@ -354,9 +355,9 @@ export default {
             let cleanData = [];
 
             rawSheetData.forEach((item, i) => {
-              cleanData.push([]);
-              if (item.values[0]) {
-                for (let v = 0; v < item.values.length; v++) {
+              cleanData.push([])
+              if (item.values && item.values[0]) {
+                for (let v = 0; v < item.values.length; v++){
                   if (item.values[v] && item.values[v].formattedValue) {
                     cleanData[i].push(item.values[v].formattedValue);
                   } else {
@@ -445,7 +446,10 @@ export default {
         console.log("done fetching and cleaning data");
         this.dataReady = true;
 
-        document.dispatchEvent(new Event("x-app-rendered"));
+        setTimeout(
+          document.dispatchEvent(new Event("x-app-rendered")),
+          100
+        );
 
         this.logAnalytics();
       }
@@ -481,7 +485,7 @@ export default {
     },
   },
   metaInfo() {
-    if (!this.gameAsExtension) {
+    if (!this.gameAsExtension && this.customOptions) {
       return {
         title: this.customOptions?.gameTitle,
         meta: [
