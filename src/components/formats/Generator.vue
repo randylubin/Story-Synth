@@ -10,6 +10,9 @@
         :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
       it to design your own game!</b-alert>
 
+    <slot name="upper-extensions">
+    </slot>
+
     <div class="game-meta">
       <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
         <div class="row text-center" v-if="customOptions.gameTitle">
@@ -151,6 +154,10 @@
       <div class="lower-text row mt-4" v-if="customOptions.lowerText">
         <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>
       </div>
+
+      <slot name="lower-extensions">
+      </slot>
+
     </div>
   </div>
 </template>

@@ -14,6 +14,8 @@
       </div>
     </app-menuBar>
 
+    <slot name="upper-extensions">
+    </slot>
 
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
@@ -87,6 +89,8 @@
       </div>
     </div>
     <!-- Timer code remixed from https://codepen.io/raphael_octau by raphael_octau -->
+    <slot name="lower-extensions">
+    </slot>
   </div>
 </template>
 

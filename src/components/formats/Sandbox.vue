@@ -5,6 +5,9 @@
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
       :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)"></app-menuBar>
 
+    <slot name="upper-extensions">
+    </slot>
+
     <div class="row">
       <div class="col-sm">
         <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
@@ -13,6 +16,8 @@
         <h1 class="game-meta">Sandbox</h1>
       </div>
     </div>
+    <slot name="lower-extensions">
+    </slot>
   </div>
 </template>
 

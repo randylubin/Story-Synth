@@ -151,9 +151,6 @@
       </div>
     </app-menuBar>
 
-    <slot name="upper-extensions">
-    </slot>
-
     <b-alert show class="" variant="danger" v-if="firebaseCacheError"
       >Warning: the length of the deck has changed since this room was first
       created. Click Restart to resync card data.</b-alert
@@ -164,6 +161,10 @@
         >this Google Sheet Template</a
       >. Copy the sheet and start editing it to design your own game!</b-alert
     >
+
+    <slot name="upper-extensions">
+    </slot>
+
     <div class="" v-if="roomInfo">
       <div class="before-game-card">
         <!-- TODO: Facilitator Notes
