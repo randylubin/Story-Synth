@@ -15,6 +15,9 @@ var VanityLookup = {
   "This-Heart-Within-Me-Burns": "1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA",
   "A-Plague-Among-Us": "1PCrllhqjllGM4PAEZz7msxQveTVBRDw4cfH2QjJPss0",
   "Prom-Queen": "1jnrm_6xwsNC-as1zxEc05vQiNmKQBwFPLQfElZ4dfXs",
+  "Ring": "1FiJNWdGtIanR4yDSDU545wGZKiFoxP2FeD_KfDcSG18",
+  "Through-All-These-Years": "1LuWobaoO92Z4mDbwiY2M5f_lQ1T_Uj12I70jRJ2rZaE",
+
 
 
 }
