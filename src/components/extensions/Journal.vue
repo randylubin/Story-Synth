@@ -8,7 +8,7 @@
               <h2 v-else>Journal Entries</h2>
 
               <div>
-                <textarea title="new journal entry input field" v-model="newItem" type="text" maxlength="250" rows="5" class="form-control"></textarea>
+                <textarea title="new journal entry input field" v-model="newItem" type="text" maxlength="1500" rows="5" class="form-control"></textarea>
                 <button :disabled="!newItem" class="btn btn-outline-dark m-3" v-on:click="addItem(newItem)">Post</button>
               </div>
 
