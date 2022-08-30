@@ -142,7 +142,9 @@
         <div class="row menu-row" v-for="chapter in chapters" :key="chapter.label">
           <b-button
             class="btn-block"
-            @click="goToCard(parseInt(chapter.firstcard))"
+            v-on:click="
+              goToCard(parseInt(chapter.firstcard));
+              closeMenu();"
             :disabled="roomInfo.xCardIsActive"
           >
             {{ chapter.label }}
