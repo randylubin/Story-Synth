@@ -478,9 +478,6 @@
         <!-- </transition> -->
       </div>
 
-      <slot name="lower-extensions">
-      </slot>
-
       <!-- TODO: Consider cleaner way to manage the v-if using shouldRenderChapterNavigation -->
       <div class="after-game-card">
         <div
@@ -511,7 +508,8 @@
             </div>
           </div>
         </div>
-
+      <slot name="lower-extensions">
+      </slot>
         <b-modal id="modalNextDeckConfirm" title="Advance?" hide-footer>
           <p></p>
           <div class="text-center mb-3">
