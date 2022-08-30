@@ -485,7 +485,7 @@
         <div
           class="mb-4 template"
           v-if="
-            shouldRenderChapterNavigation &&
+            shouldRenderChapterNavigation && customOptions.showChapterMenuOnPage &&
             (!customOptions.facilitatorMode || userRole == 'facilitator')
           "
         >
