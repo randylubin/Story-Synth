@@ -131,7 +131,7 @@
       <div
         class="mb-4 template"
         v-if="
-          shouldRenderChapterNavigation &&
+          renderChapterNavigation &&
           (!customOptions.facilitatorMode || userRole == 'facilitator')
         "
       >
@@ -480,12 +480,12 @@
         <!-- </transition> -->
       </div>
 
-      <!-- TODO: Consider cleaner way to manage the v-if using shouldRenderChapterNavigation -->
+      <!-- TODO: Consider cleaner way to manage the v-if using renderChapterNavigation -->
       <div class="after-game-card">
         <div
-          class="mb-4 template"
+          class="mb-4 extension"
           v-if="
-            shouldRenderChapterNavigation && customOptions.showChapterMenuOnPage &&
+            renderChapterNavigation && customOptions.showChapterMenuOnPage &&
             (!customOptions.facilitatorMode || userRole == 'facilitator')
           "
         >
@@ -498,7 +498,7 @@
                   </h2>
                   <div v-for="chapter in chapters" :key="chapter.label">
                     <b-button
-                      class="btn-block btn-default my-2"
+                      class="btn-block btn-default my-2 chapter-nav-button"
                       @click="goToCard(parseInt(chapter.firstcard))"
                       :disabled="roomInfo.xCardIsActive"
                     >
@@ -510,8 +510,8 @@
             </div>
           </div>
         </div>
-      <slot name="lower-extensions">
-      </slot>
+        <slot name="lower-extensions">
+        </slot>
         <b-modal id="modalNextDeckConfirm" title="Advance?" hide-footer>
           <p></p>
           <div class="text-center mb-3">
@@ -583,7 +583,7 @@ export default {
       deckTransitionArray: null,
       selectedWallet: undefined,
       error: false,
-      shouldRenderChapterNavigation: false,
+      renderChapterNavigation: false,
     };
   },
   computed: {
@@ -882,7 +882,7 @@ export default {
     setupChapterNavigation() {
       this.chapters = this.parseChaptersFromCustomOptions();
       if (this.chapters.length > 0) {
-        this.shouldRenderChapterNavigation = true;
+        this.renderChapterNavigation = true;
       }
     },
     parseChaptersFromCustomOptions() {
