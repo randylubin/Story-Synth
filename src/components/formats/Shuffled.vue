@@ -129,14 +129,14 @@
         </div>
       </div>
       <div
-        class="mb-4 template"
+        class="mb-4"
         v-if="
           renderChapterNavigation &&
           (!customOptions.facilitatorMode || userRole == 'facilitator')
         "
       >
-        <h6 class="text-center" v-if="customOptions.chaptersHeader">
-          {{ customOptions.chaptersHeader }}
+        <h6 class="text-center" v-if="customOptions.chapterNavHeader">
+          {{ customOptions.chapterNavHeader }}
         </h6>
 
         <div class="row menu-row" v-for="chapter in chapters" :key="chapter.label">
@@ -493,8 +493,8 @@
             <div class="col-sm">
               <div class="card d-flex">
                 <div class="card-body">
-                  <h2 v-if="customOptions.chaptersHeader">
-                    {{ customOptions.chaptersHeader }}
+                  <h2 v-if="customOptions.chapterNavHeader">
+                    {{ customOptions.chapterNavHeader }}
                   </h2>
                   <div v-for="chapter in chapters" :key="chapter.label">
                     <b-button
