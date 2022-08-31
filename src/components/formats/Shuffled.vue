@@ -139,11 +139,11 @@
           {{ customOptions.chapterNavHeader }}
         </h6>
 
-        <div class="row menu-row" v-for="chapter in chapters" :key="chapter.label">
+        <div class="row menu-row" v-for="chapter in chapterNavLabels" :key="chapter.label">
           <b-button
             class="btn-block"
             v-on:click="
-              goToCard(parseInt(chapter.firstcard));
+              goToCard(parseInt(deckIndex[chapter.deckNumber]));
               closeMenu();"
             :disabled="roomInfo.xCardIsActive"
           >
@@ -496,10 +496,10 @@
                   <h2 v-if="customOptions.chapterNavHeader">
                     {{ customOptions.chapterNavHeader }}
                   </h2>
-                  <div v-for="chapter in chapters" :key="chapter.label">
+                  <div v-for="chapter in chapterNavLabels" :key="chapter.label">
                     <b-button
                       class="btn-block btn-default my-2 chapter-nav-button"
-                      @click="goToCard(parseInt(chapter.firstcard))"
+                      @click="goToCard(parseInt(deckIndex[chapter.deckNumber]))"
                       :disabled="roomInfo.xCardIsActive"
                     >
                       {{ chapter.label }}
@@ -570,6 +570,7 @@ export default {
       orderedCards: [],
       currentDeck: 0,
       totalDecks: 0,
+      deckIndex: [0],
       unorderedDecks: {},
       customOptions: {
         gameTitle: undefined,
@@ -584,6 +585,7 @@ export default {
       selectedWallet: undefined,
       error: false,
       renderChapterNavigation: false,
+      chapterNavLabels: []
     };
   },
   computed: {
@@ -880,8 +882,8 @@ export default {
       this.shuffleLastCard(tempLastCardIndex, newCardSequence);
     },
     setupChapterNavigation() {
-      this.chapters = this.parseChaptersFromCustomOptions();
-      if (this.chapters.length > 0) {
+      this.chapterNavLabels = this.parseChaptersFromCustomOptions();
+      if (this.chapterNavLabels.length > 0) {
         this.renderChapterNavigation = true;
       }
     },
@@ -988,6 +990,19 @@ export default {
               deckTransitionIndexTracking +
                 parseInt(temporaryDeckTransitionArray[i])
             );
+          }
+        }
+
+        // Create an index of the different decks
+        this.deckIndex = [0];
+        if (this.unorderedDecks) {
+          let deckIndexTracker = this.orderedCards.length;
+          this.deckIndex.push(deckIndexTracker);
+  
+          for (var i = 1; i < this.unorderedDecks.length; i++) {
+            deckIndexTracker += this.unorderedDecks[i].length;
+            console.log("new index:", deckIndexTracker);
+            this.deckIndex.push(deckIndexTracker);
           }
         }
 
