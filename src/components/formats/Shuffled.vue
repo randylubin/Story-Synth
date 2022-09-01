@@ -633,8 +633,12 @@ export default {
       });
     },
     goToCard(index) {
+      let updatedPreviousCardsArray = this.roomInfo.previousCardsArray;
+      updatedPreviousCardsArray.push(index);
+
       this.$emit("firebase-update", {
         currentCardIndex: index,
+        previousCardsArray: updatedPreviousCardsArray,
         showCardBack: false,
       });
     },
