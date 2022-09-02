@@ -485,7 +485,7 @@
         <div
           class="mb-4 extension"
           v-if="
-            renderChapterNavigation && customOptions.showChapterMenuOnPage &&
+            renderChapterNavigation && customOptions.showChapterNavPage &&
             (!customOptions.facilitatorMode || userRole == 'facilitator')
           "
         >
