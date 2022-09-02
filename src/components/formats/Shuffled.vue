@@ -79,9 +79,9 @@
           !customOptions.hideNavigationButtons
         "
       >
-        <hr class="mb-4" />
-        <h6 class="text-center">{{ customOptions.lastCardLabel }} Options</h6>
-        <div class="row menu-row">
+        <hr class="mb-4" v-if="(!customOptions.hideLastCardOptions || renderChapterNavigation)" />
+        <h6 class="text-center" v-if="!customOptions.hideLastCardOptions">{{ customOptions.lastCardLabel }} Options</h6>
+        <div class="row menu-row" v-if="!customOptions.hideLastCardOptions">
           <b-button
             class="btn-block"
             v-on:click="
