@@ -24,7 +24,8 @@
         </app-playerTurnOrder>
         <app-imageGallery
           class="extension"
-          :imageGallery="extensionData.imageGallery ? extensionData.imageGallery.split(','): null"
+          :imageGallery="extensionData.imageGallery ? extensionData.imageGallery.split(',') : null"
+          :imageCaptions="extensionData.imageGalleryCaptions ? extensionData.imageGalleryCaptions.split(',') : null"
           :imageGalleryTitle="extensionData.imageGalleryTitle"
           :selectedImage="extensionData.selectedImage"
           @process-extension-update="processExtensionUpdate($event)"
