@@ -22,6 +22,15 @@
           :currentCardIndex="roomInfo.currentCardIndex" @process-extension-update="processExtensionUpdate($event)"
           v-if="extensionList['playerTurnOrder'] && (!extensionList.playerTurnOrderFirstVisible || extensionList.playerTurnOrderFirstVisible <= roomInfo.currentCardIndex) && (!extensionList.playerTurnOrderLastVisible || extensionList.playerTurnOrderLastVisible > roomInfo.currentCardIndex) && ((!extensionList.playerTurnOrderLocation && extensionLocation == 'lower') || (extensionList.playerTurnOrderLocation == extensionLocation))">
         </app-playerTurnOrder>
+        <app-imageGallery
+          class="extension"
+          :imageGallery="extensionData.imageGallery ? extensionData.imageGallery.split(',') : null"
+          :imageCaptions="extensionData.imageGalleryCaptions ? extensionData.imageGalleryCaptions.split(',') : null"
+          :imageGalleryTitle="extensionData.imageGalleryTitle"
+          :selectedImage="extensionData.selectedImage"
+          @process-extension-update="processExtensionUpdate($event)"
+          v-if="extensionList['imageGallery'] && (!extensionList.imageGalleryFirstVisible || extensionList.imageGalleryFirstVisible <= roomInfo.currentCardIndex) && (!extensionList.imageGalleryLastVisible || extensionList.imageGalleryLastVisible > roomInfo.currentCardIndex) && ((!extensionList.imageGalleryLocation && extensionLocation == 'lower') || (extensionList.imageGalleryLocation == extensionLocation))"
+        ></app-imageGallery>
         <app-plusMinus class="extension" :plusMinus="JSON.parse(extensionData.plusMinus)"
           :plusMinusTitle="extensionData.plusMinusTitle" @process-extension-update="processExtensionUpdate($event)"
           v-if="extensionList['plusMinus'] && (!extensionList.plusMinusFirstVisible || extensionList.plusMinusFirstVisible <= roomInfo.currentCardIndex) && (!extensionList.plusMinusLastVisible || extensionList.plusMinusLastVisible > roomInfo.currentCardIndex) && ((!extensionList.plusMinusLocation && extensionLocation == 'lower') || (extensionList.plusMinusLocation == extensionLocation))">
@@ -84,6 +93,7 @@ export default {
     'app-coinflip': () => import('./Coinflip'),
     'app-editableList': () => import('./EditableList.vue'),
     'app-embedWebsite': () => import('./EmbedWebsite.vue'),
+    'app-imageGallery': () => import('./ImageGallery.vue'),
     // 'app-generatorAsExtension': () => import('../formats/Generator.vue'),
     // 'app-hexflowerAsExtension': () => import('../formats/Hexflower.vue'),
     'app-journal': () => import('./Journal.vue'),

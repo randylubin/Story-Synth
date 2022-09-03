@@ -13,6 +13,8 @@ Vue.use(VueDOMPurifyHTML, {
     ALLOWED_ATTR: [
       "alt",
       "class",
+      "controls",
+      "d",
       "height",
       "href",
       "rel",
@@ -32,9 +34,8 @@ Vue.use(VueDOMPurifyHTML, {
       "xmlns:serif",
       "x",
       "y",
-      "d",
     ],
-    ADD_TAGS: ["link", "svg", "g", "style", "img", "blockquote", "pre", "span"],
+    ADD_TAGS: ["audio", "autoplay", "blockquote", "code", "figure", "figcaption", "g", "img", "link", "loop", "style", "svg", "pre", "span"],
   },
 });
 
