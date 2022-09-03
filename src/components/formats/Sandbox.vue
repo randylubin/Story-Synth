@@ -10,9 +10,13 @@
         <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
             :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start
           editing it to design your own game!</b-alert>
+        <slot name="upper-extensions">
+        </slot>
         <h1 class="game-meta">Sandbox</h1>
       </div>
     </div>
+    <slot name="lower-extensions">
+    </slot>
   </div>
 </template>
 

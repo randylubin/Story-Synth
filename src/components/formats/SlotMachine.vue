@@ -30,6 +30,8 @@
     <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
         :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
       it to design your own game!</b-alert>
+    <slot name="upper-extensions">
+    </slot>
 
     <!-- <div class="game-meta">
       <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
@@ -158,6 +160,8 @@
         <b-button variant="dark" v-on:click="shuffle();">Restart and Reshuffle</b-button>
       </div>
     </b-modal>
+    <slot name="lower-extensions">
+    </slot>
   </div>
 </template>
 

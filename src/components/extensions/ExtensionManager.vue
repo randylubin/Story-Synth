@@ -145,7 +145,8 @@ export default {
   },
   methods: {
     processExtensionUpdate(newData){
-      // console.log('processing extension update',newData)
+      console.log('processing extension update',newData)
+
       this.$set(this.extensionData, newData[0], newData[1])
       this.$emit('sync-extension', this.extensionData)
     },

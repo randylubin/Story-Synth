@@ -18,6 +18,9 @@
         :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
       it to design your own game!</b-alert>
 
+    <slot name="upper-extensions">
+    </slot>
+
     <transition name="fade">
       <div class="fab-buttons container"
         v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
@@ -141,6 +144,8 @@
         </transition>
       </div>
     </div>
+    <slot name="lower-extensions">
+    </slot>
   </div>
 </template>
 

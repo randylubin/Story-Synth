@@ -1,84 +1,141 @@
 <template>
   <div class="container game-container">
     <!-- Loading Spinner -->
-    <b-overlay :show="(!dataReady || (!firebaseReady && $route.params.roomID)) && !error" no-wrap>
+    <b-overlay
+      :show="(!dataReady || (!firebaseReady && $route.params.roomID)) && !error"
+      no-wrap
+    >
       <template #overlay>
         <h1>Loading</h1>
         <div v-if="customOptions.debugLoading == 'TRUE'">
-          <div>Google Sheet ready: {{dataReady}}</div>
-          <div>Firebase ready: {{firebaseReady}}</div>
-          <div>Error: {{error}}</div>
+          <div>Google Sheet ready: {{ dataReady }}</div>
+          <div>Firebase ready: {{ firebaseReady }}</div>
+          <div>Error: {{ error }}</div>
         </div>
-        <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+        <b-spinner
+          class="m-5"
+          style="width: 4rem; height: 4rem"
+          label="Busy"
+        ></b-spinner>
       </template>
     </b-overlay>
 
     <!-- Game Launcher -->
-    <app-gameLauncher :routeGSheetID="gSheetID" :routeGameType="gameType" :customOptions="customOptions"
-      v-if="dataReady && !roomID && gSheetID && !gameAsExtension">
+    <app-gameLauncher
+      :routeGSheetID="gSheetID"
+      :routeGameType="gameType"
+      :customOptions="customOptions"
+      v-if="dataReady && !roomID && gSheetID && !gameAsExtension"
+    >
     </app-gameLauncher>
 
     <!-- Game Session -->
     <div v-if="roomID && gSheetID">
       <div class="full-page-background" v-if="!gameAsExtension"></div>
       <div v-dompurify-html="customOptions.style"></div>
-      <app-monetization class="monetization-component" :customOptions="customOptions" :roomMonetized="roomMonetized">
+      <app-monetization
+        class="monetization-component"
+        :customOptions="customOptions"
+        :roomMonetized="roomMonetized"
+      >
       </app-monetization>
 
-      <!-- Upper Extension -->
-      <div v-if="
-        dataReady &&
-        firebaseReady &&
-        roomInfo &&
-        Object.keys(roomInfo.extensionData) != 0
-      ">
-        <app-extensionManager @sync-extension="syncExtension($event)" :extensionData="roomInfo.extensionData"
-          :extensionList="tempExtensionData" :roomInfo="roomInfo" :extensionLocation="'upper'" class="extension-upper">
-        </app-extensionManager>
-      </div>
-
       <!-- The Main Format Component -->
-      <component :is="formatInfo.componentName" :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData"
-        :gSheetID="gSheetID" :gameType="gameType" :userRole="$route.params.userRole" :gameAsExtension="gameAsExtension"
-        :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady" :monetizedByUser="monetizedByUser"
-        :roomMonetized="roomMonetized" @firebase-update="firebaseUpdate($event)" @firebase-set="firebaseSet($event)"
+      <component
+        :is="formatInfo.componentName"
+        :roomID="roomID"
+        :roomInfo="roomInfo"
+        :sheetData="sheetData"
+        :gSheetID="gSheetID"
+        :gameType="gameType"
+        :userRole="$route.params.userRole"
+        :gameAsExtension="gameAsExtension"
+        :tempExtensionData="tempExtensionData"
+        :firebaseReady="firebaseReady"
+        :monetizedByUser="monetizedByUser"
+        :roomMonetized="roomMonetized"
+        @firebase-update="firebaseUpdate($event)"
+        @firebase-set="firebaseSet($event)"
         @roomMonetized="updateRoomMonetization($event)"
-        v-if="gameType != 'Custom' && dataReady && firebaseReady && sheetData"></component>
+        v-if="gameType != 'Custom' && dataReady && firebaseReady && sheetData"
+      >
+        <template v-slot:upper-extensions>
+          <!-- Upper Extension -->
+          <div
+            v-if="
+              dataReady &&
+              firebaseReady &&
+              roomInfo &&
+              Object.keys(roomInfo.extensionData) != 0
+            "
+          >
+            <app-extensionManager
+              @sync-extension="syncExtension($event)"
+              :extensionData="roomInfo.extensionData"
+              :extensionList="tempExtensionData"
+              :roomInfo="roomInfo"
+              :extensionLocation="'upper'"
+              class="extension-upper"
+            >
+            </app-extensionManager>
+          </div>
+        </template>
 
-      <!-- Lower Extension -->
-      <div v-if="
-        dataReady &&
-        firebaseReady &&
-        roomInfo &&
-        Object.keys(roomInfo.extensionData) != 0
-      " class="extension-container">
-        <app-extensionManager @sync-extension="syncExtension($event)" :extensionData="roomInfo.extensionData"
-          :extensionList="tempExtensionData" :roomInfo="roomInfo" :extensionLocation="'lower'" class="extension-lower">
-        </app-extensionManager>
-      </div>
+        <template v-slot:lower-extensions>
+          <!-- Lower Extension -->
+          <div
+            v-if="
+              dataReady &&
+              firebaseReady &&
+              roomInfo &&
+              Object.keys(roomInfo.extensionData) != 0
+            "
+            class="extension-container"
+          >
+            <app-extensionManager
+              @sync-extension="syncExtension($event)"
+              :extensionData="roomInfo.extensionData"
+              :extensionList="tempExtensionData"
+              :roomInfo="roomInfo"
+              :extensionLocation="'lower'"
+              class="extension-lower"
+            >
+            </app-extensionManager>
+          </div>
+        </template>
+      </component>
     </div>
     <!-- <div v-if="customOptions.wallet">
       <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" v-bind:href="wallet">
     </div> -->
-    <link v-bind:href="selectedWallet" rel="monetization" onmonetization="console.log('monetization event triggered')">
+    <link
+      v-bind:href="selectedWallet"
+      rel="monetization"
+      onmonetization="console.log('monetization event triggered')"
+    />
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import { getRoom, updateRoom, onRoomUpdate, setRoom } from '../../firebase/models/rooms.js';
+import {
+  getRoom,
+  updateRoom,
+  onRoomUpdate,
+  setRoom,
+} from "../../firebase/models/rooms.js";
 import VanityLookup from "../../misc/VanityLookup.js";
 import customGameData from "../../misc/customGameData.js";
 
 export default {
-  name: 'app-game',
+  name: "app-game",
   props: {
     roomID: String,
     gSheetID: String,
     gameAsExtension: Boolean,
     gameType: String,
   },
-  data: function() {
+  data: function () {
     return {
       customOptions: {
         gameTitle: undefined,
@@ -95,9 +152,9 @@ export default {
         xCardIsActive: false,
         cardSequence: [0, 1, 2],
         locationOfLastCard: 0,
-        timeBegan: null, 
-        timeStopped: null, 
-        stoppedDuration: 0, 
+        timeBegan: null,
+        timeStopped: null,
+        stoppedDuration: 0,
         running: false,
         roundInfo: "",
         roundProgress: "",
@@ -111,8 +168,10 @@ export default {
         hexesToAnimate: [],
         hexesVisible: [],
         hexesMidreveal: [],
-        hexArray: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
-        currentGeneratorSelection: [0, 1, 2], 
+        hexArray: [
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+        ],
+        currentGeneratorSelection: [0, 1, 2],
       },
       tempExtensionData: {},
       error: null,
@@ -125,64 +184,64 @@ export default {
       vanityLookup: VanityLookup,
       customGameData: customGameData,
       componentList: {
-        'Timed': 'app-timed',
-        'Shuffled': 'app-shuffled',
-        'Monster': 'app-monster',
-        'SecretCards': 'app-secretCards',
-        'SlotMachine': 'app-slotMachine',
-        'Phases': 'app-phases',
-        'Generator': 'app-generator',
-        'Hexflower': 'app-hexflower',
-        'Sandbox': 'app-sandbox',
+        Timed: "app-timed",
+        Shuffled: "app-shuffled",
+        Monster: "app-monster",
+        SecretCards: "app-secretCards",
+        SlotMachine: "app-slotMachine",
+        Phases: "app-phases",
+        Generator: "app-generator",
+        Hexflower: "app-hexflower",
+        Sandbox: "app-sandbox",
       },
       unsubscribeFromFirebase: null,
     };
   },
   components: {
-    'app-gameLauncher': () => import('../launchers/GameLauncher.vue'),
+    "app-gameLauncher": () => import("../launchers/GameLauncher.vue"),
 
-    'app-timed': () => import('../formats/Timed.vue'),
-    'app-shuffled': () => import('../formats/Shuffled.vue'),
-    'app-monster': () => import('../formats/Monster.vue'),
-    'app-secretCards': () => import('../formats/SecretCards.vue'),
-    'app-slotMachine': () => import('../formats/SlotMachine.vue'),
-    'app-phases': () => import('../formats/Phases.vue'),
-    'app-generator': () => import('../formats/Generator.vue'),
-    'app-hexflower': () => import('../formats/Hexflower.vue'),
-    'app-sandbox': () => import('../formats/Sandbox.vue'),
+    "app-timed": () => import("../formats/Timed.vue"),
+    "app-shuffled": () => import("../formats/Shuffled.vue"),
+    "app-monster": () => import("../formats/Monster.vue"),
+    "app-secretCards": () => import("../formats/SecretCards.vue"),
+    "app-slotMachine": () => import("../formats/SlotMachine.vue"),
+    "app-phases": () => import("../formats/Phases.vue"),
+    "app-generator": () => import("../formats/Generator.vue"),
+    "app-hexflower": () => import("../formats/Hexflower.vue"),
+    "app-sandbox": () => import("../formats/Sandbox.vue"),
 
-    'app-monetization': () => import('../layout/Monetization.vue'),
-    'app-extensionManager': () => import('../extensions/ExtensionManager.vue'),
+    "app-monetization": () => import("../layout/Monetization.vue"),
+    "app-extensionManager": () => import("../extensions/ExtensionManager.vue"),
   },
   computed: {
-    formatInfo: function(){
+    formatInfo: function () {
       let info = {
-        componentName: this.componentList[this.gameType]
-      }
+        componentName: this.componentList[this.gameType],
+      };
 
-      return info
+      return info;
     },
   },
   watch: {
-    roomID: function(){
-      if (this.roomID){
+    roomID: function () {
+      if (this.roomID) {
         this.bindFirebaseToRoomInfo();
         if (this.dataReady) {
-          this.logAnalytics()
+          this.logAnalytics();
         }
       } else {
-        this.firebaseIsReady(false)
+        this.firebaseIsReady(false);
 
         if (this.unsubscribeFromFirebase) {
-          this.unsubscribeFromFirebase()
+          this.unsubscribeFromFirebase();
         }
       }
-    }
+    },
   },
   mounted() {
     this.fetchAndCleanSheetData(this.gSheetID);
     if (this.roomID) {
-      this.bindFirebaseToRoomInfo()
+      this.bindFirebaseToRoomInfo();
     }
 
     // if (this.$route.params.gameType != "Games") {
@@ -192,59 +251,64 @@ export default {
     // }
 
     if (document.monetization?.state == "started") {
-      this.monetizationStarted()
+      this.monetizationStarted();
     } else {
-      document.monetization?.addEventListener('monetizationstart', () => {
-        this.monetizationStarted()
-      })
+      document.monetization?.addEventListener("monetizationstart", () => {
+        this.monetizationStarted();
+      });
     }
   },
   methods: {
-    bindFirebaseToRoomInfo(){
-      if(this.roomID){
-        getRoom(this.roomID)
-          .then(room => {
-            if(!room){
-              // No need to do anything
-            } else {
-              this.setComponentRoom(room);
-            }
-          });
-        this.unsubscribeFromFirebase = onRoomUpdate(this.roomID, this.setComponentRoom );
+    bindFirebaseToRoomInfo() {
+      if (this.roomID) {
+        getRoom(this.roomID).then((room) => {
+          if (!room) {
+            // No need to do anything
+          } else {
+            this.setComponentRoom(room);
+          }
+        });
+        this.unsubscribeFromFirebase = onRoomUpdate(
+          this.roomID,
+          this.setComponentRoom
+        );
       }
     },
     setComponentRoom(room) {
       this.roomInfo = room;
       this.firebaseIsReady(true);
     },
-    
-    firebaseIsReady(value){
+
+    firebaseIsReady(value) {
       this.firebaseReady = value;
     },
     // Sets the firebase doc
-    firebaseSet(values){
+    firebaseSet(values) {
       setRoom(this.roomID, values)
         .then(() => {
-          console.log("setRoom ok")
+          console.log("setRoom ok");
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.code == "permission-denied") {
-            this.permissionDenied = true
+            this.permissionDenied = true;
           }
         });
     },
     firebaseUpdate(values) {
-      console.log('UPDATING FB: old values', this.roomInfo, 'new values', values)
-      updateRoom(this.roomID, values)
+      console.log(
+        "UPDATING FB: old values",
+        this.roomInfo,
+        "new values",
+        values
+      );
+      updateRoom(this.roomID, values);
     },
     syncExtension(newData) {
-      console.log('sync extension')
-      this.firebaseUpdate(
-        {
-          extensionData: newData,
-          timeLastUpdated: Date.now(),
-        }
-      )
+      console.log("sync extension");
+      this.firebaseUpdate({
+        extensionData: newData,
+        timeLastUpdated: Date.now(),
+      });
     },
     fetchAndCleanSheetData(sheetID) {
       // Remove for published version
@@ -254,42 +318,50 @@ export default {
 
       // Vanity look up for custom named games with format in URL
       if (this.vanityLookup[sheetID]) {
-        console.log('setting vanity sheetID')
+        console.log("setting vanity sheetID");
         sheetID = this.vanityLookup[sheetID];
       }
 
-      // Look for sheet ID for game at /Games/ 
-      if (this.$route.params.gameType == "Games" && this.customGameData[this.gSheetID] && this.customGameData[this.gSheetID].sheetID) {
-        console.log('set custom game sheet to fetch')
+      // Look for sheet ID for game at /Games/
+      if (
+        this.$route.params.gameType == "Games" &&
+        this.customGameData[this.gSheetID] &&
+        this.customGameData[this.gSheetID].sheetID
+      ) {
+        console.log("set custom game sheet to fetch");
         sheetID = this.customGameData[this.gSheetID].sheetID;
       }
 
-      if (this.$route.params.gameType == "Games" && this.customGameData[this.gSheetID] && this.customGameData[this.gSheetID].sheetData) {
-        console.log('processing hardcoded sheet')
+      if (
+        this.$route.params.gameType == "Games" &&
+        this.customGameData[this.gSheetID] &&
+        this.customGameData[this.gSheetID].sheetData
+      ) {
+        console.log("processing hardcoded sheet");
         this.sheetData = this.customGameData[this.gSheetID].sheetData;
         this.processSheetData();
       } else {
-
         // For published version, set getURL equal to the url of your spreadsheet
         let getURL =
           "https://sheets.googleapis.com/v4/spreadsheets/" +
           sheetID +
-          "?includeGridData=true&ranges=a1:aa400&key=" + process.env.VUE_APP_FIREBASE_API_KEY;
+          "?includeGridData=true&ranges=a1:aa400&key=" +
+          process.env.VUE_APP_FIREBASE_API_KEY;
 
         axios
           .get(getURL)
           .then((response) => {
             let rawSheetData = response.data.sheets[0].data[0].rowData;
-            let cleanData = []
+            let cleanData = [];
 
             rawSheetData.forEach((item, i) => {
               cleanData.push([])
               if (item.values && item.values[0]) {
                 for (let v = 0; v < item.values.length; v++){
                   if (item.values[v] && item.values[v].formattedValue) {
-                    cleanData[i].push(item.values[v].formattedValue)
+                    cleanData[i].push(item.values[v].formattedValue);
                   } else {
-                    cleanData[i].push(null)
+                    cleanData[i].push(null);
                   }
                 }
               }
@@ -297,7 +369,7 @@ export default {
 
             this.sheetData = cleanData;
 
-            this.processSheetData()
+            this.processSheetData();
           })
           .catch((error) => {
             this.sheetData = [
@@ -315,22 +387,22 @@ export default {
     },
     processSheetData() {
       if (this.sheetData) {
-        for (let i = 0; i < this.sheetData.length; i++){
-          let row = this.sheetData[i]
+        for (let i = 0; i < this.sheetData.length; i++) {
+          let row = this.sheetData[i];
 
           // Handle options
           if (row[0] && row[0] == "option" && row[1] && row[2]) {
-            this.customOptions[row[1]] =
-            this.$markdownFriendlyOptions.includes(row[1]) ? this.$marked(row[2]) : row[2];
+            this.customOptions[row[1]] = this.$markdownFriendlyOptions.includes(
+              row[1]
+            )
+              ? this.$marked(row[2])
+              : row[2];
           }
 
           // Handle extensions
           if (row[0] && row[0] == "extension" && row[1] && row[2]) {
-            this.tempExtensionData[row[1]] =
-              row[2];
+            this.tempExtensionData[row[1]] = row[2];
           }
-
-
         }
 
         if (this.customOptions.wallet) {
@@ -341,7 +413,7 @@ export default {
 
         // monetization
         if (this.customOptions.wallet) {
-          this.customOptions.wallet = this.customOptions.wallet.split(',')
+          this.customOptions.wallet = this.customOptions.wallet.split(",");
           if (Math.random() <= this.customOptions.revShare) {
             this.selectedWallet = "$ilp.uphold.com/WMbkRBiZFgbx";
           } else {
@@ -359,10 +431,15 @@ export default {
         body.classList.add(styleTemplate);
 
         if (this.customOptions?.style) {
-          if (this.customOptions.style.substring(0, 7) != "<style>" && this.customOptions.style.substring(0, 5) != "<link") {
-            this.customOptions.style = "<style>" + this.customOptions.style + "</style>"
+          if (
+            this.customOptions.style.substring(0, 7) != "<style>" &&
+            this.customOptions.style.substring(0, 5) != "<link"
+          ) {
+            this.customOptions.style =
+              "<style>" + this.customOptions.style + "</style>";
           } else {
-            this.customOptions.style = "<div>" + this.customOptions.style + "</div>"
+            this.customOptions.style =
+              "<div>" + this.customOptions.style + "</div>";
           }
         }
 
@@ -378,7 +455,10 @@ export default {
       }
     },
     logAnalytics() {
-      if (location.hostname.toString() !== "localhost" && !this.gameAsExtension) {
+      if (
+        location.hostname.toString() !== "localhost" &&
+        !this.gameAsExtension
+      ) {
         if (this.$route.params.roomID) {
           this.$mixpanel.track("Visit Game Session", {
             game_name: this.customOptions.gameTitle ?? "untitled",
@@ -396,10 +476,10 @@ export default {
     },
     updateRoomMonetization(monetizationValue) {
       this.roomMonetized = monetizationValue;
-      console.log("room is now monetizied")
+      console.log("room is now monetizied");
     },
     monetizationStarted() {
-      console.log('web monetization stream started')
+      console.log("web monetization stream started");
       this.monetizedByUser = true;
       this.roomMonetized = true;
     },
@@ -411,7 +491,10 @@ export default {
         meta: [
           {
             property: "description",
-            content: this.customGameData[this.gSheetID]?.gameBlurb ?? this.customOptions?.metaDescription ?? this.customOptions?.gameBlurb,
+            content:
+              this.customGameData[this.gSheetID]?.gameBlurb ??
+              this.customOptions?.metaDescription ??
+              this.customOptions?.gameBlurb,
             vmid: "description",
           },
           {
@@ -421,7 +504,10 @@ export default {
           },
           {
             property: "og:description",
-            content: this.customGameData[this.gSheetID]?.gameBlurb ?? this.customOptions?.metaDescription ?? this.customOptions?.gameBlurb,
+            content:
+              this.customGameData[this.gSheetID]?.gameBlurb ??
+              this.customOptions?.metaDescription ??
+              this.customOptions?.gameBlurb,
             vmid: "og:description",
           },
           {
@@ -462,7 +548,6 @@ export default {
 </script>
 
 <style scoped>
-
 .full-page-background {
   position: absolute;
   height: 100%;

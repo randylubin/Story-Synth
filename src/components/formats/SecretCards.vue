@@ -13,6 +13,8 @@
           "></b-button>
       </div>
     </app-menuBar>
+    <slot name="upper-extensions">
+    </slot>
 
     <div class="mb-4 game-meta" v-if="!customOptions.coverImage && (customOptions.gameTitle || customOptions.byline)">
       <div class="row text-center" v-if="customOptions.gameTitle">
@@ -114,6 +116,8 @@
         </transition>
       </div>
     </div>
+    <slot name="lower-extensions">
+    </slot>
   </div>
 </template>
 
