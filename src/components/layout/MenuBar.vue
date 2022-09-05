@@ -2,7 +2,7 @@
   <!-- Menu Bar -->
   <div class="menu-bar mb-4 d-flex align-items-center">
     <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal
-      v-bind:style="{color: customOptions.menuColor}">
+      v-bind:style="{ color: customOptions.menuColor }">
       <b-icon-list></b-icon-list> Menu
     </button>
     <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
@@ -30,9 +30,9 @@
         v-if="(customOptions.modalOneLabel || customOptions.modalTwoLabel || customOptions.modalThreeLabel || customOptions.modalFourLabel || customOptions.modalFiveLabel)">
         <hr class='mb-4' />
         <div v-for="modalNumber in modalNumberList" v-bind:key="modalNumber">
-          <b-button v-b-modal="'modal'+modalNumber" v-on:click="closeMenu();" variant="outline-dark"
-            class="btn-block btn-lg my-1" v-if="customOptions['modal'+modalNumber+'Label']">
-            {{ customOptions['modal'+modalNumber+'Label']}}
+          <b-button v-b-modal="'modal' + modalNumber" v-on:click="closeMenu();" variant="outline-dark"
+            class="btn-block btn-lg my-1" v-if="customOptions['modal' + modalNumber + 'Label']">
+            {{ customOptions['modal' + modalNumber + 'Label'] }}
           </b-button>
         </div>
       </div>
@@ -43,8 +43,8 @@
 
     <!-- content modals -->
     <b-modal v-for="modalNumber in modalNumberList" v-bind:key="modalNumber"
-      v-bind:title="customOptions['modal'+modalNumber+'Label']" v-bind:id="'modal'+modalNumber" hide-footer>
-      <div class="d-block text-left" v-dompurify-html="customOptions['modal'+modalNumber+'Text']"></div>
+      v-bind:title="customOptions['modal' + modalNumber + 'Label']" v-bind:id="'modal' + modalNumber" hide-footer>
+      <div class="d-block text-left" v-dompurify-html="customOptions['modal' + modalNumber + 'Text']"></div>
     </b-modal>
   </div>
 </template>
@@ -61,7 +61,7 @@ export default {
     dataReady: Boolean,
     firebaseReady: Boolean,
   },
-  data: function() {
+  data: function () {
     return {
       modalNumberList: [
         'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty'
@@ -73,14 +73,14 @@ export default {
     'app-roomLink': () => import('../layout/RoomLink.vue'),
   },
   methods: {
-    closeMenu(){
+    closeMenu() {
       this.$bvModal.hide("menuModal");
     },
-    copyLinkToClipboard(){
+    copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath
-      navigator.clipboard.writeText(currentUrl).then(function() {
+      navigator.clipboard.writeText(currentUrl).then(function () {
         console.log('copied url')
-      }, function() {
+      }, function () {
         console.log('copy failed')
       });
     },
@@ -89,6 +89,4 @@ export default {
 </script>
 
 <style scoped>
-
-
 </style>

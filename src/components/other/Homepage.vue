@@ -279,13 +279,13 @@ export default {
       launcherOnHomepage: false, // if you want the game launcher on the homepage, add in the route up until the roomID e.g. "/Games/Around-The-Realm/"
     }
   },
-  mounted(){
+  mounted() {
     let body = document.getElementById("app"); // document.body;
     body.classList.remove(body.classList[0]);
     body.classList.add("style-template-homepage");
-    
+
     body = document.getElementsByClassName("non-footer-content")[0]
-    if (body.classList.length > 0){
+    if (body.classList.length > 0) {
       body.classList.remove(body.classList[1])
     }
 

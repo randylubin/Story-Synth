@@ -77,7 +77,7 @@
 <script>
 export default {
   name: "app-gallery",
-  data: function() {
+  data: function () {
     return {
       gameList: [
         {
@@ -188,62 +188,62 @@ export default {
       ],
     };
   },
-  metaInfo () {
+  metaInfo() {
     return {
       title: "Gallery of Story Synth Games",
       meta: [
-            {
-              property: "description",
-              content: "Check out the top games you can play with Story Synth",
-              vmid: "description",
-            },
-            {
-              property: "og:title",
-              content: "Story Synth Gallery",
-              vmid: "og:title",
-            },
-            {
-              property: "og:description",
-              content: "Check out the top games you can play with Story Synth",
-              vmid: "og:description",
-            },
-            {
-              property: "og:image",
-              content: "https://diegeticgames.com/uploads/gallery-collage-unfurl.png",
-              vmid: "og:image",
-            },
-            {
-              property: "og:url",
-              content: "https://storysynth.org/" + this.$route.fullPath,
-              vmid: "og:url",
-            },
-            {
-              property: "twitter:card",
-              content: "summary",
-              vmid: "twitter:card",
-            },
-            {
-              property: "og:site_name",
-              content: "Story Synth",
-              vmid: "og:site_name",
-            },
-            {
-              property: "twitter:image:alt",
-              content: "The logos of several games in the Story Synth Gallery",
-              vmid: "twitter:image:alt",
-            },
-          ],
+        {
+          property: "description",
+          content: "Check out the top games you can play with Story Synth",
+          vmid: "description",
+        },
+        {
+          property: "og:title",
+          content: "Story Synth Gallery",
+          vmid: "og:title",
+        },
+        {
+          property: "og:description",
+          content: "Check out the top games you can play with Story Synth",
+          vmid: "og:description",
+        },
+        {
+          property: "og:image",
+          content: "https://diegeticgames.com/uploads/gallery-collage-unfurl.png",
+          vmid: "og:image",
+        },
+        {
+          property: "og:url",
+          content: "https://storysynth.org/" + this.$route.fullPath,
+          vmid: "og:url",
+        },
+        {
+          property: "twitter:card",
+          content: "summary",
+          vmid: "twitter:card",
+        },
+        {
+          property: "og:site_name",
+          content: "Story Synth",
+          vmid: "og:site_name",
+        },
+        {
+          property: "twitter:image:alt",
+          content: "The logos of several games in the Story Synth Gallery",
+          vmid: "twitter:image:alt",
+        },
+      ],
     }
   },
-  mounted(){
+  mounted() {
     let body = document.getElementById("app"); // document.body;
     body.classList.remove(body.classList[0]);
     body.classList.add("style-template-homepage");
 
     document.dispatchEvent(new Event("x-app-rendered"));
-    if (location.hostname.toString() !== 'localhost'){
-        this.$mixpanel.track('Visited Gallery');
-      }
+    if (location.hostname.toString() !== 'localhost') {
+      this.$mixpanel.track('Visited Gallery');
+    }
   },
   methods: {
   },
@@ -251,7 +251,7 @@ export default {
 </script>
 
 <style scoped>
-  .featured-game {
-    color: black;
-  }
+.featured-game {
+  color: black;
+}
 </style>

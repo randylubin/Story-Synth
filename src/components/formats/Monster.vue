@@ -8,8 +8,8 @@
         <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
           v-on:click="xCard(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
-                ? customOptions.safetyCardButton
-                : 'Pause'
+              ? customOptions.safetyCardButton
+              : 'Pause'
           "></b-button>
       </div>
     </app-menuBar>
@@ -34,7 +34,7 @@
         </button>
         <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
           title="Next Card" v-on:click="nextCard()"
-          :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
+          :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet[gSheet.length - 1].ordered">
           <!-- Next Card -->
           <div v-if="roomInfo.currentCardIndex == 0">
             <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
@@ -49,7 +49,7 @@
     </transition>
 
     <!--<h1 class="">{{roomInfo.roundTitle}}</h1>-->
-    <h3 class="mb-4">{{roomInfo.roundInfo}} <span class="">{{roomInfo.roundProgress}}</span></h3>
+    <h3 class="mb-4">{{ roomInfo.roundInfo }} <span class="">{{ roomInfo.roundProgress }}</span></h3>
 
 
     <div v-if="roomInfo.xCardIsActive" class="mb-4">
@@ -81,7 +81,7 @@
           <div class="row mb-4" v-if="row.ordered == roomInfo.currentCardIndex">
             <div class="col-sm">
               <div class="card shadow img-fluid"
-                v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}"
+                v-bind:class="{ 'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0) }"
                 v-on:click="updateClickedCard(index)" style="cursor:pointer">
                 <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%"
                   v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
@@ -89,7 +89,7 @@
                   style="width:100%"
                   v-if="customOptions.cardBackgroundImage && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)">
                 <div class="card-body" v-if="!customOptions.coverImage || index != 0"
-                  v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
+                  v-bind:class="{ 'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
                   <div class="row mb-4"
                     v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex <= customOptions.instructionsProgressBar && roomInfo.currentCardIndex != 0">
                     <div class="col-sm">
@@ -117,12 +117,12 @@
                   <div class="card-subtitle mb-4 text-muted" v-dompurify-html="row.subtitle"></div>
 
                   <div class="card-text text-left"
-                    v-if="clickedCard == index || roomInfo.currentCardIndex == gSheet[gSheet.length-1].ordered">
+                    v-if="clickedCard == index || roomInfo.currentCardIndex == gSheet[gSheet.length - 1].ordered">
 
-                    <h5>{{row.characterQuestion}}</h5>
+                    <h5>{{ row.characterQuestion }}</h5>
                     <div v-dompurify-html="row.characterDetail">
                     </div>
-                    <h5 class="mt-4">{{row.keyQuestion}}</h5>
+                    <h5 class="mt-4">{{ row.keyQuestion }}</h5>
                     <div v-dompurify-html="row.keyDetails">
                     </div>
                   </div>
@@ -165,10 +165,10 @@ export default {
     roomMonetized: Boolean,
     monetizedByUser: Boolean,
   },
-  data: function(){
+  data: function () {
     return {
       dataReady: false,
-      gSheet: [{text:"loading"}],
+      gSheet: [{ text: "loading" }],
       orderedCards: [],
       unorderedCards: [],
       clickedCard: -1,
@@ -187,69 +187,69 @@ export default {
     }
   },
   watch: {
-    sheetData: function(){
+    sheetData: function () {
       this.processSheetData();
     },
-    firebaseReady: function(){
-      if (this.firebaseReady && !this.roomInfo){
+    firebaseReady: function () {
+      if (this.firebaseReady && !this.roomInfo) {
         this.initialFirebaseSetup()
       }
     },
   },
-  mounted(){
-    if (this.sheetData){
+  mounted() {
+    if (this.sheetData) {
       this.processSheetData();
     }
 
-    if (this.firebaseReady && !this.roomInfo){
+    if (this.firebaseReady && !this.roomInfo) {
       this.initialFirebaseSetup()
     }
   },
   methods: {
     initialFirebaseSetup() {
       this.$emit('firebase-set',
-        {currentCardIndex:0,extensionData: this.tempExtensionData,xCardIsActive: false, cardSequence:[0,1,2]}
+        { currentCardIndex: 0, extensionData: this.tempExtensionData, xCardIsActive: false, cardSequence: [0, 1, 2] }
       )
     },
-    closeMenu(){
+    closeMenu() {
       this.$bvModal.hide("menuModal");
     },
-    copyLinkToClipboard(){
+    copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath
-      navigator.clipboard.writeText(currentUrl).then(function() {
+      navigator.clipboard.writeText(currentUrl).then(function () {
         console.log('copied url')
-      }, function() {
+      }, function () {
         console.log('copy failed')
       });
     },
-    previousCard(){
-      this.$emit('firebase-update',{
+    previousCard() {
+      this.$emit('firebase-update', {
         currentCardIndex: this.roomInfo.currentCardIndex -= 1
       })
       this.updateRoundInfo();
     },
-    nextCard(){
-      this.$emit('firebase-update',{
+    nextCard() {
+      this.$emit('firebase-update', {
         currentCardIndex: this.roomInfo.currentCardIndex += 1
       })
       this.updateRoundInfo();
     },
-    updateRoundInfo(){
+    updateRoundInfo() {
       var newRoundInfo = ""
-      var newRoundProgress =""
-/* For the published version, this section adds instruction headers
-      if (this.roomInfo.currentCardIndex == 0 || this.roomInfo.currentCardIndex == (this.instructionCardCount + this.gameRoundCount + 1)){
-        newRoundInfo = ""
-      } else if (this.roomInfo.currentCardIndex <= this.instructionCardCount){
-        newRoundInfo = "Instructions";
-        newRoundProgress = (this.roomInfo.currentCardIndex) + " of " + this.instructionCardCount
-      //} else if (this.roomInfo.currentCardIndex > this.instructionCardCount) {
-        //newRoundInfo = "Round";
-        //newRoundProgress = (this.roomInfo.currentCardIndex - this.instructionCardCount) + " of " + this.gameRoundCount
-      } else {
-        newRoundInfo = ""
-      }
-*/
+      var newRoundProgress = ""
+      /* For the published version, this section adds instruction headers
+            if (this.roomInfo.currentCardIndex == 0 || this.roomInfo.currentCardIndex == (this.instructionCardCount + this.gameRoundCount + 1)){
+              newRoundInfo = ""
+            } else if (this.roomInfo.currentCardIndex <= this.instructionCardCount){
+              newRoundInfo = "Instructions";
+              newRoundProgress = (this.roomInfo.currentCardIndex) + " of " + this.instructionCardCount
+            //} else if (this.roomInfo.currentCardIndex > this.instructionCardCount) {
+              //newRoundInfo = "Round";
+              //newRoundProgress = (this.roomInfo.currentCardIndex - this.instructionCardCount) + " of " + this.gameRoundCount
+            } else {
+              newRoundInfo = ""
+            }
+      */
       var newRoundTitle = ""
       /* For the published version, this section adds round titles
 
@@ -279,41 +279,41 @@ export default {
       }
       */
 
-      this.$emit('firebase-update',{
+      this.$emit('firebase-update', {
         roundInfo: newRoundInfo,
         roundProgress: newRoundProgress,
         roundTitle: newRoundTitle
       })
     },
-    xCard(){
-      this.$emit('firebase-update',{
+    xCard() {
+      this.$emit('firebase-update', {
         xCardIsActive: !this.roomInfo.xCardIsActive
       })
     },
-    updateClickedCard(index){
-      if(this.gSheet[index].subtitle !== undefined){
-        if(this.clickedCard == index){
-          this.clickedCard=-1
+    updateClickedCard(index) {
+      if (this.gSheet[index].subtitle !== undefined) {
+        if (this.clickedCard == index) {
+          this.clickedCard = -1
         } else if (index !== 0 && index > this.instructionCardCount) {
-          this.clickedCard=index
+          this.clickedCard = index
         }
       }
     },
     processSheetData() {
       let cleanData = [];
 
-      if (this.sheetData){
+      if (this.sheetData) {
         this.sheetData.forEach((item, i) => {
-          if (i !== 0 && item[0] && item[0]){
+          if (i !== 0 && item[0] && item[0]) {
             // Handle options
-            if (item[0] == "option"){
+            if (item[0] == "option") {
               this.customOptions[item[1]] =
                 this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
               console.log(item[2])
             }
 
             if (item[0] !== "option" &&
-                item[0] !== "extension"){
+              item[0] !== "extension") {
 
               var rowInfo = {
                 ordered: item[0],
@@ -335,7 +335,7 @@ export default {
         // Sort cleanData into ordered and unordered decks
         cleanData.forEach((item) => {
           //if (item.ordered == "1") {
-            this.orderedCards.push(item)
+          this.orderedCards.push(item)
           /*} else if (item.ordered == "0") {
             this.unorderedCards.push(item)
           }*/
@@ -351,64 +351,73 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
 <style scoped>
+body {
+  background: #50a958;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top, #50a958, #b1f1b7);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top, #50a958, #b1f1b7);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  max-width: 600px;
+  height: 100%;
+  margin: auto;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-family: 'Arvo', serif;
+}
 
-  body {
-    background: #50a958;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to top, #50a958, #b1f1b7);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to top, #50a958, #b1f1b7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    max-width: 600px;
-    height: 100%;
-    margin: auto;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    font-family: 'Arvo', serif;
-  }
+.fade-enter-active {
+  transition: opacity .5s;
+}
 
-  .fade-enter-active {
-    transition: opacity .5s;
-  }
-  .fade-enter /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
+.fade-enter
 
-  .fade-leave-active {
-    transition: opacity 0s;
-  }
-  .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
+/* .fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
 
-  li {
-    list-style-type: disc;
-    display: list-item;
-    margin-left: 20px;
-  }
+.fade-leave-active {
+  transition: opacity 0s;
+}
 
-  .card-body{
-    min-height: 11em;
-  }
+.fade-leave-to
 
-  .btn-warning {
-    color: #212529;
-    background-color: #c5a55f;
-    border-color: #422d00;
-  }
+/* .fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
 
-  .btn-warning:focus,
-  .btn-warning.focus {
-    box-shadow: 0 0 0 .2rem rgba(86, 68, 29, 0.5)
-  }
+li {
+  list-style-type: disc;
+  display: list-item;
+  margin-left: 20px;
+}
 
-  .btn-warning:hover {
-    background-color: #c39736;
-    border-color: #422d00;
-  }
+.card-body {
+  min-height: 11em;
+}
 
-  .monster{
+.btn-warning {
+  color: #212529;
+  background-color: #c5a55f;
+  border-color: #422d00;
+}
 
-    margin:auto;
-    padding-top: 1em;
-    padding-bottom: 1em;
-  }
+.btn-warning:focus,
+.btn-warning.focus {
+  box-shadow: 0 0 0 .2rem rgba(86, 68, 29, 0.5)
+}
 
+.btn-warning:hover {
+  background-color: #c39736;
+  border-color: #422d00;
+}
+
+.monster {
+
+  margin: auto;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
 </style>

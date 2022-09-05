@@ -37,7 +37,7 @@ export default {
     roomMonetized: Boolean,
     monetizedByUser: Boolean,
   },
-  data: function() {
+  data: function () {
     return {
       customOptions: {
         gameTitle: undefined,
@@ -52,36 +52,36 @@ export default {
     };
   },
   watch: {
-    sheetData: function(){
+    sheetData: function () {
       this.processSheetData();
     },
-    firebaseReady: function(){
-      if (this.firebaseReady && !this.roomInfo){
+    firebaseReady: function () {
+      if (this.firebaseReady && !this.roomInfo) {
         this.initialFirebaseSetup()
       }
     }
   },
-  mounted(){
-    if (this.sheetData){
+  mounted() {
+    if (this.sheetData) {
       this.processSheetData();
     }
 
-    if (this.firebaseReady && !this.roomInfo){
+    if (this.firebaseReady && !this.roomInfo) {
       this.initialFirebaseSetup()
     }
-    
-     
+
+
   },
   methods: {
     initialFirebaseSetup() {
       this.$emit('firebase-set',
-          {
-            extensionData: this.tempExtensionData,
-            xCardIsActive: false,
-          }
-        )
+        {
+          extensionData: this.tempExtensionData,
+          xCardIsActive: false,
+        }
+      )
     },
-    syncExtension(){
+    syncExtension() {
       this.$emit('firebase-update',
         {
           extensionData: this.roomInfo.extensionData,
@@ -90,13 +90,13 @@ export default {
       )
     },
     processSheetData() {
-      if (this.sheetData){
+      if (this.sheetData) {
         this.sheetData.forEach((item, i) => {
-      
-          if (i !== 0 && item[0]){
+
+          if (i !== 0 && item[0]) {
 
             // Handle options
-            if (item[0] == "option"){
+            if (item[0] == "option") {
               this.$set(this.customOptions, item[1], item[2])
               console.log(item[1], item[2])
               console.log('options:', this.customOptions)
@@ -105,23 +105,22 @@ export default {
         });
 
         if (this.customOptions.wallet) {
-          if (Math.random() <= this.customOptions.revShare){
+          if (Math.random() <= this.customOptions.revShare) {
             this.customOptions.wallet = '$ilp.uphold.com/WMbkRBiZFgbx';
           }
         }
 
         this.dataReady = true;
-      }     
+      }
     }
   }
 };
 </script>
 
 <style scoped>
-  .sandbox{
-    margin:auto;
-    padding-top: 1em;
-    padding-bottom: 1em; 
-  }
-
+.sandbox {
+  margin: auto;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
 </style>

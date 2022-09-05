@@ -1,7 +1,9 @@
 <template>
-  <b-button class="control-button-restart btn-lg btn-block d-flex align-items-center justify-content-center" variant="outline-dark" v-on:click="downloadData()">
-    <span class="mx-2">Download Data</span> <b-icon icon="save" font-scale=".8"></b-icon>
-  </b-button>          
+  <b-button class="control-button-restart btn-lg btn-block d-flex align-items-center justify-content-center"
+    variant="outline-dark" v-on:click="downloadData()">
+    <span class="mx-2">Download Data</span>
+    <b-icon icon="save" font-scale=".8"></b-icon>
+  </b-button>
 </template>
 
 <script>
@@ -11,16 +13,16 @@ export default {
     extensionData: Object,
     gameTitle: String,
   },
-  data: function() {
+  data: function () {
     return {
       error: null
     };
   },
-  mounted(){
+  mounted() {
 
   },
   methods: {
-    downloadData: function(){
+    downloadData: function () {
       let downloadText = ""
       let filename = ""
 
@@ -34,11 +36,11 @@ export default {
 
       // PlusMinus
       let plusMinusData = this.extensionData.plusMinus ? JSON.parse(this.extensionData.plusMinus) : null;
-      if (plusMinusData){
-        if (this.extensionData.plusMinusTitle){
+      if (plusMinusData) {
+        if (this.extensionData.plusMinusTitle) {
           downloadText += "# " + this.extensionData.plusMinusTitle + "\n\n"
         } else (downloadText += "# Stats\n\n")
-        for (let i=0; i < plusMinusData.length; i++){
+        for (let i = 0; i < plusMinusData.length; i++) {
           downloadText += plusMinusData[i].name + ": " + plusMinusData[i].value + "\n"
         }
         downloadText += "\n\n"
@@ -49,9 +51,9 @@ export default {
       if (listItems) {
         if (this.extensionData.editableListTitle) {
           downloadText += "# " + this.extensionData.editableListTitle + "\n\n"
-        } else {downloadText += '# List\n\n'}
+        } else { downloadText += '# List\n\n' }
 
-        for (let i =0; i < listItems.length; i++){
+        for (let i = 0; i < listItems.length; i++) {
           downloadText += "- " + listItems[i] + "\n"
         }
         downloadText += "\n\n"
@@ -63,24 +65,24 @@ export default {
         for (const list in multiLists) {
           if (multiLists[list]['value'].length) {
             downloadText += "# " + multiLists[list].name + '\n\n'
-            
+
             for (let i = 0; i < multiLists[list]['value'].length; i++) {
               downloadText += "- " + multiLists[list].value[i] + "\n";
             }
           }
-        downloadText += "\n\n"
+          downloadText += "\n\n"
         }
       }
 
 
       // Journal Entries
       let entries = this.extensionData.journalEntries ? JSON.parse(this.extensionData.journalEntries) : null;
-      if (entries){
-        if (this.extensionData.journalUpperText){
+      if (entries) {
+        if (this.extensionData.journalUpperText) {
           downloadText += "# " + this.extensionData.journalUpperText + "\n"
-        } else {downloadText += "# Journal Entries\n"}
+        } else { downloadText += "# Journal Entries\n" }
 
-        for (let i = 0; i < entries.length; i++){
+        for (let i = 0; i < entries.length; i++) {
           downloadText += "\n---\n"
           downloadText += entries[i]
           downloadText += "\n"
@@ -103,6 +105,4 @@ export default {
 </script>
 
 <style scoped>
-
-
 </style>

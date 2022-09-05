@@ -4,10 +4,12 @@
       <div class="col-sm">
         <div class="card d-flex shadow">
           <div class="card-body">
-            <h4 v-if="coinflipTitle" class="coinflip-title">{{coinflipTitle}}</h4>
-            <div class="flip-result" v-if="flipResult">{{flipResult}}</div>
+            <h4 v-if="coinflipTitle" class="coinflip-title">{{ coinflipTitle }}</h4>
+            <div class="flip-result" v-if="flipResult">{{ flipResult }}</div>
             <div v-else style="min-height: 50px"><br></div>
-            <button class="btn btn-outline-dark m-2 coinflip-button" v-on:click="flipCoin()">{{coinflipButtonLabel ? coinflipButtonLabel : 'Flip Coin'}}</button>
+            <button class="btn btn-outline-dark m-2 coinflip-button" v-on:click="flipCoin()">{{ coinflipButtonLabel ?
+                coinflipButtonLabel : 'Flip Coin'
+            }}</button>
           </div>
         </div>
       </div>
@@ -22,19 +24,19 @@ export default {
     flipResult: String,
     coinflipTitle: String,
     coinflipButtonLabel: String,
-    coinflipValues: String, 
+    coinflipValues: String,
   },
-  data: function() {
+  data: function () {
     return {
       error: null,
     };
   },
-  mounted(){
+  mounted() {
 
   },
   methods: {
     flipCoin() {
-      let coinSides = !this.coinflipValues.includes(',') ? ['Heads','Tails'] : this.coinflipValues?.split(',')
+      let coinSides = !this.coinflipValues.includes(',') ? ['Heads', 'Tails'] : this.coinflipValues?.split(',')
       let newFlip = ""
       if (Math.random() > .5) {
         newFlip = coinSides[0]
@@ -46,7 +48,7 @@ export default {
         this.$emit('process-extension-update', ['flipResult', newFlip])
       }, 500)
     }
-    
+
   }
 };
 </script>
@@ -62,7 +64,7 @@ export default {
 @keyframes showcoin {
   from {
     font-size: 1%;
-  } 
+  }
 
   50% {
     font-size: 2em;
@@ -73,10 +75,13 @@ export default {
   }
 }
 
-.coinflip-enter-active, .coinflip-leave-active {
+.coinflip-enter-active,
+.coinflip-leave-active {
   transition: opacity .5s;
 }
-.coinflip-enter, .coinflip-leave-to {
+
+.coinflip-enter,
+.coinflip-leave-to {
   opacity: 0;
 }
 </style>

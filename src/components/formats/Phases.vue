@@ -71,7 +71,7 @@
         </button>
         <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
           title="Next Card" v-on:click="nextCard()"
-          :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases -1)">
+          :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases - 1)">
           <!-- Next Card -->
           <div v-if="roomInfo.currentCardIndex == 0">
             <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
@@ -92,7 +92,7 @@
       class="mb-4">
 
       <div class="card d-flex shadow img-fluid"
-        v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
+        v-bind:class="{ 'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0) }">
 
         <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%"
           v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
@@ -103,12 +103,12 @@
 
         <div class="card-body justify-content-center mt-4 mx-4"
           v-if="!roomInfo.xCardIsActive && dataReady && firebaseReady && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)"
-          v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': (customOptions.cardBackgroundImage && (!customOptions.cardBackgroundImageAlign))}">
+          v-bind:class="{ 'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': (customOptions.cardBackgroundImage && (!customOptions.cardBackgroundImageAlign)) }">
           <div class="row mb-4"
             v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
             <div class="col-sm">
               <h2>Instructions</h2>
-              <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction -1" variant="dark"></b-progress>
+              <b-progress :value="roomInfo.currentCardIndex" :max="firstNonInstruction - 1" variant="dark"></b-progress>
             </div>
           </div>
 
@@ -124,13 +124,13 @@
             v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
             <!--<div v-for="(index) in numberOfPhases" v-bind:key="index" v-dompurify-html="phaseData[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
               </div>-->
-            <h2 class="card-header-text">{{phaseNames[roomInfo.currentPhase]}}</h2>
+            <h2 class="card-header-text">{{ phaseNames[roomInfo.currentPhase] }}</h2>
             <div
               v-dompurify-html="phaseData[roomInfo.currentPhase][roomInfo.cardSequence[roomInfo.currentCardIndex][roomInfo.currentPhase]]">
             </div>
             <div v-if="Array.isArray(customOptions.phaseHelpText)" class="my-4">
               <p class="phase-help-text">
-                <i class="">{{customOptions.phaseHelpText[roomInfo.currentPhase]}}</i>
+                <i class="">{{ customOptions.phaseHelpText[roomInfo.currentPhase] }}</i>
               </p>
             </div>
           </div>
@@ -139,7 +139,7 @@
 
 
         <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive"
-          v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage && !customOptions.cardBackgroundImageAlign }">
+          v-bind:class="{ 'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage && !customOptions.cardBackgroundImageAlign }">
           <div class="mt-5 pt-5 mb-5">
             <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
             <div class="safety-card-tet" v-dompurify-html="customOptions.safetyCardText"
@@ -194,14 +194,14 @@
           </div>
           <div v-for="(round, roundIndex) in roomInfo.cardSequence" v-bind:key="roundIndex">
             <div
-              v-if="Object.prototype.toString.call(round) === '[object Object]' && phaseData.length>0 && roundIndex <= roomInfo.currentCardIndex">
+              v-if="Object.prototype.toString.call(round) === '[object Object]' && phaseData.length > 0 && roundIndex <= roomInfo.currentCardIndex">
               <div class="row" v-for="(phase, phaseIndex) in numberOfPhases" v-bind:key="phaseIndex">
                 <div class="col-sm"
-                  v-if="roundIndex < roomInfo.lastSeenRound || (roundIndex==roomInfo.lastSeenRound && phaseIndex < roomInfo.lastSeenPhase)">
-                  <div v-if="customOptions.showPastPrompts[phaseIndex]==1" style="font-size: .8em;"
+                  v-if="roundIndex < roomInfo.lastSeenRound || (roundIndex == roomInfo.lastSeenRound && phaseIndex < roomInfo.lastSeenPhase)">
+                  <div v-if="customOptions.showPastPrompts[phaseIndex] == 1" style="font-size: .8em;"
                     v-dompurify-html="phaseData[phaseIndex][round[phaseIndex]]">
                   </div>
-                  <p v-if="customOptions.showPastPrompts[phaseIndex]==1" style="font-size: .8em;">
+                  <p v-if="customOptions.showPastPrompts[phaseIndex] == 1" style="font-size: .8em;">
                     |
                   </p>
 
@@ -237,7 +237,7 @@ export default {
     roomMonetized: Boolean,
     monetizedByUser: Boolean,
   },
-  data: function(){
+  data: function () {
     return {
       customOptions: {
         gameTitle: undefined,
@@ -248,7 +248,7 @@ export default {
         revShare: 0.2,
       },
       dataReady: false,
-      gSheet: [{text:"loading"}],
+      gSheet: [{ text: "loading" }],
       numberOfPhases: 0,
       phaseNames: [],
       phaseData: [],
@@ -261,54 +261,54 @@ export default {
     }
   },
   watch: {
-    sheetData: function(){
+    sheetData: function () {
       this.processSheetData();
     },
-    firebaseReady: function(){
-      if (this.firebaseReady && !this.roomInfo){
+    firebaseReady: function () {
+      if (this.firebaseReady && !this.roomInfo) {
         this.initialFirebaseSetup()
       }
     },
   },
-  mounted(){
-    if (this.sheetData){
+  mounted() {
+    if (this.sheetData) {
       this.processSheetData();
     }
 
-    if (this.firebaseReady && !this.roomInfo){
+    if (this.firebaseReady && !this.roomInfo) {
       this.initialFirebaseSetup()
     }
   },
   methods: {
     initialFirebaseSetup() {
       this.$emit('firebase-set',
-        {currentCardIndex:0, xCardIsActive: false,extensionData: this.tempExtensionData, cardSequence:[0,1,2], currentPhase: 0, skipToEnding: false, lastSeenRound: 0, lastSeenPhase: 0}
+        { currentCardIndex: 0, xCardIsActive: false, extensionData: this.tempExtensionData, cardSequence: [0, 1, 2], currentPhase: 0, skipToEnding: false, lastSeenRound: 0, lastSeenPhase: 0 }
       )
       if (this.dataReady) {
         this.shuffle();
       }
     },
-    closeMenu(){
+    closeMenu() {
       this.$bvModal.hide("menuModal");
     },
-    copyLinkToClipboard(){
+    copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath
-      navigator.clipboard.writeText(currentUrl).then(function() {
+      navigator.clipboard.writeText(currentUrl).then(function () {
         console.log('copied url')
-      }, function() {
+      }, function () {
         console.log('copy failed')
       });
     },
-    previousCard(){
-      if (Number.isInteger(this.roomInfo.cardSequence[this.roomInfo.currentCardIndex])){
-        if (this.roomInfo.cardSequence[this.roomInfo.currentCardIndex] >= this.phaseData[0].length){
+    previousCard() {
+      if (Number.isInteger(this.roomInfo.cardSequence[this.roomInfo.currentCardIndex])) {
+        if (this.roomInfo.cardSequence[this.roomInfo.currentCardIndex] >= this.phaseData[0].length) {
           this.roomInfo.currentCardIndex -= 1
           this.roomInfo.currentPhase = this.numberOfPhases - 1
         } else {
           this.roomInfo.currentCardIndex -= 1
           this.roomInfo.currentPhase = 0
         }
-      } else if (this.roomInfo.currentPhase == 0){      
+      } else if (this.roomInfo.currentPhase == 0) {
         this.roomInfo.currentPhase = this.numberOfPhases - 1
         this.roomInfo.currentCardIndex -= 1
       } else {
@@ -317,23 +317,23 @@ export default {
 
       let lastSeenRound = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenRound : this.roomInfo.currentCardIndex
       let lastSeenPhase = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenPhase : this.roomInfo.currentPhase
-      
-      this.$emit('firebase-update',{
+
+      this.$emit('firebase-update', {
         currentCardIndex: this.roomInfo.currentCardIndex,
         lastSeenRound: lastSeenRound,
         currentPhase: this.roomInfo.currentPhase,
         lastSeenPhase: lastSeenPhase,
       })
     },
-    nextCard(){
-      if (this.roomInfo.cardSequence.length == 1){
+    nextCard() {
+      if (this.roomInfo.cardSequence.length == 1) {
         this.shuffle();
       }
 
-      if (Number.isInteger(this.roomInfo.cardSequence[this.roomInfo.currentCardIndex])){
+      if (Number.isInteger(this.roomInfo.cardSequence[this.roomInfo.currentCardIndex])) {
         this.roomInfo.currentCardIndex += 1
         this.roomInfo.currentPhase = 0
-      } else if (this.roomInfo.currentPhase < this.numberOfPhases - 1){
+      } else if (this.roomInfo.currentPhase < this.numberOfPhases - 1) {
         this.roomInfo.currentPhase += 1
       } else {
         this.roomInfo.currentPhase = 0;
@@ -344,8 +344,8 @@ export default {
       let lastSeenPhase = (this.roomInfo.currentCardIndex > this.endingIndex) ? this.roomInfo.lastSeenPhase : this.roomInfo.currentPhase
 
       // numberOfRounds
-      if ((this.roomInfo.currentCardIndex >= this.endingIndex) || !this.customOptions.numberOfRounds || parseInt(this.customOptions.numberOfRounds) > this.roomInfo.currentCardIndex - this.firstNonInstruction){
-        this.$emit('firebase-update',{
+      if ((this.roomInfo.currentCardIndex >= this.endingIndex) || !this.customOptions.numberOfRounds || parseInt(this.customOptions.numberOfRounds) > this.roomInfo.currentCardIndex - this.firstNonInstruction) {
+        this.$emit('firebase-update', {
           currentCardIndex: this.roomInfo.currentCardIndex,
           lastSeenRound: lastSeenRound,
           currentPhase: this.roomInfo.currentPhase,
@@ -356,36 +356,36 @@ export default {
       }
 
     },
-    skipInstructions(){
-      this.$emit('firebase-update',{
+    skipInstructions() {
+      this.$emit('firebase-update', {
         currentCardIndex: this.firstNonInstruction,
         lastSeenRound: this.firstNonInstruction,
         currentPhase: 0,
         lastSeenPhase: 0
       })
     },
-    ending(){
-      if (this.roomInfo.cardSequence.length == 1){
+    ending() {
+      if (this.roomInfo.cardSequence.length == 1) {
         this.shuffle();
       }
 
-      this.$emit('firebase-update',{
+      this.$emit('firebase-update', {
         lastSeenRound: this.roomInfo.currentCardIndex,
         lastSeenPhase: this.roomInfo.currentPhase,
         currentCardIndex: this.endingIndex,
         skipToEnding: true
       })
     },
-    xCard(){
-      this.$emit('firebase-update',{
+    xCard() {
+      this.$emit('firebase-update', {
         xCardIsActive: !this.roomInfo.xCardIsActive
       })
     },
-    shuffle(){
+    shuffle() {
       this.$bvModal.hide('reshuffleConfirm')
 
       // reset card count
-      this.$emit('firebase-update',{
+      this.$emit('firebase-update', {
         currentCardIndex: 0,
         currentPhase: 0,
         lastSeenPhase: 0,
@@ -399,7 +399,7 @@ export default {
 
       // add in the ordered cards
       for (var i = 0; i < this.gSheet.length; i++) {
-        if (this.gSheet[i].ordered == 0){
+        if (this.gSheet[i].ordered == 0) {
           initialCardSequence.push(i)
         } else if (this.gSheet[i].ordered == 2) {
           finalCardSequence.push(i)
@@ -407,7 +407,7 @@ export default {
       }
 
       // Shuffle deck function
-      var shuffleDeck = function (deck){
+      var shuffleDeck = function (deck) {
         for (var n = deck.length - 1; n > 0; n--) {
           let j = Math.floor(Math.random() * (n + 1));
           [deck[n], deck[j]] = [deck[j], deck[n]];
@@ -417,10 +417,10 @@ export default {
 
       // create an array of the number of rounds
       var numberOfRounds = []
-      
+
       for (var j = 0; j < this.phaseData.length; j++) {
         numberOfRounds.push([])
-        for (i = 0; i < this.phaseData[0].length; i++){
+        for (i = 0; i < this.phaseData[0].length; i++) {
           numberOfRounds[j].push(i);
         }
         numberOfRounds[j] = shuffleDeck(numberOfRounds[j])
@@ -429,7 +429,7 @@ export default {
       var newEmptyCard
       for (i = 0; i < this.phaseData[0].length; i++) {
         newEmptyCard = {};
-        for (j = 0; j < this.numberOfPhases; j++){
+        for (j = 0; j < this.numberOfPhases; j++) {
           newEmptyCard[j] = numberOfRounds[j][i]
         }
 
@@ -439,7 +439,7 @@ export default {
 
 
       // sync the shuffled array
-      this.$emit('firebase-update',{
+      this.$emit('firebase-update', {
         cardSequence: initialCardSequence.concat(shuffledCards).concat(finalCardSequence)
       })
 
@@ -447,24 +447,24 @@ export default {
     processSheetData() {
       let cleanData = [];
 
-      if (this.sheetData){
+      if (this.sheetData) {
         this.numberOfPhases = this.sheetData[0].length - 3
-        
+
         for (var w = 0; w < this.numberOfPhases; w++) {
           this.phaseData.push([])
-          this.phaseNames.push(this.sheetData[0][w+3])
+          this.phaseNames.push(this.sheetData[0][w + 3])
         }
 
         var newEndingIndex = 0
-        
+
         this.sheetData.forEach((item, i) => {
-          if (i !== 0 && item[0]){
-            
+          if (i !== 0 && item[0]) {
+
             // Handle options
-            if (item[0] == "option"){
+            if (item[0] == "option") {
               this.customOptions[item[1]] =
                 this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
-              if (item[1] == "phaseHelpText"){
+              if (item[1] == "phaseHelpText") {
                 this.customOptions.phaseHelpText = this.customOptions.phaseHelpText.split('|')
               } else if (item[1] == "showPastPrompts") {
                 this.customOptions.showPastPrompts = this.customOptions.showPastPrompts.split(',')
@@ -472,17 +472,17 @@ export default {
             }
 
             // Get count of instruction cards
-            if (item[0] == 0){
+            if (item[0] == 0) {
               this.firstNonInstruction += 1
             }
 
             // Get ending index
-            if ((item[0] == 0 || item[0] == 1) && this.endingIndex == 0){
+            if ((item[0] == 0 || item[0] == 1) && this.endingIndex == 0) {
               newEndingIndex += 1
             }
 
             var rowInfo = {}
-            if (item[0] >= 0){
+            if (item[0] >= 0) {
               rowInfo = {
                 ordered: item[0],
                 headerText: item[1],
@@ -491,9 +491,9 @@ export default {
               cleanData.push(rowInfo)
             }
 
-            if (item[0] == 1){
+            if (item[0] == 1) {
               for (var j = 3; j < item.length; j++) {
-                this.phaseData[j-3].push(this.$marked(item[j] ?? null))
+                this.phaseData[j - 3].push(this.$marked(item[j] ?? null))
               }
             }
           }
@@ -505,10 +505,10 @@ export default {
         this.gSheet = cleanData
 
         this.dataReady = true;
-        
-        if(this.firebaseReady && this.roomInfo?.cardSequence.length < 4){this.shuffle();}
 
-      }     
+        if (this.firebaseReady && this.roomInfo?.cardSequence.length < 4) { this.shuffle(); }
+
+      }
     }
 
   }
@@ -519,30 +519,37 @@ export default {
 
 
 <style scoped>
+.phases {
+  margin: auto;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
 
-  .phases{
-    margin:auto;
-    padding-top: 1em;
-    padding-bottom: 1em;
-  }
+.card-body {
+  font-size: 1.5em;
+  min-height: 11em;
+}
 
-  .card-body{
-    font-size: 1.5em;
-    min-height: 11em;
-  }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .5s;
+}
 
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
-  .phase-help-text {
-    font-size: 1rem;
-    line-height: 1.5;    
-  }
-  .x-card-text {
-    font-size: .5em;
-    text-decoration: underline;
-  }
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
+
+.phase-help-text {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.x-card-text {
+  font-size: .5em;
+  text-decoration: underline;
+}
 </style>

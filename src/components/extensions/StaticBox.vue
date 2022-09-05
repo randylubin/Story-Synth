@@ -1,13 +1,13 @@
 <template>
   <div class="mb-4 static-box">
-      <div class="row">
-        <div class="col-sm">
-          <div class="card d-flex extension-card">
-            <div class="card-body" v-dompurify-html="markdownParsedStaticContent">
-            </div>
+    <div class="row">
+      <div class="col-sm">
+        <div class="card d-flex extension-card">
+          <div class="card-body" v-dompurify-html="markdownParsedStaticContent">
           </div>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -17,26 +17,24 @@ export default {
   props: {
     staticBoxContent: String,
   },
-  data: function() {
+  data: function () {
     return {
       error: null
     };
   },
   computed: {
-    markdownParsedStaticContent: function(){
+    markdownParsedStaticContent: function () {
       return this.$marked(this.staticBoxContent)
     }
   },
-  mounted(){
+  mounted() {
 
   },
   methods: {
-    
+
   }
 };
 </script>
 
 <style scoped>
-
-
 </style>

@@ -8,8 +8,8 @@
         <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
           v-on:click="stop(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
-                ? customOptions.safetyCardButton
-    : 'Pause'
+              ? customOptions.safetyCardButton
+              : 'Pause'
           "></b-button>
       </div>
     </app-menuBar>
@@ -20,13 +20,13 @@
     <div class="mb-4 game-meta" v-if="customOptions.gameTitle || customOptions.byline">
       <div class="row text-center" v-if="customOptions.gameTitle">
         <div class="col-sm">
-          <h1>{{customOptions.gameTitle}}</h1>
+          <h1>{{ customOptions.gameTitle }}</h1>
         </div>
       </div>
 
       <div class="row text-center" v-if="customOptions.byline">
         <div class="col-sm">
-          <h4>{{customOptions.byline}}</h4>
+          <h4>{{ customOptions.byline }}</h4>
         </div>
       </div>
     </div>
@@ -39,12 +39,12 @@
       <div v-if="!playerSelected" class="row my-4">
         <div class="btn-group col-sm" role="group" aria-label="Role Controls">
           <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player"
-            v-on:click="selectPlayer(player)">{{player}}</button>
+            v-on:click="selectPlayer(player)">{{ player }}</button>
         </div>
       </div>
       <div class="player-label text-center row my-4" v-if="playerSelected">
         <div class="col-sm">
-          Role: {{playerSelected}}
+          Role: {{ playerSelected }}
           <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
         </div>
       </div>
@@ -97,7 +97,7 @@
 <script>
 export default {
   name: 'app-timed',
-  components:{
+  components: {
     'app-menuBar': () => import("../layout/MenuBar.vue"),
   },
   props: {
@@ -110,7 +110,7 @@ export default {
     roomMonetized: Boolean,
     monetizedByUser: Boolean,
   },
-  data: function(){
+  data: function () {
     return {
       time: '00:00:00',
       started: null,
@@ -134,21 +134,21 @@ export default {
     }
   },
   watch: {
-    sheetData: function(){
+    sheetData: function () {
       this.processSheetData();
     },
-    firebaseReady: function(){
-      if (this.firebaseReady && !this.roomInfo){
+    firebaseReady: function () {
+      if (this.firebaseReady && !this.roomInfo) {
         this.initialFirebaseSetup()
       }
     },
   },
-  mounted(){
-    if (this.sheetData){
+  mounted() {
+    if (this.sheetData) {
       this.processSheetData();
     }
 
-    if (this.firebaseReady && !this.roomInfo){
+    if (this.firebaseReady && !this.roomInfo) {
       this.initialFirebaseSetup()
     }
 
@@ -175,69 +175,69 @@ export default {
       this.$bvModal.hide("menuModal");
     },
     start() {
-      if(this.roomInfo.running) return;
+      if (this.roomInfo.running) return;
 
       if (this.roomInfo.timeBegan === null) {
         this.reset();
-        this.$emit('firebase-update',{
+        this.$emit('firebase-update', {
           timeBegan: new Date()
         })
       }
 
       if (this.roomInfo.timeStopped !== null) {
-        this.$emit('firebase-update',{
+        this.$emit('firebase-update', {
           stoppedDuration: this.roomInfo.stoppedDuration + (new Date() - this.roomInfo.timeStopped.toDate())
         })
       }
 
       this.started = setInterval(this.clockRunning, 100);
-      this.$emit('firebase-update',{
+      this.$emit('firebase-update', {
         running: true
       })
 
     },
     stop() {
-      if (this.roomInfo.timeBegan !== null){
-        this.$emit('firebase-update',{
+      if (this.roomInfo.timeBegan !== null) {
+        this.$emit('firebase-update', {
           running: false
         })
-        this.$emit('firebase-update',{
+        this.$emit('firebase-update', {
           timeStopped: new Date()
         })
       }
     },
     reset() {
-      this.$emit('firebase-update',{
+      this.$emit('firebase-update', {
         running: false
       })
-      this.$emit('firebase-update',{
+      this.$emit('firebase-update', {
         stoppedDuration: 0,
         timeBegan: null,
         timeStopped: null
       })
       this.time = "00:00:00";
-      this.timeElapsed = new Date (0);
+      this.timeElapsed = new Date(0);
       this.secondsElapsed = 0;
     },
-    sync(){
+    sync() {
       this.started = setInterval(this.clockRunning, 100);
       this.timerSynced = true;
     },
-    clockRunning(){
-      if (!this.roomInfo){
+    clockRunning() {
+      if (!this.roomInfo) {
         return
       }
-      else if (this.roomInfo.timeBegan == null){
+      else if (this.roomInfo.timeBegan == null) {
         this.time = "00:00:00";
       }
-      if (this.roomInfo.timeBegan !== null && this.roomInfo.running == true){
+      if (this.roomInfo.timeBegan !== null && this.roomInfo.running == true) {
         var currentTime = new Date()
         this.timeElapsed = new Date(currentTime - this.roomInfo.timeBegan.toDate() - this.roomInfo.stoppedDuration)
         var hour = this.timeElapsed.getUTCHours(),
-        min = this.timeElapsed.getUTCMinutes(),
-        sec = this.timeElapsed.getUTCSeconds()
+          min = this.timeElapsed.getUTCMinutes(),
+          sec = this.timeElapsed.getUTCSeconds()
 
-        this.secondsElapsed = sec + (min * 60) + (hour *60 * 60)
+        this.secondsElapsed = sec + (min * 60) + (hour * 60 * 60)
 
         this.time =
           this.zeroPrefix(hour, 2) + ":" +
@@ -247,24 +247,24 @@ export default {
     },
     zeroPrefix(num, digit) {
       var zero = '';
-      for(var i = 0; i < digit; i++) {
+      for (var i = 0; i < digit; i++) {
         zero += '0';
       }
       return (zero + num).slice(-digit);
     },
-    selectPlayer(player){
+    selectPlayer(player) {
       this.playerSelected = player
     },
     processSheetData() {
       let cleanData = [];
 
-      if (this.sheetData){
+      if (this.sheetData) {
         var headers = this.sheetData[0]
 
         var playerArray = []
 
         headers.forEach((item, i) => {
-          if (i>=2) {
+          if (i >= 2) {
             playerArray.push(item)
           }
         });
@@ -273,7 +273,7 @@ export default {
           console.log(item[0])
 
           // Handle options
-          if (item[0] == "option"){
+          if (item[0] == "option") {
             this.customOptions[item[1]] =
               this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
             console.log(item[2])
@@ -283,15 +283,15 @@ export default {
           if (
             item[0] !== "option" &&
             item[0] !== "extension"
-          ){
+          ) {
 
             var rowInfo = {
               time: item[0],
               text: this.$marked(item[1] ?? "")
             }
 
-            playerArray.forEach((player, i)=>{
-              rowInfo[player] = parseInt(item[i+2]);
+            playerArray.forEach((player, i) => {
+              rowInfo[player] = parseInt(item[i + 2]);
             });
 
             cleanData.push(rowInfo)
@@ -310,36 +310,41 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this.roomInfo component only -->
 
 <style scoped>
+.game-room {
+  padding-top: 20px;
+  margin: auto;
+}
 
-  .game-room {
-    padding-top: 20px;
-    margin: auto;
-  }
-  .time {
-    font-size: 4em;
-  }
+.time {
+  font-size: 4em;
+}
 
-  .message{
-    font-size: 1.5em;
-    margin-top: 1em;
-  }
+.message {
+  font-size: 1.5em;
+  margin-top: 1em;
+}
 
-  .timer-box{
-    background-color: white;
-    margin-top: 1em;
-    padding-bottom: 1em;
-  }
+.timer-box {
+  background-color: white;
+  margin-top: 1em;
+  padding-bottom: 1em;
+}
 
-  .player-button {
-    margin-left: .3em;
-    margin-right: .3em;
-  }
+.player-button {
+  margin-left: .3em;
+  margin-right: .3em;
+}
 
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .5s;
+}
 
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
 </style>

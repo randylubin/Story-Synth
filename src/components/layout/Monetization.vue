@@ -10,14 +10,10 @@
           <div v-dompurify-html="customOptions.monetizationPaywall"></div>
           <div class="mt-4">
             <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
-            <b-spinner
-                class="m-5"
-                style="width: 4rem; height: 4rem;"
-                label="Busy"
-              ></b-spinner>
+            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
           </div>
         </div>
-      </template>  
+      </template>
     </b-overlay>
   </div>
 </template>
@@ -29,7 +25,7 @@ export default {
     customOptions: Object,
     roomMonetized: Boolean,
   },
-  data: function() {
+  data: function () {
     return {
     };
   },

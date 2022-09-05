@@ -2,53 +2,36 @@
   <div class="roomLink-section">
     <div class="room-link flex-row d-flex" v-if="$route.params.roomID">
       <transition name="bounce" mode="out-in">
-        <div
-          v-if="roomInfo"
-          :key="Object.keys(roomInfo).length"
-          class="pt-2 px-2 game-meta live-player-counter"
-          v-bind:style="{color: color}"
-        >
+        <div v-if="roomInfo" :key="Object.keys(roomInfo).length" class="pt-2 px-2 game-meta live-player-counter"
+          v-bind:style="{ color: color }">
           {{ Object.keys(roomInfo).length }} <b-icon-people></b-icon-people>
         </div>
       </transition>
       <transition name="bounce" mode="out-in">
-        <div       
-          v-if="atLeastOneMonetizedUser"
-          class="pt-2 px-2 game-meta live-player-counter"
-          v-bind:style="{color: color}"
-        >
+        <div v-if="atLeastOneMonetizedUser" class="pt-2 px-2 game-meta live-player-counter"
+          v-bind:style="{ color: color }">
           <b-icon-coin alt="web monetization active"></b-icon-coin>
         </div>
       </transition>
 
-      <button
-        class="btn btn-outline-dark ml-auto border-0"
-        @click="$bvToast.show('copyToast')"
-        v-on:click="copyTextToClipboard()"
-        type="button"
-        v-bind:style="{color: color}"
-      >
+      <button class="btn btn-outline-dark ml-auto border-0" @click="$bvToast.show('copyToast')"
+        v-on:click="copyTextToClipboard()" type="button" v-bind:style="{ color: color }">
         <b-icon-link45deg></b-icon-link45deg> Copy URL
       </button>
 
-      <b-toast
-        variant="success"
-        id="copyToast"
-        auto-hide-delay="1000"
-        no-close-button
-      >
+      <b-toast variant="success" id="copyToast" auto-hide-delay="1000" no-close-button>
         Link copied to clipboard
       </b-toast>
 
 
 
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
 
-import {notifyMyOnlineStatus, onRoomInfoUpdate, setMyOnlineData} from "../../firebase/models/players_in_room.js";
+import { notifyMyOnlineStatus, onRoomInfoUpdate, setMyOnlineData } from "../../firebase/models/players_in_room.js";
 
 export default {
   name: "app-roomLink",
@@ -77,17 +60,17 @@ export default {
     }
   },
   computed: {
-    stringyRoomInfo: function() {
+    stringyRoomInfo: function () {
       return JSON.stringify(this.roomInfo);
     }
   },
   watch: {
-    monetizedByUser: function(){
+    monetizedByUser: function () {
       if (this.userRef) {
-        setMyOnlineData(this.userRef, {monetized: this.monetizedByUser})
+        setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
       }
     },
-    stringyRoomInfo: function(){
+    stringyRoomInfo: function () {
       this.checkMonetization();
     },
     $route() {
@@ -122,7 +105,7 @@ export default {
       }
     },
     updateUrl() {
-      if (!this.$route.params.userRole){
+      if (!this.$route.params.userRole) {
         this.currentUrl =
           "https://" + location.hostname.toString() + this.$route.fullPath;
       } else {
@@ -131,9 +114,9 @@ export default {
       // console.log('current URL is now', this.$route.params.userRole, this.currentUrl)
     },
     copyTextToClipboard() {
-      navigator.clipboard.writeText(this.currentUrl).then(function() {
+      navigator.clipboard.writeText(this.currentUrl).then(function () {
         console.log('copied url')
-      }, function() {
+      }, function () {
         console.log('copy failed')
       });
     },
@@ -145,6 +128,7 @@ export default {
 .live-player-counter {
   color: #343a40
 }
+
 .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
@@ -153,9 +137,11 @@ export default {
   0% {
     transform: scale(0);
   }
+
   50% {
     transform: scale(1.2);
   }
+
   100% {
     transform: scale(1);
   }

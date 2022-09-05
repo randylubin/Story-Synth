@@ -54,43 +54,43 @@
 </template>
 
 <script>
-  import { anonymousSignIn } from './firebase/auth.js';
-  import customGameData from './misc/customGameData'
- 
-  // import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue' // TODO push this to components
+import { anonymousSignIn } from './firebase/auth.js';
+import customGameData from './misc/customGameData'
 
-  export default {
-    name: 'app',
-    components: {
-      'app-header': () => import('./components/layout/Header.vue'),
+// import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue' // TODO push this to components
 
-      'app-homepage': () => import('./components/other/Homepage.vue'),
-      'app-gallery': () => import('./components/other/Gallery.vue'),
-      'app-formatsAndExtensions': () => import('./components/other/FormatsAndExtensionsOverview.vue'),
-      'app-grants': () => import('./components/other/Grants.vue'),
-      'app-CSSPlayground': () => import('./components/other/CSSPlayground.vue'),
+export default {
+  name: 'app',
+  components: {
+    'app-header': () => import('./components/layout/Header.vue'),
 
-      'app-game': () => import('./components/layout/Game.vue'),
-      'app-uploadPage': () => import('./components/launchers/UploadPage.vue'),
-      // 'app-customGameLauncher': () => import('./components/games/CustomGameLauncher.vue'),
-      // 'app-customGameSessionManager': CustomGameSessionManager,
-      
-    },
-    data () {
-      return {
-        firebaseAuth: false,
+    'app-homepage': () => import('./components/other/Homepage.vue'),
+    'app-gallery': () => import('./components/other/Gallery.vue'),
+    'app-formatsAndExtensions': () => import('./components/other/FormatsAndExtensionsOverview.vue'),
+    'app-grants': () => import('./components/other/Grants.vue'),
+    'app-CSSPlayground': () => import('./components/other/CSSPlayground.vue'),
+
+    'app-game': () => import('./components/layout/Game.vue'),
+    'app-uploadPage': () => import('./components/launchers/UploadPage.vue'),
+    // 'app-customGameLauncher': () => import('./components/games/CustomGameLauncher.vue'),
+    // 'app-customGameSessionManager': CustomGameSessionManager,
+
+  },
+  data() {
+    return {
+      firebaseAuth: false,
+    }
+  },
+  computed: {
+    gameType: function () {
+      if (this.$route.params.gameType != "Games") {
+        return this.$route.params.gameType;
+      } else {
+        return customGameData[this.$route.params.gSheetID]?.gameType ?? "Custom";
       }
-    },
-    computed: {
-      gameType: function () {
-        if (this.$route.params.gameType != "Games") {
-          return this.$route.params.gameType;
-        } else {
-          return customGameData[this.$route.params.gSheetID]?.gameType ?? "Custom";
-        }
-      }  
-    },
-    metaInfo () {
+    }
+  },
+  metaInfo() {
     return {
       title: "Story Synth",
       meta: [
@@ -139,12 +139,12 @@
           content: '$ilp.uphold.com/WMbkRBiZFgbx',
           vmid: 'monetization'
         },
-        
+
       ]
     }
   },
-    mounted () {
-      anonymousSignIn()
+  mounted() {
+    anonymousSignIn()
       .then(() => {
         // console.log('anon auth')
         this.firebaseAuth = true;
@@ -156,172 +156,187 @@
         // TODO display error message
       });
 
-    },
-    methods: {
-    }
+  },
+  methods: {
   }
+}
 </script>
 
 <style lang="scss">
+a {
+  color: #0071EB;
+}
 
+html {
+  height: 100%;
+}
+
+.btn-outline-dark:not(:hover),
+.btn-outline-primary:not(:hover) {
+  background-color: white;
+}
+
+.menu-bar .btn-outline-dark:not(:hover),
+.menu-bar .btn-outline-primary:not(:hover) {
+  background-color: transparent;
+}
+
+.message {
+  font-size: 2em;
+  margin-top: 1em;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .5s;
+}
+
+.fade-enter,
+.fade-leave-to
+
+/* .fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
+
+.app-main {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #000d1b;
+
+  position: relative;
+  min-height: 100vh;
+}
+
+.game-room {
+  text-align: center;
+  max-width: 600px;
+}
+
+body {
+  background: var(--light);
+  margin: auto;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  touch-action: manipulation;
+}
+
+h1,
+h2 {
+  font-weight: normal;
+}
+
+ul {
+  padding: 0;
+}
+
+ul.dropdown-menu>li {
+  list-style-type: none;
+}
+
+li {
+
+  list-style-type: disc;
+  display: list-item;
+  margin-left: 1.2rem
+}
+
+
+.margin-between-sections {
+  margin-bottom: 116px;
+}
+
+.padding-after-navbar {
+  padding-top: 124px;
+}
+
+.navbar {
+  backdrop-filter: blur(10px);
+  width: 100%;
+}
+
+ul.navbar-nav {
+  list-style-type: none;
+}
+
+li.nav-item {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.app-main .shadow {
+  box-shadow:
+    0 1px 1px hsl(0deg 0% 0% / 0.075),
+    0 2px 2px hsl(0deg 0% 0% / 0.075),
+    0 4px 4px hsl(0deg 0% 0% / 0.075),
+    0 8px 8px hsl(0deg 0% 0% / 0.075),
+    0 16px 16px hsl(0deg 0% 0% / 0.075) !important;
+}
+
+.extension h2 {
+  font-size: 1.5rem;
+}
+
+.non-footer-content {
+  padding-bottom: 8.5rem;
+}
+
+.demoInfo {
   a {
-    color: #0071EB;
+    color: black;
   }
+}
 
-  html {
-    height: 100%;
-  }
+// Utility classes  
+:root {
+  --ds-rounding: 14px;
+}
 
-  .btn-outline-dark:not(:hover), .btn-outline-primary:not(:hover) {
-    background-color:white;
-  }
+.rounded-m {
+  border-radius: var(--ds-rounding);
+}
 
-  .menu-bar .btn-outline-dark:not(:hover), .menu-bar .btn-outline-primary:not(:hover) {
-    background-color: transparent;
-  }
+.clipped {
+  overflow: hidden;
+}
 
-  .message{
-    font-size: 2em;
-    margin-top: 1em;
-  }
+.card {
+  border-radius: var(--ds-rounding);
+  overflow: hidden;
+}
 
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
-
-  .app-main {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #000d1b;
-    
-    position: relative;
-    min-height: 100vh;
-  }
-
-  .game-room {
-    text-align: center;
-    max-width:600px;
-  }
-
-  body {
-    background: var(--light);
-    margin: auto;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    touch-action: manipulation;
-  }
-
-  h1, h2 {
-    font-weight: normal;
-  }
-
-  ul {
-    padding: 0;
-  }
-
-  ul.dropdown-menu > li{
-    list-style-type: none;
-  }
-
-  li {
-
-    list-style-type: disc;
-    display: list-item;
-    margin-left: 1.2rem
-    
-  }
-
-
-  .margin-between-sections {
-    margin-bottom: 116px;
-  }
-
-  .padding-after-navbar {
-    padding-top: 124px;
-  }
-  .navbar {
-    backdrop-filter: blur(10px);
-    width: 100%;
-  }
-  ul.navbar-nav {
-    list-style-type: none;
-  }
-
-  li.nav-item {
-    display: inline-block;
-    margin: 0 10px;
-  }
-
-  .app-main .shadow {
-    box-shadow:
-      0 1px 1px hsl(0deg 0% 0% / 0.075),
-      0 2px 2px hsl(0deg 0% 0% / 0.075),
-      0 4px 4px hsl(0deg 0% 0% / 0.075),
-      0 8px 8px hsl(0deg 0% 0% / 0.075),
-      0 16px 16px hsl(0deg 0% 0% / 0.075) !important
-    ;
-  }
-
-  .extension h2 {
-    font-size: 1.5rem;
-  }
-
-  .non-footer-content {
-    padding-bottom: 8.5rem;
-  }
-
-  .demoInfo {
-    a {
-      color: black;
-    }
-  }
-
-  // Utility classes  
-  :root {
-    --ds-rounding: 14px;
-  }  
-  .rounded-m {
-    border-radius: var(--ds-rounding);
-  }
-  .clipped {
-    overflow: hidden;
-  }
-  .card {
-    border-radius: var(--ds-rounding);
-    overflow: hidden;
-  }
-  .card-img {
-    border-radius: 0;
-  }
+.card-img {
+  border-radius: 0;
+}
 
 .btn-fab.shadow {
   border-width: 0;
   box-shadow:
-      0 1px 1px hsl(0deg 0% 0% / 0.075),
-      0 2px 2px hsl(0deg 0% 0% / 0.075),
-      0 4px 4px hsl(0deg 0% 0% / 0.075),
-      0 8px 8px hsl(0deg 0% 0% / 0.075),
-      0 16px 16px hsl(0deg 0% 0% / 0.075),
-      0 0px 5px hsl(0deg 0% 0% / .15) !important
-    ;
+    0 1px 1px hsl(0deg 0% 0% / 0.075),
+    0 2px 2px hsl(0deg 0% 0% / 0.075),
+    0 4px 4px hsl(0deg 0% 0% / 0.075),
+    0 8px 8px hsl(0deg 0% 0% / 0.075),
+    0 16px 16px hsl(0deg 0% 0% / 0.075),
+    0 0px 5px hsl(0deg 0% 0% / .15) !important;
 }
+
 .btn-fab:not(:hover) {
   background: white;
 }
+
 .btn-fab svg {
   transition: transform 0.2s;
 }
+
 .btn-fab:hover:not([disabled="disabled"]) svg {
   transform: scale(1.1);
 }
+
 .btn-fab[disabled="disabled"] {
   background: white;
 
-  svg{
+  svg {
     color: var(--secondary);
   }
 }
@@ -333,13 +348,14 @@
     z-index: 100000;
     bottom: 48px;
   }
+
   .btn-fab {
-    --fab-diameter: 90px;  
-    --fab-spacing: 28px;  
-    border-radius: var(--fab-diameter); 
-    width: var(--fab-diameter); 
-    height: var(--fab-diameter); 
-    
+    --fab-diameter: 90px;
+    --fab-spacing: 28px;
+    border-radius: var(--fab-diameter);
+    width: var(--fab-diameter);
+    height: var(--fab-diameter);
+
     // &.btn-fab-left {
     // 
     // }
@@ -349,22 +365,25 @@
     }
   }
 }
+
 @media (min-width: 800px) {
   .fab-buttons {
     position: relative;
     width: 100%;
   }
+
   .btn-fab {
-    --fab-diameter: 90px;  
-    border-radius: var(--fab-diameter); 
-    width: var(--fab-diameter); 
-    height: var(--fab-diameter); 
+    --fab-diameter: 90px;
+    border-radius: var(--fab-diameter);
+    width: var(--fab-diameter);
+    height: var(--fab-diameter);
     margin-top: 120px;
     position: absolute;
-    
+
     &.btn-fab-left {
       left: calc(-20px - var(--fab-diameter));
     }
+
     &.btn-fab-right {
       right: calc(-20px - var(--fab-diameter));
     }
@@ -376,19 +395,19 @@
   margin-bottom: 10px;
 }
 
-.demoInfo, .alert-info {
-    color: #0c5460;
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-    text-shadow: none !important;
+.demoInfo,
+.alert-info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  text-shadow: none !important;
 
-    a {
-      color: #0071EB !important;
-    }
+  a {
+    color: #0071EB !important;
+  }
 }
 
 .edit-button {
   border: none;
 }
-
 </style>

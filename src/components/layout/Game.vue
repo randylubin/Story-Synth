@@ -1,10 +1,7 @@
 <template>
   <div class="container game-container">
     <!-- Loading Spinner -->
-    <b-overlay
-      :show="(!dataReady || (!firebaseReady && $route.params.roomID)) && !error"
-      no-wrap
-    >
+    <b-overlay :show="(!dataReady || (!firebaseReady && $route.params.roomID)) && !error" no-wrap>
       <template #overlay>
         <h1>Loading</h1>
         <div v-if="customOptions.debugLoading == 'TRUE'">
@@ -12,94 +9,55 @@
           <div>Firebase ready: {{ firebaseReady }}</div>
           <div>Error: {{ error }}</div>
         </div>
-        <b-spinner
-          class="m-5"
-          style="width: 4rem; height: 4rem"
-          label="Busy"
-        ></b-spinner>
+        <b-spinner class="m-5" style="width: 4rem; height: 4rem" label="Busy"></b-spinner>
       </template>
     </b-overlay>
 
     <!-- Game Launcher -->
-    <app-gameLauncher
-      :routeGSheetID="gSheetID"
-      :routeGameType="gameType"
-      :customOptions="customOptions"
-      v-if="dataReady && !roomID && gSheetID && !gameAsExtension"
-    >
+    <app-gameLauncher :routeGSheetID="gSheetID" :routeGameType="gameType" :customOptions="customOptions"
+      v-if="dataReady && !roomID && gSheetID && !gameAsExtension">
     </app-gameLauncher>
 
     <!-- Game Session -->
     <div v-if="roomID && gSheetID">
       <div class="full-page-background" v-if="!gameAsExtension"></div>
       <div v-dompurify-html="customOptions.style"></div>
-      <app-monetization
-        class="monetization-component"
-        :customOptions="customOptions"
-        :roomMonetized="roomMonetized"
-      >
+      <app-monetization class="monetization-component" :customOptions="customOptions" :roomMonetized="roomMonetized">
       </app-monetization>
 
       <!-- The Main Format Component -->
-      <component
-        :is="formatInfo.componentName"
-        :roomID="roomID"
-        :roomInfo="roomInfo"
-        :sheetData="sheetData"
-        :gSheetID="gSheetID"
-        :gameType="gameType"
-        :userRole="$route.params.userRole"
-        :gameAsExtension="gameAsExtension"
-        :tempExtensionData="tempExtensionData"
-        :firebaseReady="firebaseReady"
-        :monetizedByUser="monetizedByUser"
-        :roomMonetized="roomMonetized"
-        @firebase-update="firebaseUpdate($event)"
-        @firebase-set="firebaseSet($event)"
+      <component :is="formatInfo.componentName" :roomID="roomID" :roomInfo="roomInfo" :sheetData="sheetData"
+        :gSheetID="gSheetID" :gameType="gameType" :userRole="$route.params.userRole" :gameAsExtension="gameAsExtension"
+        :tempExtensionData="tempExtensionData" :firebaseReady="firebaseReady" :monetizedByUser="monetizedByUser"
+        :roomMonetized="roomMonetized" @firebase-update="firebaseUpdate($event)" @firebase-set="firebaseSet($event)"
         @roomMonetized="updateRoomMonetization($event)"
-        v-if="gameType != 'Custom' && dataReady && firebaseReady && sheetData"
-      >
+        v-if="gameType != 'Custom' && dataReady && firebaseReady && sheetData">
         <template v-slot:upper-extensions>
           <!-- Upper Extension -->
-          <div
-            v-if="
-              dataReady &&
-              firebaseReady &&
-              roomInfo &&
-              Object.keys(roomInfo.extensionData) != 0
-            "
-          >
-            <app-extensionManager
-              @sync-extension="syncExtension($event)"
-              :extensionData="roomInfo.extensionData"
-              :extensionList="tempExtensionData"
-              :roomInfo="roomInfo"
-              :extensionLocation="'upper'"
-              class="extension-upper"
-            >
+          <div v-if="
+            dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData) != 0
+          ">
+            <app-extensionManager @sync-extension="syncExtension($event)" :extensionData="roomInfo.extensionData"
+              :extensionList="tempExtensionData" :roomInfo="roomInfo" :extensionLocation="'upper'"
+              class="extension-upper">
             </app-extensionManager>
           </div>
         </template>
 
         <template v-slot:lower-extensions>
           <!-- Lower Extension -->
-          <div
-            v-if="
-              dataReady &&
-              firebaseReady &&
-              roomInfo &&
-              Object.keys(roomInfo.extensionData) != 0
-            "
-            class="extension-container"
-          >
-            <app-extensionManager
-              @sync-extension="syncExtension($event)"
-              :extensionData="roomInfo.extensionData"
-              :extensionList="tempExtensionData"
-              :roomInfo="roomInfo"
-              :extensionLocation="'lower'"
-              class="extension-lower"
-            >
+          <div v-if="
+            dataReady &&
+            firebaseReady &&
+            roomInfo &&
+            Object.keys(roomInfo.extensionData) != 0
+          " class="extension-container">
+            <app-extensionManager @sync-extension="syncExtension($event)" :extensionData="roomInfo.extensionData"
+              :extensionList="tempExtensionData" :roomInfo="roomInfo" :extensionLocation="'lower'"
+              class="extension-lower">
             </app-extensionManager>
           </div>
         </template>
@@ -108,11 +66,8 @@
     <!-- <div v-if="customOptions.wallet">
       <link v-for="wallet in customOptions.wallet" :key="wallet" rel="monetization" v-bind:href="wallet">
     </div> -->
-    <link
-      v-bind:href="selectedWallet"
-      rel="monetization"
-      onmonetization="console.log('monetization event triggered')"
-    />
+    <link v-bind:href="selectedWallet" rel="monetization"
+      onmonetization="console.log('monetization event triggered')" />
   </div>
 </template>
 
@@ -357,7 +312,7 @@ export default {
             rawSheetData.forEach((item, i) => {
               cleanData.push([])
               if (item.values && item.values[0]) {
-                for (let v = 0; v < item.values.length; v++){
+                for (let v = 0; v < item.values.length; v++) {
                   if (item.values[v] && item.values[v].formattedValue) {
                     cleanData[i].push(item.values[v].formattedValue);
                   } else {

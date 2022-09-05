@@ -63,21 +63,21 @@
           </div>
 
           <div class="row mt-4" v-if="
-              routeGSheetID &&
-              !customOptions.gameTitle &&
-              !customOptions.byline &&
-              !customOptions.gameBlurb &&
-              !customOptions.gameCover
-            ">
+            routeGSheetID &&
+            !customOptions.gameTitle &&
+            !customOptions.byline &&
+            !customOptions.gameBlurb &&
+            !customOptions.gameCover
+          ">
             <div class="col-sm text-center">
               <h1>Playtest with Story Synth</h1>
               <div class="col-sm">
                 This session will use the {{ routeGameType }} template and
                 <a v-bind:href="
-                    'https://docs.google.com/spreadsheets/d/' +
-                    routeGSheetID +
-                    '/edit?usp=sharing'
-                  " target="_blank">this Google Sheet</a>
+                  'https://docs.google.com/spreadsheets/d/' +
+                  routeGSheetID +
+                  '/edit?usp=sharing'
+                " target="_blank">this Google Sheet</a>
                 for game content. You can <a href="/">clear these defaults</a>,
                 if you'd like.
               </div>
@@ -136,8 +136,8 @@
           </div>
 
           <div class="row mb-5" v-if="
-              !customOptions.password || passwordInput == customOptions.password
-            ">
+            !customOptions.password || passwordInput == customOptions.password
+          ">
             <div class="col-sm text-center">
               <router-link :to="{ path: constructURL($route.fullPath, roomID) }">
                 <button :disabled="!roomID" type="button" class="btn btn-dark">
@@ -231,13 +231,13 @@ export default {
         routeFullPath = routeFullPath.slice(0, -1);
       }
 
-      let tempURL = routeFullPath.slice(0,routeFullPath.lastIndexOf("/"))
+      let tempURL = routeFullPath.slice(0, routeFullPath.lastIndexOf("/"))
 
       let sheetID = this.vanityLookup[this.routeGSheetID] ? this.vanityLookup[this.routeGSheetID] : this.routeGSheetID;
 
       tempURL = tempURL + "/" + sheetID + "/" + roomID
 
-      if (this.customOptions.facilitatorMode){
+      if (this.customOptions.facilitatorMode) {
         tempURL += '/facilitator/'
       }
 

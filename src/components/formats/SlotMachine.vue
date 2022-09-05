@@ -54,16 +54,16 @@
         v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex))">
         <button class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
           v-on:click="previousCard()" v-b-tooltip.hover title="Previous Card" :disabled="
-                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
-              ">
+            roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
+          ">
           <!-- Previous Card -->
           <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
           <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
         </button>
         <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
           title="Next Card" v-on:click="nextCard()" :disabled="
-                roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1
-              ">
+            roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1
+          ">
           <!-- Next Card -->
           <div v-if="roomInfo.currentCardIndex == 0">
             <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
@@ -92,7 +92,7 @@
       class="mb-4">
       <transition name="fade">
         <div class="card d-flex shadow img-fluid"
-          v-bind:class="{'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0)}">
+          v-bind:class="{ 'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0) }">
           <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%"
             v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
           <img v-bind:src="customOptions.cardBackgroundImage" class="card-img-top card-background" style="width:100%"
@@ -100,7 +100,7 @@
 
           <div class="card-body justify-content-center mt-2"
             v-if="!roomInfo.xCardIsActive && (!customOptions.coverImage || roomInfo.currentCardIndex != 0)"
-            v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
+            v-bind:class="{ 'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
             <div class="row mb-4"
               v-if="customOptions.instructionsProgressBar && roomInfo.currentCardIndex < firstNonInstruction && roomInfo.currentCardIndex != 0">
               <div class="col-sm">
@@ -120,7 +120,7 @@
             <div
               v-if="Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'">
               <div v-for="(index) in numberOfWheels" v-bind:key="index"
-                v-dompurify-html="wheels[index-1][roomInfo.cardSequence[roomInfo.currentCardIndex][index-1]]">
+                v-dompurify-html="wheels[index - 1][roomInfo.cardSequence[roomInfo.currentCardIndex][index - 1]]">
 
               </div>
             </div>
@@ -128,7 +128,7 @@
           </div>
 
           <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive"
-            v-bind:class="{'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
+            v-bind:class="{ 'card-body': !customOptions.cardBackgroundImage, 'card-img-overlay': customOptions.cardBackgroundImage }">
             <div class="mt-5 pt-5 mb-5">
               <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
               <div class="safety-card-tet" v-dompurify-html="customOptions.safetyCardText"
@@ -181,11 +181,11 @@ export default {
     roomMonetized: Boolean,
     monetizedByUser: Boolean,
   },
-  data: function(){
+  data: function () {
     return {
       firstNonInstruction: 0,
       dataReady: false,
-      gSheet: [{text:"loading"}],
+      gSheet: [{ text: "loading" }],
       numberOfWheels: 0,
       wheels: [],
       orderedCards: [],
@@ -203,21 +203,21 @@ export default {
     }
   },
   watch: {
-    sheetData: function(){
+    sheetData: function () {
       this.processSheetData();
     },
-    firebaseReady: function(){
-      if (this.firebaseReady && !this.roomInfo){
+    firebaseReady: function () {
+      if (this.firebaseReady && !this.roomInfo) {
         this.initialFirebaseSetup()
       }
     },
   },
-  mounted(){
-    if (this.sheetData){
+  mounted() {
+    if (this.sheetData) {
       this.processSheetData();
     }
 
-    if (this.firebaseReady && !this.roomInfo){
+    if (this.firebaseReady && !this.roomInfo) {
       this.initialFirebaseSetup()
     }
   },
@@ -235,49 +235,49 @@ export default {
         this.shuffle();
       }
     },
-    closeMenu(){
+    closeMenu() {
       this.$bvModal.hide("menuModal");
     },
-    copyLinkToClipboard(){
+    copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath
-      navigator.clipboard.writeText(currentUrl).then(function() {
+      navigator.clipboard.writeText(currentUrl).then(function () {
         console.log('copied url')
-      }, function() {
+      }, function () {
         console.log('copy failed')
       });
     },
-    previousCard(){
-      this.$emit('firebase-update',{
+    previousCard() {
+      this.$emit('firebase-update', {
         currentCardIndex: this.roomInfo.currentCardIndex -= 1
       })
     },
-    nextCard(){
-      if (this.roomInfo.cardSequence.length == 1){
+    nextCard() {
+      if (this.roomInfo.cardSequence.length == 1) {
         this.shuffle();
       }
-      this.$emit('firebase-update',{
+      this.$emit('firebase-update', {
         currentCardIndex: this.roomInfo.currentCardIndex += 1
       })
     },
-    lastCard(){
-      if (this.roomInfo.cardSequence.length == 1){
+    lastCard() {
+      if (this.roomInfo.cardSequence.length == 1) {
         this.shuffle();
       }
 
-      this.$emit('firebase-update',{
-        currentCardIndex: this.gSheet.length -1
+      this.$emit('firebase-update', {
+        currentCardIndex: this.gSheet.length - 1
       })
     },
-    xCard(){
-      this.$emit('firebase-update',{
+    xCard() {
+      this.$emit('firebase-update', {
         xCardIsActive: !this.roomInfo.xCardIsActive
       })
     },
-    shuffle(){
+    shuffle() {
       this.$bvModal.hide('reshuffleConfirm')
 
       // reset card count
-      this.$emit('firebase-update',{
+      this.$emit('firebase-update', {
         currentCardIndex: 0
       })
 
@@ -287,13 +287,13 @@ export default {
 
       // add in the ordered cards
       for (var i = 0; i < this.gSheet.length; i++) {
-        if (this.gSheet[i].ordered == 0){
+        if (this.gSheet[i].ordered == 0) {
           newCardSequence.push(i)
         }
       }
 
       // Shuffle deck function
-      var shuffleDeck = function (deck){
+      var shuffleDeck = function (deck) {
         for (var n = deck.length - 1; n > 0; n--) {
           let j = Math.floor(Math.random() * (n + 1));
           [deck[n], deck[j]] = [deck[j], deck[n]];
@@ -303,10 +303,10 @@ export default {
 
       // create an array of the wheel length
       var wheelsIndexArray = []
-      
+
       for (var j = 0; j < this.wheels.length; j++) {
         wheelsIndexArray.push([])
-        for (i = 0; i < this.wheels[0].length; i++){
+        for (i = 0; i < this.wheels[0].length; i++) {
           wheelsIndexArray[j].push(i);
         }
         wheelsIndexArray[j] = shuffleDeck(wheelsIndexArray[j])
@@ -315,7 +315,7 @@ export default {
       var newEmptyCard
       for (i = 0; i < this.wheels[0].length; i++) {
         newEmptyCard = {};
-        for (j = 0; j < this.numberOfWheels; j++){
+        for (j = 0; j < this.numberOfWheels; j++) {
           newEmptyCard[j] = wheelsIndexArray[j][i]
         }
 
@@ -327,13 +327,13 @@ export default {
 
       // add last cards
       for (var l = 0; l < this.gSheet.length; l++) {
-        if (this.gSheet[l].ordered >= 2){
+        if (this.gSheet[l].ordered >= 2) {
           newCardSequence.push(l)
         }
       }
 
       // sync the shuffled array
-      this.$emit('firebase-update',{
+      this.$emit('firebase-update', {
         cardSequence: newCardSequence,
       })
 
@@ -341,27 +341,27 @@ export default {
     processSheetData() {
       let cleanData = [];
 
-      if (this.sheetData){
+      if (this.sheetData) {
         this.numberOfWheels = this.sheetData[0].length - 3
-        
+
         for (var w = 0; w < this.numberOfWheels; w++) {
           this.wheels.push([])
         }
 
         this.sheetData.forEach((item, i) => {
-          if (i !== 0 && item[0]){
+          if (i !== 0 && item[0]) {
 
             // Handle options
-            if (item[0] == "option"){
+            if (item[0] == "option") {
               this.customOptions[item[1]] =
                 this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
               console.log(item[2])
             }
 
-            if (item[0] !== "option" && item[0] !== "extension"){
+            if (item[0] !== "option" && item[0] !== "extension") {
 
               var rowInfo = {}
-              if (item[0] >= 0){
+              if (item[0] >= 0) {
                 rowInfo = {
                   ordered: item[0],
                   headerText: item[1],
@@ -369,11 +369,11 @@ export default {
                 }
                 cleanData.push(rowInfo)
 
-                if (item[0] == 0){
+                if (item[0] == 0) {
                   this.firstNonInstruction += 1
                 }
 
-                if (item[0] == 1){
+                if (item[0] == 1) {
                   for (var j = 3; j < item.length; j++) {
                     if (item[j]) {
                       this.wheels[j - 3].push(this.$marked(item[j]))
@@ -383,7 +383,7 @@ export default {
               }
             }
 
-            
+
           }
         });
 
@@ -393,9 +393,9 @@ export default {
         console.log('done fetching and cleaning data')
         this.dataReady = true;
 
-        if(this.firebaseReady && this.roomInfo?.cardSequence.length < 4){this.shuffle();}
+        if (this.firebaseReady && this.roomInfo?.cardSequence.length < 4) { this.shuffle(); }
 
-      }  
+      }
     }
   }
 }
@@ -405,28 +405,33 @@ export default {
 
 
 <style scoped>
+.slot-machine {
 
-  .slot-machine{
+  margin: auto;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
 
-    margin:auto;
-    padding-top: 1em;
-    padding-bottom: 1em;
-  }
+.card-body {
+  font-size: 1.5em;
+  min-height: 11em;
+}
 
-  .card-body{
-    font-size: 1.5em;
-    min-height: 11em;
-  }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .5s;
+}
 
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    opacity: 0;
-  }
-  .x-card-text {
-    font-size: .5em;
-    text-decoration: underline;
-  }
+.fade-enter,
+.fade-leave-to
 
+/* .fade-leave-active below version 2.1.8 */
+  {
+  opacity: 0;
+}
+
+.x-card-text {
+  font-size: .5em;
+  text-decoration: underline;
+}
 </style>

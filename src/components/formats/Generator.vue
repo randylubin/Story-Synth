@@ -1,17 +1,30 @@
 <template>
-  <div class="generator game-room" v-if="roomInfo"
-    v-bind:class="{'px-0': gameAsExtension, styleTemplate: styleTemplate}">
-    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
-      :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
-      :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)" v-if="!gameAsExtension">
+  <div
+    class="generator game-room"
+    v-if="roomInfo"
+    v-bind:class="{ 'px-0': gameAsExtension, styleTemplate: styleTemplate }"
+  >
+    <app-menuBar
+      :roomInfo="roomInfo"
+      :tempExtensionData="tempExtensionData"
+      :customOptions="customOptions"
+      :monetizedByUser="monetizedByUser"
+      :routeRoomID="$route.params.roomID"
+      :dataReady="dataReady"
+      :firebaseReady="firebaseReady"
+      @roomMonetized="$emit('roomMonetized', true)"
+      v-if="!gameAsExtension"
+    >
     </app-menuBar>
 
-    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by <a
-        :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
-      it to design your own game!</b-alert>
+    <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo"
+      >This demo is powered by
+      <a :href="customOptions.demoInfo" target="_blank"
+        >this Google Sheet Template</a
+      >. Copy the sheet and start editing it to design your own game!</b-alert
+    >
 
-    <slot name="upper-extensions">
-    </slot>
+    <slot name="upper-extensions"> </slot>
 
     <div class="game-meta">
       <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
@@ -34,61 +47,105 @@
     </div>
 
     <div class="mb-4">
-
       <div class="mt-4 generator-main card shadow mb-4">
-        <div class="game-title-on-card mt-4" v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard">
-          <h1>{{customOptions.gameTitle}}</h1>
+        <div
+          class="game-title-on-card mt-4"
+          v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard"
+        >
+          <h1>{{ customOptions.gameTitle }}</h1>
         </div>
         <div class="regenerate-button my-4">
           <b-form inline class="justify-content-center">
             <b-button v-on:click="shuffleAll()" class="btn btn-dark mx-2 my-1">
               <span>Randomize All</span>
-              <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
+              <b-icon
+                class="generator-cell-reroll-icon"
+                icon="arrow-clockwise"
+              ></b-icon>
             </b-button>
-            <b-form-select v-model="generatorView" class="mx-2 my-1"
-              v-if="customOptions.showSummary || customOptions.showFullLists">
-              <b-form-select-option value="Grid View">Grid View</b-form-select-option>
-              <b-form-select-option value="Summary View" v-if="customOptions.showSummary">Summary View
+            <b-form-select
+              v-model="generatorView"
+              class="mx-2 my-1"
+              v-if="customOptions.showSummary || customOptions.showFullLists"
+            >
+              <b-form-select-option value="Grid View"
+                >Grid View</b-form-select-option
+              >
+              <b-form-select-option
+                value="Summary View"
+                v-if="customOptions.showSummary"
+                >Summary View
               </b-form-select-option>
-              <b-form-select-option value="Full View" v-if="customOptions.showFullLists">Full View
+              <b-form-select-option
+                value="Full View"
+                v-if="customOptions.showFullLists"
+                >Full View
               </b-form-select-option>
             </b-form-select>
           </b-form>
         </div>
 
-
-        <div class='pl-3 pr-3' v-if="generatorView == 'Grid View'">
-
+        <div class="pl-3 pr-3" v-if="generatorView == 'Grid View'">
           <div class="row generator-row">
-            <button v-for="index in numberOfCategories" v-bind:key="index"
-              v-bind:class="customOptions.generatorRowLayout[index - 1]" v-on:click="shuffleOne(index)" tabindex="0">
+            <button
+              v-for="index in numberOfCategories"
+              v-bind:key="index"
+              v-bind:class="customOptions.generatorRowLayout[index - 1]"
+              v-on:click="shuffleOne(index)"
+              tabindex="0"
+            >
               <transition name="reroll" mode="out-in">
-                <div class="mt-4 mb-3 generator-cell-contents" :key="
+                <div
+                  class="mt-4 mb-3 generator-cell-contents"
+                  :key="
                     categoryData[index - 1][
                       roomInfo.currentGeneratorSelection[index - 1]
                     ]
-                  ">
+                  "
+                >
                   <div class="mb-2">
-                    <div v-dompurify-html="categoryLabels[index - 1]" v-if="!customOptions.hideLabels"
-                      class="generator-cell-label px-2" style="cursor: pointer"></div>
+                    <div
+                      v-dompurify-html="categoryLabels[index - 1]"
+                      v-if="!customOptions.hideLabels"
+                      class="generator-cell-label px-2"
+                      style="cursor: pointer"
+                    ></div>
                   </div>
 
-                  <div :key="
-                        categoryData[index - 1][
-                          roomInfo.currentGeneratorSelection[index - 1]
-                        ]
-                      " v-dompurify-html="
-                        categoryData[index - 1][
-                          roomInfo.currentGeneratorSelection[index - 1]
-                        ]
-                      " class="generator-cell-body mb-2"
-                    v-bind:class="{'generator-cell-full-small': String(categoryData[index - 1][roomInfo.currentGeneratorSelection[index - 1]]).length >= 50}">
-                  </div>
-                  <div class="generator-cell-reroll-button" v-if="categoryData[index - 1][
-                          roomInfo.currentGeneratorSelection[index - 1]
-                        ] && (categoryData[index-1].length > 1)">
+                  <div
+                    :key="
+                      categoryData[index - 1][
+                        roomInfo.currentGeneratorSelection[index - 1]
+                      ]
+                    "
+                    v-dompurify-html="
+                      categoryData[index - 1][
+                        roomInfo.currentGeneratorSelection[index - 1]
+                      ]
+                    "
+                    class="generator-cell-body mb-2"
+                    v-bind:class="{
+                      'generator-cell-full-small':
+                        String(
+                          categoryData[index - 1][
+                            roomInfo.currentGeneratorSelection[index - 1]
+                          ]
+                        ).length >= 50,
+                    }"
+                  ></div>
+                  <div
+                    class="generator-cell-reroll-button"
+                    v-if="
+                      categoryData[index - 1][
+                        roomInfo.currentGeneratorSelection[index - 1]
+                      ] && categoryData[index - 1].length > 1
+                    "
+                  >
                     <span>Reroll</span>
-                    <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
+                    <b-icon
+                      class="generator-cell-reroll-icon"
+                      icon="arrow-clockwise"
+                    ></b-icon>
                   </div>
                 </div>
               </transition>
@@ -96,58 +153,96 @@
           </div>
         </div>
 
-        <div class='pl-3 pr-3' v-if="generatorView == 'Summary View'">
+        <div class="pl-3 pr-3" v-if="generatorView == 'Summary View'">
           <div class="row generator-summary text-left my-5">
-            <div v-for="index in numberOfCategories" v-bind:key="index" class="col-12">
-              <div v-on:click="shuffleOne(index)" class="" style="cursor: pointer">
-                <span v-dompurify-html="categoryLabels[index - 1] + ':'" v-if="!customOptions.hideLabels"
-                  class="summary-category-label px-2 font-weight-bold"></span>
+            <div
+              v-for="index in numberOfCategories"
+              v-bind:key="index"
+              class="col-12"
+            >
+              <div
+                v-on:click="shuffleOne(index)"
+                class=""
+                style="cursor: pointer"
+              >
+                <span
+                  v-dompurify-html="categoryLabels[index - 1] + ':'"
+                  v-if="!customOptions.hideLabels"
+                  class="summary-category-label px-2 font-weight-bold"
+                ></span>
                 <transition-group name="reroll-list" mode="out-in">
-                  <span :key="
-                      roomInfo.currentGeneratorSelection[index - 1]
-                    " v-dompurify-html="
+                  <span
+                    :key="roomInfo.currentGeneratorSelection[index - 1]"
+                    v-dompurify-html="
                       categoryData[index - 1][
                         roomInfo.currentGeneratorSelection[index - 1]
                       ]
-                    " class="summary-category-body font-weight-normal mb-2"></span>
+                    "
+                    class="summary-category-body font-weight-normal mb-2"
+                  ></span>
                 </transition-group>
-                <b-icon v-on:click="shuffleOne(index)" class='ml-2 generator-cell-reroll-icon' icon="arrow-clockwise">
+                <b-icon
+                  v-on:click="shuffleOne(index)"
+                  class="ml-2 generator-cell-reroll-icon"
+                  icon="arrow-clockwise"
+                >
                 </b-icon>
               </div>
             </div>
           </div>
         </div>
 
-        <div class='pl-3 pr-3' v-if="generatorView == 'Full View'">
+        <div class="pl-3 pr-3" v-if="generatorView == 'Full View'">
           <div class="row generator-row generator-full">
-            <div v-for="index in numberOfCategories" v-bind:key="index"
-              v-bind:class="customOptions.generatorRowLayout[index - 1]">
+            <div
+              v-for="index in numberOfCategories"
+              v-bind:key="index"
+              v-bind:class="customOptions.generatorRowLayout[index - 1]"
+            >
               <div class="my-4 generator-cell-contents">
                 <div class="mb-2">
-                  <div v-dompurify-html="categoryLabels[index - 1]" v-on:click="shuffleOne(index)"
-                    v-if="!customOptions.hideLabels" class="generator-cell-label px-2"></div>
+                  <div
+                    v-dompurify-html="categoryLabels[index - 1]"
+                    v-on:click="shuffleOne(index)"
+                    v-if="!customOptions.hideLabels"
+                    class="generator-cell-label px-2"
+                  ></div>
                 </div>
-                <div v-for="(option, optionIndex) in categoryData[index - 1]" v-bind:key="option">
+                <div
+                  v-for="(option, optionIndex) in categoryData[index - 1]"
+                  v-bind:key="option"
+                >
                   <transition name="reroll-list" mode="out-in">
-                    <span v-dompurify-html="option" v-on:click="selectOne(index, optionIndex)"
-                      class="font-weight-normal" v-bind:class="{
+                    <span
+                      v-dompurify-html="option"
+                      v-on:click="selectOne(index, optionIndex)"
+                      class="font-weight-normal"
+                      v-bind:class="{
                         'font-weight-bolder':
                           option ==
                           categoryData[index - 1][
                             roomInfo.currentGeneratorSelection[index - 1]
                           ],
-                      }" style="cursor: pointer;" :key="roomInfo.currentGeneratorSelection[index - 1]"></span>
+                      }"
+                      style="cursor: pointer"
+                      :key="roomInfo.currentGeneratorSelection[index - 1]"
+                    ></span>
                   </transition>
                 </div>
-                <div v-on:click="shuffleOne(index)" class="generator-cell-reroll-button"
-                  v-if="customOptions.rerollButton">
+                <div
+                  v-on:click="shuffleOne(index)"
+                  class="generator-cell-reroll-button"
+                  v-if="customOptions.rerollButton"
+                >
                   <span>Random</span>
-                  <b-icon class='generator-cell-reroll-icon' icon="arrow-clockwise"></b-icon>
+                  <b-icon
+                    class="generator-cell-reroll-icon"
+                    icon="arrow-clockwise"
+                  ></b-icon>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -155,9 +250,7 @@
         <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>
       </div>
 
-      <slot name="lower-extensions">
-      </slot>
-
+      <slot name="lower-extensions"> </slot>
     </div>
   </div>
 </template>
@@ -166,7 +259,7 @@
 export default {
   name: "app-generator",
   components: {
-    'app-menuBar': () => import("../layout/MenuBar.vue"),
+    "app-menuBar": () => import("../layout/MenuBar.vue"),
   },
   props: {
     roomID: String,
@@ -184,7 +277,7 @@ export default {
       dataReady: false,
       gSheet: [{ text: "loading" }],
       generatorLayout: [],
-      generatorView: 'Grid View',
+      generatorView: "Grid View",
       numberOfCategories: 0,
       categoryLabels: [],
       categoryData: [],
@@ -202,46 +295,47 @@ export default {
     };
   },
   watch: {
-    sheetData: function(){
+    sheetData: function () {
       this.processSheetData();
     },
-    firebaseReady: function(){
-      if (this.firebaseReady && !this.roomInfo){
-        this.initialFirebaseSetup()
+    firebaseReady: function () {
+      if (this.firebaseReady && !this.roomInfo) {
+        this.initialFirebaseSetup();
       }
     },
   },
   mounted() {
-    if (this.sheetData){
+    if (this.sheetData) {
       this.processSheetData();
     }
 
-    if (this.firebaseReady && !this.roomInfo){
-      this.initialFirebaseSetup()
+    if (this.firebaseReady && !this.roomInfo) {
+      this.initialFirebaseSetup();
     }
   },
   methods: {
     initialFirebaseSetup() {
-      this.$emit('firebase-set',
-        {
-          extensionData: this.tempExtensionData,
-          currentGeneratorSelection: [0, 1, 2],
-        }
-      )
+      this.$emit("firebase-set", {
+        extensionData: this.tempExtensionData,
+        currentGeneratorSelection: [0, 1, 2],
+      });
       if (this.dataReady) {
         this.shuffleAll();
       }
     },
-    closeMenu(){
+    closeMenu() {
       this.$bvModal.hide("menuModal");
     },
-    copyLinkToClipboard(){
-      let currentUrl = location.hostname.toString() + this.$route.fullPath
-      navigator.clipboard.writeText(currentUrl).then(function() {
-        console.log('copied url')
-      }, function() {
-        console.log('copy failed')
-      });
+    copyLinkToClipboard() {
+      let currentUrl = location.hostname.toString() + this.$route.fullPath;
+      navigator.clipboard.writeText(currentUrl).then(
+        function () {
+          console.log("copied url");
+        },
+        function () {
+          console.log("copy failed");
+        }
+      );
     },
     shuffleAll() {
       let newGeneratorSelection = [];
@@ -255,7 +349,7 @@ export default {
       console.log("new generator picks:", newGeneratorSelection);
 
       // sync the shuffled array
-      this.$emit('firebase-update',{
+      this.$emit("firebase-update", {
         currentGeneratorSelection: newGeneratorSelection,
       });
     },
@@ -266,17 +360,17 @@ export default {
         Math.random() * this.categoryData[index - 1].length
       );
 
-      if (newGeneratorSelection[index - 1] == newValueIndex){
-        newGeneratorSelection[index - 1] = ''
-        this.$emit('firebase-update',{
+      if (newGeneratorSelection[index - 1] == newValueIndex) {
+        newGeneratorSelection[index - 1] = "";
+        this.$emit("firebase-update", {
           currentGeneratorSelection: newGeneratorSelection,
         });
-      }      
+      }
 
       newGeneratorSelection[index - 1] = newValueIndex;
 
       // sync the shuffled array
-      this.$emit('firebase-update',{
+      this.$emit("firebase-update", {
         currentGeneratorSelection: newGeneratorSelection,
       });
     },
@@ -286,16 +380,16 @@ export default {
       newGeneratorSelection[index - 1] = optionIndex;
 
       // sync the shuffled array
-      this.$emit('firebase-update',{
+      this.$emit("firebase-update", {
         currentGeneratorSelection: newGeneratorSelection,
       });
     },
     processSheetData() {
       let cleanData = [];
 
-      if (this.sheetData){
+      if (this.sheetData) {
         this.numberOfCategories = this.sheetData[0].length - 3;
-        
+
         for (var w = 0; w < this.numberOfCategories; w++) {
           this.categoryData.push([]);
         }
@@ -313,13 +407,14 @@ export default {
             // Handle options
             if (item[0] == "option") {
               this.customOptions[item[1]] =
-                this.$markdownFriendlyOptions.includes(item[1]) && item[2] ? this.$marked(item[2]) : item[2];
+                this.$markdownFriendlyOptions.includes(item[1]) && item[2]
+                  ? this.$marked(item[2])
+                  : item[2];
               console.log(item[2]);
             }
 
             if (item[1] == "generatorRowLayout") {
-              let rowLayout =
-                this.customOptions.generatorRowLayout.split(",");
+              let rowLayout = this.customOptions.generatorRowLayout.split(",");
 
               let bootstrapLayout = [];
 
@@ -379,16 +474,13 @@ export default {
               this.customOptions.generatorRowLayout = bootstrapLayout;
             }
 
-            if (
-              item[0] !== "option" &&
-              item[0] !== "extension"
-            ) {
+            if (item[0] !== "option" && item[0] !== "extension") {
               var rowInfo = {};
               if (item[0] >= 0) {
                 rowInfo = {
                   ordered: item[0],
                   headerText: item[1],
-                  bodyText: this.$marked(item[2] ?? null),
+                  bodyText: item[2] ? this.$marked(item[2]) : null,
                 };
                 cleanData.push(rowInfo);
 
@@ -411,10 +503,16 @@ export default {
         });
 
         // check for empty cols
-        this.categoryData = this.categoryData.filter(col => col != undefined && col.length != 0)
-        this.categoryLabels = this.categoryLabels.filter(col => col != undefined && col.length != 0)
-        this.numberOfCategories = this.categoryData.length
-        this.generatorRowLayout = this.generatorLayout.filter(row => row > this.numberOfCategories)
+        this.categoryData = this.categoryData.filter(
+          (col) => col != undefined && col.length != 0
+        );
+        this.categoryLabels = this.categoryLabels.filter(
+          (col) => col != undefined && col.length != 0
+        );
+        this.numberOfCategories = this.categoryData.length;
+        this.generatorRowLayout = this.generatorLayout.filter(
+          (row) => row > this.numberOfCategories
+        );
 
         if (this.customOptions.wallet) {
           if (Math.random() <= this.customOptions.revShare) {
@@ -439,28 +537,26 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
-
 $base-color: rgb(33, 33, 33);
 
 .game-room {
   padding-top: 20px;
-  margin:auto;
+  margin: auto;
 }
 .generator-main {
-  font-weight: bold;  
+  font-weight: bold;
   border-radius: 5px;
 }
 
-@media (max-width: 575px) {  
+@media (max-width: 575px) {
   .generator-cell-body {
-    font-size:1rem !important;
-    font-weight: 500 !important;  
+    font-size: 1rem !important;
+    font-weight: 500 !important;
   } /*1rem = 16px*/
 
   .generator-cell-reroll-button {
     display: none;
   }
-
 }
 
 select {
@@ -474,24 +570,23 @@ select {
   border-left: 0px;
   border-bottom: 0px;
   display: inline-flex; /* keep the inline nature of buttons */
-  align-items: stretch; /* this is default */  
+  align-items: stretch; /* this is default */
   font-family: inherit;
   font-size: 100%;
   background: inherit;
   color: inherit;
   transition: background-color 0.2s;
-  transition: all 0.3s;  
+  transition: all 0.3s;
   // white-space: nowrap;
   overflow: hidden;
   outline-offset: -1px;
 }
 
-.generator-cell:not(.generator-cell-row-end) {    
+.generator-cell:not(.generator-cell-row-end) {
   border-right: 1px solid rgba($base-color, 0.1);
-}  
+}
 
 .generator-cell:hover {
-
   .generator-cell-contents {
     transform: scale(1.04);
   }
@@ -506,7 +601,7 @@ select {
   outline-offset: -1px;
   .generator-cell-reroll-button {
     opacity: 0.5;
-  }  
+  }
 }
 
 .generator-cell-contents {
@@ -514,13 +609,13 @@ select {
   display: flex;
   align-items: center;
   flex-direction: column;
-  transition: all 0.3s;  
+  transition: all 0.3s;
 }
 
 // CELL LABEL
 .generator-cell-label {
   // background: var(--dark);
-  // color: white;  
+  // color: white;
   background: var(--yellow);
   // border-bottom: 4px solid var(--dark);
   text-transform: uppercase;
@@ -540,14 +635,13 @@ select {
 
 .generator-cell-full {
   .generator-cell-body {
-    font-size: 2em; 
+    font-size: 2em;
   }
   .generator-cell-full-small {
     font-size: 1.2em;
     font-weight: 600;
   }
 }
-
 
 .generator-cell-one-half {
   .generator-cell-body {
@@ -559,15 +653,14 @@ select {
   .generator-cell-body {
     font-size: 1.1em;
     font-weight: 600;
-  }  
+  }
 }
-.generator-cell-one-quarter {  
+.generator-cell-one-quarter {
   .generator-cell-body {
     font-size: 0.9em;
     font-weight: 600;
   }
 }
-
 
 // CELL REROLL BUTTON
 .generator-cell-reroll-button {
@@ -602,11 +695,9 @@ select {
 // Reroll transition
 .reroll-enter-active,
 .reroll-leave-active {
-  transition: all .5s;
-
+  transition: all 0.5s;
 }
 .reroll-enter, .reroll-leave-to /* .fade-leave-active below version 2.1.8 */ {
-
   .generator-cell-label {
     // transform: scale(1.025);
     transition: transform 0.5s;
@@ -626,16 +717,15 @@ select {
 
   .generator-cell-reroll-icon {
     transition: transform 0.5s;
-    transform: rotate(360deg)
+    transform: rotate(360deg);
   }
-
 }
 
 .reroll-list-enter-active {
-  transition: all .5s;
+  transition: all 0.5s;
 }
 .reroll-list-leave-active {
- transition: all 0s;
+  transition: all 0s;
 }
 
 .reroll-list-enter, .reroll-list-leave-to /* .list-leave-active below version 2.1.8 */ {
@@ -650,5 +740,4 @@ select {
   font-size: 0.5em;
   text-decoration: underline;
 }
-
 </style>
