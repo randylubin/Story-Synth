@@ -42,7 +42,7 @@
           </div>
           <!-- End query param section -->
 
-          <form>
+          <div>
             <!-- Remove for published version. Comment out the format selection and gSheetID field. Make sure to hard code the gSheetID in the game's .vue file. -->
             <div v-if="!routeGSheetID">
               <div class="row mb-3 mx-auto">
@@ -93,7 +93,7 @@
                 </router-link>
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
