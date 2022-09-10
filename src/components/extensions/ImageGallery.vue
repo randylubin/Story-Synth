@@ -8,8 +8,10 @@
             <div class="row" v-if="!Number.isInteger(selectedImage)">
               <div class="col-md-4" v-for="(image, index) in imageGallery" v-bind:key="index">
                 <figure class="figure">
-                  <img role="button" v-bind:alt="imageCaptions ? imageCaptions[index] : ''" v-bind:src="image"
-                    v-on:click="selectImage(index)" class="m-1 figure-img img-fluid rounded gallery-image">
+                  <img role="button"
+                    v-bind:alt="imageAltText ? imageAltText[index] : imageCaptions ? imageCaptions[index] : ''"
+                    v-bind:src="image" v-on:click="selectImage(index)"
+                    class="m-1 figure-img img-fluid rounded gallery-image">
                   <figcaption v-if="markdownRenderedCaptions && markdownRenderedCaptions[index]"
                     class="figure-caption image-caption" v-dompurify-html="markdownRenderedCaptions[index]">
                   </figcaption>
@@ -19,7 +21,7 @@
             <div v-if="Number.isInteger(selectedImage)">
               <figure class="figure">
                 <img v-bind:src="imageGallery[selectedImage]" class="figure-img img-fluid rounded selected-image"
-                  v-bind:alt="markdownRenderedCaptions ? markdownRenderedCaptions[selectedImage] : ''">
+                  v-bind:alt="imageAltText ? imageAltText[selectedImage] : imageCaptions ? imageCaptions[selectedImage] : ''">
                 <figcaption v-if="markdownRenderedCaptions && markdownRenderedCaptions[selectedImage]"
                   class="figure-caption image-caption" v-dompurify-html="markdownRenderedCaptions[selectedImage]">
                 </figcaption>
@@ -41,6 +43,7 @@ export default {
   props: {
     imageGallery: Array,
     imageCaptions: Array,
+    imageAltText: Array,
     imageGalleryTitle: String,
     selectedImage: Number,
   },
@@ -71,4 +74,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>
