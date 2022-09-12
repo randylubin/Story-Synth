@@ -567,7 +567,7 @@ export default {
         showCardBack: false,
       });
     },
-    shuffleLastCard(location, cardSequence) {
+    shuffleLastCard(location, cardSequence, fromReshuffle = false) {
       if (!cardSequence) {
         cardSequence = this.roomInfo.cardSequence;
       }
@@ -583,35 +583,41 @@ export default {
           break;
         case "end":
           tempNewLastCardLocation =
-            cardSequence.length - Math.floor(Math.random() * 4);
+            cardSequence.length - Math.floor(Math.random() * 4) - 1;
           break;
         default:
           if (Number.isInteger(location)) {
             tempNewLastCardLocation = location;
           }
       }
-      console.log("last card", location);
+      console.log("last card", tempNewLastCardLocation);
 
       let oldLastCardLocation = cardSequence.length - 1;
 
       if (
         this.roomInfo.locationOfLastCard == 0 ||
-        !this.roomInfo.locationOfLastCard
+        !this.roomInfo.locationOfLastCard || fromReshuffle
       ) {
         oldLastCardLocation = cardSequence.length - 1;
       } else {
         oldLastCardLocation = this.roomInfo.locationOfLastCard;
       }
 
+      console.log('old last card location', oldLastCardLocation)
+
       let lastCardNumber = cardSequence[oldLastCardLocation];
 
       // remove the last card from the sequence
       let newCardSequence = cardSequence;
+      console.log('updated sequence', newCardSequence, tempNewLastCardLocation)
 
       newCardSequence.splice(oldLastCardLocation, 1);
 
+      console.log('updated sequence', newCardSequence, tempNewLastCardLocation)
       // add it back in
       newCardSequence.splice(tempNewLastCardLocation, 0, lastCardNumber);
+
+      console.log('updated sequence', newCardSequence, tempNewLastCardLocation)
 
       this.$emit("firebase-update", {
         cardSequence: newCardSequence,
@@ -638,14 +644,8 @@ export default {
       this.$bvModal.hide("reshuffleConfirm");
       this.$bvModal.hide("menuModal");
 
-      // reset card count
-      this.$emit("firebase-update", {
-        currentCardIndex: 0,
-        locationOfLastCard: 0,
-      });
-
       // Create a ordered array
-      var newCardSequence = [];
+      let newCardSequence = [];
 
       // Add the ordered cards first
       for (var i = 0; i < this.orderedCards.length; i++) {
@@ -653,7 +653,7 @@ export default {
       }
 
       // Shuffle deck function
-      var shuffleDeck = function (deck) {
+      let shuffleDeck = function (deck) {
         for (var n = deck.length - 1; n > 0; n--) {
           let j = Math.floor(Math.random() * (n + 1));
           [deck[n], deck[j]] = [deck[j], deck[n]];
@@ -698,10 +698,14 @@ export default {
       this.$emit('firebase-update', {
         previousCardsArray: [0],
         cardSequence: newCardSequence,
+        currentCardIndex: 0,
         locationOfLastCard: newCardSequence.length - 1,
       });
 
-      this.shuffleLastCard(tempLastCardIndex, newCardSequence);
+      console.log('last location', !Number.isNaN(lastLocation))
+      if (!Number.isNaN(lastLocation)) {
+        this.shuffleLastCard(tempLastCardIndex, newCardSequence, true);
+      }
     },
     setupChapterNavigation() {
       this.chapterNavLabels = this.parseChaptersFromCustomOptions();
@@ -790,6 +794,7 @@ export default {
 
         // Sort cleanData into ordered and unordered decks
         cleanData.forEach((row, index) => {
+          // console.log('row:', row)
           if (row.ordered == "0") {
             this.orderedCards.push(row);
             this.firstNonInstruction += 1;
