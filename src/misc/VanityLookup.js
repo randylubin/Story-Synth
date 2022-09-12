@@ -18,6 +18,8 @@ var VanityLookup = {
   "Ring": "1FiJNWdGtIanR4yDSDU545wGZKiFoxP2FeD_KfDcSG18",
   "Through-All-These-Years": "1LuWobaoO92Z4mDbwiY2M5f_lQ1T_Uj12I70jRJ2rZaE",
   "The-Wizards-Tower": "1XFyNmVDbuNyJyl1KP6nyPvesAckFXQ6hGAQDKOBF7Y0",
+  "For-the-Heir": "1ABMp5mNdv5wMRFe9oDtoM8Hx0MdHVL2_iuSaqsRHaag",
+  "For-the-Heir-One-Act": "1Qb0MM3pwjZZtFX8jyZnk5arH4pbPctOLx3e3qhPh5GA"
 
 
 
