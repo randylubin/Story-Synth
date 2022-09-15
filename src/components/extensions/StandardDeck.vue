@@ -19,10 +19,11 @@
               </span>
             </div>
 
-            <button class="btn btn-outline-dark m-1"
+            <button class="btn btn-outline-dark m-1 standard-deck-button standard-deck-button-draw"
               :disabled="standardDeck.drawnCards.length == standardDeck.fullDeck.length"
               v-on:click="drawCard()">Draw</button>
-            <button class="btn btn-outline-dark m-1" v-on:click="reshuffle()">Reshuffle</button>
+            <button class="btn btn-outline-dark m-1 standard-deck-button standard-deck-button-reshuffle"
+              v-on:click="reshuffle()">Reshuffle</button>
           </div>
         </div>
       </div>
