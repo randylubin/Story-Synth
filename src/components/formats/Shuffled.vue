@@ -714,7 +714,7 @@ export default {
       }
     },
     parseChaptersFromCustomOptions() {
-      const regex = /^chapter-(\d)-(\w+)$/;
+      const regex = /^chapter-(\d+)-(\w+)$/;
 
       return Object.entries(this.customOptions)
         .filter(([key]) => regex.test(key))
