@@ -67,8 +67,8 @@ Vue.use(BootstrapVue);
 // Optionally install the BootstrapVue icon components plugin
 Vue.component("BIcon", BIcon);
 Vue.component("BIconArrowsExpand", BIconArrowsExpand),
-  Vue.component("BIconArrowsCollapse", BIconArrowsCollapse),
-  Vue.component("BIconPencil", BIconPencil);
+Vue.component("BIconArrowsCollapse", BIconArrowsCollapse),
+Vue.component("BIconPencil", BIconPencil);
 Vue.component("BIconTrash", BIconTrash);
 Vue.component("BIconCheck2", BIconCheck2);
 Vue.component("BIconList", BIconList);
@@ -113,6 +113,7 @@ const routes = [
   { path: "/:gameType/:gSheetID/", component: App },
   { path: "/:gameType/:gSheetID/:roomID", component: App },
   { path: "/:gameType/:gSheetID/:roomID/:userRole", component: App },
+  { path: "/Games/", redirect: "/Gallery/"},
 ];
 
 const router = new VueRouter({

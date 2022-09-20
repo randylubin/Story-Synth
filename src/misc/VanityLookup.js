@@ -22,6 +22,7 @@ var VanityLookup = {
   "For-the-Heir-One-Act": "1Qb0MM3pwjZZtFX8jyZnk5arH4pbPctOLx3e3qhPh5GA",
   "Mirror-Bound": "1yBtJ8X8eDixJfLVzjyaaUxj7vVToOVbxMeEeB1HSPcM",
   "Iseguy": "1O6w2eLaRygC6wq5grOJfyx_fWkP3WhCKeaSMtTC5-Oc",
+  "Many-Patterns": "1iUg8mmZFSltJvlelsexRwxG8xxBGC04FLH5cmHCCPog",
 
 
 
