@@ -7,7 +7,7 @@ var VanityLookup = {
   "Slot-Machine-Demo": "1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU",
   "Phases-Demo": "1HataDfV2lrA4hfzmLgDjXH09dEMLQV6OT10tVH9G52A",
   "Secret-Cards-Demo": "1JwMF02DSxNKtjHp6u-wyznSs-iEG_3DpOobgc17I16o",
-  
+
   // Games
   "Compersion": "1XVd4Kgq3X3utOm25JXOsDbhI_jLjAHX8mGzpiT6Sgho",
   "Cute-Games-For-First-Dates": "1jaGlSVeBBCfRvY5j_lLrz5YC_psGOVURn_OaXbr2JH0",
@@ -23,6 +23,7 @@ var VanityLookup = {
   "Mirror-Bound": "1yBtJ8X8eDixJfLVzjyaaUxj7vVToOVbxMeEeB1HSPcM",
   "Iseguy": "1O6w2eLaRygC6wq5grOJfyx_fWkP3WhCKeaSMtTC5-Oc",
   "Many-Patterns": "1iUg8mmZFSltJvlelsexRwxG8xxBGC04FLH5cmHCCPog",
+  "Bloom-Brink": "19w2se79WgpFXwzGbZn0E_puHa2BncbOt4NtcmJvf7dQ",
 
 
 
