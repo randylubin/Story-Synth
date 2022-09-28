@@ -231,13 +231,13 @@
                 !customOptions.cardBackgroundImageAlign,
             }" v-if="!roomInfo.xCardIsActive">
               <div v-if="!roomInfo.showCardBack">
-                <h1 v-if="!customOptions.hideHeadersOnCards">
+                <h1 v-if="!customOptions.hideHeadersOnCards" class="main-card-header-text">
                   {{
                   gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
                   .headerText
                   }}
                 </h1>
-                <div class="mt-4 mb-4" v-dompurify-html="
+                <div class="mt-4 mb-4 main-card-body-text" v-dompurify-html="
                   gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
                     .bodyText
                 "></div>
