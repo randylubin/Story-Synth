@@ -24,6 +24,9 @@ var VanityLookup = {
   "Iseguy": "1O6w2eLaRygC6wq5grOJfyx_fWkP3WhCKeaSMtTC5-Oc",
   "Many-Patterns": "1iUg8mmZFSltJvlelsexRwxG8xxBGC04FLH5cmHCCPog",
   "Bloom-Brink": "19w2se79WgpFXwzGbZn0E_puHa2BncbOt4NtcmJvf7dQ",
+  "Deck-of-Many-Ideas": "1yXf1nJ1KqHuBju9mmyRY2Fw_Rrs1OioBSzNg3hXQ46I",
+  "Last-Summer": "1FFJ2_UJFGOX5mpUIfxr6aQNolRvcu7uv33s9nz1AQoc",
+
 
 
 
