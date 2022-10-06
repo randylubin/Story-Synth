@@ -89,7 +89,7 @@ export default {
         },
         {
           property: "og:title",
-          content: "Story Synth Gallery",
+          content: "Story Synth Microgrants",
           vmid: "og:title",
         },
         {
