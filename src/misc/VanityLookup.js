@@ -26,6 +26,8 @@ var VanityLookup = {
   "Bloom-Brink": "19w2se79WgpFXwzGbZn0E_puHa2BncbOt4NtcmJvf7dQ",
   "Deck-of-Many-Ideas": "1yXf1nJ1KqHuBju9mmyRY2Fw_Rrs1OioBSzNg3hXQ46I",
   "Last-Summer": "1FFJ2_UJFGOX5mpUIfxr6aQNolRvcu7uv33s9nz1AQoc",
+  "Rusting-Giant": "1Zd8_IKbXzxWMYi-t25Tz4Q3Q13P20dF-RjnDPSU-JwQ",
+  "Our-Ties-Forever-Bound": "1sTJiVc3T7vzfkTIsbgybl3kQ1sFZHu1Pk_KV6wZGPog",
 
 
 
