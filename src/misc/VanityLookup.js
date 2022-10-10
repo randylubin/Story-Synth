@@ -28,6 +28,7 @@ var VanityLookup = {
   "Last-Summer": "1FFJ2_UJFGOX5mpUIfxr6aQNolRvcu7uv33s9nz1AQoc",
   "Rusting-Giant": "1Zd8_IKbXzxWMYi-t25Tz4Q3Q13P20dF-RjnDPSU-JwQ",
   "Our-Ties-Forever-Bound": "1sTJiVc3T7vzfkTIsbgybl3kQ1sFZHu1Pk_KV6wZGPog",
+  "Kaiju-Haiku": "1V5foCiEOIFM-MT2aewLvjhpUH25_iD6_JWgfBldidfc",
 
 
 
