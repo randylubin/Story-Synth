@@ -27,6 +27,7 @@ module.exports = {
         "/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/", // This Heart Within Me Burns
         "/Shuffled/12dLB630MtjpJGDwEEwD0lvOzMUoACfzgqHQLgTLYTGc/", // Compersion
         "/Shuffled/1p3DrsORsL69s3Iqr8SlpS_G1jy--sAWDPbBBSy6pnZk/", // Generational
+        "/Shuffled/1PGZzheGPu6zvRo4ENEZ-MSVq8y20Q1_4E0nmfW-sRdY/", // Super Fre-nemies
       ],
       useRenderEvent: true,
       headless: true,
