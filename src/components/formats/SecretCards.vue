@@ -103,11 +103,11 @@
               <div class="card shadow" v-on:click="updateClickedCard(index)" style="cursor:pointer">
                 <div class="card-body">
                   <h5>Public: </h5>
-                  <span v-dompurify-html="row.publicText"></span>
+                  <div v-dompurify-html="row.publicText"></div>
                   <br><br>
 
                   <h5>Secret:</h5>
-                  <span v-dompurify-html="row[playerSelected]"></span>
+                  <div v-dompurify-html="row[playerSelected]"></div>
 
                 </div>
               </div>
