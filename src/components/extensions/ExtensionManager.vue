@@ -49,6 +49,21 @@
             extensionList.staticBoxLocation == extensionLocation)
         ">
         </app-staticBox>
+        <app-interrupts class="extension" :extensionList="this.extensionList"
+          :currentInterrupt="extensionData.currentInterrupt" @process-extension-update="processExtensionUpdate($event)"
+          v-if="
+            extensionList['interrupts'] &&
+            (!extensionList.interruptsFirstVisible ||
+              extensionList.interruptsFirstVisible <=
+                roomInfo.currentCardIndex) &&
+            (!extensionList.interruptsLastVisible ||
+              extensionList.interruptsLastVisible >
+                roomInfo.currentCardIndex) &&
+            ((!extensionList.interruptsLocation &&
+              extensionLocation == 'lower') ||
+              extensionList.interruptsLocation == extensionLocation)
+          ">
+        </app-interrupts>
         <app-playerTurnOrder class="extension" :playerTurnOrder="JSON.parse(extensionData.playerTurnOrder)"
           :playerTurnOrderHeader="extensionData.playerTurnOrderHeader"
           :playerTurnOrderButtonLabel="extensionData.playerTurnOrderButtonLabel" :playerTurnOrderFirstVisible="
@@ -259,6 +274,7 @@ export default {
     "app-plusMinus": () => import("./PlusMinus.vue"),
     "app-standardDeck": () => import("./StandardDeck.vue"),
     "app-staticBox": () => import("./StaticBox.vue"),
+    "app-interrupts": () => import("./Interrupts.vue"),
     // 'app-downloadExtensionData': () => import('./DownloadExtensionData.vue'),
   },
   props: {
