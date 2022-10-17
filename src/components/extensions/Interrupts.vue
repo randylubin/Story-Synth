@@ -1,24 +1,61 @@
 <template>
   <div class="mb-4 template" v-if="renderInterrupts">
-    <div class="row">
-      <div class="col-sm">
-        <div class="card d-flex shadow">
-          <div class="card-body" v-if="!currentInterrupt">
-            <h2>Interrupts</h2>
-            <p>Put the good stuff here!</p>
-            <div v-for="interrupt in interruptsArray" :key="interrupt.label">
-              <b-button class="btn-block btn-default my-2 interrupt-button" @click="selectInterrupt(interrupt.text)">
-                {{ interrupt.label }}
-              </b-button>
+    <div v-if="!menuLocation">
+      <div class="row mb-4" v-if="currentInterrupt && extensionList.interruptsKeepOptionsVisible">
+        <div class="col-sm">
+          <div class="card d-flex shadow">
+            <div class="card-body current-interrupt">
+              <div class="interrupt-text" v-dompurify-html="currentInterrupt.text"></div>
+              <br><button class="mt-2 btn btn-sm btn-outline-dark close-button"
+                v-on:click="closeInterrupt()">Close</button>
             </div>
-
-          </div>
-          <div class="card-body current-interrupt" v-if="currentInterrupt">
-            <div class="interrupt-text" v-dompurify-html="currentInterrupt"></div>
-            <br><button class="mt-2 btn btn-sm btn-outline-dark close-button"
-              v-on:click="closeInterrupt()">Close</button>
           </div>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-sm">
+          <div class="card d-flex shadow">
+            <div class="card-body" v-if="!currentInterrupt || extensionList.interruptsKeepOptionsVisible">
+              <h2>Interrupts</h2>
+              <p>Put the good stuff here!</p>
+              <div v-for="interrupt in interruptsArray" :key="interrupt.label">
+                <b-button class="btn-block btn-default my-2 interrupt-button"
+                  @click="selectInterrupt(interrupt.text, interrupt.label)"
+                  v-if="currentInterrupt && interrupt.label == currentInterrupt.label" :active="true" :pressed="true"
+                  :active-class="'active'">
+                  {{ interrupt.label }}
+                </b-button>
+                <b-button class="btn-block btn-default my-2 interrupt-button"
+                  @click="selectInterrupt(interrupt.text, interrupt.label)"
+                  v-if="!currentInterrupt || interrupt.label != currentInterrupt.label">
+                  {{ interrupt.label }}
+                </b-button>
+              </div>
+            </div>
+
+            <div class="card-body current-interrupt"
+              v-if="currentInterrupt && !extensionList.interruptsKeepOptionsVisible">
+              <div class="interrupt-text" v-dompurify-html="currentInterrupt.text"></div>
+              <br><button class="mt-2 btn btn-sm btn-outline-dark close-button"
+                v-on:click="closeInterrupt()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="menuLocation">
+      <div v-for="interrupt in interruptsArray" :key="interrupt.label">
+        <b-button variant="outline-dark" class="btn-block btn-lg my-1 interrupt-button-menu"
+          @click="selectInterrupt(interrupt.text, interrupt.label)"
+          v-if="currentInterrupt && interrupt.label == currentInterrupt.label" :active="true" :pressed="true"
+          :active-class="'active'">
+          {{ interrupt.label }}
+        </b-button>
+        <b-button variant="outline-dark" class="btn-block btn-lg my-1 interrupt-button-menu"
+          @click="selectInterrupt(interrupt.text, interrupt.label)"
+          v-if="!currentInterrupt || interrupt.label != currentInterrupt.label">
+          {{ interrupt.label }}
+        </b-button>
       </div>
     </div>
   </div>
@@ -28,8 +65,9 @@
 export default {
   name: 'app-interrupts',
   props: {
-    currentInterrupt: String,
+    currentInterrupt: Object,
     extensionList: Object,
+    menuLocation: Boolean,
   },
   data: function () {
     return {
@@ -46,9 +84,12 @@ export default {
     }
   },
   methods: {
-    selectInterrupt(interruptText) {
-      console.log('new interrupt text', interruptText)
-      this.$emit('process-extension-update', ['currentInterrupt', interruptText])
+    selectInterrupt(interruptText, interruptLabel) {
+      let parsedText = interruptText ? this.$marked(interruptText) : null
+
+      let newCurrentInterrupt = { label: interruptLabel, text: parsedText }
+
+      this.$emit('process-extension-update', ['currentInterrupt', newCurrentInterrupt])
     },
     closeInterrupt() {
       this.$emit('process-extension-update', ['currentInterrupt', null])
