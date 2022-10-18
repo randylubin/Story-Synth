@@ -130,14 +130,16 @@
               parseInt(customOptions.hideNavigationButtons) >
               roomInfo.currentCardIndex)
           ">
+            <!-- Previous Card -->
             <button class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
               v-on:click="previousCard()" v-b-tooltip.hover title="Previous Card" :disabled="
-                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
+                roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0 ||
+                (roomInfo.extensionData && roomInfo.extensionData.interruptsReplaceMainCards && roomInfo.extensionData.currentInterrupt)
               ">
-              <!-- Previous Card -->
               <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
               <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
             </button>
+            <!-- Next Card -->
             <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
               title="Next Card" v-on:click="nextCard()" :disabled="
                 roomInfo.xCardIsActive ||
@@ -145,9 +147,9 @@
                 (customOptions.treatLastCardAsLastDeck &&
                   this.roomInfo.cardSequence.indexOf(
                     this.unorderedDecks[this.unorderedDecks.length - 1][0]
-                  ) == this.roomInfo.currentCardIndex)
+                  ) == this.roomInfo.currentCardIndex) ||
+                (roomInfo.extensionData && roomInfo.extensionData.interruptsReplaceMainCards && roomInfo.extensionData.currentInterrupt)
               ">
-              <!-- Next Card -->
               <div v-if="roomInfo.currentCardIndex == 0">
                 <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
                 <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
@@ -187,7 +189,8 @@
             cardIndex == 0,
         }" v-if="
           gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] &&
-          cardIndex == roomInfo.currentCardIndex
+          cardIndex == roomInfo.currentCardIndex &&
+          (!roomInfo.extensionData || !(roomInfo.extensionData.interruptsReplaceMainCards && roomInfo.extensionData.currentInterrupt))
         ">
           <!-- card images -->
           <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width: 100%" v-if="

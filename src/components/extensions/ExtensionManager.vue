@@ -50,8 +50,8 @@
         ">
         </app-staticBox>
         <app-interrupts class="extension" :extensionList="this.extensionList"
-          :currentInterrupt="extensionData.currentInterrupt" :menuLocation="false"
-          @process-extension-update="processExtensionUpdate($event)" v-if="
+          :interruptTopText="extensionList.interruptTopText" :currentInterrupt="extensionData.currentInterrupt"
+          :menuLocation="false" @process-extension-update="processExtensionUpdate($event)" v-if="
             extensionList['interrupts'] &&
             (!extensionList.interruptsFirstVisible ||
               extensionList.interruptsFirstVisible <=

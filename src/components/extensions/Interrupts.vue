@@ -16,8 +16,8 @@
         <div class="col-sm">
           <div class="card d-flex shadow">
             <div class="card-body" v-if="!currentInterrupt || extensionList.interruptsKeepOptionsVisible">
-              <h2>Interrupts</h2>
-              <p>Put the good stuff here!</p>
+              <div class="interrupts-top-text" v-if="extensionList.interruptTopText"
+                v-dompurify-html="interruptTopTextMarkdown"></div>
               <div v-for="interrupt in interruptsArray" :key="interrupt.label">
                 <b-button class="btn-block btn-default my-2 interrupt-button"
                   @click="selectInterrupt(interrupt.text, interrupt.label)"
@@ -65,6 +65,7 @@
 export default {
   name: 'app-interrupts',
   props: {
+    interruptTopText: String,
     currentInterrupt: Object,
     extensionList: Object,
     menuLocation: Boolean,
@@ -74,6 +75,7 @@ export default {
       interruptsArray: [],
       interruptLabels: [],
       renderInterrupts: false,
+      interruptTopTextMarkdown: null,
       error: null
     };
   },
@@ -81,6 +83,10 @@ export default {
     this.interruptsArray = this.parseInterruptsFromExtensionList();
     if (this.interruptsArray.length > 0) {
       this.renderInterrupts = true;
+    }
+
+    if (this.interruptTopText) {
+      this.interruptTopTextMarkdown = this.$marked(this.interruptTopText)
     }
   },
   methods: {
