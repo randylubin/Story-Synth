@@ -134,7 +134,7 @@
             <button class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
               v-on:click="previousCard()" v-b-tooltip.hover title="Previous Card" :disabled="
                 roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0 ||
-                (roomInfo.extensionData && roomInfo.extensionData.interruptsReplaceMainCards && roomInfo.extensionData.currentInterrupt)
+                (roomInfo.extensionData && (roomInfo.extensionData.interruptsReplaceMainCards || roomInfo.extensionData.interruptsPauseNavigation) && roomInfo.extensionData.currentInterrupt)
               ">
               <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
               <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
@@ -148,7 +148,7 @@
                   this.roomInfo.cardSequence.indexOf(
                     this.unorderedDecks[this.unorderedDecks.length - 1][0]
                   ) == this.roomInfo.currentCardIndex) ||
-                (roomInfo.extensionData && roomInfo.extensionData.interruptsReplaceMainCards && roomInfo.extensionData.currentInterrupt)
+                (roomInfo.extensionData && (roomInfo.extensionData.interruptsReplaceMainCards || roomInfo.extensionData.interruptsPauseNavigation) && roomInfo.extensionData.currentInterrupt)
               ">
               <div v-if="roomInfo.currentCardIndex == 0">
                 <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>

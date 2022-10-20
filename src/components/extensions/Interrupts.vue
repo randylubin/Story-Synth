@@ -1,7 +1,7 @@
 <template>
   <div class="mb-4 template" v-if="renderInterrupts">
     <div v-if="!menuLocation">
-      <div class="row mb-4" v-if="currentInterrupt && extensionList.interruptsKeepOptionsVisible">
+      <div class="row mb-4" v-if="currentInterrupt">
         <div class="col-sm">
           <div class="card d-flex shadow">
             <div class="card-body current-interrupt">
@@ -12,10 +12,10 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="!currentInterrupt || extensionList.interruptsKeepOptionsVisible">
         <div class="col-sm">
           <div class="card d-flex shadow">
-            <div class="card-body" v-if="!currentInterrupt || extensionList.interruptsKeepOptionsVisible">
+            <div class="card-body">
               <div class="interrupts-top-text" v-if="extensionList.interruptTopText"
                 v-dompurify-html="interruptTopTextMarkdown"></div>
               <div v-for="interrupt in interruptsArray" :key="interrupt.label">
@@ -33,12 +33,12 @@
               </div>
             </div>
 
-            <div class="card-body current-interrupt"
+            <!-- <div class="card-body current-interrupt"
               v-if="currentInterrupt && !extensionList.interruptsKeepOptionsVisible">
               <div class="interrupt-text" v-dompurify-html="currentInterrupt.text"></div>
               <br><button class="mt-2 btn btn-sm btn-outline-dark close-button"
                 v-on:click="closeInterrupt()">Close</button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
