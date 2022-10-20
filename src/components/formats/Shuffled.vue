@@ -180,6 +180,36 @@
         </div>
       </div>
 
+      <!-- Safety Card -->
+      <div class="card main-card d-flex shadow img-fluid mb-4" v-if="roomInfo.xCardIsActive">
+        <div class="card-body align-items-center justify-content-center" v-bind:class="{
+          'card-body': !customOptions.cardBackgroundImage,
+          'card-img-overlay':
+            customOptions.cardBackgroundImage &&
+            !customOptions.cardBackgroundImageAlign,
+        }">
+          <div class="mt-5 pt-5 mb-5">
+            <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
+            <div class="safety-card-text" v-dompurify-html="customOptions.safetyCardText"
+              v-if="customOptions.safetyCardText">
+            </div>
+          </div>
+          <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">
+            Continue
+          </button>
+          <div class="" v-if="!customOptions.safetyCardText">
+            <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
+          </div>
+        </div>
+
+        <!-- Card Image, Bottom -->
+        <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" bottom v-if="
+          customOptions.cardBackgroundImageAlign == 'bottom' &&
+          roomInfo.currentCardIndex != 0
+        "></b-card-img>
+      </div>
+
+      <!-- Main Card -->
       <div v-for="(card, cardIndex) in roomInfo.cardSequence" v-bind:key="cardIndex">
         <!-- <transition name="fade out-in"> -->
         <div class="card main-card d-flex shadow img-fluid mb-4" v-bind:class="{
@@ -190,7 +220,8 @@
         }" v-if="
           gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] &&
           cardIndex == roomInfo.currentCardIndex &&
-          (!roomInfo.extensionData || !(roomInfo.extensionData.interruptsReplaceMainCards && roomInfo.extensionData.currentInterrupt))
+          (!roomInfo.extensionData || !(roomInfo.extensionData.interruptsReplaceMainCards && roomInfo.extensionData.currentInterrupt)) &&
+          !roomInfo.xCardIsActive
         ">
           <!-- card images -->
           <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width: 100%" v-if="
@@ -232,7 +263,7 @@
               'card-img-overlay':
                 customOptions.cardBackgroundImage &&
                 !customOptions.cardBackgroundImageAlign,
-            }" v-if="!roomInfo.xCardIsActive">
+            }">
               <div v-if="!roomInfo.showCardBack">
                 <h1 v-if="!customOptions.hideHeadersOnCards" class="main-card-header-text">
                   {{
@@ -286,32 +317,6 @@
             customOptions.lastCardReminderFrequency - 1
           ">
           </b-alert>
-
-          <!-- Safety Card -->
-          <div class="card-body align-items-center justify-content-center" v-if="roomInfo.xCardIsActive" v-bind:class="{
-            'card-body': !customOptions.cardBackgroundImage,
-            'card-img-overlay':
-              customOptions.cardBackgroundImage &&
-              !customOptions.cardBackgroundImageAlign,
-          }">
-            <div class="mt-5 pt-5 mb-5">
-              <h1 v-if="!customOptions.safetyCardText">X-Card</h1>
-              <div class="safety-card-text" v-dompurify-html="customOptions.safetyCardText"
-                v-if="customOptions.safetyCardText"></div>
-            </div>
-            <button class="btn btn-outline-dark mt-5" v-on:click="xCard()">
-              Continue
-            </button>
-            <div class="" v-if="!customOptions.safetyCardText">
-              <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
-            </div>
-          </div>
-
-          <!-- Card Image, Bottom -->
-          <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" bottom v-if="
-            customOptions.cardBackgroundImageAlign == 'bottom' &&
-            roomInfo.currentCardIndex != 0
-          "></b-card-img>
         </div>
         <!-- </transition> -->
       </div>

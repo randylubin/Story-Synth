@@ -1,7 +1,8 @@
 <template>
   <div class="mb-4 template" v-if="renderInterrupts">
     <div v-if="!menuLocation">
-      <div class="row mb-4" v-if="currentInterrupt">
+      <!-- Interrupt Content -->
+      <div class="row mb-4" v-if="currentInterrupt && !roomInfo.xCardIsActive">
         <div class="col-sm">
           <div class="card d-flex shadow">
             <div class="card-body current-interrupt">
@@ -12,7 +13,10 @@
           </div>
         </div>
       </div>
-      <div class="row" v-if="!currentInterrupt || extensionList.interruptsKeepOptionsVisible">
+
+      <!-- Interrupt Options -->
+      <div class="row"
+        v-if="(!currentInterrupt || extensionList.interruptsKeepOptionsVisible) && (!customOptions.facilitatorMode || userRole == 'facilitator')">
         <div class="col-sm">
           <div class="card d-flex shadow">
             <div class="card-body">
@@ -32,13 +36,6 @@
                 </b-button>
               </div>
             </div>
-
-            <!-- <div class="card-body current-interrupt"
-              v-if="currentInterrupt && !extensionList.interruptsKeepOptionsVisible">
-              <div class="interrupt-text" v-dompurify-html="currentInterrupt.text"></div>
-              <br><button class="mt-2 btn btn-sm btn-outline-dark close-button"
-                v-on:click="closeInterrupt()">Close</button>
-            </div> -->
           </div>
         </div>
       </div>
@@ -69,6 +66,9 @@ export default {
     currentInterrupt: Object,
     extensionList: Object,
     menuLocation: Boolean,
+    customOptions: Object,
+    roomInfo: Object,
+    userRole: String,
   },
   data: function () {
     return {

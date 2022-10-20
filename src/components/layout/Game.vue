@@ -41,8 +41,8 @@
             Object.keys(roomInfo.extensionData) != 0
           ">
             <app-extensionManager @sync-extension="syncExtension($event)" :extensionData="roomInfo.extensionData"
-              :extensionList="tempExtensionData" :roomInfo="roomInfo" :extensionLocation="'upper'"
-              class="extension-upper">
+              :extensionList="tempExtensionData" :roomInfo="roomInfo" :customOptions="customOptions"
+              :userRole="$route.params.userRole" :extensionLocation="'upper'" class="extension-upper">
             </app-extensionManager>
           </div>
         </template>
@@ -56,8 +56,8 @@
             Object.keys(roomInfo.extensionData) != 0
           " class="extension-container">
             <app-extensionManager @sync-extension="syncExtension($event)" :extensionData="roomInfo.extensionData"
-              :extensionList="tempExtensionData" :roomInfo="roomInfo" :extensionLocation="'lower'"
-              class="extension-lower">
+              :extensionList="tempExtensionData" :roomInfo="roomInfo" :customOptions="customOptions"
+              :userRole="$route.params.userRole" :extensionLocation="'lower'" class="extension-lower">
             </app-extensionManager>
           </div>
         </template>

@@ -51,7 +51,8 @@
         </app-staticBox>
         <app-interrupts class="extension" :extensionList="this.extensionList"
           :interruptTopText="extensionList.interruptTopText" :currentInterrupt="extensionData.currentInterrupt"
-          :menuLocation="false" @process-extension-update="processExtensionUpdate($event)" v-if="
+          :menuLocation="false" :roomInfo="roomInfo" :customOptions="customOptions" :userRole="userRole"
+          @process-extension-update="processExtensionUpdate($event)" v-if="
             extensionList['interrupts'] &&
             (!extensionList.interruptsFirstVisible ||
               extensionList.interruptsFirstVisible <=
@@ -281,6 +282,8 @@ export default {
     extensionData: Object,
     extensionList: Object,
     extensionLocation: String,
+    customOptions: Object,
+    userRole: String,
     roomInfo: Object,
     gameTitle: String,
   },
