@@ -384,14 +384,6 @@ export default {
     shuffle() {
       this.$bvModal.hide('reshuffleConfirm')
 
-      // reset card count
-      this.$emit('firebase-update', {
-        currentCardIndex: 0,
-        currentPhase: 0,
-        lastSeenPhase: 0,
-        lastSeenRound: 0
-      })
-
       // Create a ordered array
       var initialCardSequence = []
       var finalCardSequence = []
@@ -440,7 +432,12 @@ export default {
 
       // sync the shuffled array
       this.$emit('firebase-update', {
-        cardSequence: initialCardSequence.concat(shuffledCards).concat(finalCardSequence)
+        cardSequence: initialCardSequence.concat(shuffledCards).concat(finalCardSequence),
+        currentCardIndex: 0,
+        currentPhase: 0,
+        lastSeenPhase: 0,
+        lastSeenRound: 0,
+        extensionData: this.tempExtensionData,
       })
 
     },
