@@ -91,8 +91,7 @@
       v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'"
       class="mb-4">
 
-      <div class="card d-flex shadow img-fluid"
-        v-bind:class="{ 'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0) }">
+      <div class="card d-flex shadow img-fluid" v-bind:class="classObject">
 
         <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%"
           v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
@@ -258,6 +257,26 @@ export default {
       endingIndex: 0,
       selectedWallet: undefined,
       error: false,
+    }
+  },
+  computed: {
+    classObject: function () {
+      if (this.roomInfo && this.roomInfo.currentCardIndex) {
+        return {
+          'bg-transparent': this.customOptions.coverImage && this.roomInfo.currentCardIndex == 0,
+          'phases-deck-0': this.roomInfo.currentCardIndex < this.firstNonInstruction,
+          'phases-deck-1': this.roomInfo.currentPhase == 0 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-2': this.roomInfo.currentPhase == 1 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-3': this.roomInfo.currentPhase == 2 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-4': this.roomInfo.currentPhase == 3 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-5': this.roomInfo.currentPhase == 4 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-6': this.roomInfo.currentPhase == 5 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-ending': this.roomInfo.currentCardIndex >= this.endingIndex,
+
+        }
+      } else {
+        return {}
+      }
     }
   },
   watch: {
