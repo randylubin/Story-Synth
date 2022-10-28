@@ -127,32 +127,6 @@
         </div>
       </div>
 
-      <!-- Section: grant -->
-      <div class="margin-between-sections">
-        <div class="row">
-          <div class="col-12">
-            <h2>Grant Program</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <p>Apply for a grant to make a game with Story Synth. This microgrant program is run by Big Bad Con and
-              funded by Grant for the Web. <a href="/Grants/">Learn more and apply</a>.</p>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-12 mb-2">
-            <div class="card shadow">
-              <a href="/Grants/">
-                <img class="img img-fluid" src="/img/microgrant-banner.png"
-                  alt="microgrant banner - click it to learn more and apply">
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Section: create -->
       <div class="homepage-create margin-between-sections">
         <div class="row">

@@ -9,8 +9,8 @@
               alt="microgrant banner - click it to learn more and apply">
           </a>
         </div>
-        <p>We're thrilled to announce that you can now apply for a grant to build a Story Synth game. The grant program
-          is run by Big Bad Con and funded by Grant for the Web. Learn more on <a
+        <p>In 2022, we ran a $30,000 microgrant program to help designers make games on Story Synth. The grant program
+          was run by Big Bad Con and funded by Grant for the Web. Learn more on <a
             href="https://www.bigbadcon.com/story-synth-microgrants/">Big Bad Con's site</a>.</p>
       </div>
     </div>
@@ -20,18 +20,18 @@
         <div class="card card-body shadow">
           <h3>Program Details</h3>
           <div>
-            <p>The microgrants are for designers from marginalized backgrounds to create new games on Story Synth that
+            <p>The microgrants were for designers from marginalized backgrounds to create new games on Story Synth that
               take advantage of web monetization.</p>
 
-            <p>The microgrants come with the following:</p>
+            <p>The microgrants came with the following:</p>
             <ul>
               <li>$300 to each grant recipient (up to 100 recipients) to create a game in a 6 month window</li>
               <li>Administrative support from the Big Bad Con grants administrators</li>
               <li>Story Synth technical and design support from Randy Lubin</li>
               <li>Designers retain full ownership / rights to their games</li>
             </ul>
-            <p>The microgrant program is being run by the wonderful folks at Big Bad Con. Learn more about the
-              application process and apply on <a href="https://www.bigbadcon.com/story-synth-microgrants/">Big Bad
+            <p>The microgrant program was run by the wonderful folks at Big Bad Con. Learn more about the
+              application process on <a href="https://www.bigbadcon.com/story-synth-microgrants/">Big Bad
                 Con's site</a>.</p>
           </div>
         </div>

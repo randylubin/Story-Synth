@@ -91,8 +91,7 @@
       v-if="gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] || Object.prototype.toString.call(roomInfo.cardSequence[roomInfo.currentCardIndex]) === '[object Object]'"
       class="mb-4">
 
-      <div class="card d-flex shadow img-fluid"
-        v-bind:class="{ 'bg-transparent': (customOptions.coverImage && roomInfo.currentCardIndex == 0) }">
+      <div class="card d-flex shadow img-fluid" v-bind:class="classObject">
 
         <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width:100%"
           v-if="customOptions.coverImage && roomInfo.currentCardIndex == 0">
@@ -260,6 +259,26 @@ export default {
       error: false,
     }
   },
+  computed: {
+    classObject: function () {
+      if (this.roomInfo && this.roomInfo.currentCardIndex) {
+        return {
+          'bg-transparent': this.customOptions.coverImage && this.roomInfo.currentCardIndex == 0,
+          'phases-deck-0': this.roomInfo.currentCardIndex < this.firstNonInstruction,
+          'phases-deck-1': this.roomInfo.currentPhase == 0 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-2': this.roomInfo.currentPhase == 1 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-3': this.roomInfo.currentPhase == 2 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-4': this.roomInfo.currentPhase == 3 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-5': this.roomInfo.currentPhase == 4 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-6': this.roomInfo.currentPhase == 5 && this.roomInfo.currentCardIndex >= this.firstNonInstruction && this.roomInfo.currentCardIndex < this.endingIndex,
+          'phases-deck-ending': this.roomInfo.currentCardIndex >= this.endingIndex,
+
+        }
+      } else {
+        return {}
+      }
+    }
+  },
   watch: {
     sheetData: function () {
       this.processSheetData();
@@ -384,14 +403,6 @@ export default {
     shuffle() {
       this.$bvModal.hide('reshuffleConfirm')
 
-      // reset card count
-      this.$emit('firebase-update', {
-        currentCardIndex: 0,
-        currentPhase: 0,
-        lastSeenPhase: 0,
-        lastSeenRound: 0
-      })
-
       // Create a ordered array
       var initialCardSequence = []
       var finalCardSequence = []
@@ -440,7 +451,12 @@ export default {
 
       // sync the shuffled array
       this.$emit('firebase-update', {
-        cardSequence: initialCardSequence.concat(shuffledCards).concat(finalCardSequence)
+        cardSequence: initialCardSequence.concat(shuffledCards).concat(finalCardSequence),
+        currentCardIndex: 0,
+        currentPhase: 0,
+        lastSeenPhase: 0,
+        lastSeenRound: 0,
+        extensionData: this.tempExtensionData,
       })
 
     },

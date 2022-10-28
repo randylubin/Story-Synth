@@ -5,7 +5,8 @@
         <div class="card d-flex extension-card">
           <div class="card-body">
             <h2 v-dompurify-html="editableListTitle" v-if="editableListTitle != undefined"></h2>
-            <h2 v-else>List</h2>
+            <div v-dompurify-html="editableListUpperMarked" v-if="editableListUpperMarked"></div>
+            <h2 v-if="!editableListTitle && !editableListUpper">List</h2>
 
             <div v-if="editableList != []">
               <div v-for="(item, index) in editableList" v-bind:key="index" class="">
@@ -49,6 +50,7 @@ export default {
   props: {
     editableList: Array,
     editableListTitle: String,
+    editableListUpper: String,
   },
   data: function () {
     return {
@@ -58,6 +60,15 @@ export default {
 
       error: null
     };
+  },
+  computed: {
+    editableListUpperMarked: function () {
+      if (this.editableListUpper) {
+        return this.$marked(this.editableListUpper)
+      } else {
+        return null
+      }
+    }
   },
   mounted() {
 
@@ -97,4 +108,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

@@ -708,6 +708,7 @@ export default {
         cardSequence: newCardSequence,
         currentCardIndex: 0,
         locationOfLastCard: newCardSequence.length - 1,
+        extensionData: this.tempExtensionData,
       });
 
       console.log('last location', !Number.isNaN(lastLocation))

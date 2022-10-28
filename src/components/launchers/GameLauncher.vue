@@ -56,7 +56,7 @@
             </div>
 
             <div v-if="customOptions.gameBlurb" class="row">
-              <div class="col-sm text-center game-burb" style="white-space: pre-wrap">
+              <div class="col-sm text-center game-blurb" style="white-space: pre-wrap">
                 <p v-dompurify-html="customOptions.gameBlurb"></p>
               </div>
             </div>
