@@ -11,30 +11,30 @@
       <div class="row menu-row" v-if="!roomInfo.xCardIsActive">
         <b-button variant="outline-dark" class="btn-lg btn-block control-button-safety-card"
           v-on:click="xCard(); closeMenu();">{{ customOptions.safetyCardButton
-          ? customOptions.safetyCardButton
-          : 'X-Card'
+              ? customOptions.safetyCardButton
+              : 'X-Card'
           }}</b-button>
       </div>
       <div class="row menu-row">
         <b-button v-on:click="
-          nextDeck();
-          closeMenu();
+  nextDeck();
+closeMenu();
         " variant="outline-dark" class="control-button-next-deck btn-lg btn-block" v-if="
           this.customOptions.showNextDeckButton &&
           (!customOptions.facilitatorMode || userRole == 'facilitator')
         " :disabled="
-          roomInfo.xCardIsActive ||
-          roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
-        ">{{ customOptions.showNextDeckButton
-        ? customOptions.showNextDeckButton
-        : 'Next Deck'
-        }}</b-button>
+  roomInfo.xCardIsActive ||
+  roomInfo.currentCardIndex >= roomInfo.locationOfLastCard
+">{{ customOptions.showNextDeckButton
+    ? customOptions.showNextDeckButton
+    : 'Next Deck'
+}}</b-button>
       </div>
       <div v-if="customOptions.treatLastCardAsLastDeck"
         :disabled="roomInfo.currentCardIndex >= roomInfo.locationOfLastCard" class="row menu-row">
         <b-button variant="outline-dark" class="control-button-last-deck btn-lg btn-block" v-on:click="
-          lastCard();
-          closeMenu();
+  lastCard();
+closeMenu();
         " :disabled="
           roomInfo.xCardIsActive ||
           roomInfo.currentCardIndex == gSheet.length - 1 ||
@@ -53,8 +53,8 @@
         <h6 class="text-center" v-if="!customOptions.hideLastCardOptions">{{ customOptions.lastCardLabel }} Options</h6>
         <div class="row menu-row" v-if="!customOptions.hideLastCardOptions">
           <b-button class="btn-block" v-on:click="
-            lastCard();
-            closeMenu();
+  lastCard();
+closeMenu();
           " :disabled="
             roomInfo.xCardIsActive ||
             roomInfo.currentCardIndex == gSheet.length - 1 ||
@@ -64,8 +64,8 @@
           </b-button>
 
           <b-button class="btn-block" v-on:click="
-            shuffleLastCard('center');
-            closeMenu();
+  shuffleLastCard('center');
+closeMenu();
           " :disabled="
             roomInfo.xCardIsActive ||
             roomInfo.currentCardIndex == gSheet.length - 1 ||
@@ -75,8 +75,8 @@
           </b-button>
 
           <b-button class="btn-block" v-on:click="
-            shuffleLastCard('end');
-            closeMenu();
+  shuffleLastCard('end');
+closeMenu();
           " :disabled="
             roomInfo.xCardIsActive ||
             roomInfo.currentCardIndex == gSheet.length - 1 ||
@@ -170,10 +170,10 @@
           <div class="col-sm">
             <h2>
               <span v-if="customOptions.displayCardCountLabel">{{
-              customOptions.displayCardCountLabel
+                  customOptions.displayCardCountLabel
               }}</span><span v-else>Cards seen:</span>
               {{
-              roomInfo.currentCardIndex - customOptions.displayCardCount + 1
+                  roomInfo.currentCardIndex - customOptions.displayCardCount + 1
               }}
             </h2>
           </div>
@@ -201,12 +201,6 @@
             <a class="x-card-text" href="http://tinyurl.com/x-card-rpg">About the X-Card</a>
           </div>
         </div>
-
-        <!-- Card Image, Bottom -->
-        <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" bottom v-if="
-          customOptions.cardBackgroundImageAlign == 'bottom' &&
-          roomInfo.currentCardIndex != 0
-        "></b-card-img>
       </div>
 
       <!-- Main Card -->
@@ -218,11 +212,11 @@
             !customOptions.noCoverImageInSession &&
             cardIndex == 0,
         }" v-if="
-          gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] &&
-          cardIndex == roomInfo.currentCardIndex &&
-          (!roomInfo.extensionData || !(roomInfo.extensionData.interruptsReplaceMainCards && roomInfo.extensionData.currentInterrupt)) &&
-          !roomInfo.xCardIsActive
-        ">
+  gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]] &&
+  cardIndex == roomInfo.currentCardIndex &&
+  (!roomInfo.extensionData || !(roomInfo.extensionData.interruptsReplaceMainCards && roomInfo.extensionData.currentInterrupt)) &&
+  !roomInfo.xCardIsActive
+">
           <!-- card images -->
           <img v-bind:src="customOptions.coverImage" class="card-img-top" style="width: 100%" v-if="
             customOptions.coverImage &&
@@ -267,8 +261,8 @@
               <div v-if="!roomInfo.showCardBack">
                 <h1 v-if="!customOptions.hideHeadersOnCards" class="main-card-header-text">
                   {{
-                  gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
-                  .headerText
+                      gSheet[roomInfo.cardSequence[roomInfo.currentCardIndex]]
+                        .headerText
                   }}
                 </h1>
                 <div class="mt-4 mb-4 main-card-body-text" v-dompurify-html="
@@ -317,6 +311,11 @@
             customOptions.lastCardReminderFrequency - 1
           ">
           </b-alert>
+          <!-- Card Image, Bottom -->
+          <b-card-img v-bind:src="customOptions.cardBackgroundImage" alt="Card Background image" bottom v-if="
+            customOptions.cardBackgroundImageAlign == 'bottom' &&
+            roomInfo.currentCardIndex != 0
+          "></b-card-img>
         </div>
         <!-- </transition> -->
       </div>
@@ -352,9 +351,9 @@
           <div class="text-center mb-3">
             <b-button variant="dark" v-on:click="nextDeck()">Advance to
               {{
-              customOptions.showNextDeckButton
-              ? customOptions.showNextDeckButton
-              : "Next Deck"
+                  customOptions.showNextDeckButton
+                    ? customOptions.showNextDeckButton
+                    : "Next Deck"
               }}</b-button>
           </div>
         </b-modal>
