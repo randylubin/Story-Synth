@@ -26,6 +26,20 @@
         <slot></slot>
       </b-container>
       <!-- <app-menuModal :customOptions="customOptions" :location="'menu'"></app-menuModal> -->
+      <div v-if="roomInfo.extensionData && roomInfo.extensionData.interruptsInMenu">
+        <hr class='mb-4' />
+        <app-interrupts class="extension" :extensionList="this.tempExtensionData"
+          :currentInterrupt="roomInfo.extensionData.currentInterrupt" :menuLocation="true"
+          @process-extension-update="processExtensionUpdate($event)" v-if="
+            tempExtensionData['interrupts'] &&
+            (!tempExtensionData.interruptsFirstVisible ||
+              tempExtensionData.interruptsFirstVisible <=
+                roomInfo.currentCardIndex) &&
+            (!tempExtensionData.interruptsLastVisible ||
+              tempExtensionData.interruptsLastVisible >
+                roomInfo.currentCardIndex)
+          "></app-interrupts>
+      </div>
       <div class=""
         v-if="(customOptions.modalOneLabel || customOptions.modalTwoLabel || customOptions.modalThreeLabel || customOptions.modalFourLabel || customOptions.modalFiveLabel)">
         <hr class='mb-4' />
@@ -71,6 +85,7 @@ export default {
   components: {
     'app-downloadExtensionData': () => import("../extensions/DownloadExtensionData.vue"),
     'app-roomLink': () => import('../layout/RoomLink.vue'),
+    "app-interrupts": () => import("../extensions/Interrupts.vue"),
   },
   methods: {
     closeMenu() {
@@ -84,9 +99,17 @@ export default {
         console.log('copy failed')
       });
     },
+    processExtensionUpdate(newData) {
+      console.log("processing extension update", newData);
+
+      this.$set(this.roomInfo.extensionData, newData[0], newData[1]);
+      this.$emit("sync-extension", this.roomInfo.extensionData);
+      this.$bvModal.hide("menuModal");
+    },
   },
 };
 </script>
 
 <style scoped>
+
 </style>
