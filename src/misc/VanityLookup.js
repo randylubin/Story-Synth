@@ -30,7 +30,10 @@ var VanityLookup = {
   "Our-Ties-Forever-Bound": "1sTJiVc3T7vzfkTIsbgybl3kQ1sFZHu1Pk_KV6wZGPog",
   "Kaiju-Haiku": "1V5foCiEOIFM-MT2aewLvjhpUH25_iD6_JWgfBldidfc",
   "Empathy-is-Cyberpunk": "1b320bxNguUTtVs4f731y7wFX_tOBtNEJyJyGwt8eN6w",
-  "End-of-the-Line": "1Hugmc0cZIFJemNLLtMEDBDnHMQxOumVS8PoHM8YvnM0"
+  "End-of-the-Line": "1Hugmc0cZIFJemNLLtMEDBDnHMQxOumVS8PoHM8YvnM0",
+  "As-The-Tiles-May-Fall": "1Eq0qDZv8SLlFiiSPaXPEuiHIt0ZDUbDDLNhNVHR_EbM",
+  "Generational": "1p3DrsORsL69s3Iqr8SlpS_G1jy--sAWDPbBBSy6pnZk",
+  "Operational": "1-5TGL3MXCuJ7iEk-Tod5auPwjcPn2_UJileIwop9HK0",
 
 
 
