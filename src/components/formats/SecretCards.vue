@@ -102,11 +102,15 @@
             <div class="col-sm">
               <div class="card shadow" v-on:click="updateClickedCard(index)" style="cursor:pointer">
                 <div class="card-body">
-                  <h5>Public: </h5>
+                  <h5 v-if="customOptions.secretCardsPublicHeader"
+                    v-dompurify-html="customOptions.secretCardsPublicHeader"></h5>
+                  <h5 v-else>Public:</h5>
                   <div v-dompurify-html="row.publicText"></div>
                   <br><br>
 
-                  <h5>Secret:</h5>
+                  <h5 v-if="customOptions.secretCardsPrivateHeader"
+                    v-dompurify-html="customOptions.secretCardsPrivateHeader"></h5>
+                  <h5 v-else>Secret:</h5>
                   <div v-dompurify-html="row[playerSelected]"></div>
 
                 </div>
