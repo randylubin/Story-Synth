@@ -37,39 +37,51 @@
 
 
 
-      <div v-if="!playerSelected" class="mb-4">
+      <div class="mb-4">
         <div class="row align-center mb-3">
           <img v-bind:src="customOptions.coverImage" class="img-fluid" alt="">
         </div>
-        <div class="row text-center">
-          <div class="col-sm">Pick a player role:</div>
-        </div>
         <div class="row">
-          <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
-            <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player"
-              v-on:click="selectPlayer(player)">{{ player }}</button>
+          <div class="col-12">
+            <div class="card d-flex align-items-center py-3">
+              <div v-if="!playerSelected">
+                <div v-if="!customOptions.pickARoleText" class="row text-center">
+                  <div class="col-sm">Pick a player role:</div>
+                </div>
+                <div v-if="customOptions.pickARoleText" class="row text-center">
+                  <div class="col" v-dompurify-html="customOptions.pickARoleText"></div>
+                </div>
+                <div class="row">
+                  <div class="btn-group col-sm" role="group" aria-label="Timer Controls">
+                    <button type="button" class="btn btn-outline-dark" v-for="player in playerArray" v-bind:key="player"
+                      v-on:click="selectPlayer(player)">{{ player }}</button>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="player-label row mb-4" v-if="playerSelected">
+                <div class="col-sm">
+                  Role: {{ playerSelected }}
+                  <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
+                </div>
+              </div>
+
+              <div class="btn-container" v-if="playerSelected">
+                <div class="row mb-4">
+                  <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
+                    <button class="btn btn-outline-dark" v-on:click="previousCard()"
+                      :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
+                    <button class="btn btn-outline-dark" v-on:click="nextCard()"
+                      :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 2">
+                      <span v-if="roomInfo.currentCardIndex == 0">Start</span>
+                      <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div class="player-label row mb-4" v-if="playerSelected">
-        <div class="col-sm">
-          Role: {{ playerSelected }}
-          <button class="btn btn-sm btn-outline-dark" v-on:click="selectPlayer(null)">Reselect role</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="btn-container" v-if="playerSelected">
-      <div class="row mb-4">
-        <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
-          <button class="btn btn-outline-dark" v-on:click="previousCard()"
-            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">Previous</button>
-          <button class="btn btn-outline-dark" v-on:click="nextCard()"
-            :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 2">
-            <span v-if="roomInfo.currentCardIndex == 0">Start</span>
-            <span v-if="roomInfo.currentCardIndex !== 0">Next</span>
-          </button>
         </div>
       </div>
     </div>
