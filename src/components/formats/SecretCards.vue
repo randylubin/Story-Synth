@@ -34,11 +34,8 @@
       it to design your own game!</b-alert>
 
     <div>
-
-
-
       <div class="mb-4">
-        <div class="row align-center mb-3">
+        <div class="row align-center mb-3" v-if="!playerSelected">
           <img v-bind:src="customOptions.coverImage" class="img-fluid" alt="">
         </div>
         <div class="row">
