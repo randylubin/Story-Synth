@@ -64,7 +64,7 @@
                 </div>
               </div>
 
-              <div class="btn-container" v-if="playerSelected">
+              <!-- <div class="btn-container" v-if="playerSelected">
                 <div class="row mb-4">
                   <div class="btn-group col-sm" role="group" aria-label="Deck Controls">
                     <button class="btn btn-outline-dark" v-on:click="previousCard()"
@@ -76,7 +76,7 @@
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -103,6 +103,29 @@
       </transition>
     </div>
 
+    <div class="fab-buttons container"
+      v-if="(!customOptions.facilitatorMode || userRole == 'facilitator') && (!customOptions.lowerCardNavOnMobile) && (!customOptions.hideNavigationButtons || (parseInt(customOptions.hideNavigationButtons) > roomInfo.currentCardIndex)) && playerSelected">
+      <button class="btn btn-outline-dark btn-fab btn-fab-left control-button-previous-card shadow"
+        v-on:click="previousCard()" v-b-tooltip.hover title="Previous Card"
+        :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">
+        <!-- Previous Card -->
+        <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
+        <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+      </button>
+      <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
+        title="Next Card" v-on:click="nextCard()"
+        :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases - 1)">
+        <!-- Next Card -->
+        <div v-if="roomInfo.currentCardIndex == 0">
+          <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
+          <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
+        </div>
+        <div v-else>
+          <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
+          <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>
+        </div>
+      </button>
+    </div>
 
     <div v-if="!roomInfo.xCardIsActive && playerSelected">
       <div v-for="(row, index) in gSheet" v-bind:key="index">
