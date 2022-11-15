@@ -64,10 +64,10 @@
             <p>In 2022, Big Bad Con and Story Synth teamed up to give $30,000 in microgrants to designers of
               marginalized identities. Check out the <a href="/Microgrant-Gallery">Microgrant Gallery</a> for a listing
               of their games.</p>
-            <!-- <a href="https://itch.io/jam/story-synth-summer-jam/entries">
-              <img src="https://diegeticgames.com/uploads/story-synth-summer-jam-2021-gallery.png"
-                alt="gallery image of game submissions to the story synth summer jam" class="img-fluid">
-            </a> -->
+            <a href="/Microgrant-Gallery">
+              <img src="https://diegeticgames.com/uploads/microgrant-gallery-min.png"
+                alt="image gallery of games designed by our grantees" class="img-fluid">
+            </a>
           </div>
         </div>
       </div>
