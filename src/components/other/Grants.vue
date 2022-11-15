@@ -10,7 +10,8 @@
           </a>
         </div>
         <p>In 2022, we ran a $30,000 microgrant program to help designers make games on Story Synth. The grant program
-          was run by Big Bad Con and funded by Grant for the Web. Learn more on <a
+          was run by Big Bad Con and funded by Grant for the Web. Check out the grantees' games in the <a
+            href="/Microgrant-Gallery">Microgrant Gallery</a>. Learn more on <a
             href="https://www.bigbadcon.com/story-synth-microgrants/">Big Bad Con's site</a>.</p>
       </div>
     </div>

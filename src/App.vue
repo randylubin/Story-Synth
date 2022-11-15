@@ -20,6 +20,10 @@
           <app-gallery></app-gallery>
         </div>
 
+        <div v-if="$route.fullPath == '/Microgrant-Gallery/'">
+          <app-microgrant-gallery></app-microgrant-gallery>
+        </div>
+
         <div v-if="$route.fullPath == '/Grants/'">
           <app-grants></app-grants>
         </div>
@@ -66,6 +70,7 @@ export default {
 
     'app-homepage': () => import('./components/other/Homepage.vue'),
     'app-gallery': () => import('./components/other/Gallery.vue'),
+    'app-microgrant-gallery': () => import('./components/other/MicrograntGallery.vue'),
     'app-formatsAndExtensions': () => import('./components/other/FormatsAndExtensionsOverview.vue'),
     'app-grants': () => import('./components/other/Grants.vue'),
     'app-CSSPlayground': () => import('./components/other/CSSPlayground.vue'),

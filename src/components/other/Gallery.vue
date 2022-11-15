@@ -60,13 +60,14 @@
       <div class="col-xl-8 offset-xl-2 offset-lg-0 col-lg-12 col-sm-12 mb-1 mt-5">
         <div class="card shadow">
           <div class="card-body text-center">
-            <h2>Story Synth Summer Jam 2021</h2>
-            <p>Check out the great submissions to the <a href="https://itch.io/jam/story-synth-summer-jam/entries">Story
-                Synth Summer Jam 2021</a></p>
-            <a href="https://itch.io/jam/story-synth-summer-jam/entries">
+            <h2>Big Bad Con Presents: Story Synth Microgrants</h2>
+            <p>In 2022, Big Bad Con and Story Synth teamed up to give $30,000 in microgrants to designers of
+              marginalized identities. Check out the <a href="/Microgrant-Gallery">Microgrant Gallery</a> for a listing
+              of their games.</p>
+            <!-- <a href="https://itch.io/jam/story-synth-summer-jam/entries">
               <img src="https://diegeticgames.com/uploads/story-synth-summer-jam-2021-gallery.png"
                 alt="gallery image of game submissions to the story synth summer jam" class="img-fluid">
-            </a>
+            </a> -->
           </div>
         </div>
       </div>

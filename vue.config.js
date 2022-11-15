@@ -8,6 +8,7 @@ module.exports = {
         "/Upload/",
         "/Formats/",
         "/Grants/",
+        "/Microgrant-Gallery",
         "/CSS-Playground/",
         '/Games/Aethelreds-Academy/',
         '/Games/Around-The-Realm/',
