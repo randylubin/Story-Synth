@@ -34,6 +34,7 @@ var VanityLookup = {
   "As-The-Tiles-May-Fall": "1Eq0qDZv8SLlFiiSPaXPEuiHIt0ZDUbDDLNhNVHR_EbM",
   "Generational": "1p3DrsORsL69s3Iqr8SlpS_G1jy--sAWDPbBBSy6pnZk",
   "Operational": "1-5TGL3MXCuJ7iEk-Tod5auPwjcPn2_UJileIwop9HK0",
+  "Workspace-Generator": "1Uol5Hqiu6_tc8Wj0hLbLvyjCZJEJhJzYaCl-P1Mvgyw"
 
 
 
