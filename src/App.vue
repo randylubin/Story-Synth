@@ -116,7 +116,7 @@ export default {
         },
         {
           property: 'og:image',
-          content: 'https://storysynth.org/img/story-synth-square-logo.gif',
+          content: 'https://storysynth.org/img/story-synth-square-logo.png',
           vmid: 'og:image'
         },
         {

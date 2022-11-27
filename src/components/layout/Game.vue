@@ -294,6 +294,7 @@ export default {
       ) {
         console.log("processing hardcoded sheet");
         this.sheetData = this.customGameData[this.gSheetID].sheetData;
+        this.customOptions.ogImageSquare = this.customGameData[this.gSheetID].ogImageSquare;
         this.processSheetData();
       } else {
         // For published version, set getURL equal to the url of your spreadsheet
@@ -440,7 +441,7 @@ export default {
     },
   },
   metaInfo() {
-    if (!this.gameAsExtension && this.customOptions) {
+    if (!this.gameAsExtension) {
       return {
         title: this.customOptions?.gameTitle,
         meta: [
@@ -467,12 +468,12 @@ export default {
           },
           {
             property: "og:image",
-            content: this.customOptions.ogImageSquare,
+            content: this.customOptions?.ogImageSquare,
             vmid: "og:image",
           },
           {
             property: "og:url",
-            content: location.hostname.toString() + "/#" + this.$route.fullPath,
+            content: location.hostname.toString() + "/" + this.$route.fullPath,
             vmid: "og:url",
           },
           {

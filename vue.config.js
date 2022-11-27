@@ -10,6 +10,7 @@ module.exports = {
         "/Grants/",
         "/Microgrant-Gallery",
         "/CSS-Playground/",
+        // TODO: FIX THIS
         '/Games/Aethelreds-Academy/',
         '/Games/Around-The-Realm/',
         '/Games/Clash-At-Ikara/',
@@ -24,11 +25,11 @@ module.exports = {
         "/SlotMachine/1t5LRUQG9DzMJ3kd8E9DZV7_EbE8J5-Gqhz7TWQ4Y-uU/",
         "/Phases/1HataDfV2lrA4hfzmLgDjXH09dEMLQV6OT10tVH9G52A/",
         "/SecretCards/1JwMF02DSxNKtjHp6u-wyznSs-iEG_3DpOobgc17I16o/",
-        "/Shuffled/1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc/", // Reunion
-        "/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/", // This Heart Within Me Burns
-        "/Shuffled/12dLB630MtjpJGDwEEwD0lvOzMUoACfzgqHQLgTLYTGc/", // Compersion
-        "/Shuffled/1p3DrsORsL69s3Iqr8SlpS_G1jy--sAWDPbBBSy6pnZk/", // Generational
-        "/Shuffled/1PGZzheGPu6zvRo4ENEZ-MSVq8y20Q1_4E0nmfW-sRdY/", // Super Fre-nemies
+        // "/Shuffled/1rJ3L8E_sBEqiRO8ADQeSAS2UmcK9Xzk0g_F0d_XkkRc/", // Reunion
+        // "/Shuffled/1WLy_IM9DehQbrBNjTdL67Bc-ZiW83INcfxlnzpDMqnA/", // This Heart Within Me Burns
+        // "/Shuffled/12dLB630MtjpJGDwEEwD0lvOzMUoACfzgqHQLgTLYTGc/", // Compersion
+        // "/Shuffled/1p3DrsORsL69s3Iqr8SlpS_G1jy--sAWDPbBBSy6pnZk/", // Generational
+        // "/Shuffled/1PGZzheGPu6zvRo4ENEZ-MSVq8y20Q1_4E0nmfW-sRdY/", // Super Fre-nemies
       ],
       useRenderEvent: true,
       headless: true,
