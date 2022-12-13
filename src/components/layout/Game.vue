@@ -147,6 +147,7 @@ export default {
         Phases: "app-phases",
         Generator: "app-generator",
         Hexflower: "app-hexflower",
+        Hexmap: "app-hexmap",
         Sandbox: "app-sandbox",
       },
       unsubscribeFromFirebase: null,
@@ -163,6 +164,7 @@ export default {
     "app-phases": () => import("../formats/Phases.vue"),
     "app-generator": () => import("../formats/Generator.vue"),
     "app-hexflower": () => import("../formats/Hexflower.vue"),
+    "app-hexmap": () => import("../formats/Hexmap.vue"),
     "app-sandbox": () => import("../formats/Sandbox.vue"),
 
     "app-monetization": () => import("../layout/Monetization.vue"),

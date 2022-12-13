@@ -61,6 +61,7 @@
                     <option>Phases</option>
                     <option>Generator</option>
                     <option>Hexflower</option>
+                    <option>Hexmap</option>
                   </b-form-select>
                 </div>
               </div>
@@ -136,6 +137,8 @@ export default {
         this.gameType = "Generator";
       } else if (this.routeGameType == "Hexflower") {
         this.gameType = "Hexflower";
+      } else if (this.routeGameType== "Hexmap") {
+        this.gameType = "Hexmap";
       } else {
         this.gameType = "SecretCards";
       }
@@ -165,6 +168,8 @@ export default {
         newPath += "Generator";
       } else if (gameType == "Hexflower") {
         newPath += "Hexflower";
+      } else if (gameType == "Hexmap") {
+        newPath += "Hexmap";
       } else {
         newPath += "SlotMachine";
       }
