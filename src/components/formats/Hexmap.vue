@@ -67,15 +67,20 @@
             'pointy-top': customOptions.hexOrientation == 'pointyTop',
             'hex-randomizing': roomInfo.playRandomizerAnimation === true,
             'hex-resetting': roomInfo.playResetAnimation === true,
+            'looking-enabled': customOptions.lookBeforeMove,
           }">
             <template v-for="(hexRow, hexRowIndex) in updatedHexMapRows">
-              <button class="hex-tile" v-for="(hex, hexIndex) in hexRow" v-on:click="goToHex(hex.hexID, false)"
+              <button class="hex-tile" v-for="(hex, hexIndex) in hexRow" v-on:click="lookOrMove(hex.hexID, false)"
                 v-bind:key="`${hexIndex}_${hexRowIndex}`" v-bind:class="{
                   'hex-tile-active':
                     hex.hexID == roomInfo.currentLocation &&
                     !roomInfo.tempSameHex,
                   'hex-tile-previous-active':
                     hex.hexID == roomInfo.previousLocation,
+                  'hex-tile-previously-visited':
+                    roomInfo.visitedHexes && roomInfo.visitedHexes.includes(hex.hexID),
+                  'hex-currently-viewed': 
+                    hex.hexID == currentlyViewedHex
                 }" v-bind:style="{
                   transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`,
                 }" :disabled="
@@ -137,16 +142,32 @@
         </div>
 
         <transition name="fade-full-content" mode="out-in">
-          <!--TODO fix this-->
-          <div class="row mt-4 mb-4 p-2 full-content" :key="
-            gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent
-          " v-if="
-            roomInfo.hexArray.length && gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent &&
-            !roomInfo.tempSameHex
+          <div class="row mt-5 mb-4 p-2 full-content"
+          v-if="
+            ((!customOptions.lookBeforeMove || currentlyViewedHex == undefined) && roomInfo.hexArray.length && gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent &&
+            !roomInfo.tempSameHex) ||
+            (customOptions.lookBeforeMove && roomInfo.hexArray.length && currentlyViewedHex !== undefined && gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent &&
+            !roomInfo.tempSameHex)
           " v-bind:class="{ invisible: roomInfo.playRandomizerAnimation }">
-            <div class="col-sm-12" v-dompurify-html="
-              gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent
-            "></div>
+            <div class="col-sm-12">
+              <button class="btn btn-dark mx-2 my-1" v-if="customOptions.lookBeforeMove && currentlyViewedHex && roomInfo.currentLocation != currentlyViewedHex" v-on:click="goToHex(currentlyViewedHex, false)">Move</button>
+            </div>
+            <div class="col-sm-12" v-if="currentlyViewedHex !== undefined">
+              <div v-if="(roomInfo.hexesVisible[currentlyViewedHex] || (customOptions.lookIntoFog)) && gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent" v-dompurify-html="
+                gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent
+              "></div>
+              <div v-if="gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent && roomInfo.visitedHexes.includes(currentlyViewedHex)" v-dompurify-html="
+                gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent
+              "></div>
+            </div>
+            <div class="col-sm-12" v-if="currentlyViewedHex == undefined">
+              <div v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].lookContent" v-dompurify-html="
+                gSheet[roomInfo.hexArray[roomInfo.currentLocation]].lookContent
+              "></div>
+              <div v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent" v-dompurify-html="
+                gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent
+              "></div>
+            </div>
           </div>
         </transition>
       </div>
@@ -189,38 +210,8 @@ export default {
       totalHexCount: 0,
       hexRowLookup: {},
       hexMapRows: [],
-      hexNeighborMap: [
-        [null, null, 2, 4, 1, null],
-        [null, 0, 4, 6, 3, null],
-        [null, null, 5, 7, 4, 0],
-        [null, 1, 6, 8, null, null],
-        [0, 2, 7, 9, 6, 1],
-        [null, null, null, 10, 7, 2],
-        [1, 4, 9, 11, 8, 3],
-        [2, 5, 10, 12, 9, 4],
-        [3, 6, 11, 13, null, null],
-        [4, 7, 12, 14, 11, 6],
-        [5, null, null, 15, 12, 7],
-        [6, 9, 14, 16, 13, 8],
-        [7, 10, 15, 17, 14, 9],
-        [8, 11, 16, null, null, null],
-        [9, 12, 17, 18, 16, 11],
-        [10, null, null, null, 17, 12],
-        [11, 14, 18, null, null, 13],
-        [12, 15, null, null, 18, 14],
-        [14, 17, null, null, null, 16],
-      ],
-      // hexNeighborMap: [
-      //   [null, null, 3, 5, 2, null],
-      //   [null, 1, 5, 4, null, null], [null, null, 6, 8, 5, 1],
-      //   [null,2,7,9,null,null],[1,3,8,10,7,2],[null,null,null,11,8,3],
-      //   [2,5,10,12,9,4],[3,6,11,13,10,5],
-      //   [4,7,12,14,null,null],[5,8,13,15,12,7],[6,null,null,16,13,8],
-      //   [7,10,15,17,14,9],[8,11,16,18,15,10],
-      //   [9,12,17,null,null,null],[10,13,18,19,17,12],[11,null,null,null,18,13],
-      //   [12,15,19,null,null,14],[13,16,null,null,19,15],
-      //   [15,18,null,null,null,17],
-      // ],
+      hexNeighborMap: [],
+      currentlyViewedHex: undefined,
       rowArrayString: "",
       styleTemplate: "",
       customOptions: {
@@ -261,6 +252,13 @@ export default {
           this.$emit("firebase-update", { playResetAnimation: false });
         }, 1000);
       }
+      if (val?.previousLocation == null){
+        this.currentlyViewedHex = val?.currentLocation
+      }
+      if (this.currentlyViewedHex == undefined){
+        console.log('watch TRIGGERED from Room Info', val)
+        this.currentlyViewedHex = val?.currentLocation
+      }
     },
     sheetData: function () {
       this.processSheetData();
@@ -268,6 +266,13 @@ export default {
     firebaseReady: function () {
       if (this.firebaseReady && !this.roomInfo) {
         this.initialFirebaseSetup();
+      } else if (this.firebaseReady && this.roomInfo){
+        if (this.roomInfo.previousLocation == null){
+          this.currentlyViewedHex = this.roomInfo.currentLocation
+        }
+        if (this.currentlyViewedHex == undefined){
+          this.currentlyViewedHex == this.roomInfo.currentLocation
+        }
       }
     },
   },
@@ -419,7 +424,18 @@ export default {
         this.goToHex(targetHexID, true, hexesToAnimate);
       }
     },
+    lookOrMove(hexID, animationInstruction = false, hexesToAnimate = []){
+      if (!this.customOptions.lookBeforeMove || this.customOptions.lookBeforeMove == "FALSE"){
+        this.goToHex(hexID, animationInstruction, hexesToAnimate);
+      } else {
+        this.currentlyViewedHex = hexID;
+      }
+    },
     goToHex(hexID, playRandomizerAnimation = false, hexesToAnimate = []) {
+      let visitedHexes = this.roomInfo.visitedHexes
+      visitedHexes.push(hexID)
+      this.currentlyViewedHex = hexID
+
       // fog of war
       let hexesMidreveal = [];
       if (this.customOptions.fogOfWar == "revealOnMove") {
@@ -448,6 +464,7 @@ export default {
           hexesToAnimate: hexesToAnimate,
           hexesVisible: this.roomInfo.hexesVisible,
           hexesMidreveal: hexesMidreveal,
+          visitedHexes: visitedHexes,
           tempSameHex: true,
         });
         setTimeout(
@@ -465,12 +482,19 @@ export default {
           hexesToAnimate: hexesToAnimate,
           hexesVisible: this.roomInfo.hexesVisible,
           hexesMidreveal: hexesMidreveal,
+          visitedHexes: visitedHexes,
           currentLocation: hexID,
         });
       }
     },
     regenerateHexes() {
       let startingHex = parseInt(this.customOptions.startingHex) ?? 1;
+      let visitedHexesArray = [startingHex];
+      this.currentlyViewedHex = startingHex;
+
+      if (this.customOptions.initiallyVisited){
+        visitedHexesArray = visitedHexesArray.concat(this.customOptions.initiallyVisited)
+      }
 
       let randomApproach = this.customOptions.randomizeHexes ?? null;
 
@@ -593,6 +617,7 @@ export default {
         hexArray: hexIndexList,
         currentLocation: startingHex,
         hexesVisible: visibleHexArray,
+        visitedHexes: visitedHexesArray,
       });
     },
     processSheetData() {
@@ -642,8 +667,9 @@ export default {
                   hexID: parseInt(item[0]),
                   summary: item[3],
                   fullContent: item[4] ? this.$marked(item[4]) : null,
-                  probability: item[5],
-                  background: item[6],
+                  lookContent: item[5] ? this.$marked(item[5]) : null,
+                  probability: item[6],
+                  background: item[7],
                 };
 
                 // check for background
@@ -658,6 +684,10 @@ export default {
             }
           }
         });
+
+        if (this.customOptions.lookIntoFog){
+          this.customOptions.lookIntoFog = this.customOptions.lookIntoFog == "TRUE" ? true : false; 
+        }
 
         if (this.customOptions.initiallyVisible) {
           this.customOptions.initiallyVisible =
@@ -675,6 +705,16 @@ export default {
           for (let v = 0; v < this.customOptions.tilesWithFixedLocations.length; v++) {
             this.customOptions.tilesWithFixedLocations[v] = parseInt(
               this.customOptions.tilesWithFixedLocations[v]
+            );
+          }
+        }
+
+        if (this.customOptions.initiallyVisited) {
+          this.customOptions.initiallyVisited =
+            this.customOptions.initiallyVisited.split(",");
+          for (let v = 0; v < this.customOptions.initiallyVisited.length; v++) {
+            this.customOptions.initiallyVisited[v] = parseInt(
+              this.customOptions.initiallyVisited[v]
             );
           }
         }
@@ -766,6 +806,8 @@ export default {
         if (this.firebaseReady && this.roomInfo?.hexesVisible.length == 0) {
           console.log("about to regen", this.roomInfo);
           this.regenerateHexes();
+        } else if (this.firebaseReady && this.roomInfo?.currentLocation){
+          this.currentlyViewedHex == this.roomInfo.currentLocation;
         }
       }
     },
@@ -830,6 +872,14 @@ $hex-padding: 4px;
 .hex-tile-foggy .hex-tile-inner-content {
   background-color: red;
   visibility: hidden;
+}
+
+.hex-tile-previously-visited .hex-tile-inner-content {
+    text-decoration: line-through;
+}
+
+.hex-currently-viewed .hex-tile-inner-content {
+    text-decoration: underline;
 }
 
 .pointy-top .hex-tile-inner-content {
@@ -970,6 +1020,10 @@ $hex-padding: 4px;
   pointer-events: none;
   -webkit-clip-path: none !important;
   clip-path: none !important;
+}
+
+.looking-enabled .hex-tile-active {
+  pointer-events: auto;
 }
 
 .hex-tile-active .hex-tile-inner {
