@@ -126,7 +126,7 @@
           <div class="row mt-4 mb-4 p-2 full-content" :key="
             gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent
           " v-if="
-            gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent &&
+            roomInfo.hexArray.length && gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent &&
             !roomInfo.tempSameHex
           " v-bind:class="{ invisible: roomInfo.playRandomizerAnimation }">
             <div class="col-sm-12" v-dompurify-html="
@@ -206,6 +206,7 @@ export default {
       //   [12,15,19,null,null,14],[13,16,null,null,19,15],
       //   [15,18,null,null,null,17],
       // ],
+      rowArrayString: "",
       styleTemplate: "",
       customOptions: {
         gameTitle: undefined,
@@ -258,7 +259,7 @@ export default {
   computed: {
     updatedHexMapRows: function () {
       let newHexMapRows = JSON.parse(JSON.stringify(this.hexMapRows));
-      if (this.firebaseReady && this.dataReady && this.roomInfo) {
+      if (this.firebaseReady && this.dataReady && this.roomInfo && this.roomInfo.hexArray.length) {
         let hexIndexTracker = 0;
         for (let r = 0; r < newHexMapRows.length; r++) {
           for (let c = 0; c < newHexMapRows[r].length; c++) {
@@ -281,9 +282,7 @@ export default {
         hexesToAnimate: [],
         extensionData: this.tempExtensionData,
         currentLocation: 9,
-        hexArray: [
-          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-        ],
+        hexArray: [],
         hexesVisible: [],
         hexesMidreveal: [],
         playRandomizerAnimation: false,
@@ -313,13 +312,12 @@ export default {
       let hexPadding = 4;
 
       // Layout
-      let offset = [0, 0, -1, 0, -1, 0, -1, 0, 0];
-
+      
       // Offsets
       let hexSlotOffset = hexWidth * 1.5 + hexPadding;
       let oddOffset = row % 2 === 0 ? 0 : -hexWidth * 0.75 - hexPadding / 2;
 
-      let x = col * hexSlotOffset + oddOffset + offset[row] * hexSlotOffset;
+      let x = col * hexSlotOffset + oddOffset;
 
       let y = row * (hexHeight / 2 + hexPadding / 2.5);
 
@@ -463,51 +461,65 @@ export default {
 
       let newHexArray = [];
       let visibleHexArray = [];
-      for (let n = 0; n < this.gSheet.length; n++) {
-        newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[n]));
-        visibleHexArray[n] = 1;
+      let shuffledFullHexList = [];
+
+      for (let h = 0; h < this.totalHexCount; h++){
+        newHexArray.push({})
+        visibleHexArray.push(1)
       }
 
+      
       if (randomApproach == "randomNoCopies") {
-        for (let n = newHexArray.length - 1; n > 0; n--) {
-          let j = Math.floor(Math.random() * (n + 1));
-          [newHexArray[n], newHexArray[j]] = [
-            JSON.parse(JSON.stringify(newHexArray[j])),
-            JSON.parse(JSON.stringify(newHexArray[n])),
-          ];
+        // create random list of hex indexes
+        for (let h = 0; h < this.gSheet.length; h++){
+          let newIndex = Math.floor(Math.random()*this.gSheet.length)
+          shuffledFullHexList.splice(h, 0, newIndex)
         }
-        if (this.customOptions.startingHexFixedTile == "TRUE") {
-          let oldIndex = startingHex;
-          for (let h = 0; h < newHexArray.length; h++) {
-            if (
-              newHexArray[h].fullContent == this.gSheet[startingHex].fullContent
-            ) {
-              oldIndex = h;
-            }
-          }
-          [newHexArray[oldIndex], newHexArray[startingHex]] = [
-            newHexArray[startingHex],
-            newHexArray[oldIndex],
-          ];
+
+        // TODO: check for fixed hexes
+
+        for (let n = 0; n < this.totalHexCount; n++){
+          newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[shuffledFullHexList[n]]))
         }
+
+        // if (this.customOptions.startingHexFixedTile == "TRUE") {
+        //   let oldIndex = startingHex;
+        //   for (let h = 0; h < newHexArray.length; h++) {
+        //     if (
+        //       newHexArray[h].fullContent == this.gSheet[startingHex].fullContent
+        //     ) {
+        //       oldIndex = h;
+        //     }
+        //   }
+        //   [newHexArray[oldIndex], newHexArray[startingHex]] = [
+        //     newHexArray[startingHex],
+        //     newHexArray[oldIndex],
+        //   ];
+        // }
       } else if (randomApproach == "randomWithCopies") {
-        for (let n = 0; n < this.gSheet.length; n++) {
+        for (let n = 0; n < this.totalHexCount; n++) {
           let j = Math.floor(Math.random() * this.gSheet.length);
           newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[j]));
         }
-        if (this.customOptions.startingHexFixedTile == "TRUE") {
-          newHexArray[startingHex] = JSON.parse(
-            JSON.stringify(this.gSheet[startingHex])
-          );
+
+        // TODO fix starting hexes
+        // if (this.customOptions.startingHexFixedTile == "TRUE") {
+        //   newHexArray[startingHex] = JSON.parse(
+        //     JSON.stringify(this.gSheet[startingHex])
+        //   );
+        // }
+      } else {
+        for (let n = 0; n < this.totalHexCount; n++) {
+          newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[n]));
         }
       }
 
+      console.log(this.hexMapRows)
       let hexIndexTracker = 0;
       for (let r = 0; r < this.hexMapRows.length; r++) {
         for (let c = 0; c < this.hexMapRows[r].length; c++) {
-          this.hexMapRows[r][c] = JSON.parse(
-            JSON.stringify(newHexArray[hexIndexTracker])
-          );
+          console.log('adding hex', hexIndexTracker, newHexArray[hexIndexTracker], this.hexMapRows)
+          this.hexMapRows[r][c] = JSON.parse(JSON.stringify(newHexArray[hexIndexTracker]));
           this.hexMapRows[r][c].hexID = hexIndexTracker;
           hexIndexTracker += 1;
         }
@@ -529,6 +541,7 @@ export default {
 
       let hexIndexList = [];
 
+      console.log("here's the hex array", newHexArray)
       for (let hexIndex = 0; hexIndex < newHexArray.length; hexIndex++) {
         hexIndexList.push(newHexArray[hexIndex].hexID);
       }
@@ -544,6 +557,7 @@ export default {
     },
     processSheetData() {
       let cleanData = [];
+      this.hexMapRows = []
 
       if (this.sheetData) {
         this.sheetData.forEach((item, i) => {
@@ -568,8 +582,14 @@ export default {
                 }
 
                 for (let r = 0; r < this.rowsCount; r++){
-                  this.hexMapRows.push([]);
+                  let newRowArray = [];
+                  for (let c = 0; c < this.columnsCount; c++){
+                    newRowArray.push([]);
+                  }
+                  this.hexMapRows.push(newRowArray);
                 }
+
+                this.rowArrayString = JSON.stringify(this.hexMapRows)
               }
             }
 
@@ -591,10 +611,6 @@ export default {
                   hexInfo.backgroundColor = hexInfo.background;
                 } else {
                   hexInfo.backgroundImage = 'url("' + hexInfo.background + '")';
-                }
-
-                if (this.hexMapRows[this.hexRowLookup[hexInfo.hexID]]) {
-                  this.hexMapRows[this.hexRowLookup[hexInfo.hexID]].push(hexInfo);
                 }
 
                 cleanData.push(hexInfo);
@@ -674,6 +690,12 @@ $hex-padding: 4px;
 
 .hexmap {
   padding-top: 20px;
+}
+
+.hexmap-main {
+  position: relative;
+  width: 100vw;
+  left: calc(-1 * (100vw - 100%) / 2);
 }
 
 // HEXES
