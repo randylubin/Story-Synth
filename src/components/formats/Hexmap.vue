@@ -461,7 +461,6 @@ export default {
 
       let newHexArray = [];
       let visibleHexArray = [];
-      let shuffledFullHexList = [];
 
       for (let h = 0; h < this.totalHexCount; h++){
         newHexArray.push({})
@@ -471,15 +470,23 @@ export default {
       
       if (randomApproach == "randomNoCopies") {
         // create random list of hex indexes
+        let indexArray = []
         for (let h = 0; h < this.gSheet.length; h++){
-          let newIndex = Math.floor(Math.random()*this.gSheet.length)
-          shuffledFullHexList.splice(h, 0, newIndex)
+          indexArray.push(h);
+        }
+
+        for (let n = indexArray.length - 1; n > 0; n--) {
+          let j = Math.floor(Math.random() * (n + 1));
+          [indexArray[n], indexArray[j]] = [
+            indexArray[j],
+            indexArray[n],
+          ];
         }
 
         // TODO: check for fixed hexes
-
+        
         for (let n = 0; n < this.totalHexCount; n++){
-          newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[shuffledFullHexList[n]]))
+          newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[indexArray[n]]))
         }
 
         // if (this.customOptions.startingHexFixedTile == "TRUE") {
