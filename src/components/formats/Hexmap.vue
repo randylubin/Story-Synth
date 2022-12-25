@@ -162,6 +162,13 @@
             <div class="col-sm-12">
               <button class="btn btn-dark mx-2 my-1" v-if="customOptions.lookBeforeMove && currentlyViewedHex && roomInfo.currentLocation != currentlyViewedHex" v-on:click="goToHex(currentlyViewedHex, false)">Move</button>
               <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="rerollHex(currentlyViewedHex)">Reroll</button>
+              <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="togglePickHexList()">Select</button>
+            </div>
+
+            <div class="col-sm-12" v-if="facilitatorMode && showPickHexList">
+              <div class="col-sm-12" v-for="hex in gSheet" v-bind:key="hex.hexID">
+                <span v-dompurify-html="hex.summary"></span> <button v-on:click="pickHexFromList(currentlyViewedHex, hex.hexID)" class="btn btn-dark btn-sm mx-2 my-1">Pick</button>
+              </div>
             </div>
 
             <div v-if="facilitatorMode && currentlyViewedHex" class="col-sm-12 my-4">
@@ -252,6 +259,7 @@ export default {
       currentlyViewedHex: undefined,
       rowArrayString: "",
       styleTemplate: "",
+      showPickHexList: false,
       customOptions: {
         gameTitle: undefined,
         byline: undefined,
@@ -525,13 +533,23 @@ export default {
         });
       }
     },
+    togglePickHexList(){
+      this.showPickHexList = !this.showPickHexList
+    },
+    pickHexFromList(hexID, newHexID){
+      let newHexArray = this.roomInfo.hexArray
+
+      newHexArray[hexID] = newHexID
+
+      this.$emit("firebase-update", {
+        hexArray: newHexArray
+      });
+    },
     rerollHex(hexID){
       let newHexID = Math.floor(Math.random()*this.gSheet.length)
       let newHexArray = this.roomInfo.hexArray
 
       newHexArray[hexID] = newHexID
-
-      console.log(newHexID, newHexArray)
 
       this.$emit("firebase-update", {
         hexArray: newHexArray
