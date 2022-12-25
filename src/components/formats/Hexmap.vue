@@ -59,6 +59,11 @@
               <span>Regenerate</span>
               <b-icon class="hexmap-reroll-icon" icon="arrow-clockwise"></b-icon>
             </b-button>
+            <b-button v-if="
+              customOptions.facilitatorMode == 'TRUE'
+            " :pressed="facilitatorMode" v-on:click="toggleFacilitatorMode()" class="btn btn-dark mx-2 my-1">
+              <span>Facilitator Mode</span>
+            </b-button>
           </div>
         </div>
 
@@ -97,15 +102,18 @@
                     'hex-tile-animate-randomization':
                       roomInfo.hexesToAnimate.includes(hex.hexID),
                     'hex-tile-foggy':
-                      (customOptions.fogOfWar &&
+                      !facilitatorMode &&
+                      ((customOptions.fogOfWar &&
                         roomInfo.hexesVisible[hex.hexID] == 0) ||
-                      roomInfo.hexesMidreveal.includes(hex.hexID),
+                      roomInfo.hexesMidreveal.includes(hex.hexID)),
                   }">
+
+                    <!-- No Replacement Icon -->
                     <div class="hex-tile-inner-content" v-if="
-                      !(
-                        (customOptions.fogOfWar &&
-                          roomInfo.hexesVisible[hex.hexID] == 0) ||
-                        roomInfo.hexesMidreveal.includes(hex.hexID)
+                      (
+                        (!customOptions.fogOfWar ||
+                          roomInfo.hexesVisible[hex.hexID] !== 0 || facilitatorMode) &&
+                        !roomInfo.hexesMidreveal.includes(hex.hexID)
                       ) && !(hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex && customOptions.currentHexReplacementIcon)
                     " v-bind:class="{
                       'hex-tile-inner-content-lg':
@@ -120,7 +128,8 @@
                         countGraphemes(hex.summary) >= 25,
                     }" v-dompurify-html="hex.summary"></div>
 
-                    <div class="hex-tile-inner-content" v-if="
+                    <!-- Replacement Icon -->
+                    <div class="hex-tile-inner-content current-hex-replacement-icon" v-if="
                       hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex && customOptions.currentHexReplacementIcon
                     " v-bind:class="{
                       'hex-tile-inner-content-lg':
@@ -149,16 +158,39 @@
             (customOptions.lookBeforeMove && roomInfo.hexArray.length && currentlyViewedHex !== undefined && gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent &&
             !roomInfo.tempSameHex)
           " v-bind:class="{ invisible: roomInfo.playRandomizerAnimation }">
+
             <div class="col-sm-12">
               <button class="btn btn-dark mx-2 my-1" v-if="customOptions.lookBeforeMove && currentlyViewedHex && roomInfo.currentLocation != currentlyViewedHex" v-on:click="goToHex(currentlyViewedHex, false)">Move</button>
+              <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="rerollHex(currentlyViewedHex)">Reroll</button>
             </div>
+
+            <div v-if="facilitatorMode && currentlyViewedHex" class="col-sm-12 my-4">
+              <div v-if="roomInfo.currentLocation == currentlyViewedHex">
+                Players are currently at this location
+              </div>
+              <div v-if="roomInfo.visitedHexes.includes(currentlyViewedHex) && roomInfo.currentLocation !== currentlyViewedHex">
+                Players have visited this hex
+              </div>
+              <div v-if="!roomInfo.visitedHexes.includes(currentlyViewedHex) && roomInfo.hexesVisible[currentlyViewedHex]">
+                Players have *not* visited this hex
+              </div>
+              <div v-if="!roomInfo.hexesVisible[currentlyViewedHex]">
+                Players cannot see this hex
+              </div>
+            </div>
+
             <div class="col-sm-12" v-if="currentlyViewedHex !== undefined">
-              <div v-if="(roomInfo.hexesVisible[currentlyViewedHex] || (customOptions.lookIntoFog)) && gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent" v-dompurify-html="
+              <div v-if="(roomInfo.hexesVisible[currentlyViewedHex] || (customOptions.lookIntoFog) || facilitatorMode) && gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent" v-dompurify-html="
                 gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent
               "></div>
-              <div v-if="gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent && roomInfo.visitedHexes.includes(currentlyViewedHex)" v-dompurify-html="
+              <div v-if="gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent && (roomInfo.visitedHexes.includes(currentlyViewedHex) || facilitatorMode)" v-dompurify-html="
                 gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent
               "></div>
+              <div v-if="facilitatorMode && gSheet[roomInfo.hexArray[currentlyViewedHex]].facilitatorContent"
+                v-dompurify-html="
+                  gSheet[roomInfo.hexArray[currentlyViewedHex]].facilitatorContent
+                "
+              ></div>
             </div>
             <div class="col-sm-12" v-if="currentlyViewedHex == undefined">
               <div v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].lookContent" v-dompurify-html="
@@ -167,6 +199,11 @@
               <div v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent" v-dompurify-html="
                 gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent
               "></div>
+              <div v-if="facilitatorMode && gSheet[roomInfo.hexArray[roomInfo.currentLocation]].facilitatorContent"
+                v-dompurify-html="
+                  gSheet[roomInfo.hexArray[roomInfo.currentLocation]].facilitatorContent
+                "
+              ></div>
             </div>
           </div>
         </transition>
@@ -208,6 +245,7 @@ export default {
       rowsCount: 0,
       columnsCount: 0,
       totalHexCount: 0,
+      facilitatorMode: false,
       hexRowLookup: {},
       hexMapRows: [],
       hexNeighborMap: [],
@@ -252,7 +290,7 @@ export default {
           this.$emit("firebase-update", { playResetAnimation: false });
         }, 1000);
       }
-      if (val?.previousLocation == null){
+      if (val?.previousLocation == null && !this.currentlyViewedHex){
         this.currentlyViewedHex = val?.currentLocation
       }
       if (this.currentlyViewedHex == undefined){
@@ -487,6 +525,22 @@ export default {
         });
       }
     },
+    rerollHex(hexID){
+      let newHexID = Math.floor(Math.random()*this.gSheet.length)
+      let newHexArray = this.roomInfo.hexArray
+
+      newHexArray[hexID] = newHexID
+
+      console.log(newHexID, newHexArray)
+
+      this.$emit("firebase-update", {
+        hexArray: newHexArray
+      });
+    },
+    toggleFacilitatorMode(){
+      console.log('toggling', this.facilitatorMode)
+      this.facilitatorMode = !this.facilitatorMode;
+    },
     regenerateHexes() {
       let startingHex = parseInt(this.customOptions.startingHex) ?? 1;
       let visitedHexesArray = [startingHex];
@@ -668,8 +722,9 @@ export default {
                   summary: item[3],
                   fullContent: item[4] ? this.$marked(item[4]) : null,
                   lookContent: item[5] ? this.$marked(item[5]) : null,
-                  probability: item[6],
-                  background: item[7],
+                  facilitatorContent: item[6] ? this.$marked(item[6]) : null,
+                  probability: item[7],
+                  background: item[8],
                 };
 
                 // check for background
