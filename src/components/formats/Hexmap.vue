@@ -101,7 +101,7 @@
                         (customOptions.fogOfWar &&
                           roomInfo.hexesVisible[hex.hexID] == 0) ||
                         roomInfo.hexesMidreveal.includes(hex.hexID)
-                      )
+                      ) && !(hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex && customOptions.currentHexReplacementIcon)
                     " v-bind:class="{
                       'hex-tile-inner-content-lg':
                         countGraphemes(hex.summary) == 1,
@@ -114,6 +114,21 @@
                       'hex-tile-inner-content-xs':
                         countGraphemes(hex.summary) >= 25,
                     }" v-dompurify-html="hex.summary"></div>
+
+                    <div class="hex-tile-inner-content" v-if="
+                      hex.hexID == roomInfo.currentLocation && !roomInfo.tempSameHex && customOptions.currentHexReplacementIcon
+                    " v-bind:class="{
+                      'hex-tile-inner-content-lg':
+                        countGraphemes(customOptions.currentHexReplacementIcon) == 1,
+                      'hex-tile-inner-content-md':
+                        countGraphemes(customOptions.currentHexReplacementIcon) >= 2 &&
+                        countGraphemes(customOptions.currentHexReplacementIcon) < 5,
+                      'hex-tile-inner-content-sm':
+                        countGraphemes(customOptions.currentHexReplacementIcon) >= 5 &&
+                        countGraphemes(customOptions.currentHexReplacementIcon) < 25,
+                      'hex-tile-inner-content-xs':
+                        countGraphemes(customOptions.currentHexReplacementIcon) >= 25,
+                    }" v-dompurify-html="customOptions.currentHexReplacementIcon"></div>
                   </div>
                 </transition>
               </button>
@@ -482,13 +497,26 @@ export default {
             indexArray[n],
           ];
         }
-
-        // TODO: check for fixed hexes
+        
+        // check for fixed location hexes
+        if (this.customOptions.tilesWithFixedLocations){
+          for (let t = 0; t < this.customOptions.tilesWithFixedLocations.length; t++){
+            let fixedTileIndex = this.customOptions.tilesWithFixedLocations[t]
+            let randomLocation = indexArray.indexOf(fixedTileIndex)
+            let hexAtIntendedLocation = indexArray[fixedTileIndex]
+            
+            indexArray[fixedTileIndex] = fixedTileIndex
+            indexArray[randomLocation] = hexAtIntendedLocation
+            
+            // newHexArray[this.customOptions.tilesWithFixedLocations[t]] = JSON.parse(JSON.stringify(this.gSheet[indexArray[this.customOptions.tilesWithFixedLocations[t]]]))
+          }
+          console.log('updated index array', indexArray)
+        }
         
         for (let n = 0; n < this.totalHexCount; n++){
           newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[indexArray[n]]))
         }
-
+        
         // if (this.customOptions.startingHexFixedTile == "TRUE") {
         //   let oldIndex = startingHex;
         //   for (let h = 0; h < newHexArray.length; h++) {
@@ -505,11 +533,15 @@ export default {
         // }
       } else if (randomApproach == "randomWithCopies") {
         for (let n = 0; n < this.totalHexCount; n++) {
-          let j = Math.floor(Math.random() * this.gSheet.length);
-          newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[j]));
-        }
+          if (this.customOptions.tilesWithFixedLocations && this.customOptions.tilesWithFixedLocations.includes(n)){
+            newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[n]));  
+          } else {
+            let j = Math.floor(Math.random() * this.gSheet.length);
+            newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[j]));
+          }
 
-        // TODO fix starting hexes
+        }
+       
         // if (this.customOptions.startingHexFixedTile == "TRUE") {
         //   newHexArray[startingHex] = JSON.parse(
         //     JSON.stringify(this.gSheet[startingHex])
@@ -525,7 +557,7 @@ export default {
       let hexIndexTracker = 0;
       for (let r = 0; r < this.hexMapRows.length; r++) {
         for (let c = 0; c < this.hexMapRows[r].length; c++) {
-          console.log('adding hex', hexIndexTracker, newHexArray[hexIndexTracker], this.hexMapRows)
+          // console.log('adding hex', hexIndexTracker, newHexArray[hexIndexTracker], this.hexMapRows)
           this.hexMapRows[r][c] = JSON.parse(JSON.stringify(newHexArray[hexIndexTracker]));
           this.hexMapRows[r][c].hexID = hexIndexTracker;
           hexIndexTracker += 1;
@@ -637,7 +669,23 @@ export default {
           }
         }
 
-        //TODO add donut and globe
+        if (this.customOptions.tilesWithFixedLocations) {
+          this.customOptions.tilesWithFixedLocations =
+            this.customOptions.tilesWithFixedLocations.split(",");
+          for (let v = 0; v < this.customOptions.tilesWithFixedLocations.length; v++) {
+            this.customOptions.tilesWithFixedLocations[v] = parseInt(
+              this.customOptions.tilesWithFixedLocations[v]
+            );
+          }
+        }
+
+        if (this.customOptions.currentHexReplacementIcon){
+          if (this.customOptions.currentHexReplacementIcon.substring(0, 4) === "http") {
+            this.customOptions.currentHexReplacementIcon = '<img class="active-hex-replacement-image" alt="an image indicating the active hex" src="' + this.customOptions.currentHexReplacementIcon + '">)';
+          }
+        }
+
+        //TODO add donut and globe wrap
         if (this.customOptions.hexWarp !== "TRUE") {
           this.hexNeighborMap = [];
           for (let h = 0; h < this.totalHexCount; h++){
