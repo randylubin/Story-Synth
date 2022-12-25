@@ -538,8 +538,9 @@ export default {
       ) {
         for (let h = 0; h < visibleHexArray.length; h++) {
           if (
+            h != startingHex &&
             !this.customOptions.initiallyVisible?.includes(h) &&
-            h != startingHex
+            (this.customOptions.fogOfWar == "revealOnMove" || !this.hexNeighborMap[startingHex]?.includes(h))
           ) {
             visibleHexArray[h] = 0;
           }
@@ -636,28 +637,70 @@ export default {
           }
         }
 
-        if (this.customOptions.hexWarp == "TRUE") {
-          this.hexNeighborMap = [
-            [18, 3, 2, 4, 1, 5],
-            [16, 0, 4, 6, 3, 10],
-            [17, 8, 5, 7, 4, 0],
-            [13, 1, 6, 8, 0, 15],
-            [0, 2, 7, 9, 6, 1],
-            [15, 13, 0, 10, 7, 2],
-            [1, 4, 9, 11, 8, 3],
-            [2, 5, 10, 12, 9, 4],
-            [3, 6, 11, 13, 2, 17],
-            [4, 7, 12, 14, 11, 6],
-            [5, 16, 1, 15, 12, 7],
-            [6, 9, 14, 16, 13, 8],
-            [7, 10, 15, 17, 14, 9],
-            [8, 11, 16, 3, 5, 18],
-            [9, 12, 17, 18, 16, 11],
-            [10, 18, 3, 5, 17, 12],
-            [11, 14, 18, 1, 10, 13],
-            [12, 15, 8, 2, 18, 14],
-            [14, 17, 13, 0, 15, 16],
-          ];
+        //TODO add donut and globe
+        if (this.customOptions.hexWarp !== "TRUE") {
+          this.hexNeighborMap = [];
+          for (let h = 0; h < this.totalHexCount; h++){
+            let neighborArray = [];
+            let row = this.hexRowLookup[h];
+
+            // N
+            if (row >= 2){
+              neighborArray.push(h - (this.columnsCount*2))
+            }
+
+            // NE
+            if (row > 0){
+              if (row % 2 == 0){
+                if (((h+1) % this.columnsCount) != 0) {
+                  neighborArray.push(h - this.columnsCount + 1)
+                }
+              } else {
+                neighborArray.push(h - this.columnsCount)
+              }
+            }
+
+            // SE
+            if (row < this.rowsCount - 1){
+              if (row % 2 == 0){
+                if (((h+1) % this.columnsCount) != 0) {
+                  neighborArray.push(h + this.columnsCount + 1)
+                }
+              } else {
+                neighborArray.push(h + this.columnsCount)
+              }
+            }
+
+            // S
+            if (row < this.rowsCount - 2){
+              neighborArray.push(h + (this.columnsCount*2))
+            }
+
+            // SW
+            if (row < this.rowsCount - 1){
+              if (row % 2 == 1){
+                if (h % this.columnsCount != 0){
+                  neighborArray.push(h + this.columnsCount - 1)
+                }
+              } else {
+                neighborArray.push(h + this.columnsCount)
+              }
+            }
+
+            // NW
+            if (row > 0){
+              if (row % 2 == 1){
+                if (h % this.columnsCount != 0){
+                  neighborArray.push(h - this.columnsCount - 1)
+                }
+              } else {
+                neighborArray.push(h - this.columnsCount)
+              }
+            }
+
+
+            this.hexNeighborMap.push(neighborArray)
+          }
         }
 
         if (this.customOptions.wallet) {
