@@ -160,9 +160,11 @@
           " v-bind:class="{ invisible: roomInfo.playRandomizerAnimation }">
 
             <div class="col-sm-12">
-              <button class="btn btn-dark mx-2 my-1" v-if="customOptions.lookBeforeMove && currentlyViewedHex && roomInfo.currentLocation != currentlyViewedHex" v-on:click="goToHex(currentlyViewedHex, false)">Move</button>
-              <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="rerollHex(currentlyViewedHex)">Reroll</button>
-              <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="togglePickHexList()">Select</button>
+              <button class="btn btn-dark mx-2 my-1" v-if="customOptions.lookBeforeMove && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex" v-on:click="goToHex(currentlyViewedHex, false)">Move</button>
+              <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="rerollHex(currentlyViewedHex)">Reroll</button>
+              <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="togglePickHexList()">Select</button>
+              <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && !roomInfo.hexesVisible[currentlyViewedHex] && roomInfo.currentLocation != currentlyViewedHex" v-on:click="toggleVisibility(currentlyViewedHex)">Show Hex</button>
+              <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.hexesVisible[currentlyViewedHex] && roomInfo.currentLocation != currentlyViewedHex" v-on:click="toggleVisibility(currentlyViewedHex)">Hide Hex</button>
             </div>
 
             <div class="col-sm-12" v-if="facilitatorMode && showPickHexList">
@@ -532,6 +534,13 @@ export default {
           currentLocation: hexID,
         });
       }
+    },
+    toggleVisibility(hexID){
+      let newHexVisibleArray = this.roomInfo.hexesVisible;
+      newHexVisibleArray[hexID] = (newHexVisibleArray[hexID] + 1) % 2;
+      this.$emit("firebase-update", {
+        hexesVisible: newHexVisibleArray
+      });
     },
     togglePickHexList(){
       this.showPickHexList = !this.showPickHexList
@@ -948,11 +957,11 @@ $hex-padding: 4px;
 }
 
 .hex-tile-previously-visited .hex-tile-inner-content {
-    text-decoration: line-through;
+    // text-decoration: line-through;
 }
 
 .hex-currently-viewed .hex-tile-inner-content {
-    text-decoration: underline;
+    // text-decoration: underline;
 }
 
 .pointy-top .hex-tile-inner-content {
