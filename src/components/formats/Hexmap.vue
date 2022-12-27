@@ -37,19 +37,19 @@
         <div class="game-title-on-card mt-4" v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard">
           <h1>{{ customOptions.gameTitle }}</h1>
         </div>
-
+        
         <div class="row">
           <div class="
-              regenerate-button
-              my-4
-              col-sm-12
-              justify-content-center
-              generator
-            ">
-            <b-button v-on:click="randomlyMoveOnHexmap()" class="btn btn-dark mx-2 my-1">
-              <span>{{
-                  roomInfo.playRandomizerAnimation ? "Rolling" : "Move"
-              }}</span>
+            regenerate-button
+            my-4
+            col-sm-12
+            justify-content-center
+            generator
+          ">
+          <b-button v-on:click="randomlyMoveOnHexmap()" class="btn btn-dark mx-2 my-1">
+            <span>{{
+              roomInfo.playRandomizerAnimation ? "Rolling" : "Move"
+            }}</span>
               <b-icon class="hexmap-reroll-icon" icon="arrows-move"></b-icon>
             </b-button>
             <b-button v-if="
@@ -65,6 +65,9 @@
               <span>Facilitator Mode</span>
             </b-button>
           </div>
+        </div>
+        <div class="col-sm" v-if="(Array.isArray(updatedHexMapRows) && updatedHexMapRows.length == 0 )">
+          <h1>ERROR: the map sized has changed since creating this session, try creating a new session from the game launcher page</h1>
         </div>
 
         <div class="row justify-content-center">
@@ -89,10 +92,11 @@
                 }" v-bind:style="{
                   transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`,
                 }" :disabled="
-                  !hex.summary &&
+                  (!hex.summary &&
                   !hex.fullContent &&
                   !hex.backgroundImage &&
-                  hex.backgroundColor == 'transparent'
+                  hex.backgroundColor == 'transparent') ||
+                  (!facilitatorMode && !roomInfo.hexesVisible[hex.hexID] && (!customOptions.lookIntoFog && !customOptions.moveIntoFog))
                 ">
                 <transition appear name="reroll-current-hex" mode="out-in">
                   <div class="hex-tile-inner" :key="hex.hexID" v-bind:style="{
@@ -160,7 +164,7 @@
           " v-bind:class="{ invisible: roomInfo.playRandomizerAnimation }">
 
             <div class="col-sm-12">
-              <button class="btn btn-dark mx-2 my-1" v-if="customOptions.lookBeforeMove && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex" v-on:click="goToHex(currentlyViewedHex, false)">Move</button>
+              <button class="btn btn-dark mx-2 my-1" v-if="(customOptions.lookBeforeMove && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex) && !(roomInfo.hexesVisible[currentlyViewedHex] == 0 && customOptions.moveIntoFog == 'FALSE')" v-on:click="goToHex(currentlyViewedHex, false)">Move</button>
               <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="rerollHex(currentlyViewedHex)">Reroll</button>
               <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="togglePickHexList()">Select</button>
               <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && !roomInfo.hexesVisible[currentlyViewedHex] && roomInfo.currentLocation != currentlyViewedHex" v-on:click="toggleVisibility(currentlyViewedHex)">Show Hex</button>
@@ -307,6 +311,11 @@ export default {
         console.log('watch TRIGGERED from Room Info', val)
         this.currentlyViewedHex = val?.currentLocation
       }
+      if (val?.hexArray.length != this.totalHexCount){
+        this.error = true
+      } else {
+        this.error = false
+      }
     },
     sheetData: function () {
       this.processSheetData();
@@ -326,6 +335,10 @@ export default {
   },
   computed: {
     updatedHexMapRows: function () {
+      if (this.roomInfo.hexArray.length != this.totalHexCount){
+        return []
+      }
+      
       let newHexMapRows = JSON.parse(JSON.stringify(this.hexMapRows));
       if (this.firebaseReady && this.dataReady && this.roomInfo && this.roomInfo.hexArray.length) {
         let hexIndexTracker = 0;
@@ -769,6 +782,10 @@ export default {
 
         if (this.customOptions.lookIntoFog){
           this.customOptions.lookIntoFog = this.customOptions.lookIntoFog == "TRUE" ? true : false; 
+        }
+
+        if (this.customOptions.moveIntoFog){
+          this.customOptions.moveIntoFog = this.customOptions.moveIntoFog == "TRUE" ? true : false; 
         }
 
         if (this.customOptions.initiallyVisible) {
