@@ -88,7 +88,7 @@
                   'hex-tile-previously-visited':
                     roomInfo.visitedHexes && roomInfo.visitedHexes.includes(hex.hexID),
                   'hex-currently-viewed': 
-                    hex.hexID == currentlyViewedHex
+                    hex.hexID == currentlyViewedHex && currentlyViewedHex != roomInfo.currentLocation
                 }" v-bind:style="{
                   transform: `translate(${hexPosition(hexIndex, hexRowIndex)})`,
                 }" :disabled="
@@ -110,7 +110,19 @@
                       ((customOptions.fogOfWar &&
                         roomInfo.hexesVisible[hex.hexID] == 0) ||
                       roomInfo.hexesMidreveal.includes(hex.hexID)),
+                    'hex-tile-facilitator-visible-player-invisible':
+                      facilitatorMode && 
+                      ((customOptions.fogOfWar &&
+                          roomInfo.hexesVisible[hex.hexID] == 0) ||
+                        roomInfo.hexesMidreveal.includes(hex.hexID)),
                   }">
+                    <!-- player-fog-indicator -->
+                    <div class="player-foggy-icon" v-if="facilitatorMode && 
+                      ((customOptions.fogOfWar &&
+                          roomInfo.hexesVisible[hex.hexID] == 0) ||
+                        roomInfo.hexesMidreveal.includes(hex.hexID))">
+                      <b-icon-eye-slash-fill></b-icon-eye-slash-fill>
+                    </div>
 
                     <!-- No Replacement Icon -->
                     <div class="hex-tile-inner-content" v-if="
@@ -935,6 +947,8 @@ $hex-padding: 4px;
   position: relative;
   width: 100vw;
   left: calc(-1 * (100vw - 100%) / 2);
+  cursor: grab;
+  overflow: scroll;
 }
 
 // HEXES
@@ -973,12 +987,30 @@ $hex-padding: 4px;
   visibility: hidden;
 }
 
+.hex-tile-facilitator-visible-player-invisible {
+  filter:brightness(60%);
+}
+
+.player-foggy-icon {
+  position:fixed;
+  padding-bottom: 4rem;
+}
+
 .hex-tile-previously-visited .hex-tile-inner-content {
     // text-decoration: line-through;
 }
 
-.hex-currently-viewed .hex-tile-inner-content {
-    // text-decoration: underline;
+@keyframes currently-viewed-indicator {
+  0%   {}
+  20%   {}
+  50%  { filter: brightness(30%);}
+  80%   {}
+  100% {}
+}
+
+
+.hex-currently-viewed .hex-tile-inner {
+  animation: currently-viewed-indicator 2s infinite;
 }
 
 .pointy-top .hex-tile-inner-content {

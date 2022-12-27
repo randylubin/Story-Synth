@@ -60,6 +60,7 @@ import {
   BIconChevronLeft,
   BIconCardHeading,
   BIconChevronRight,
+  BIconEyeSlashFill,
 } from "bootstrap-vue";
 
 // Install BootstrapVue
@@ -81,6 +82,7 @@ Vue.component("BIconCardHeading", BIconCardHeading);
 Vue.component("BIconCoin", BIconCoin);
 Vue.component("BIconPeople", BIconPeople);
 Vue.component("BIconSave", BIconSave);
+Vue.component("BIconEyeSlashFill", BIconEyeSlashFill);
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
