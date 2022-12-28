@@ -39,7 +39,9 @@
                   !hex.backgroundImage &&
                   hex.backgroundColor == 'transparent') ||
                   (!facilitatorMode && !roomInfo.hexesVisible[hex.hexID] && (!customOptions.lookIntoFog && !customOptions.moveIntoFog))
-                ">
+                "
+                v-b-popover.hover="{content: hex.lookContent, html: true, disabled: (hex.hexID == roomInfo.currentLocation || !hex), variant: 'light'}"
+                >
                 <transition appear name="reroll-current-hex" mode="out-in">
                   <div class="hex-tile-inner" :key="hex.hexID" v-bind:style="{
                     backgroundColor: hex.backgroundColor,
@@ -145,106 +147,122 @@
           <div class="upper-text row" v-if="customOptions.upperText">
             <div class="col-sm" v-dompurify-html="customOptions.upperText"></div>
           </div>
+
+          <div class="row sidebar-buttons">
+              <div class="
+                regenerate-button
+                my-4
+                col-sm-12
+                justify-content-center
+                generator
+              ">
+              <b-button v-on:click="randomlyMoveOnHexmap()" class="btn btn-dark mx-2 my-1">
+                <span>{{
+                  roomInfo.playRandomizerAnimation ? "Rolling" : "Move"
+                }}</span>
+                  <b-icon class="hexmap-reroll-icon" icon="arrows-move"></b-icon>
+                </b-button>
+                <b-button v-if="
+                  customOptions.randomizeHexes == 'randomWithCopies' ||
+                  customOptions.randomizeHexes == 'randomNoCopies'
+                " v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
+                  <span>Regenerate</span>
+                  <b-icon class="hexmap-reroll-icon" icon="arrow-clockwise"></b-icon>
+                </b-button>
+                <b-button v-if="
+                  customOptions.facilitatorMode == 'TRUE'
+                " :pressed="facilitatorMode" v-on:click="toggleFacilitatorMode()" class="btn btn-dark mx-2 my-1">
+                  <span>Facilitator Mode</span>
+                </b-button>
+              </div>
+            </div>
+
+          <div class="hex-info" v-if="firebaseReady && dataReady && roomInfo && !error">
+            <div class="row">
+              <div class="col-sm-12">
+                <h2>Current Hex</h2>
+                <h3><span v-dompurify-html="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].summary"></span></h3>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].lookContent" v-dompurify-html="
+                gSheet[roomInfo.hexArray[roomInfo.currentLocation]].lookContent
+              "></div>
+              <div v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent" v-dompurify-html="
+                gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent
+              "></div>
+              <div v-if="facilitatorMode && gSheet[roomInfo.hexArray[roomInfo.currentLocation]].facilitatorContent"
+                v-dompurify-html="
+                  gSheet[roomInfo.hexArray[roomInfo.currentLocation]].facilitatorContent
+                "
+              ></div>
+            </div>
+      
+            <div class="selected-hex" v-if="
+                  Number.isInteger(currentlyViewedHex) &&
+                  (roomInfo && dataReady && firebaseReady) &&
+                  ((!customOptions.lookBeforeMove || currentlyViewedHex == undefined) && roomInfo.hexArray.length && gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent &&
+                  !roomInfo.tempSameHex) ||
+                  (customOptions.lookBeforeMove && roomInfo.hexArray.length && currentlyViewedHex !== undefined && gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent &&
+                  !roomInfo.tempSameHex) &&
+                  (currentlyViewedHex !== roomInfo.currentLocation)
+                " v-bind:class="{ invisible: roomInfo.playRandomizerAnimation }">
+              <transition name="fade-full-content" mode="out-in">
+                <div class="row mt-5 mb-4 p-2 full-content"
+                >
+                
+                  <div class="col-sm-12">
+                    <h2>Selected Hex</h2>
+                    <h3 v-if="Number.isInteger(currentlyViewedHex)"><span v-dompurify-html="gSheet[roomInfo.hexArray[currentlyViewedHex]].summary"></span></h3>
+                  </div>
+                  
+                  <div class="col-sm-12">
+                    <button class="btn btn-dark mx-2 my-1" v-if="(customOptions.lookBeforeMove && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex) && !(roomInfo.hexesVisible[currentlyViewedHex] == 0 && customOptions.moveIntoFog == 'FALSE')" v-on:click="goToHex(currentlyViewedHex, false)">Move Here</button>
+                    <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="rerollHex(currentlyViewedHex)">Reroll</button>
+                    <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="togglePickHexList()">Select</button>
+                    <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && !roomInfo.hexesVisible[currentlyViewedHex] && roomInfo.currentLocation != currentlyViewedHex" v-on:click="toggleVisibility(currentlyViewedHex)">Show Hex</button>
+                    <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.hexesVisible[currentlyViewedHex] && roomInfo.currentLocation != currentlyViewedHex" v-on:click="toggleVisibility(currentlyViewedHex)">Hide Hex</button>
+                  </div>
+        
+                  <div class="col-sm-12" v-if="facilitatorMode && showPickHexList">
+                    <div class="col-sm-12" v-for="hex in gSheet" v-bind:key="hex.hexID">
+                      <span v-dompurify-html="hex.summary"></span> <button v-on:click="pickHexFromList(currentlyViewedHex, hex.hexID)" class="btn btn-dark btn-sm mx-2 my-1">Pick</button>
+                    </div>
+                  </div>
     
+                  <div v-if="facilitatorMode && currentlyViewedHex" class="col-sm-12 my-4">
+                    <div v-if="roomInfo.visitedHexes.includes(currentlyViewedHex) && roomInfo.currentLocation !== currentlyViewedHex">
+                      Players have visited this hex
+                    </div>
+                    <div v-if="!roomInfo.visitedHexes.includes(currentlyViewedHex) && roomInfo.hexesVisible[currentlyViewedHex]">
+                      Players have *not* visited this hex
+                    </div>
+                    <div v-if="!roomInfo.hexesVisible[currentlyViewedHex]">
+                      Players cannot see this hex
+                    </div>
+                  </div>
+        
+                  <div class="col-sm-12" v-if="currentlyViewedHex !== undefined && currentlyViewedHex !== roomInfo.currentLocation">
+                    <div v-if="(roomInfo.hexesVisible[currentlyViewedHex] || (customOptions.lookIntoFog) || facilitatorMode) && gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent" v-dompurify-html="
+                      gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent
+                    "></div>
+                    <div v-if="gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent && (roomInfo.visitedHexes.includes(currentlyViewedHex) || facilitatorMode)" v-dompurify-html="
+                      gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent
+                    "></div>
+                    <div v-if="facilitatorMode && gSheet[roomInfo.hexArray[currentlyViewedHex]].facilitatorContent"
+                      v-dompurify-html="
+                        gSheet[roomInfo.hexArray[currentlyViewedHex]].facilitatorContent
+                      "
+                    ></div>
+                  </div>
+                </div>
+              </transition>
+            </div>
+          </div>
+
           <div class="lower-text row mt-4" v-if="customOptions.lowerText">
             <div class="col-sm" v-dompurify-html="customOptions.lowerText"></div>
           </div>
-    
-          <div class="row">
-            <div class="
-              regenerate-button
-              my-4
-              col-sm-12
-              justify-content-center
-              generator
-            ">
-            <b-button v-on:click="randomlyMoveOnHexmap()" class="btn btn-dark mx-2 my-1">
-              <span>{{
-                roomInfo.playRandomizerAnimation ? "Rolling" : "Move"
-              }}</span>
-                <b-icon class="hexmap-reroll-icon" icon="arrows-move"></b-icon>
-              </b-button>
-              <b-button v-if="
-                customOptions.randomizeHexes == 'randomWithCopies' ||
-                customOptions.randomizeHexes == 'randomNoCopies'
-              " v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
-                <span>Regenerate</span>
-                <b-icon class="hexmap-reroll-icon" icon="arrow-clockwise"></b-icon>
-              </b-button>
-              <b-button v-if="
-                customOptions.facilitatorMode == 'TRUE'
-              " :pressed="facilitatorMode" v-on:click="toggleFacilitatorMode()" class="btn btn-dark mx-2 my-1">
-                <span>Facilitator Mode</span>
-              </b-button>
-            </div>
-          </div>
-          <transition name="fade-full-content" mode="out-in">
-            <div class="row mt-5 mb-4 p-2 full-content"
-            v-if="
-              (roomInfo && dataReady && firebaseReady) &&
-              ((!customOptions.lookBeforeMove || currentlyViewedHex == undefined) && roomInfo.hexArray.length && gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent &&
-              !roomInfo.tempSameHex) ||
-              (customOptions.lookBeforeMove && roomInfo.hexArray.length && currentlyViewedHex !== undefined && gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent &&
-              !roomInfo.tempSameHex)
-            " v-bind:class="{ invisible: roomInfo.playRandomizerAnimation }">
-    
-              <div class="col-sm-12">
-                <button class="btn btn-dark mx-2 my-1" v-if="(customOptions.lookBeforeMove && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex) && !(roomInfo.hexesVisible[currentlyViewedHex] == 0 && customOptions.moveIntoFog == 'FALSE')" v-on:click="goToHex(currentlyViewedHex, false)">Move</button>
-                <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="rerollHex(currentlyViewedHex)">Reroll</button>
-                <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="togglePickHexList()">Select</button>
-                <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && !roomInfo.hexesVisible[currentlyViewedHex] && roomInfo.currentLocation != currentlyViewedHex" v-on:click="toggleVisibility(currentlyViewedHex)">Show Hex</button>
-                <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.hexesVisible[currentlyViewedHex] && roomInfo.currentLocation != currentlyViewedHex" v-on:click="toggleVisibility(currentlyViewedHex)">Hide Hex</button>
-              </div>
-    
-              <div class="col-sm-12" v-if="facilitatorMode && showPickHexList">
-                <div class="col-sm-12" v-for="hex in gSheet" v-bind:key="hex.hexID">
-                  <span v-dompurify-html="hex.summary"></span> <button v-on:click="pickHexFromList(currentlyViewedHex, hex.hexID)" class="btn btn-dark btn-sm mx-2 my-1">Pick</button>
-                </div>
-              </div>
-    
-              <div v-if="facilitatorMode && currentlyViewedHex" class="col-sm-12 my-4">
-                <div v-if="roomInfo.currentLocation == currentlyViewedHex">
-                  Players are currently at this location
-                </div>
-                <div v-if="roomInfo.visitedHexes.includes(currentlyViewedHex) && roomInfo.currentLocation !== currentlyViewedHex">
-                  Players have visited this hex
-                </div>
-                <div v-if="!roomInfo.visitedHexes.includes(currentlyViewedHex) && roomInfo.hexesVisible[currentlyViewedHex]">
-                  Players have *not* visited this hex
-                </div>
-                <div v-if="!roomInfo.hexesVisible[currentlyViewedHex]">
-                  Players cannot see this hex
-                </div>
-              </div>
-    
-              <div class="col-sm-12" v-if="currentlyViewedHex !== undefined">
-                <div v-if="(roomInfo.hexesVisible[currentlyViewedHex] || (customOptions.lookIntoFog) || facilitatorMode) && gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent" v-dompurify-html="
-                  gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent
-                "></div>
-                <div v-if="gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent && (roomInfo.visitedHexes.includes(currentlyViewedHex) || facilitatorMode)" v-dompurify-html="
-                  gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent
-                "></div>
-                <div v-if="facilitatorMode && gSheet[roomInfo.hexArray[currentlyViewedHex]].facilitatorContent"
-                  v-dompurify-html="
-                    gSheet[roomInfo.hexArray[currentlyViewedHex]].facilitatorContent
-                  "
-                ></div>
-              </div>
-              <div class="col-sm-12" v-if="currentlyViewedHex == undefined">
-                <div v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].lookContent" v-dompurify-html="
-                  gSheet[roomInfo.hexArray[roomInfo.currentLocation]].lookContent
-                "></div>
-                <div v-if="gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent" v-dompurify-html="
-                  gSheet[roomInfo.hexArray[roomInfo.currentLocation]].fullContent
-                "></div>
-                <div v-if="facilitatorMode && gSheet[roomInfo.hexArray[roomInfo.currentLocation]].facilitatorContent"
-                  v-dompurify-html="
-                    gSheet[roomInfo.hexArray[roomInfo.currentLocation]].facilitatorContent
-                  "
-                ></div>
-              </div>
-            </div>
-          </transition>
     
           <slot name="lower-extensions"> </slot>
         </div>
@@ -496,7 +514,7 @@ export default {
     },
     randomlyMoveOnHexmap() {
       let hexID = this.roomInfo.currentLocation;
-      let probabilityWeights = this.gSheet[hexID].probability;
+      let probabilityWeights = this.gSheet[hexID].probabilityMove;
 
       if (probabilityWeights == undefined) {
         probabilityWeights = [];
@@ -512,7 +530,7 @@ export default {
           }
         }
       } else {
-        probabilityWeights = this.gSheet[hexID].probability.split(",");
+        probabilityWeights = this.gSheet[hexID].probabilityMove.split(",");
       }
 
       let probabilityDistribution = {};
@@ -684,7 +702,7 @@ export default {
         visibleHexArray.push(1)
       }
 
-      
+      // TODO: weighted draws
       if (randomApproach == "randomNoCopies") {
         // create random list of hex indexes
         let indexArray = []
@@ -718,21 +736,6 @@ export default {
         for (let n = 0; n < this.totalHexCount; n++){
           newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[indexArray[n]]))
         }
-        
-        // if (this.customOptions.startingHexFixedTile == "TRUE") {
-        //   let oldIndex = startingHex;
-        //   for (let h = 0; h < newHexArray.length; h++) {
-        //     if (
-        //       newHexArray[h].fullContent == this.gSheet[startingHex].fullContent
-        //     ) {
-        //       oldIndex = h;
-        //     }
-        //   }
-        //   [newHexArray[oldIndex], newHexArray[startingHex]] = [
-        //     newHexArray[startingHex],
-        //     newHexArray[oldIndex],
-        //   ];
-        // }
       } else if (randomApproach == "randomWithCopies") {
         for (let n = 0; n < this.totalHexCount; n++) {
           if (this.customOptions.tilesWithFixedLocations && this.customOptions.tilesWithFixedLocations.includes(n)){
@@ -743,12 +746,6 @@ export default {
           }
 
         }
-       
-        // if (this.customOptions.startingHexFixedTile == "TRUE") {
-        //   newHexArray[startingHex] = JSON.parse(
-        //     JSON.stringify(this.gSheet[startingHex])
-        //   );
-        // }
       } else {
         for (let n = 0; n < this.totalHexCount; n++) {
           newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[n]));
@@ -797,6 +794,8 @@ export default {
         hexesVisible: visibleHexArray,
         visitedHexes: visitedHexesArray,
       });
+
+      // setTimeout(this.goToHex(startingHex),500)
     },
     processSheetData() {
       let cleanData = [];
@@ -847,8 +846,9 @@ export default {
                   fullContent: item[4] ? this.$marked(item[4]) : null,
                   lookContent: item[5] ? this.$marked(item[5]) : null,
                   facilitatorContent: item[6] ? this.$marked(item[6]) : null,
-                  probability: item[7],
-                  background: item[8],
+                  probabilityDrawn: item[7],
+                  probabilityMove: item[8],
+                  background: item[9],
                 };
 
                 // check for background
@@ -1048,6 +1048,7 @@ $hex-padding: 4px;
   background-color: black;
   border-left: solid 2px darkgray;
   box-shadow: -10px 0 10px rgb(0, 0, 0, .2) ;
+  text-align: center;
 }
 
 .hexmap {
