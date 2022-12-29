@@ -140,19 +140,20 @@
             </div>
             <div class="row menu-row">
               <b-button v-if="
-                customOptions.facilitatorMode == 'TRUE'
+                customOptions.facilitatorButton == 'TRUE'
                 " :pressed="facilitatorMode" v-on:click="toggleFacilitatorMode()" class="btn-block btn-lg my-1">
-                <span>Facilitator Mode</span>
+                <span v-if="!facilitatorMode">Facilitator View</span>
+                <span v-if="facilitatorMode">Player View</span>
               </b-button>
             </div>
           </app-menuBar>
       
           <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by
             <a :href="customOptions.demoInfo" target="_blank">this Google Sheet Template</a>. Copy the sheet and start editing
-            it to design your own game!</b-alert>
-      
-          <slot name="upper-extensions"> </slot>
-      
+            it to design your own game!
+          </b-alert>
+
+          
           <div class="game-meta">
             <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
               <div class="row text-center" v-if="customOptions.gameTitle">
@@ -160,7 +161,7 @@
                   <h1>{{ customOptions.gameTitle }}</h1>
                 </div>
               </div>
-      
+              
               <div class="row text-center" v-if="customOptions.byline">
                 <div class="col-sm">
                   <h4>{{ customOptions.byline }}</h4>
@@ -168,7 +169,11 @@
               </div>
             </div>
           </div>
+          
+          <b-alert show variant="danger" v-if="error">{{ error }}</b-alert>
       
+          <slot name="upper-extensions"> </slot>
+
           <div class="upper-text row" v-if="customOptions.upperText">
             <div class="col-sm" v-dompurify-html="customOptions.upperText"></div>
           </div>
@@ -226,9 +231,7 @@
                 
                   <div class="col-sm-12">
                     <h2>Selected Hex</h2>
-                    <h3 v-if="Number.isInteger(currentlyViewedHex)"><span v-dompurify-html="gSheet[roomInfo.hexArray[currentlyViewedHex]].summary"></span></h3>
                   </div>
-                  
                   <div class="col-sm-12">
                     <button class="btn btn-dark mx-2 my-1" v-if="(customOptions.lookBeforeMove && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex) && !(roomInfo.hexesVisible[currentlyViewedHex] == 0 && customOptions.moveIntoFog == 'FALSE')" v-on:click="goToHex(currentlyViewedHex, false)">Move Here</button>
                     <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex && customOptions.randomizeHexes" v-on:click="rerollHex(currentlyViewedHex)">Reroll</button>
@@ -236,13 +239,11 @@
                     <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && !roomInfo.hexesVisible[currentlyViewedHex] && roomInfo.currentLocation != currentlyViewedHex" v-on:click="toggleVisibility(currentlyViewedHex)">Show Hex</button>
                     <button class="btn btn-dark mx-2 my-1" v-if="facilitatorMode && currentlyViewedHex !== undefined && roomInfo.hexesVisible[currentlyViewedHex] && roomInfo.currentLocation != currentlyViewedHex" v-on:click="toggleVisibility(currentlyViewedHex)">Hide Hex</button>
                   </div>
-        
-                  <div class="col-sm-12" v-if="facilitatorMode && showPickHexList">
-                    <div class="col-sm-12" v-for="hex in gSheet" v-bind:key="hex.hexID">
-                      <span v-dompurify-html="hex.summary"></span> <button v-on:click="pickHexFromList(currentlyViewedHex, hex.hexID)" class="btn btn-dark btn-sm mx-2 my-1">Pick</button>
-                    </div>
+                  <div class="col-sm-12 mt-4 mb-2">
+                    <h3 v-if="Number.isInteger(currentlyViewedHex)"><span v-dompurify-html="gSheet[roomInfo.hexArray[currentlyViewedHex]].summary"></span></h3>
                   </div>
-    
+                  
+
                   <div v-if="facilitatorMode && currentlyViewedHex" class="col-sm-12 my-4">
                     <div v-if="roomInfo.visitedHexes.includes(currentlyViewedHex) && roomInfo.currentLocation !== currentlyViewedHex">
                       Players have visited this hex
@@ -254,6 +255,13 @@
                       Players cannot see this hex
                     </div>
                   </div>
+        
+                  <div class="col-sm-12" v-if="facilitatorMode && showPickHexList">
+                    <div class="col-sm-12" v-for="hex in gSheet" v-bind:key="hex.hexID">
+                      <span v-dompurify-html="hex.summary"></span> <button v-on:click="pickHexFromList(currentlyViewedHex, hex.hexID)" class="btn btn-dark btn-sm mx-2 my-1">Pick</button>
+                    </div>
+                  </div>
+    
         
                   <div class="col-sm-12" v-if="currentlyViewedHex !== undefined && currentlyViewedHex !== roomInfo.currentLocation">
                     <div v-if="(roomInfo.hexesVisible[currentlyViewedHex] || (customOptions.lookIntoFog) || facilitatorMode) && gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent" v-dompurify-html="
@@ -374,7 +382,11 @@ export default {
         this.currentlyViewedHex = val?.currentLocation
       }
       if (val?.hexArray.length != this.totalHexCount){
-        this.error = true
+        if (!(this.customOptions.randomizeHexes == "randomWithCopies" || this.customOptions.randomizeHexes == "randomNoCopies") && (this.gSheet.length < this.totalHexCount)){
+          this.error = "Error: too few hexes for an unrandomized map of this size"
+        } else {
+          this.error = "Error: the map is out of sync with the spreadsheet. Please start a new session"
+        }
       } else {
         this.error = false
       }
@@ -396,7 +408,7 @@ export default {
     },
     scrollboxVisible: function() {
       if (this.scrollboxVisible){
-        console.log('setting scroll listener')
+        // console.log('setting scroll listener')
         this.setScrollAndDragListeners();
       }
     }
@@ -425,7 +437,7 @@ export default {
       return newHexMapRows;
     },
     scrollboxVisible: function(){
-      console.log('scrollbox', document.contains(document.getElementById('scrollbox')), document.getElementById('scrollbox'))
+      // console.log('scrollbox', document.contains(document.getElementById('scrollbox')), document.getElementById('scrollbox'))
       return this.isMounted && this.dataReady && this.firebaseReady && this.roomInfo && document.contains(document.getElementById('scrollbox'))
     },
   },
@@ -434,7 +446,7 @@ export default {
       this.$emit("firebase-set", {
         hexesToAnimate: [],
         extensionData: this.tempExtensionData,
-        currentLocation: 9,
+        currentLocation: 0,
         hexArray: [],
         hexesVisible: [],
         hexesMidreveal: [],
@@ -509,7 +521,7 @@ export default {
       if (this.customOptions.hexOrientation == "pointyTop"){
         translateValue += " " + (106 * this.columnsCount) + 'px'
       }
-      console.log('zoom scale offset', translateValue)
+      // console.log('zoom scale offset', translateValue)
       return translateValue
     },
     hexPosition(col, row) {
@@ -707,8 +719,8 @@ export default {
       });
     },
     toggleFacilitatorMode(){
-      console.log('toggling', this.facilitatorMode)
       this.facilitatorMode = !this.facilitatorMode;
+      this.closeMenu();
     },
     createWeightedDrawnProbabilityArray(){
       let weightedArray = []
@@ -718,17 +730,17 @@ export default {
           weightedArray.push(this.gSheet[i]);
         } else if (parseInt(this.gSheet[i].probabilityDrawn) > 0) {
           for (let j=0; j<this.gSheet[i].probabilityDrawn; j++) {
-            console.log('prob',parseInt(this.gSheet[i].probabilityDrawn))
+            // console.log('prob',parseInt(this.gSheet[i].probabilityDrawn))
             weightedArray.push(JSON.parse(JSON.stringify(this.gSheet[i])))
           }
         }
       }
 
-      console.log('weighted array:', weightedArray)
+      // console.log('weighted array:', weightedArray)
       return weightedArray
     },
     regenerateHexes() {
-      let startingHex = parseInt(this.customOptions.startingHex) ?? 1;
+      let startingHex = parseInt(this.customOptions.startingHex) ?? 0;
       let visitedHexesArray = [startingHex];
       this.currentlyViewedHex = startingHex;
 
@@ -782,14 +794,14 @@ export default {
         }
       } else if (randomApproach == "randomWithCopies") {
         let weightedArray = this.createWeightedDrawnProbabilityArray()
-        console.log(weightedArray)
+        // console.log(weightedArray)
         
         for (let n = 0; n < this.totalHexCount; n++) {
           if (this.customOptions.tilesWithFixedLocations && this.customOptions.tilesWithFixedLocations.includes(n)){
             newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[n]));  
           } else {
             let j = Math.floor(Math.random() * weightedArray.length);
-            console.log(j, weightedArray[j])
+            // console.log(j, weightedArray[j])
             newHexArray[n] = JSON.parse(JSON.stringify(weightedArray[j]));
           }
 
@@ -828,7 +840,7 @@ export default {
 
       let hexIndexList = [];
 
-      console.log("here's the hex array", newHexArray)
+      // console.log("here's the hex array", newHexArray)
       for (let hexIndex = 0; hexIndex < newHexArray.length; hexIndex++) {
         hexIndexList.push(newHexArray[hexIndex].hexID);
       }
@@ -867,6 +879,11 @@ export default {
                 this.totalHexCount = this.rowsCount * this.columnsCount;
                 this.hexRowLookup = {}
                 
+                if (this.totalHexCount > 2500){
+                  this.error="Error: too many hexes"
+                  return;
+                }
+
                 for (let h = 0; h < this.totalHexCount; h++){    
                   this.hexRowLookup[h] = Math.floor(h / this.customOptions.columns);
                 }
@@ -1031,6 +1048,12 @@ export default {
         // For the published version, set gSheet equal to your converted JSON object
         this.gSheet = cleanData;
 
+        if (!(this.customOptions.randomizeHexes == "randomWithCopies" || this.customOptions.randomizeHexes == "randomNoCopies") && (this.gSheet.length < this.totalHexCount)){
+          this.error = "Error: too few hexes for an unrandomized map of this size"
+          console.log('error!', this.error)
+          return;
+        }
+
         console.log("done fetching and cleaning data");
         this.dataReady = true;
 
@@ -1150,6 +1173,7 @@ $hex-padding: 4px;
 .hex-tile-foggy {
   background-color: grey !important;
   cursor: grab;
+  background-image: none !important;
 }
 
 .hex-tile-foggy .hex-tile-inner-content {
