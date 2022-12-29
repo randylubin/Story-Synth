@@ -120,6 +120,21 @@
           <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
             :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
             :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)" v-if="!gameAsExtension">
+            <div class="row menu-row">
+              <b-button v-if="
+                    customOptions.randomizeHexes == 'randomWithCopies' ||
+                    customOptions.randomizeHexes == 'randomNoCopies'
+                  " v-on:click="regenerateHexes()" class="btn-block btn-lg my-1">
+                    <span>Regenerate Hexmap</span>
+                  </b-button>
+            </div>
+            <div class="row menu-row">
+              <b-button v-if="
+                customOptions.facilitatorMode == 'TRUE'
+                " :pressed="facilitatorMode" v-on:click="toggleFacilitatorMode()" class="btn-block btn-lg my-1">
+                <span>Facilitator Mode</span>
+              </b-button>
+            </div>
           </app-menuBar>
       
           <b-alert show class="demoInfo" variant="info" v-if="customOptions.demoInfo">This demo is powered by
@@ -148,35 +163,6 @@
             <div class="col-sm" v-dompurify-html="customOptions.upperText"></div>
           </div>
 
-          <div class="row sidebar-buttons">
-              <div class="
-                regenerate-button
-                my-4
-                col-sm-12
-                justify-content-center
-                generator
-              ">
-              <b-button v-on:click="randomlyMoveOnHexmap()" class="btn btn-dark mx-2 my-1">
-                <span>{{
-                  roomInfo.playRandomizerAnimation ? "Rolling" : "Move"
-                }}</span>
-                  <b-icon class="hexmap-reroll-icon" icon="arrows-move"></b-icon>
-                </b-button>
-                <b-button v-if="
-                  customOptions.randomizeHexes == 'randomWithCopies' ||
-                  customOptions.randomizeHexes == 'randomNoCopies'
-                " v-on:click="regenerateHexes()" class="btn btn-dark mx-2 my-1">
-                  <span>Regenerate</span>
-                  <b-icon class="hexmap-reroll-icon" icon="arrow-clockwise"></b-icon>
-                </b-button>
-                <b-button v-if="
-                  customOptions.facilitatorMode == 'TRUE'
-                " :pressed="facilitatorMode" v-on:click="toggleFacilitatorMode()" class="btn btn-dark mx-2 my-1">
-                  <span>Facilitator Mode</span>
-                </b-button>
-              </div>
-            </div>
-
           <div class="hex-info" v-if="firebaseReady && dataReady && roomInfo && !error">
             <div class="row">
               <div class="col-sm-12">
@@ -196,6 +182,23 @@
                   gSheet[roomInfo.hexArray[roomInfo.currentLocation]].facilitatorContent
                 "
               ></div>
+            </div>
+
+            <div class="row" v-if="customOptions.randomMoveButton == 'TRUE'">
+              <div class="
+                regenerate-button
+                my-4
+                col-sm-12
+                justify-content-center
+                generator
+              ">
+                <b-button v-on:click="randomlyMoveOnHexmap()" class="btn btn-dark mx-2 my-1">
+                  <span>{{
+                    roomInfo.playRandomizerAnimation ? "Rolling" : "Move"
+                  }}</span>
+                  <b-icon class="hexmap-reroll-icon" icon="arrows-move"></b-icon>
+                </b-button>
+                </div>
             </div>
       
             <div class="selected-hex" v-if="
@@ -683,6 +686,23 @@ export default {
       console.log('toggling', this.facilitatorMode)
       this.facilitatorMode = !this.facilitatorMode;
     },
+    createWeightedDrawnProbabilityArray(){
+      let weightedArray = []
+
+      for (let i=0; i<this.gSheet.length; i++){
+        if (!Number.isInteger(parseInt(this.gSheet[i].probabilityDrawn))){
+          weightedArray.push(this.gSheet[i]);
+        } else if (parseInt(this.gSheet[i].probabilityDrawn) > 0) {
+          for (let j=0; j<this.gSheet[i].probabilityDrawn; j++) {
+            console.log('prob',parseInt(this.gSheet[i].probabilityDrawn))
+            weightedArray.push(JSON.parse(JSON.stringify(this.gSheet[i])))
+          }
+        }
+      }
+
+      console.log('weighted array:', weightedArray)
+      return weightedArray
+    },
     regenerateHexes() {
       let startingHex = parseInt(this.customOptions.startingHex) ?? 1;
       let visitedHexesArray = [startingHex];
@@ -737,12 +757,16 @@ export default {
           newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[indexArray[n]]))
         }
       } else if (randomApproach == "randomWithCopies") {
+        let weightedArray = this.createWeightedDrawnProbabilityArray()
+        console.log(weightedArray)
+        
         for (let n = 0; n < this.totalHexCount; n++) {
           if (this.customOptions.tilesWithFixedLocations && this.customOptions.tilesWithFixedLocations.includes(n)){
             newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[n]));  
           } else {
-            let j = Math.floor(Math.random() * this.gSheet.length);
-            newHexArray[n] = JSON.parse(JSON.stringify(this.gSheet[j]));
+            let j = Math.floor(Math.random() * weightedArray.length);
+            console.log(j, weightedArray[j])
+            newHexArray[n] = JSON.parse(JSON.stringify(weightedArray[j]));
           }
 
         }
@@ -1045,8 +1069,8 @@ $hex-padding: 4px;
   position: absolute;
   left: calc(100vw - $scrollmap-width);
   top: 0;
-  background-color: black;
-  border-left: solid 2px darkgray;
+  background-color: #242424;
+  border-left: solid 2px #373737;
   box-shadow: -10px 0 10px rgb(0, 0, 0, .2) ;
   text-align: center;
 }
