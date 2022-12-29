@@ -2,8 +2,14 @@
   <div class="hexmap hexmap-game-room" v-if="roomInfo"
     v-bind:class="{ 'px-0': gameAsExtension, styleTemplate: styleTemplate }">
 
+    <div id="zoom-buttons">
+      <b-button-group>
+        <b-button variant="dark" v-on:click="changeZoom(1.5)"><b-icon icon="zoom-in"></b-icon></b-button>
+        <b-button variant="dark" :disabled="zoomScale < 0.5" v-on:click="changeZoom(0.666)"><b-icon icon="zoom-out"></b-icon></b-button>
+      </b-button-group>
+    </div>
     <div id="scrollbox" class="main-scrollbox">
-      <div class="mt-4 hexmap-main mb-4" v-if="firebaseReady && dataReady && !error">
+      <div :style="{transform: 'scale(' + zoomScale + ')'}" class="mt-4 hexmap-main mb-4" v-if="firebaseReady && dataReady && !error">
         <div class="game-title-on-card mt-4" v-if="customOptions.gameTitle && customOptions.showGameTitleOnCard">
           <h1>{{ customOptions.gameTitle }}</h1>
         </div>
@@ -18,7 +24,11 @@
             'hex-randomizing': roomInfo.playRandomizerAnimation === true,
             'hex-resetting': roomInfo.playResetAnimation === true,
             'looking-enabled': customOptions.lookBeforeMove,
-          }">
+          }"
+          v-bind:style="{
+            translate: zoomScaleOffset()
+          }"
+          >
             <template v-for="(hexRow, hexRowIndex) in updatedHexMapRows">
               <button class="hex-tile" v-for="(hex, hexIndex) in hexRow" v-on:click="lookOrMove(hex.hexID, false)"
                 v-bind:key="`${hexIndex}_${hexRowIndex}`" v-bind:class="{
@@ -315,6 +325,7 @@ export default {
       rowArrayString: "",
       styleTemplate: "",
       showPickHexList: false,
+      zoomScale: 1,
       customOptions: {
         gameTitle: undefined,
         byline: undefined,
@@ -491,6 +502,16 @@ export default {
         }
       );
     },
+    zoomScaleOffset(){
+      let pointyAdjustment = this.customOptions.hexOrientation == "pointyTop" ? 100 : 0
+      let translateValue = (500 * (this.zoomScale-1) + pointyAdjustment) + 'px'
+      
+      if (this.customOptions.hexOrientation == "pointyTop"){
+        translateValue += " " + (106 * this.columnsCount) + 'px'
+      }
+      console.log('zoom scale offset', translateValue)
+      return translateValue
+    },
     hexPosition(col, row) {
       // Basic dimensions
       let hexHeight = screen.width > 375 ? 92 : 69;
@@ -508,6 +529,9 @@ export default {
       let y = row * (hexHeight / 2 + hexPadding / 2.5);
 
       return `${x}px, ${y}px`;
+    },
+    changeZoom(changeFactor){
+      this.zoomScale *= changeFactor;
     },
     countGraphemes(str) {
       if (str) {
@@ -1025,7 +1049,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang='scss'>
 @use "sass:math";
-$scrollmap-width: 500px;
+$sidebar-width: 500px;
 
 $base-color: rgb(33, 33, 33);
 
@@ -1038,13 +1062,20 @@ $hex-padding: 4px;
   margin: auto;
 }
 
+#zoom-buttons {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 99;
+}
+
 #scrollbox {
-  width: calc(100vw - $scrollmap-width);
+  width: calc(100vw - $sidebar-width);
   height: 100vh;
   position: absolute;
   top: 0px;
   left: 0px;
-  padding-left: $scrollmap-width - 60px;
+  padding-left: $sidebar-width - 60px;
   overflow:auto;
   cursor: grab;
   user-select: none;
@@ -1062,12 +1093,12 @@ $hex-padding: 4px;
 }
 
 .sidebar {
-  width: $scrollmap-width;
+  width: $sidebar-width;
   height: 100vh;
   overflow-y: scroll;
   overflow-x: hidden;
   position: absolute;
-  left: calc(100vw - $scrollmap-width);
+  left: calc(100vw - $sidebar-width);
   top: 0;
   background-color: #242424;
   border-left: solid 2px #373737;
@@ -1082,6 +1113,7 @@ $hex-padding: 4px;
 .hexmap-main {
   position: relative;
   width: 100vw;
+  height: 0;
   left: calc(-1 * (100vw - 100%) / 2);
   cursor: grab;
   position: relative;
