@@ -1,6 +1,11 @@
 <template>
   <div class="hexmap hexmap-game-room" v-if="roomInfo"
     v-bind:class="{ 'px-0': gameAsExtension, styleTemplate: styleTemplate }">
+    <div class="desktop-only-message">
+      <div class="row"><div class="col-sm-12 mt-5 mx-2">
+        Sorry, the Hexmap format is only available on larger screens. All of the other <a href="https://storysynth.org">Story Synth</a> formats work on mobile.
+      </div></div>
+    </div>
 
     <div id="zoom-buttons">
       <b-button-group>
@@ -154,7 +159,7 @@
           </b-alert>
 
           
-          <div class="game-meta">
+          <!-- <div class="game-meta">
             <div class="" v-if="customOptions.gameTitle || customOptions.byline">
               <div class="row text-center" v-if="customOptions.gameTitle">
                 <div class="col-sm">
@@ -168,7 +173,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           
           <b-alert show variant="danger" v-if="error">{{ error }}</b-alert>
       
@@ -233,7 +238,8 @@
                       </div>
                       <div class="col-sm-9 pl-4">
                         <h3 v-if="currentlyViewedHex == roomInfo.currentLocation">Current Hex</h3>
-                        <h3 v-else><button class="btn btn-light mb-1 font-weight-bold" v-if="(customOptions.lookBeforeMove && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex) && !(roomInfo.hexesVisible[currentlyViewedHex] == 0 && customOptions.moveIntoFog == 'FALSE')" v-on:click="goToHex(currentlyViewedHex, false)">MOVE HERE</button></h3>
+                        <div class="hex-title" v-dompurify-html="gSheet[roomInfo.hexArray[currentlyViewedHex]].hexTitle"></div>
+                        <h3 v-if="currentlyViewedHex !== roomInfo.currentLocation"><button class="btn btn-light mb-1 font-weight-bold" v-if="(customOptions.lookBeforeMove && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex) && !(roomInfo.hexesVisible[currentlyViewedHex] == 0 && customOptions.moveIntoFog == 'FALSE')" v-on:click="goToHex(currentlyViewedHex, false)">MOVE HERE</button></h3>
                         <div v-if="gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent" v-dompurify-html="
                           gSheet[roomInfo.hexArray[currentlyViewedHex]].lookContent
                         "></div>
@@ -311,7 +317,7 @@
               </div>
             <!-- </transition> -->
 
-            <div class="row ">
+            <div class="row" v-if="gSheet[roomInfo.hexArray[currentlyViewedHex]].fullContent && gSheet[roomInfo.hexArray[currentlyViewedHex]].facilitatorContent">
               <div class="col-sm-12">
                 <hr color="white"/>
               </div>
@@ -993,12 +999,13 @@ export default {
                 hexInfo = {
                   hexID: parseInt(item[0]),
                   summary: item[3],
-                  fullContent: item[4] ? this.$marked(item[4]) : null,
-                  lookContent: item[5] ? this.$marked(item[5]) : null,
-                  facilitatorContent: item[6] ? this.$marked(item[6]) : null,
-                  background: item[7],
-                  probabilityDrawn: item[8],
-                  probabilityMove: item[9],
+                  hexTitle: item[4] ? this.$marked(item[4]) : null,
+                  fullContent: item[5] ? this.$marked(item[5]) : null,
+                  lookContent: item[6] ? this.$marked(item[6]) : null,
+                  facilitatorContent: item[7] ? this.$marked(item[7]) : null,
+                  background: item[8],
+                  probabilityDrawn: item[9],
+                  probabilityMove: item[10],
                 };
 
                 // check for background
@@ -1161,6 +1168,34 @@ $hex-padding: 4px;
 .hexmap-game-room {
   text-align: center;
   margin: auto;
+}
+
+@media (max-device-width: 767px) {
+  .desktop-only-message {
+    
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    position:absolute;
+    background-color: lightblue;
+    color: black;
+    margin: 0;
+    display: flex !important;
+
+    a {
+      color: DarkSlateGray;
+      text-decoration: underline;
+    }
+
+  }
+}
+
+@media (min-device-width: 768px) {
+  .desktop-only-message {
+    display: none;
+  }
 }
 
 #zoom-buttons {
@@ -1380,6 +1415,7 @@ $hex-padding: 4px;
 
 // This is the content
 .hex-tile-inner-content {
+  color: black;
   padding: $hex-height * 0.25;
 
   @media (max-width: 375px) {
@@ -1454,6 +1490,10 @@ $hex-padding: 4px;
 
 .hex-tile-active .hex-tile-inner {
   transform: scale(1.1);
+}
+
+.hex-title {
+  font-weight: bold;
 }
 
 /////////////////////////////////////////////

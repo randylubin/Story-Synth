@@ -70,10 +70,27 @@
     <div class="row">
       <div class="col">
         <div class="card card-body shadow">
+          <h3>Hexmap</h3>
+          <img src="https://diegeticgames.com/uploads/screenshot-2022-12-31-at-8-46-13-am.png" class="rounded mx-auto d-block format-thumbnail"
+            alt="thumbnail of the hexmap format">
+          <p>This format features a map made of hexagons, each containg content relevant to the players and / or faciliator. Maps can be fixed or randomly generated.</p>
+          <p>Template: <a
+              href="https://docs.google.com/spreadsheets/d/1tW0XdThjJesSdRcU_Tj1hk-V008QIpVw87UDcTdGQ-k/edit#gid=0">Hexmap
+              Template</a></p>
+          <p>Example Game: <a
+              href="https://storysynth.org/Hexmap/1tW0XdThjJesSdRcU_Tj1hk-V008QIpVw87UDcTdGQ-k/">Hexmap Demo</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="card card-body shadow">
           <h3>Hexflower</h3>
           <img src="/img/hexflower-thumbnail.png" class="rounded mx-auto d-block format-thumbnail"
             alt="thumbnail of the hexflower format">
-          <p>This format features and big hexagon made of smaller hexagons, with each hex having it's own content.
+          <p>This format features a big hexagon made of smaller hexagons, with each hex having it's own content.
             Players can click to select different hexes or roll to randomly move among them.</p>
           <p>Inspired by the <a href="https://goblinshenchman.wordpress.com/hex-power-flower/">Hexflower Cookbook</a>
           </p>
@@ -192,6 +209,7 @@
             <li>Standard Deck: provides a way of drawing from a deck of playing cards</li>
             <li>Journal Entries: allows players to write journal entries</li>
             <li>Hexflower as Extension: embeds a hexflower in a different game format</li>
+            <li>Generator as Extension: embeds a Generator in a different game format</li>
           </ul>
         </div>
       </div>
