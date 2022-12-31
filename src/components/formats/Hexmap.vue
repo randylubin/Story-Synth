@@ -50,7 +50,7 @@
                   hex.backgroundColor == 'transparent') ||
                   (!facilitatorMode && !roomInfo.hexesVisible[hex.hexID] && (!customOptions.lookIntoFog && !customOptions.moveIntoFog))
                 "
-                v-b-popover.hover="{content: hex.lookContent, html: true, disabled: (hex.hexID == roomInfo.currentLocation || !hex), variant: 'light'}"
+                v-b-popover.hover="{content: hex.lookContent, html: true, disabled: ((customOptions.showLookOnHover !== 'TRUE') || (hex.hexID == roomInfo.currentLocation || !hex)), variant: 'light'}"
                 >
                 <transition appear name="reroll-current-hex" mode="out-in">
                   <div class="hex-tile-inner" :key="hex.hexID" v-bind:style="{
@@ -155,14 +155,14 @@
 
           
           <div class="game-meta">
-            <div class="mb-4" v-if="customOptions.gameTitle || customOptions.byline">
+            <div class="" v-if="customOptions.gameTitle || customOptions.byline">
               <div class="row text-center" v-if="customOptions.gameTitle">
                 <div class="col-sm">
                   <h1>{{ customOptions.gameTitle }}</h1>
                 </div>
               </div>
               
-              <div class="row text-center" v-if="customOptions.byline">
+              <div class="row text-center mt-4" v-if="customOptions.byline">
                 <div class="col-sm">
                   <h4>{{ customOptions.byline }}</h4>
                 </div>
