@@ -280,6 +280,12 @@
                         </div>
                       </div>
                     </div>
+
+                    <div class="row" v-if="facilitatorMode && showPickHexList">
+                      <div class="col-sm-12" v-for="hex in gSheet" v-bind:key="hex.hexID">
+                        <span v-dompurify-html="hex.summary"></span> <button v-on:click="pickHexFromList(currentlyViewedHex, hex.hexID)" class="btn btn-dark btn-sm mx-2 my-1">Pick</button>
+                      </div>
+                    </div>
       
                     <div class="row ">
                       <div class="col-sm-12">
@@ -335,11 +341,7 @@
 
                   
         
-                  <div class="col-sm-12" v-if="facilitatorMode && showPickHexList">
-                    <div class="col-sm-12" v-for="hex in gSheet" v-bind:key="hex.hexID">
-                      <span v-dompurify-html="hex.summary"></span> <button v-on:click="pickHexFromList(currentlyViewedHex, hex.hexID)" class="btn btn-dark btn-sm mx-2 my-1">Pick</button>
-                    </div>
-                  </div>
+                  
     
         
                   <div class="col-sm-12" v-if="currentlyViewedHex !== undefined && currentlyViewedHex !== roomInfo.currentLocation">
