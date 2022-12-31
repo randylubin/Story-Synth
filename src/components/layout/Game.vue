@@ -303,7 +303,7 @@ export default {
         let getURL =
           "https://sheets.googleapis.com/v4/spreadsheets/" +
           sheetID +
-          "?includeGridData=true&ranges=a1:aa400&key=" +
+          "?includeGridData=true&ranges=a1:aa500&key=" +
           process.env.VUE_APP_FIREBASE_API_KEY;
 
         axios

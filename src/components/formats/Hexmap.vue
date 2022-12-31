@@ -618,12 +618,12 @@ export default {
       // Layout
       
       // Offsets
-      let hexSlotOffset = hexWidth * 1.5 + hexPadding;
-      let oddOffset = row % 2 === 0 ? 0 : -hexWidth * 0.75 - hexPadding / 2;
+      let hexSlotOffset = hexWidth * 0.75 + hexPadding / 2;
+      let oddOffset = col % 2 === 0 ? hexHeight / 1.95 : 0;
 
-      let x = col * hexSlotOffset + oddOffset;
+      let x = col * hexSlotOffset;
 
-      let y = row * (hexHeight / 2 + hexPadding / 2.5);
+      let y = row * (hexHeight + hexPadding / 2.5) + oddOffset;
 
       return `${x}px, ${y}px`;
     },
@@ -996,9 +996,9 @@ export default {
                   fullContent: item[4] ? this.$marked(item[4]) : null,
                   lookContent: item[5] ? this.$marked(item[5]) : null,
                   facilitatorContent: item[6] ? this.$marked(item[6]) : null,
-                  probabilityDrawn: item[7],
-                  probabilityMove: item[8],
-                  background: item[9],
+                  background: item[7],
+                  probabilityDrawn: item[8],
+                  probabilityMove: item[9],
                 };
 
                 // check for background
@@ -1009,6 +1009,7 @@ export default {
                 }
 
                 cleanData.push(hexInfo);
+                console.log('push')
               }
             }
           }
@@ -1064,61 +1065,53 @@ export default {
           for (let h = 0; h < this.totalHexCount; h++){
             let neighborArray = [];
             let row = this.hexRowLookup[h];
+            let col = h % this.columnsCount;
 
             // N
-            if (row >= 2){
-              neighborArray.push(h - (this.columnsCount*2))
+            if (row >= 1){
+              neighborArray.push(h - this.columnsCount)
             }
 
             // NE
-            if (row > 0){
-              if (row % 2 == 0){
-                if (((h+1) % this.columnsCount) != 0) {
-                  neighborArray.push(h - this.columnsCount + 1)
-                }
+            if (col !== this.columnsCount - 1 && !(row == 0 && col % 2 == 1)){
+              if (col % 2 == 0) {
+                neighborArray.push(h + 1)
               } else {
-                neighborArray.push(h - this.columnsCount)
-              }
-            }
-
-            // SE
-            if (row < this.rowsCount - 1){
-              if (row % 2 == 0){
-                if (((h+1) % this.columnsCount) != 0) {
-                  neighborArray.push(h + this.columnsCount + 1)
-                }
-              } else {
-                neighborArray.push(h + this.columnsCount)
-              }
-            }
-
-            // S
-            if (row < this.rowsCount - 2){
-              neighborArray.push(h + (this.columnsCount*2))
-            }
-
-            // SW
-            if (row < this.rowsCount - 1){
-              if (row % 2 == 1){
-                if (h % this.columnsCount != 0){
-                  neighborArray.push(h + this.columnsCount - 1)
-                }
-              } else {
-                neighborArray.push(h + this.columnsCount)
+                neighborArray.push(h - this.columnsCount + 1)
               }
             }
 
             // NW
-            if (row > 0){
-              if (row % 2 == 1){
-                if (h % this.columnsCount != 0){
-                  neighborArray.push(h - this.columnsCount - 1)
-                }
+            if (col !== 0 && !(row == 0 && col % 2 == 1)){
+              if (col % 2 == 0) {
+                neighborArray.push(h - 1)
               } else {
-                neighborArray.push(h - this.columnsCount)
+                neighborArray.push(h - this.columnsCount - 1)
               }
             }
 
+            // S
+            if (row < this.rowsCount - 1){
+              neighborArray.push(h + this.columnsCount)
+            }
+
+            // SE
+            if (col !== this.columnsCount - 1 && !(row == this.rowsCount -1 && col % 2 == 0)){
+              if (col % 2 == 0) {
+                neighborArray.push(h + this.columnsCount + 1)
+              } else {
+                neighborArray.push(h + 1)
+              }
+            }
+
+            // SW
+            if (col !== 0 && !(row == this.rowsCount -1 && col % 2 == 0)){
+              if (col % 2 == 0) {
+                neighborArray.push(h + this.columnsCount - 1)
+              } else {
+                neighborArray.push(h - 1)
+              }
+            }
 
             this.hexNeighborMap.push(neighborArray)
           }
@@ -1134,7 +1127,7 @@ export default {
         this.gSheet = cleanData;
 
         if (!(this.customOptions.randomizeHexes == "randomWithCopies" || this.customOptions.randomizeHexes == "randomNoCopies") && (this.gSheet.length < this.totalHexCount)){
-          this.error = "Error: too few hexes for an unrandomized map of this size"
+          this.error = "Error: too few hexes for an unrandomized map of this size. Total hex count: " + this.totalHexCount + ". Total hexes in sheet: " + this.gSheet.length 
           console.log('error!', this.error)
           return;
         }
