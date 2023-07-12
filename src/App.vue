@@ -161,6 +161,12 @@ export default {
         // TODO display error message
       });
 
+      window.addEventListener('mouseup', function(){
+        document.getElementById('menu-bar-button').focus()
+        document.getElementById('menu-bar-button').blur()
+        console.log("click!")
+      })
+
   },
   methods: {
   }
@@ -326,8 +332,14 @@ li.nav-item {
     0 0px 5px hsl(0deg 0% 0% / .15) !important;
 }
 
-.btn-fab:not(:hover) {
+.btn-fab:not(:hover):not(:focus) {
   background: white;
+}
+
+.btn-fab.btn-outline-dark:focus {
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40;
 }
 
 .btn-fab svg {

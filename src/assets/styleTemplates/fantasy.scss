@@ -23,6 +23,9 @@
     &:hover {
       background-color: rgba($base-color, 0.8) !important;
     }
+    &:focus {
+      background-color: rgba($base-color, 0.8) !important;
+    }
   }
 
   .full-page-background {

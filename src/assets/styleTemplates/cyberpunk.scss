@@ -20,7 +20,10 @@
     background-color: $base-color !important;
     color: black !important;
     &:hover {
-      background-color: rgba($base-color, 0.8) !important;
+      background-color: rgba($base-color, 0.6) !important;
+    }
+    &:focus {
+      background-color: rgba($base-color, 0.6) !important;
     }
   }
 

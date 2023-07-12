@@ -1,7 +1,7 @@
 <template>
   <!-- Menu Bar -->
   <div class="menu-bar mb-4 d-flex align-items-center">
-    <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal
+    <button id="menu-bar-button" class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal
       v-bind:style="{ color: customOptions.menuColor }">
       <b-icon-list></b-icon-list> Menu
     </button>

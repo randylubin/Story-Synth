@@ -31,6 +31,9 @@
     &:hover {
       background-color: rgba($dark-color, 0.8) !important;
     }
+    &:focus {
+      filter: invert(1) !important;
+    }
   }
 
   .menu-bar .btn {
