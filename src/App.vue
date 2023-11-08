@@ -161,11 +161,11 @@ export default {
         // TODO display error message
       });
 
-      window.addEventListener('mouseup', function(){
-        document.getElementById('menu-bar-button').focus()
-        document.getElementById('menu-bar-button').blur()
-        console.log("click!")
-      })
+      // window.addEventListener('mouseup', function(){
+        // document.getElementById('menu-bar-button').focus()
+        // document.getElementById('menu-bar-button').blur()
+      //   console.log("click!")
+      // })
 
   },
   methods: {
@@ -336,10 +336,14 @@ li.nav-item {
   background: white;
 }
 
-.btn-fab.btn-outline-dark:focus {
+.btn-fab.btn-outline-dark:hover:not([disabled="disabled"]) {
   color: #fff;
   background-color: #343a40;
   border-color: #343a40;
+}
+
+.btn-fab.btn-outline-dark:focus {
+  box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5) !important;
 }
 
 .btn-fab svg {
