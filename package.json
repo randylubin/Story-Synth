@@ -8,6 +8,8 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@vitejs/plugin-vue": "^4.5.0",
+    "@vue/compat": "^3.1.0",
     "axios": "^0.21.1",
     "bootstrap": "^4.5.2",
     "bootstrap-vue": "^2.23.0",
@@ -18,18 +20,18 @@
     "marked": "^4.0.15",
     "material-icons": "^0.3.1",
     "sass": "^1.26.10",
-    "@vitejs/plugin-vue": "^1.6.1",
-    "vite": "^2.5.4",
-    "vite-plugin-vue2" : "1.9.0",
-    "vue": "^2.6.11",
+    "vite": "^4.0.0",
+    "vue": "^3.2.36",
+    "vue-gtag": "^2.0.0",
     "vue-analytics": "^5.22.1",
-    "vue-dompurify-html": "^2.5.2",
-    "vue-gtag": "^1.10.0",
+    "vue-dompurify-html": "^4.1.4",
+    "vue-loader": "^17.3.1",
     "vue-meta": "^2.4.0",
     "vue-mixpanel": "^1.0.6",
     "vue-router": "^3.4.3"
   },
   "devDependencies": {
+    "@vue/compiler-sfc": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "prerender-spa-plugin": "^3.2.1"
@@ -43,9 +45,6 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
     "rules": {}
   },
   "browserslist": [

@@ -1,12 +1,23 @@
-import { defineConfig } from 'vite'
-import { createVuePlugin as vue } from "vite-plugin-vue2"
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 const path = require("path");
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          compatConfig: {
+            MODE: 2
+          }
+        }
+      }
+    })
+  ],
   extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   resolve: {
     alias: {
+      vue: '@vue/compat',
       "@": path.resolve(__dirname, "./src"),
     },
   },

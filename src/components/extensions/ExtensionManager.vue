@@ -348,7 +348,7 @@ export default {
         "https://sheets.googleapis.com/v4/spreadsheets/" +
         sheetID +
         "?includeGridData=true&ranges=a1:aa400&key=" +
-        import.meta.env.VUE_APP_FIREBASE_API_KEY;
+        import.meta.env.VITE_APP_FIREBASE_API_KEY;
 
       axios
         .get(getURL)
