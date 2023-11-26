@@ -1,47 +1,47 @@
 <template>
   <div id="app">
     <!-- <router-view></router-view>-->
-    <div v-if="$route.path !== '/about'">
+    <div v-if="route && path !== '/about'">
 
       <app-header class=""></app-header>
 
       <div class="non-footer-content">
 
-        <div v-if="$route.fullPath == '/'">
+        <div v-if="fullPath == '/'">
           <app-homepage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID"
             :routeGameType="$route.params.gameType"></app-homepage>
         </div>
 
-        <div v-if="$route.fullPath == '/Formats/'">
+        <div v-if="fullPath == '/Formats/'">
           <app-formatsAndExtensions></app-formatsAndExtensions>
         </div>
 
-        <div v-if="$route.fullPath == '/Gallery/'">
+        <div v-if="fullPath == '/Gallery/'">
           <app-gallery></app-gallery>
         </div>
 
-        <div v-if="$route.fullPath == '/Microgrant-Gallery/'">
+        <div v-if="fullPath == '/Microgrant-Gallery/'">
           <app-microgrant-gallery></app-microgrant-gallery>
         </div>
 
-        <div v-if="$route.fullPath == '/Grants/'">
+        <div v-if="fullPath == '/Grants/'">
           <app-grants></app-grants>
         </div>
 
-        <div v-if="$route.fullPath == '/CSS-Playground/'">
+        <div v-if="fullPath == '/CSS-Playground/'">
           <app-CSSPlayground></app-CSSPlayground>
         </div>
 
-        <div v-if="$route.fullPath == '/Upload/'">
+        <div v-if="fullPath == '/Upload/'">
           <app-uploadPage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID"
             :routeGameType="$route.params.gameType"></app-uploadPage>
         </div>
 
         <app-game
-          v-if="firebaseAuth && $route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          v-if="firebaseAuth && routeParams?.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
           :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" :gameType="gameType"></app-game>
         <b-overlay
-          :show="!firebaseAuth && $route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          :show="!firebaseAuth && routeParams?.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
           no-wrap>
           <template #overlay>
             <h1>Loading</h1>
@@ -52,7 +52,7 @@
 
       <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx"
         onmonetization="console.log('monetization event triggered')"
-        v-if="['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
+        v-if="['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes(routeParams?.gameType)">
     </div>
   </div>
 </template>
@@ -60,6 +60,8 @@
 <script>
 import { anonymousSignIn } from './firebase/auth.js';
 import customGameData from './misc/customGameData'
+import { useRoute } from 'vue-router';
+import { computed, watch } from 'vue';
 
 // import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue' // TODO push this to components
 
@@ -84,6 +86,15 @@ export default {
   data() {
     return {
       firebaseAuth: false,
+    }
+  },
+  setup(){
+    const route=useRoute();
+    const path = computed(() => route.path)
+    const fullPath = computed(() => route.fullPath)
+    const routeParams = computed(() => route.params)
+    return {
+      route, path, fullPath, routeParams
     }
   },
   computed: {
