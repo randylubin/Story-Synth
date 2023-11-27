@@ -66,20 +66,20 @@
           v-on:click="previousCard()" v-b-tooltip.hover title="Previous Card"
           :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">
           <!-- Previous Card -->
-          <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
-          <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+          <IBiChevronLeft class="h1 mb-0" />
+          <IBiCardHeading class="h1 mb-0 mr-2" />
         </button>
         <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
           title="Next Card" v-on:click="nextCard()"
           :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases - 1)">
           <!-- Next Card -->
           <div v-if="roomInfo.currentCardIndex == 0">
-            <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
-            <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
+            <IBiCardHeading class="h1 mb-0 ml-2" animation="fade" />
+            <IBiChevronRight class="h1 mb-0" animation="fade" />
           </div>
           <div v-else>
-            <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
-            <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>
+            <IBiCardHeading class="h1 mb-0 ml-2" />
+            <IBiChevronRight class="h1 mb-0" />
           </div>
         </button>
       </div>
@@ -308,7 +308,7 @@ export default {
       }
     },
     closeMenu() {
-      this.$bvModal.hide("menuModal");
+      // this.$bvModal.hide("menuModal"); TODO FIX
     },
     copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath
@@ -401,7 +401,7 @@ export default {
       })
     },
     shuffle() {
-      this.$bvModal.hide('reshuffleConfirm')
+      // this.$bvModal.hide('reshuffleConfirm') TODO FIX
 
       // Create a ordered array
       var initialCardSequence = []

@@ -237,6 +237,7 @@ export default {
 
     };
   },
+  inject: ['mixpanel'],
   metaInfo() {
     return {
       title: "Story Synth Formats and Extensions",
@@ -291,7 +292,7 @@ export default {
 
     document.dispatchEvent(new Event("x-app-rendered"));
     if (location.hostname.toString() !== 'localhost') {
-      this.$mixpanel.track('Visited Format Overview');
+      this.mixpanel.track('Visited Format Overview');
     }
   },
 };

@@ -4,19 +4,19 @@
       <transition name="bounce" mode="out-in">
         <div v-if="roomInfo" :key="Object.keys(roomInfo).length" class="pt-2 px-2 game-meta live-player-counter"
           v-bind:style="{ color: color }">
-          {{ Object.keys(roomInfo).length }} <b-icon-people></b-icon-people>
+          {{ Object.keys(roomInfo).length }} <IBiPeople />
         </div>
       </transition>
       <transition name="bounce" mode="out-in">
         <div v-if="atLeastOneMonetizedUser" class="pt-2 px-2 game-meta live-player-counter"
           v-bind:style="{ color: color }">
-          <b-icon-coin alt="web monetization active"></b-icon-coin>
+          <iBiCoin alt="web monetization active" />
         </div>
       </transition>
 
       <button class="btn btn-outline-dark ml-auto border-0" @click="$bvToast.show('copyToast')"
         v-on:click="copyTextToClipboard()" type="button" v-bind:style="{ color: color }">
-        <b-icon-link45deg></b-icon-link45deg> Copy URL
+        <iBiLink45deg /> Copy URL
       </button>
 
       <b-toast variant="success" id="copyToast" auto-hide-delay="1000" no-close-button>

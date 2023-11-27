@@ -3,11 +3,11 @@ import { createApp } from "vue";
 import App from './App.vue'
 const app = createApp(App)
 
-import VueMeta from "vue-meta";
-app.use(VueMeta);
+import { createMetaManager } from 'vue-meta'
+app.use(createMetaManager); // TODO use throughout app 
 
 import { marked } from "marked";
-app.prototype.$marked = marked;
+app.config.globalProperties.$marked = marked;
 
 import VueDOMPurifyHTML from "vue-dompurify-html";
 app.use(VueDOMPurifyHTML, {
@@ -43,7 +43,10 @@ app.use(VueDOMPurifyHTML, {
 });
 
 import markdownFriendlyOptions from "./misc/markdown-friendly-options.json";
-app.prototype.$markdownFriendlyOptions = markdownFriendlyOptions;
+app.config.globalProperties.$markdownFriendlyOptions = markdownFriendlyOptions;
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 
 // import {
 //   BootstrapVue,
@@ -113,7 +116,6 @@ app.use(VueMixpanel, {
 });
 
 import { createRouter, createWebHistory } from "vue-router";
-// Vue.use(createRouter);
 
 const routes = [
   { path: "/", component: App },

@@ -243,6 +243,7 @@ export default {
   components: {
 
   },
+  inject: ['mixpanel'],
   metaInfo() {
     return {
       title: "CSS Playground",
@@ -301,7 +302,7 @@ export default {
 
     document.dispatchEvent(new Event("x-app-rendered"));
     if (location.hostname.toString() !== 'localhost') {
-      this.$mixpanel.track('Visited CSS Playground');
+      this.mixpanel.track('Visited CSS Playground');
     }
   },
   methods: {

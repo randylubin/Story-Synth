@@ -170,6 +170,7 @@ export default {
     "app-monetization": () => import("../layout/Monetization.vue"),
     "app-extensionManager": () => import("../extensions/ExtensionManager.vue"),
   },
+  inject: ['mixpanel'],
   computed: {
     formatInfo: function () {
       let info = {
@@ -418,13 +419,13 @@ export default {
         !this.gameAsExtension
       ) {
         if (this.$route.params.roomID) {
-          this.$mixpanel.track("Visit Game Session", {
+          this.mixpanel.track("Visit Game Session", {
             game_name: this.customOptions.gameTitle ?? "untitled",
             session_url: location.hostname.toString() + this.$route.fullPath,
             format: this.$route.params.gameType,
           });
         } else {
-          this.$mixpanel.track("Visit Game Launcher", {
+          this.mixpanel.track("Visit Game Launcher", {
             game_name: this.customOptions.gameTitle ?? "untitled",
             format: this.$route.params.gameType,
             launcher_url: location.hostname.toString() + this.$route.fullPath,

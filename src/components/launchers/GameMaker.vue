@@ -118,6 +118,7 @@ export default {
       roomInfo: {},
     };
   },
+  inject: ['mixpanel'],
   mounted() {
     document.dispatchEvent(new Event("x-app-rendered"));
     if (!this.routeGameType) {
@@ -144,7 +145,7 @@ export default {
       }
     }
     if (location.hostname.toString() !== "localhost") {
-      this.$mixpanel.track("Visit Homepage");
+      this.mixpanel.track("Visit Homepage");
     }
   },
   updated() {

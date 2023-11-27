@@ -30,6 +30,7 @@ export default {
   components: {
     "app-gameMaker": GameMaker,
   },
+  inject: ['mixpanel'],
   metaInfo() {
     return {
       title: "Gallery of Story Synth Games",
@@ -89,7 +90,7 @@ export default {
 
     document.dispatchEvent(new Event("x-app-rendered"));
     if (location.hostname.toString() !== 'localhost') {
-      this.$mixpanel.track('Visited Uploader');
+      this.mixpanel.track('Visited Uploader');
     }
   },
 };

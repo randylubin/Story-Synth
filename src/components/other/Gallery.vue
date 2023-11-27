@@ -236,6 +236,7 @@ export default {
       ],
     }
   },
+  inject: ['mixpanel'],
   mounted() {
     let body = document.getElementById("app"); // document.body;
     body.classList.remove(body.classList[0]);
@@ -243,7 +244,7 @@ export default {
 
     document.dispatchEvent(new Event("x-app-rendered"));
     if (location.hostname.toString() !== 'localhost') {
-      this.$mixpanel.track('Visited Gallery');
+      this.mixpanel.track('Visited Gallery');
     }
   },
   methods: {

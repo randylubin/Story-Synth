@@ -3,7 +3,7 @@
   <div class="menu-bar mb-4 d-flex align-items-center">
     <button id="menu-bar-button" class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal
       v-bind:style="{ color: customOptions.menuColor }">
-      <b-icon-list></b-icon-list> Menu
+      <iBiList /> Menu
     </button>
     <!-- <div v-if="customOptions.gameTitle" class="mx-auto align-middle text-center">{{customOptions.gameTitle}}</div> -->
     <app-roomLink class="d-none d-sm-block" :monetizedByUser="monetizedByUser"
@@ -15,7 +15,7 @@
         <div class="row menu-row">
           <b-button class="border-0 btn-lg btn-block" v-on:click="copyLinkToClipboard(); closeMenu();"
             @click="$bvToast.show('copyToast')">
-            <b-icon-link45deg></b-icon-link45deg> Copy URL
+            <iBiLink45deg /> Copy URL
           </b-button>
         </div>
         <div class="row menu-row" v-if="roomInfo">
