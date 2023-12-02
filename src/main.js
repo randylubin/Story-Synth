@@ -1,7 +1,12 @@
+import 'bootstrap/dist/css/bootstrap.min.css'
+import bootstrap from 'bootstrap/dist/js/bootstrap.min.js'
+
 import { createApp } from "vue";
 
 import App from './App.vue'
 const app = createApp(App)
+
+app.use(bootstrap)
 
 import { createMetaManager } from 'vue-meta'
 app.use(createMetaManager); // TODO use throughout app 
@@ -44,9 +49,6 @@ app.use(VueDOMPurifyHTML, {
 
 import markdownFriendlyOptions from "./misc/markdown-friendly-options.json";
 app.config.globalProperties.$markdownFriendlyOptions = markdownFriendlyOptions;
-
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 
 // import {
 //   BootstrapVue,
@@ -94,8 +96,8 @@ import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 // app.component("BIconZoomIn", BIconZoomIn);
 // app.component("BIconZoomOut", BIconZoomOut)
 
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
+// import "bootstrap/dist/css/bootstrap.css";
+// import "bootstrap-vue/dist/bootstrap-vue.css";
 
 import "./assets/styleTemplates/homepage.scss";
 
@@ -123,6 +125,7 @@ const routes = [
   { path: "/:gameType/:gSheetID/:roomID", component: App },
   { path: "/:gameType/:gSheetID/:roomID/:userRole", component: App },
   { path: "/Games/", redirect: "/Gallery/"},
+  { path: "/Upload", component: App}
 ];
 
 let router = createRouter({

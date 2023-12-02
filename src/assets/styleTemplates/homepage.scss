@@ -1,5 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 .style-template-homepage {
-  @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
   $dark-blue: #323c69;
   $light-blue: #d9fcfd;
 
@@ -86,6 +86,7 @@
 
   .navbar {
     transition: all 0.2s;
+    z-index: 9999;
   }
   .navbar:not(.scrolledNavbar) {
     background-color: transparent !important;

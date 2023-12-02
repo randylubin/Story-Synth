@@ -14,6 +14,7 @@ declare module 'vue' {
     BContainer: typeof import('bootstrap-vue-next')['BContainer']
     BFormInput: typeof import('bootstrap-vue-next')['BFormInput']
     BFormSelect: typeof import('bootstrap-vue-next')['BFormSelect']
+    BFormSelectOption: typeof import('bootstrap-vue-next')['BFormSelectOption']
     BIcon: typeof import('bootstrap-vue-next')['BIcon']
     BIconCoin: typeof import('bootstrap-vue-next')['BIconCoin']
     BIconLink45deg: typeof import('bootstrap-vue-next')['BIconLink45deg']
@@ -86,6 +87,7 @@ declare module 'vue' {
     UploadPage: typeof import('./src/components/launchers/UploadPage.vue')['default']
   }
   export interface ComponentCustomProperties {
+    vBColorMode: typeof import('bootstrap-vue-next')['vBColorMode']
     vBModal: typeof import('bootstrap-vue-next')['vBModal']
     vBTooltip: typeof import('bootstrap-vue-next')['vBTooltip']
   }

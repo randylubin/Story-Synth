@@ -51,25 +51,37 @@
               <div class="row mb-4">
                 <div class="col-sm">
                   Select your game format
-                  <b-form-select v-model="gameType" class="custom-select" title="Select your game format" size="lg">
-                    <option disabled value="">Please select one</option>
-                    <option>Shuffled</option>
-                    <option>Timed</option>
-                    <option>Monster</option>
-                    <option>Secret Cards</option>
-                    <option>Slot Machine</option>
-                    <option>Phases</option>
-                    <option>Generator</option>
-                    <option>Hexflower</option>
-                    <option>Hexmap</option>
-                  </b-form-select>
+                  <select class="form-select form-select-lg" id="formatSelect" v-model="gameType" title="Select your game format">
+                    <option disabled selected value="">Please select one</option>
+                    <option value="Shuffled">Shuffled</option>
+                    <option value="Timed">Timed</option>
+                    <option value="Monster">Monster</option>
+                    <option value="Secret Cards">Secret Cards</option>
+                    <option value="Slot Machine">Slot Machine</option>
+                    <option value="Phases">Phases</option>
+                    <option value="Generator">Generator</option>
+                    <option value="Hexflower">Hexflower</option>
+                    <option value="Hexmap">Hexmap</option>
+                  </select>
+                  <!-- <BFormSelect v-model="gameType" class="custom-select" title="Select your game format" size="lg">
+                    <BFormSelectOption disabled value="">Please select one</BFormSelectOption>
+                    <BFormSelectOption>Shuffled</BFormSelectOption>
+                    <BFormSelectOption>Timed</BFormSelectOption>
+                    <BFormSelectOption>Monster</BFormSelectOption>
+                    <BFormSelectOption>Secret Cards</BFormSelectOption>
+                    <BFormSelectOption>Slot Machine</BFormSelectOption>
+                    <BFormSelectOption>Phases</BFormSelectOption>
+                    <BFormSelectOption>Generator</BFormSelectOption>
+                    <BFormSelectOption>Hexflower</BFormSelectOption>
+                    <BFormSelectOption>Hexmap</BFormSelectOption>
+                  </BFormSelect> -->
                 </div>
               </div>
 
               <div class="row mb-4">
                 <div class="col-sm">
-                  Paste your Google Sheet public link
-                  <svg v-b-tooltip.hover
+                  Google Sheet link
+                  <svg data-bs-toggle="tooltip" data-bs-placement="top"
                     title="Paste in the entire URL link to your publicly shared Google Sheet that contains the game data"
                     width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle-fill m-1"
                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -77,8 +89,8 @@
                       d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033a.237.237 0 0 1-.24-.247C5.35 4.091 6.737 3.5 8.005 3.5c1.396 0 2.672.73 2.672 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.105a.25.25 0 0 1-.25.25h-.81a.25.25 0 0 1-.25-.246l-.004-.217c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.803 0-1.253.478-1.342 1.134-.018.137-.128.25-.266.25h-.825zm2.325 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z" />
                   </svg>
 
-                  <b-form-input v-model="gSheetID" class="form-control" placeholder="Google Sheet Public Link"
-                    title="Google Sheet Public Link" size="lg" />
+                  <input v-model="gSheetID" class="form-control form-control-lg" placeholder="Google Sheet Public Link"
+                    title="Google Sheet Public Link" />
                 </div>
               </div>
             </div>
@@ -103,6 +115,9 @@
 
 
 <script>
+import { ref } from 'vue';
+import { Tooltip } from 'bootstrap'
+
 export default {
   name: "app-gameMaker",
   props: {
@@ -112,8 +127,8 @@ export default {
   },
   data() {
     return {
-      gameType: null,
-      gSheetID: null,
+      gameType: ref(null),
+      gSheetID: ref(null),
       currentUrl: location.hostname.toString() + "/#" + this.$route.fullPath,
       roomInfo: {},
     };
@@ -147,6 +162,9 @@ export default {
     if (location.hostname.toString() !== "localhost") {
       this.mixpanel.track("Visit Homepage");
     }
+    new Tooltip(document.body, {
+      selector: "[data-bs-toggle='tooltip']",
+    })
   },
   updated() {
     this.updateUrl();

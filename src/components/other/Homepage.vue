@@ -8,9 +8,9 @@
         </div>
       </div>
 
-      <div class="homepage-gif row rounded-m clipped mb-4 shadow">
-        <div class="embed-responsive embed-responsive-16by9">
-          <video class="embed-responsive-item" autoplay loop controls muted>
+      <div class="homepage-gif rounded clipped mb-4 shadow">
+        <div class="ratio ratio-16x9">
+          <video autoplay loop controls muted>
             <source src="https://diegeticgames.com/uploads/story-synth-teaser.mp4" type="video/mp4" />
           </video>
         </div>
@@ -210,12 +210,12 @@
             <p>When you’re ready, fill out <a href="https://forms.gle/CizjsyFsR6sVCYEX7">this form</a> to add your game
               to the gallery!</p>
           </div>
-          <div class="card shadow">
-            <a href="/Gallery/">
-              <img class="img img-fluid rounded-m clipped" src="/img/story-synth-gallery-banner.png"
-                alt="Collage of Story Synth Games">
-            </a>
-          </div>
+        </div>
+        <div class="card shadow">
+          <a href="/Gallery/">
+            <img class="img img-fluid rounded-m clipped" src="/img/story-synth-gallery-banner.png"
+              alt="Collage of Story Synth Games">
+          </a>
         </div>
 
       </div>

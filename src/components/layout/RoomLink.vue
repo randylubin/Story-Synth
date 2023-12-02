@@ -14,14 +14,24 @@
         </div>
       </transition>
 
-      <button class="btn btn-outline-dark ml-auto border-0" @click="$bvToast.show('copyToast')"
+      <button class="btn btn-outline-dark ml-auto border-0"
         v-on:click="copyTextToClipboard()" type="button" v-bind:style="{ color: color }">
         <iBiLink45deg /> Copy URL
       </button>
 
-      <b-toast variant="success" id="copyToast" auto-hide-delay="1000" no-close-button>
+      <!-- <b-toast variant="success" id="copyToast" auto-hide-delay="1000" no-close-button>
         Link copied to clipboard
-      </b-toast>
+      </b-toast> -->
+
+      <div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+        <div class="toast-container position-absolute p-3" id="copyToast">
+          <div class="toast hide">
+            <div class="toast-body">
+              Link copied to clipboard
+            </div>
+          </div>
+        </div>
+      </div>
 
 
 
@@ -32,6 +42,8 @@
 <script>
 
 import { notifyMyOnlineStatus, onRoomInfoUpdate, setMyOnlineData } from "../../firebase/models/players_in_room.js";
+
+let userRef = null;
 
 export default {
   name: "app-roomLink",
@@ -50,7 +62,6 @@ export default {
       context: null,
       userID: null,
       atLeastOneMonetizedUser: false,
-      userRef: null
     };
   },
   mounted() {
@@ -65,18 +76,24 @@ export default {
     }
   },
   watch: {
-    monetizedByUser: function () {
-      if (this.userRef) {
-        setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
-      }
+    monetizedByUser: {
+      handler() {
+        if (this.userRef) {
+          setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
+        }
+      }, deep: true,
     },
-    stringyRoomInfo: function () {
-      this.checkMonetization();
+    stringyRoomInfo: {
+      handler() {
+        this.checkMonetization();
+      }, deep: true,
     },
-    $route() {
-      if (this.routeRoomID) {
-        this.bindToFirebaseRTDB()
-      }
+    $route: {
+      handler() {
+        if (this.routeRoomID) {
+          this.bindToFirebaseRTDB()
+        }
+      }, deep: true,
     },
   },
   updated() {
@@ -84,7 +101,7 @@ export default {
   },
   methods: {
     bindToFirebaseRTDB() {
-      this.userRef = notifyMyOnlineStatus(this.routeRoomID);
+      userRef = notifyMyOnlineStatus(this.routeRoomID);
       onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
         // console.log(roomInfo)
         this.roomInfo = roomInfo
@@ -93,7 +110,7 @@ export default {
         sheetID: this.$route.gSheetID,
         gameSessionURL: this.currentUrl,
       });
-      setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
+      setMyOnlineData(userRef, { monetized: this.monetizedByUser })
       this.updateUrl();
     },
     checkMonetization() {

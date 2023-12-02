@@ -1,17 +1,24 @@
 <template>
   <div class="container game-container">
     <!-- Loading Spinner -->
-    <b-overlay :show="(!dataReady || (!firebaseReady && $route.params.roomID)) && !error" no-wrap>
-      <template #overlay>
-        <h1>Loading</h1>
-        <div v-if="customOptions.debugLoading == 'TRUE'">
+    <div class="vw-100 vh-100 d-flex align-items-center justify-content-center" v-if="(!dataReady || (!firebaseReady && $route.params.roomID)) && !error" no-wrap>
+      <div class="row" v-if="customOptions.debugLoading != 'TRUE'">
+        <div class="col">
+          <h1>Loading
+            <span class="spinner-border m-auto p-auto" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </span>
+          </h1>
+        </div>
+      </div>
+      <div class="row" v-if="customOptions.debugLoading == 'TRUE'">
+        <div class="col">
           <div>Google Sheet ready: {{ dataReady }}</div>
           <div>Firebase ready: {{ firebaseReady }}</div>
           <div>Error: {{ error }}</div>
         </div>
-        <b-spinner class="m-5" style="width: 4rem; height: 4rem" label="Busy"></b-spinner>
-      </template>
-    </b-overlay>
+      </div>
+    </div>
 
     <!-- Game Launcher -->
     <app-gameLauncher :routeGSheetID="gSheetID" :routeGameType="gameType" :customOptions="customOptions"
@@ -81,13 +88,14 @@ import {
 } from "../../firebase/models/rooms.js";
 import VanityLookup from "../../misc/VanityLookup.js";
 import customGameData from "../../misc/customGameData.js";
+import { defineAsyncComponent } from 'vue';
 
 export default {
   name: "app-game",
   props: {
     roomID: String,
     gSheetID: String,
-    gameAsExtension: Boolean,
+    gameAsExtension: String,
     gameType: String,
   },
   data: function () {
@@ -154,21 +162,21 @@ export default {
     };
   },
   components: {
-    "app-gameLauncher": () => import("../launchers/GameLauncher.vue"),
+    "app-gameLauncher": defineAsyncComponent(() => import("../launchers/GameLauncher.vue")),
 
-    "app-timed": () => import("../formats/Timed.vue"),
-    "app-shuffled": () => import("../formats/Shuffled.vue"),
-    "app-monster": () => import("../formats/Monster.vue"),
-    "app-secretCards": () => import("../formats/SecretCards.vue"),
-    "app-slotMachine": () => import("../formats/SlotMachine.vue"),
-    "app-phases": () => import("../formats/Phases.vue"),
-    "app-generator": () => import("../formats/Generator.vue"),
-    "app-hexflower": () => import("../formats/Hexflower.vue"),
-    "app-hexmap": () => import("../formats/Hexmap.vue"),
-    "app-sandbox": () => import("../formats/Sandbox.vue"),
+    "app-timed": defineAsyncComponent(() => import("../formats/Timed.vue")),
+    "app-shuffled": defineAsyncComponent(() => import("../formats/Shuffled.vue")),
+    "app-monster": defineAsyncComponent(() => import("../formats/Monster.vue")),
+    "app-secretCards": defineAsyncComponent(() => import("../formats/SecretCards.vue")),
+    "app-slotMachine": defineAsyncComponent(() => import("../formats/SlotMachine.vue")),
+    "app-phases": defineAsyncComponent(() => import("../formats/Phases.vue")),
+    "app-generator": defineAsyncComponent(() => import("../formats/Generator.vue")),
+    "app-hexflower": defineAsyncComponent(() => import("../formats/Hexflower.vue")),
+    "app-hexmap": defineAsyncComponent(() => import("../formats/Hexmap.vue")),
+    "app-sandbox": defineAsyncComponent(() => import("../formats/Sandbox.vue")),
 
-    "app-monetization": () => import("../layout/Monetization.vue"),
-    "app-extensionManager": () => import("../extensions/ExtensionManager.vue"),
+    "app-monetization": defineAsyncComponent(() => import("../layout/Monetization.vue")),
+    "app-extensionManager": defineAsyncComponent(() => import("../extensions/ExtensionManager.vue")),
   },
   inject: ['mixpanel'],
   computed: {
@@ -181,19 +189,21 @@ export default {
     },
   },
   watch: {
-    roomID: function () {
-      if (this.roomID) {
-        this.bindFirebaseToRoomInfo();
-        if (this.dataReady) {
-          this.logAnalytics();
+    roomID: {
+      handler() {
+        if (this.roomID) {
+          this.bindFirebaseToRoomInfo();
+          if (this.dataReady) {
+            this.logAnalytics();
+          }
+        } else {
+          this.firebaseIsReady(false);
+  
+          if (this.unsubscribeFromFirebase) {
+            this.unsubscribeFromFirebase();
+          }
         }
-      } else {
-        this.firebaseIsReady(false);
-
-        if (this.unsubscribeFromFirebase) {
-          this.unsubscribeFromFirebase();
-        }
-      }
+      }, deep: true
     },
   },
   mounted() {

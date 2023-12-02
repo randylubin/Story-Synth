@@ -40,14 +40,21 @@
         <app-game
           v-if="firebaseAuth && routeParams?.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
           :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" :gameType="gameType"></app-game>
-        <b-overlay
-          :show="!firebaseAuth && routeParams?.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+
+        <div
+          v-if="!firebaseAuth && routeParams?.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          class="vw-100 vh-100 d-flex align-items-center justify-content-center"
           no-wrap>
-          <template #overlay>
-            <h1>Loading</h1>
-            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
-          </template>
-        </b-overlay>
+          <div class="row">
+            <div class="col">
+              <h1>Loading
+                <span class="spinner-border m-auto p-auto" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </span>
+              </h1>
+            </div>
+          </div>
+        </div>
       </div>
 
       <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx"
@@ -58,6 +65,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { anonymousSignIn } from './firebase/auth.js';
 import customGameData from './misc/customGameData'
 import { useRoute } from 'vue-router';
@@ -68,17 +76,17 @@ import { computed, watch } from 'vue';
 export default {
   name: 'app',
   components: {
-    'app-header': () => import('./components/layout/Header.vue'),
+    'app-header': defineAsyncComponent(() => import('./components/layout/Header.vue')),
 
-    'app-homepage': () => import('./components/other/Homepage.vue'),
-    'app-gallery': () => import('./components/other/Gallery.vue'),
-    'app-microgrant-gallery': () => import('./components/other/MicrograntGallery.vue'),
-    'app-formatsAndExtensions': () => import('./components/other/FormatsAndExtensionsOverview.vue'),
-    'app-grants': () => import('./components/other/Grants.vue'),
-    'app-CSSPlayground': () => import('./components/other/CSSPlayground.vue'),
+    'app-homepage': defineAsyncComponent(() => import('./components/other/Homepage.vue')),
+    'app-gallery': defineAsyncComponent(() => import('./components/other/Gallery.vue')),
+    'app-microgrant-gallery': defineAsyncComponent(() => import('./components/other/MicrograntGallery.vue')),
+    'app-formatsAndExtensions': defineAsyncComponent(() => import('./components/other/FormatsAndExtensionsOverview.vue')),
+    'app-grants': defineAsyncComponent(() => import('./components/other/Grants.vue')),
+    'app-CSSPlayground': defineAsyncComponent(() => import('./components/other/CSSPlayground.vue')),
 
-    'app-game': () => import('./components/layout/Game.vue'),
-    'app-uploadPage': () => import('./components/launchers/UploadPage.vue'),
+    'app-game': defineAsyncComponent(() => import('./components/layout/Game.vue')),
+    'app-uploadPage': defineAsyncComponent(() => import('./components/launchers/UploadPage.vue')),
     // 'app-customGameLauncher': () => import('./components/games/CustomGameLauncher.vue'),
     // 'app-customGameSessionManager': CustomGameSessionManager,
 
@@ -441,5 +449,60 @@ li.nav-item {
 
 .edit-button {
   border: none;
+}
+
+$dark-blue: #323c69;
+$light-blue: #d9fcfd;
+
+.navbar {
+  transition: all 0.2s;
+  z-index: 9999;
+}
+.navbar:not(.scrolledNavbar) {
+  background-color: transparent !important;
+}
+.navbar-brand,
+.nav-item,
+.nav-link {
+  color: $dark-blue !important;
+  font-family: "Poppins", sans-serif !important;
+
+  :hover {
+    text-decoration: underline !important;
+  }
+}
+
+.navbar.scrolledNavbar {
+  background-color: $dark-blue !important;
+  // animation: navbarFade 0.5s forwards;
+}
+
+// @keyframes navbarFade {
+//   0% {
+//     background-color: transparent !important;
+//   }
+
+//   100% {
+//     background-color: $dark-blue !important;
+//   }
+// }
+
+.scrolledNavbar {
+  .navbar-brand,
+  .nav-item,
+  .nav-link {
+    color: $light-blue !important;
+    font-family: "Poppins", sans-serif !important;
+
+    :hover {
+      text-decoration: underline !important;
+    }
+  }
+}
+
+.navbar-toggler {
+  font-weight: bold;
+  background: #323c69;
+  color: #d9fcfd;
 }
 </style>
