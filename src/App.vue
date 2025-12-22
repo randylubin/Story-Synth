@@ -367,6 +367,7 @@ li.nav-item {
 
 .btn-fab svg {
   transition: transform 0.2s;
+  font-size: 125%;
 }
 
 .btn-fab:hover:not([disabled="disabled"]) svg {
