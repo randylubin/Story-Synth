@@ -5,13 +5,13 @@
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
       :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button v-b-modal.reshuffleConfirm v-on:click="closeMenu();" class="control-button-restart btn-lg btn-block"
+        <b-button v-b-modal.reshuffleConfirm v-on:click="closeMenu();" class="control-button-restart btn-lg w-100"
           variant="outline-dark" :disabled="roomInfo.xCardIsActive"
           v-if="!customOptions.facilitatorMode || userRole == 'facilitator'" color="rgb(187, 138, 200)">Reshuffle
         </b-button>
       </div>
       <div class="row menu-row">
-        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg w-100"
           v-on:click="xCard(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
               ? customOptions.safetyCardButton
@@ -19,7 +19,7 @@
           "></b-button>
       </div>
       <div class="row menu-row">
-        <b-button variant="outline-dark" class="btn-lg btn-block"
+        <b-button variant="outline-dark" class="btn-lg w-100"
           :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive"
           v-on:click="lastCard(); closeMenu();">
           Last Card
@@ -58,7 +58,7 @@
           ">
           <!-- Previous Card -->
           <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
-          <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+          <b-icon class="h1 mb-0 me-2" icon="card-heading"></b-icon>
         </button>
         <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
           title="Next Card" v-on:click="nextCard()" :disabled="
@@ -66,11 +66,11 @@
           ">
           <!-- Next Card -->
           <div v-if="roomInfo.currentCardIndex == 0">
-            <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
+            <b-icon class="h1 mb-0 ms-2" animation="fade" icon="card-heading"></b-icon>
             <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
           </div>
           <div v-else>
-            <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
+            <b-icon class="h1 mb-0 ms-2" icon="card-heading"></b-icon>
             <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>
           </div>
         </button>

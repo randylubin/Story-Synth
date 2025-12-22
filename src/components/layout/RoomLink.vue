@@ -14,7 +14,7 @@
         </div>
       </transition>
 
-      <button class="btn btn-outline-dark ml-auto border-0"
+      <button class="btn btn-outline-dark ms-auto border-0"
         v-on:click="copyTextToClipboard()" type="button" v-bind:style="{ color: color }">
         <iBiLink45deg /> Copy URL
       </button>

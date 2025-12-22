@@ -113,7 +113,7 @@
                     ]
                   " class="summary-category-body font-weight-normal mb-2"></span>
                 </transition-group>
-                <b-icon v-on:click="shuffleOne(index)" class="ml-2 generator-cell-reroll-icon" icon="arrow-clockwise">
+                <b-icon v-on:click="shuffleOne(index)" class="ms-2 generator-cell-reroll-icon" icon="arrow-clockwise">
                 </b-icon>
               </div>
             </div>

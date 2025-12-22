@@ -23,13 +23,13 @@
               <div class="interrupts-top-text" v-if="extensionList.interruptTopText"
                 v-dompurify-html="interruptTopTextMarkdown"></div>
               <div v-for="interrupt in interruptsArray" :key="interrupt.label">
-                <b-button class="btn-block btn-default my-2 interrupt-button"
+                <b-button class="w-100 btn-default my-2 interrupt-button"
                   @click="selectInterrupt(interrupt.text, interrupt.label)"
                   v-if="currentInterrupt && interrupt.label == currentInterrupt.label" :active="true" :pressed="true"
                   :active-class="'active'">
                   {{ interrupt.label }}
                 </b-button>
-                <b-button class="btn-block btn-default my-2 interrupt-button"
+                <b-button class="w-100 btn-default my-2 interrupt-button"
                   @click="selectInterrupt(interrupt.text, interrupt.label)"
                   v-if="!currentInterrupt || interrupt.label != currentInterrupt.label">
                   {{ interrupt.label }}
@@ -42,13 +42,13 @@
     </div>
     <div v-if="menuLocation">
       <div v-for="interrupt in interruptsArray" :key="interrupt.label">
-        <b-button variant="outline-dark" class="btn-block btn-lg my-1 interrupt-button-menu"
+        <b-button variant="outline-dark" class="w-100 btn-lg my-1 interrupt-button-menu"
           @click="selectInterrupt(interrupt.text, interrupt.label)"
           v-if="currentInterrupt && interrupt.label == currentInterrupt.label" :active="true" :pressed="true"
           :active-class="'active'">
           {{ interrupt.label }}
         </b-button>
-        <b-button variant="outline-dark" class="btn-block btn-lg my-1 interrupt-button-menu"
+        <b-button variant="outline-dark" class="w-100 btn-lg my-1 interrupt-button-menu"
           @click="selectInterrupt(interrupt.text, interrupt.label)"
           v-if="!currentInterrupt || interrupt.label != currentInterrupt.label">
           {{ interrupt.label }}

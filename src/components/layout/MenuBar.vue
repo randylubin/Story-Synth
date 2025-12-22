@@ -1,7 +1,7 @@
 <template>
   <!-- Menu Bar -->
   <div class="menu-bar mb-4 d-flex align-items-center">
-    <button id="menu-bar-button" key="menuModalButton" class="btn btn-outline-dark mr-auto border-0" data-bs-toggle="modal" href="#menuModal"
+    <button id="menu-bar-button" key="menuModalButton" class="btn btn-outline-dark me-auto border-0" data-bs-toggle="modal" href="#menuModal"
       v-bind:style="{ color: customOptions.menuColor }">
       <iBiList /> Menu
     </button>
@@ -19,7 +19,7 @@
           </div>
           <div class="modal-body">
             <div class="row menu-row">
-              <button class="border-0 btn btn-lg btn-secondary btn-block" v-on:click="copyLinkToClipboard();" data-bs-dismiss="modal">
+              <button class="border-0 btn btn-lg btn-secondary w-100" v-on:click="copyLinkToClipboard();" data-bs-dismiss="modal">
                 <iBiLink45deg /> Copy URL
               </button>
             </div>
@@ -50,7 +50,7 @@
               <hr class='mb-4' />
               <div v-for="modalNumber in modalNumberList" v-bind:key="modalNumber" class="row menu-row">
                 <button v-bind:data-bs-target="'#modal' + modalNumber" data-bs-toggle="modal" data-bs-dismiss="modal"
-                  class="btn btn-outline-dark btn-block btn-lg my-1" v-if="customOptions['modal' + modalNumber + 'Label']">
+                  class="btn btn-outline-dark w-100 btn-lg my-1" v-if="customOptions['modal' + modalNumber + 'Label']">
                   {{ customOptions['modal' + modalNumber + 'Label'] }}
                 </button>
               </div>

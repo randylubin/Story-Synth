@@ -139,14 +139,14 @@
               <b-button v-if="
                     customOptions.randomizeHexes == 'randomWithCopies' ||
                     customOptions.randomizeHexes == 'randomNoCopies'
-                  " v-on:click="regenerateHexes()" class="btn-block btn-lg my-1">
+                  " v-on:click="regenerateHexes()" class="w-100 btn-lg my-1">
                     <span>Regenerate Hexmap</span>
                   </b-button>
             </div>
             <div class="row menu-row">
               <b-button v-if="
                 customOptions.facilitatorButton == 'TRUE'
-                " :pressed="facilitatorMode" v-on:click="toggleFacilitatorMode()" class="btn-block btn-lg my-1">
+                " :pressed="facilitatorMode" v-on:click="toggleFacilitatorMode()" class="w-100 btn-lg my-1">
                 <span v-if="!facilitatorMode">Facilitator View</span>
                 <span v-if="facilitatorMode">Player View</span>
               </b-button>
@@ -209,7 +209,7 @@
             <!-- <transition name="fade-full-content" mode="out-in"> -->
               <div :key="currentlyViewedHex">
                 <div class="row">
-                  <div class="col-sm-12 ml-3">
+                  <div class="col-sm-12 ms-3">
                     <div class="row">
                       <div class="col-sm-3">
                         <div class="row">

@@ -5,7 +5,7 @@
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
       :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg w-100"
           v-on:click="stop(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
               ? customOptions.safetyCardButton

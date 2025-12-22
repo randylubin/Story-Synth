@@ -147,7 +147,7 @@
               <img src="/img/shuffled-thumbnail.png" alt="a thumbnail of the shuffled format" class="card-img-top">
               <div class="card-body">
                 <h3 class="card-title">Shuffled</h3>
-                <a href="/Shuffled/1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w" class="btn btn-block">View demo</a>
+                <a href="/Shuffled/1N5eeyKTVWo5QeGcUV_zYtwtR0DikJCcvcj6w69UkC1w" class="btn w-100">View demo</a>
               </div>
             </div>
           </div>
@@ -156,7 +156,7 @@
               <img src="/img/generator-thumbnail.png" alt="a thumbnail of the generator format" class="card-img-top">
               <div class="card-body">
                 <h3 class="card-title">Generator</h3>
-                <a href="/Generator/1F0g3rVHxRA7O0rRMIQSsLCepJStxBO6pa7QJUNJb3K0/" class="btn btn-block">View demo</a>
+                <a href="/Generator/1F0g3rVHxRA7O0rRMIQSsLCepJStxBO6pa7QJUNJb3K0/" class="btn w-100">View demo</a>
               </div>
             </div>
           </div>
@@ -165,7 +165,7 @@
               <img src="/img/hexflower-thumbnail.png" alt="a thumbnail of the hexflower format" class="card-img-top">
               <div class="card-body">
                 <h3 class="card-title">Hexflower</h3>
-                <a href="/Hexflower/1wLDboZZBfBwMKswMYcRIXxz6DxRZJyAa6KPW6TvR-dM/" class="btn btn-block">View demo</a>
+                <a href="/Hexflower/1wLDboZZBfBwMKswMYcRIXxz6DxRZJyAa6KPW6TvR-dM/" class="btn w-100">View demo</a>
               </div>
             </div>
           </div>
@@ -174,7 +174,7 @@
         <div class="row mt-3">
           <div class="col-sm">
             <a href="/Formats/" class="btn mb-5 py-3 px-4 btn-lg">More templates</a>
-            <a href="https://docs.storysynth.org/guide/" class="btn ml-2 mb-5 py-3 px-4 btn-lg">Learn how to make your
+            <a href="https://docs.storysynth.org/guide/" class="btn ms-2 mb-5 py-3 px-4 btn-lg">Learn how to make your
               first game</a>
           </div>
         </div>

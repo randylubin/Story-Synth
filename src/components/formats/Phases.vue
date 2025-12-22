@@ -4,13 +4,13 @@
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
       :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button v-b-modal.reshuffleConfirm v-on:click="closeMenu();" class="control-button-restart btn-lg btn-block"
+        <b-button v-b-modal.reshuffleConfirm v-on:click="closeMenu();" class="control-button-restart btn-lg w-100"
           variant="outline-dark" :disabled="roomInfo.xCardIsActive"
           v-if="!customOptions.facilitatorMode || userRole == 'facilitator'" color="rgb(187, 138, 200)">Restart
         </b-button>
       </div>
       <div class="row menu-row">
-        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg w-100"
           v-on:click="xCard(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
               ? customOptions.safetyCardButton
@@ -18,12 +18,12 @@
           "></b-button>
       </div>
       <div class="row menu-row" v-if="roomInfo.currentCardIndex < firstNonInstruction">
-        <b-button variant="outline-dark" class="btn-lg btn-block" v-on:click="skipInstructions(); closeMenu();">
+        <b-button variant="outline-dark" class="btn-lg w-100" v-on:click="skipInstructions(); closeMenu();">
           Skip Instructions
         </b-button>
       </div>
       <div class="row menu-row" v-if="roomInfo.currentCardIndex >= firstNonInstruction">
-        <b-button variant="outline-dark" class="btn-lg btn-block"
+        <b-button variant="outline-dark" class="btn-lg w-100"
           :disabled="roomInfo.currentCardIndex >= endingIndex || roomInfo.xCardIsActive"
           v-on:click="ending(); closeMenu();">
           Ending
@@ -67,18 +67,18 @@
           :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">
           <!-- Previous Card -->
           <IBiChevronLeft class="h1 mb-0" />
-          <IBiCardHeading class="h1 mb-0 mr-2" />
+          <IBiCardHeading class="h1 mb-0 me-2" />
         </button>
         <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
           title="Next Card" v-on:click="nextCard()"
           :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases - 1)">
           <!-- Next Card -->
           <div v-if="roomInfo.currentCardIndex == 0">
-            <IBiCardHeading class="h1 mb-0 ml-2" animation="fade" />
+            <IBiCardHeading class="h1 mb-0 ms-2" animation="fade" />
             <IBiChevronRight class="h1 mb-0" animation="fade" />
           </div>
           <div v-else>
-            <IBiCardHeading class="h1 mb-0 ml-2" />
+            <IBiCardHeading class="h1 mb-0 ms-2" />
             <IBiChevronRight class="h1 mb-0" />
           </div>
         </button>
