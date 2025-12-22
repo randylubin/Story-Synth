@@ -455,54 +455,7 @@ $dark-blue: #323c69;
 $light-blue: #d9fcfd;
 
 .navbar {
-  transition: all 0.2s;
   z-index: 9999;
 }
-.navbar:not(.scrolledNavbar) {
-  background-color: transparent !important;
-}
-.navbar-brand,
-.nav-item,
-.nav-link {
-  color: $dark-blue !important;
-  font-family: "Poppins", sans-serif !important;
 
-  :hover {
-    text-decoration: underline !important;
-  }
-}
-
-.navbar.scrolledNavbar {
-  background-color: $dark-blue !important;
-  // animation: navbarFade 0.5s forwards;
-}
-
-// @keyframes navbarFade {
-//   0% {
-//     background-color: transparent !important;
-//   }
-
-//   100% {
-//     background-color: $dark-blue !important;
-//   }
-// }
-
-.scrolledNavbar {
-  .navbar-brand,
-  .nav-item,
-  .nav-link {
-    color: $light-blue !important;
-    font-family: "Poppins", sans-serif !important;
-
-    :hover {
-      text-decoration: underline !important;
-    }
-  }
-}
-
-.navbar-toggler {
-  font-weight: bold;
-  background: #323c69;
-  color: #d9fcfd;
-}
 </style>

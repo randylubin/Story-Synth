@@ -6,8 +6,6 @@ import { createApp } from "vue";
 import App from './App.vue'
 const app = createApp(App)
 
-app.use(bootstrap)
-
 import { createMetaManager } from 'vue-meta'
 app.use(createMetaManager); // TODO use throughout app 
 
