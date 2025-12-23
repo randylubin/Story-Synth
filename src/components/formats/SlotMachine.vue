@@ -340,6 +340,7 @@ export default {
     },
     processSheetData() {
       let cleanData = [];
+      this.firstNonInstruction = 0;
 
       if (this.sheetData) {
         this.numberOfWheels = this.sheetData[0].length - 3

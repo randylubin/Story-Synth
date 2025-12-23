@@ -767,7 +767,8 @@ export default {
 
     processSheetData() {
       let cleanData = [];
-      this.orderedCards = []
+      this.orderedCards = [];
+      this.firstNonInstruction = 0;
 
 
       if (this.sheetData) {
@@ -831,6 +832,7 @@ export default {
           if (row.ordered == "0") {
             this.orderedCards.push(row);
             this.firstNonInstruction += 1;
+            // console.log("ordered 0", row.ordered, this.firstNonInstruction);
           } else if (row.ordered !== "option") {
             this.unorderedDecks[row.ordered].push(index);
           }

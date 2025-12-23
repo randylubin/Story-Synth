@@ -300,6 +300,7 @@ export default {
     },
     processSheetData() {
       let cleanData = [];
+      this.firstNonInstruction = 0;
 
       if (this.sheetData) {
         this.numberOfCategories = this.sheetData[0].length - 3;
