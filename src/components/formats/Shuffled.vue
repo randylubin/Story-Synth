@@ -1,12 +1,13 @@
 <template>
 
   <div class="shuffled game-room" v-if="roomInfo">
-    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+    <app-menuBar ref="menuBar" :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
       :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row" v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
-        <button type="button" data-bs-target="#reshuffleConfirm" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-lg w-100 btn-outline-dark control-button-restart"
-          variant="outline-dark" :disabled="roomInfo.xCardIsActive" color="rgb(187, 138, 200)">Restart</button>
+        <button type="button" class="btn btn-lg w-100 btn-outline-dark control-button-restart"
+          variant="outline-dark" :disabled="roomInfo.xCardIsActive" color="rgb(187, 138, 200)"
+          @click="openReshuffleModal">Restart</button>
       </div>
       <div class="row menu-row" v-if="!roomInfo.xCardIsActive">
         <button class="btn btn-outline-dark btn-lg w-100 control-button-safety-card" data-bs-dismiss="modal" data-bs-target="#menuModal"
@@ -340,46 +341,24 @@
         </div>
         <slot name="lower-extensions">
         </slot>
-        <div class="modal" id="modalNextDeckConfirm" title="Advance?" tabindex="-1">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <div class="modal-title">
-                  Advance?
-                </div>
-              </div>
-              <div class="modal-body">
-                <div class="text-center mb-3">
-                  <button class="btn btn-dark" v-on:click="nextDeck()">Advance to
-                    {{
-                        customOptions.showNextDeckButton
-                          ? customOptions.showNextDeckButton
-                          : "Next Deck"
-                    }}</button>
-                </div>
-              </div>
-            </div>
+        <b-modal id="modalNextDeckConfirm" ref="nextDeckModal" title="Advance?" hide-footer>
+          <div class="text-center mb-3">
+            <button class="btn btn-dark" v-on:click="nextDeck(); hideNextDeckModal()">Advance to
+              {{
+                  customOptions.showNextDeckButton
+                    ? customOptions.showNextDeckButton
+                    : "Next Deck"
+              }}</button>
           </div>
-        </div>
-        <div class="modal fade" id="reshuffleConfirm" key="reshuffleModal" title="Restart and Reshuffle" tabindex="-1">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <div class="modal-title">
-                  Restart and Reshuffle
-                </div>
-              </div> 
-              <div class="modal-body">
-                <p>
-                  Do you want to reshuffle all of the prompts and restart the game?
-                </p>
-                <div class="text-center mb-3">
-                  <button class="btn btn-dark" key="reshuffleConfirmModal" variant="dark" v-on:click="shuffleAndResetGame()" data-bs-dismiss="modal" data-bs-target="#reshuffleConfirm">Restart and Reshuffle</button>
-                </div>
-              </div>
-            </div>
+        </b-modal>
+        <b-modal id="reshuffleConfirm" ref="reshuffleModal" title="Restart and Reshuffle" hide-footer no-trap-focus :auto-focus="false">
+          <p>
+            Do you want to reshuffle all of the prompts and restart the game?
+          </p>
+          <div class="text-center mb-3">
+            <button class="btn btn-dark" key="reshuffleConfirmModal" variant="dark" v-on:click="shuffleAndResetGame(); hideReshuffleModal();">Restart and Reshuffle</button>
           </div>
-        </div>
+        </b-modal>
       </div>
     </div>
   </div>
@@ -487,6 +466,25 @@ export default {
         previousCardsArray: updatedPreviousCardsArray,
         showCardBack: false,
       });
+    },
+    closeMenu() {
+      if (this.$refs.menuBar?.hideMenu) {
+        this.$refs.menuBar.hideMenu();
+      } else if (this.$bvModal?.hide) {
+        this.$bvModal.hide("menuModal");
+      }
+    },
+    openReshuffleModal() {
+      this.closeMenu();
+      this.$nextTick(() => {
+        setTimeout(() => this.$refs.reshuffleModal?.show?.(), 0);
+      });
+    },
+    hideReshuffleModal() {
+      this.$refs.reshuffleModal?.hide?.();
+    },
+    hideNextDeckModal() {
+      this.$refs.nextDeckModal?.hide?.();
     },
     previousCard() {
       let updatedPreviousCardsArray = this.roomInfo.previousCardsArray

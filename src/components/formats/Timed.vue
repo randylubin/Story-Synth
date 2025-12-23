@@ -95,6 +95,7 @@
 </template>
 
 <script>
+import { useModalController } from 'bootstrap-vue-next';
 export default {
   name: 'app-timed',
   components: {
@@ -175,7 +176,12 @@ export default {
       )
     },
     closeMenu() {
-      this.$bvModal.hide("menuModal");
+      const modalCtrl = useModalController?.();
+      if (modalCtrl?.hide) {
+        modalCtrl.hide('menuModal');
+      } else if (this.$bvModal?.hide) {
+        this.$bvModal.hide("menuModal");
+      }
     },
     start() {
       if (this.roomInfo.running) return;

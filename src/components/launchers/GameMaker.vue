@@ -81,7 +81,7 @@
               <div class="row mb-4">
                 <div class="col-sm">
                   Google Sheet link
-                  <svg data-bs-toggle="tooltip" data-bs-placement="top"
+                  <svg v-b-tooltip.hover
                     title="Paste in the entire URL link to your publicly shared Google Sheet that contains the game data"
                     width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-question-circle-fill m-1"
                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -116,7 +116,6 @@
 
 <script>
 import { ref } from 'vue';
-import { Tooltip } from 'bootstrap'
 
 export default {
   name: "app-gameMaker",
@@ -162,9 +161,6 @@ export default {
     if (location.hostname.toString() !== "localhost") {
       this.mixpanel.track("Visit Homepage");
     }
-    new Tooltip(document.body, {
-      selector: "[data-bs-toggle='tooltip']",
-    })
   },
   updated() {
     this.updateUrl();

@@ -206,6 +206,7 @@
 
 <script>
 import GraphemeSplitter from "grapheme-splitter";
+import { useModalController } from 'bootstrap-vue-next';
 
 export default {
   name: "app-hexflower",
@@ -351,7 +352,12 @@ export default {
       }
     },
     closeMenu() {
-      this.$bvModal.hide("menuModal");
+      const modalCtrl = useModalController?.();
+      if (modalCtrl?.hide) {
+        modalCtrl.hide('menuModal');
+      } else if (this.$bvModal?.hide) {
+        this.$bvModal.hide("menuModal");
+      }
     },
     copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath;

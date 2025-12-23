@@ -1,11 +1,11 @@
 <template>
   <div class="slot-machine game-room" v-if="roomInfo">
 
-    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+    <app-menuBar ref="menuBar" :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
       :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button v-b-modal.reshuffleConfirm v-on:click="closeMenu();" class="control-button-restart btn-lg w-100"
+        <b-button v-on:click="openReshuffleModal" class="control-button-restart btn-lg w-100"
           variant="outline-dark" :disabled="roomInfo.xCardIsActive"
           v-if="!customOptions.facilitatorMode || userRole == 'facilitator'" color="rgb(187, 138, 200)">Reshuffle
         </b-button>
@@ -154,7 +154,7 @@
       </div>
     </div> -->
 
-    <b-modal id="reshuffleConfirm" title="Restart and Reshuffle" hide-footer>
+    <b-modal id="reshuffleConfirm" ref="reshuffleModal" title="Restart and Reshuffle" hide-footer no-trap-focus :auto-focus="false">
       <p>Do you want to reshuffle all of the prompts and restart the game?</p>
       <div class="text-center mb-3">
         <b-button variant="dark" v-on:click="shuffle();">Restart and Reshuffle</b-button>
@@ -239,7 +239,17 @@ export default {
       }
     },
     closeMenu() {
-      this.$bvModal.hide("menuModal");
+      if (this.$refs.menuBar?.hideMenu) {
+        this.$refs.menuBar.hideMenu();
+      } else if (this.$bvModal?.hide) {
+        this.$bvModal.hide("menuModal");
+      }
+    },
+    openReshuffleModal() {
+      this.closeMenu();
+      this.$nextTick(() => {
+        setTimeout(() => this.$refs.reshuffleModal?.show?.(), 0);
+      });
     },
     copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath
@@ -277,7 +287,7 @@ export default {
       })
     },
     shuffle() {
-      this.$bvModal.hide('reshuffleConfirm')
+      this.$refs.reshuffleModal?.hide?.();
 
       // Create a ordered array
       var newCardSequence = []

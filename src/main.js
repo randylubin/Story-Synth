@@ -1,17 +1,18 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 
 import { createApp, configureCompat } from "vue";
 
-// Silence compat warning for array watchers; code uses explicit deep watchers where needed.
-configureCompat({ WATCH_ARRAY: false });
+// Use Vue 3 v-model behavior (needed by bootstrap-vue-next) and silence array watcher warning.
+configureCompat({ WATCH_ARRAY: false, COMPONENT_V_MODEL: false });
 
 import App from './App.vue'
 const app = createApp(App)
 
-import { bootstrapPlugin } from 'bootstrap-vue-next'
+import { bootstrapPlugin, modalControllerPlugin, modalManagerPlugin } from 'bootstrap-vue-next'
 app.use(bootstrapPlugin)
+app.use(modalControllerPlugin)
+app.use(modalManagerPlugin)
 
 import { createMetaManager } from 'vue-meta'
 app.use(createMetaManager); // TODO use throughout app 
