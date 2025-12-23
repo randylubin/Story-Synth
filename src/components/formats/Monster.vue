@@ -148,11 +148,12 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { useModalController } from 'bootstrap-vue-next';
 export default {
   name: 'app-monster',
   components: {
-    'app-menuBar': () => import("../layout/MenuBar.vue"),
+    'app-menuBar': defineAsyncComponent(() => import("../layout/MenuBar.vue")),
   },
   props: {
     roomID: String,

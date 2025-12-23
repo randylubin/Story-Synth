@@ -21,11 +21,12 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 export default {
   name: 'app-sandbox',
   components: {
     // 'app-extensionManager': () => import('../extensions/ExtensionManager.vue'),
-    'app-menuBar': () => import("../layout/MenuBar.vue"),
+    'app-menuBar': defineAsyncComponent(() => import("../layout/MenuBar.vue")),
   },
   props: {
     gSheetID: String,
