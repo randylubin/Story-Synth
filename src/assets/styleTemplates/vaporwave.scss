@@ -36,7 +36,7 @@
       rgba(205, 0, 223, 0.502)
     );
     border: 1px solid $card-bg;
-    color: $base-color;
+    color: $base-color !important;
   }
 
   h1 {
