@@ -1,7 +1,7 @@
 <template>
   <!-- Menu Bar -->
   <div class="menu-bar mb-4 d-flex align-items-center">
-    <button id="menu-bar-button" key="menuModalButton" class="btn btn-outline-dark mr-auto border-0" data-bs-toggle="modal" href="#menuModal"
+    <button id="menu-bar-button" key="menuModalButton" class="btn btn-outline-dark me-auto border-0" data-bs-toggle="modal" href="#menuModal"
       v-bind:style="{ color: customOptions.menuColor }">
       <iBiList /> Menu
     </button>
@@ -19,7 +19,7 @@
           </div>
           <div class="modal-body">
             <div class="row menu-row">
-              <button class="border-0 btn btn-lg btn-secondary btn-block" v-on:click="copyLinkToClipboard();" data-bs-dismiss="modal">
+              <button class="border-0 btn btn-lg btn-secondary w-100" v-on:click="copyLinkToClipboard();" data-bs-dismiss="modal">
                 <iBiLink45deg /> Copy URL
               </button>
             </div>
@@ -50,7 +50,7 @@
               <hr class='mb-4' />
               <div v-for="modalNumber in modalNumberList" v-bind:key="modalNumber" class="row menu-row">
                 <button v-bind:data-bs-target="'#modal' + modalNumber" data-bs-toggle="modal" data-bs-dismiss="modal"
-                  class="btn btn-outline-dark btn-block btn-lg my-1" v-if="customOptions['modal' + modalNumber + 'Label']">
+                  class="btn btn-outline-dark w-100 btn-lg my-1" v-if="customOptions['modal' + modalNumber + 'Label']">
                   {{ customOptions['modal' + modalNumber + 'Label'] }}
                 </button>
               </div>
@@ -74,9 +74,18 @@
             </div>
           </div>
           <div class="modal-body">
-            <div class="d-block text-left" v-dompurify-html="customOptions['modal' + modalNumber + 'Text']"></div>
+            <div class="d-block text-start" v-dompurify-html="customOptions['modal' + modalNumber + 'Text']"></div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" ref="menuCopyToastContainer" aria-live="polite"
+    aria-atomic="true">
+    <div class="toast text-bg-success" ref="menuCopyToast" role="status" aria-live="polite" aria-atomic="true">
+      <div class="toast-body">
+        Link copied to clipboard
       </div>
     </div>
   </div>
@@ -84,7 +93,7 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { Collapse } from 'bootstrap';
+import { Collapse, Toast } from 'bootstrap';
 
 export default {
   name: 'app-menuBar',
@@ -101,13 +110,19 @@ export default {
     return {
       modalNumberList: [
         'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty'
-      ]
+      ],
+      copyToast: null,
     };
   },
   components: {
     'app-downloadExtensionData': defineAsyncComponent(() => import("../extensions/DownloadExtensionData.vue")),
     'app-roomLink': defineAsyncComponent(() => import('../layout/RoomLink.vue')),
     "app-interrupts": defineAsyncComponent(() => import("../extensions/Interrupts.vue")),
+  },
+  mounted() {
+    if (this.$refs.menuCopyToast) {
+      this.copyToast = new Toast(this.$refs.menuCopyToast, { delay: 1200 });
+    }
   },
   methods: {
     // closeMenu() {
@@ -121,6 +136,9 @@ export default {
       }, function () {
         console.log('copy failed')
       });
+      if (this.copyToast) {
+        this.copyToast.show();
+      }
     },
     processExtensionUpdate(newData) {
       console.log("processing extension update", newData);

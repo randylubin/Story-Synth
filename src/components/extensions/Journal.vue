@@ -18,7 +18,7 @@
                 <div class="row journal-list-row" v-if="entry && (entry != 'EMPTY')">
                   <div class="col-sm-12 my-1 card px-0">
                     <div class="journal-entry justify-content-between d-flex">
-                      <div class="card-body text-left ">
+                      <div class="card-body text-start ">
                         <div class="journal-entry-inner" v-dompurify-html="entry" v-if="index != currentEditIndex">
                         </div>
                         <textarea title="edit journal entry field" v-else class="form-control" type="text"
@@ -26,19 +26,19 @@
                       </div>
                       <div v-if="currentEditIndex !== index">
                         <button class="btn btn-sm btn-outline-dark m-1 px-1 edit-button" v-on:click="editItem(index)">
-                          <b-icon-pencil></b-icon-pencil>
+                          <IBiPencil />
                         </button>
                       </div>
                       <div v-else>
                         <div class="">
                           <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="saveEditedItem(index)">
-                            <b-icon-check2></b-icon-check2>
+                            <IBiCheck2 />
                           </button>
                         </div>
                         <div class="">
                           <button class="btn btn-sm btn-outline-dark m-1 px-1 delete-button"
                             v-on:click="deleteItem(journalEntries.length - index - 1)">
-                            <b-icon-trash></b-icon-trash>
+                            <IBiTrash />
                           </button>
                         </div>
                       </div>

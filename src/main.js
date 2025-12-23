@@ -1,12 +1,13 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
-import bootstrap from 'bootstrap/dist/js/bootstrap.min.js'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
-import { createApp } from "vue";
+import { createApp, configureCompat } from "vue";
+
+// Silence compat warning for array watchers; code uses explicit deep watchers where needed.
+configureCompat({ WATCH_ARRAY: false });
 
 import App from './App.vue'
 const app = createApp(App)
-
-app.use(bootstrap)
 
 import { createMetaManager } from 'vue-meta'
 app.use(createMetaManager); // TODO use throughout app 

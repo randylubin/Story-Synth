@@ -9,8 +9,8 @@
 
     <div id="zoom-buttons">
       <b-button-group>
-        <b-button variant="dark" v-on:click="changeZoom(1.5)"><b-icon icon="zoom-in"></b-icon></b-button>
-        <b-button variant="dark" :disabled="zoomScale < 0.5" v-on:click="changeZoom(0.666)"><b-icon icon="zoom-out"></b-icon></b-button>
+        <b-button variant="dark" v-on:click="changeZoom(1.5)"><IBiZoomIn /></b-button>
+        <b-button variant="dark" :disabled="zoomScale < 0.5" v-on:click="changeZoom(0.666)"><IBiZoomOut /></b-button>
       </b-button-group>
     </div>
     <div id="scrollbox" class="main-scrollbox">
@@ -80,7 +80,7 @@
                       ((customOptions.fogOfWar &&
                           roomInfo.hexesVisible[hex.hexID] == 0) ||
                         roomInfo.hexesMidreveal.includes(hex.hexID))">
-                      <b-icon-eye-slash-fill></b-icon-eye-slash-fill>
+                      <IBiEyeSlashFill />
                     </div>
 
                     <!-- No Replacement Icon -->
@@ -139,14 +139,14 @@
               <b-button v-if="
                     customOptions.randomizeHexes == 'randomWithCopies' ||
                     customOptions.randomizeHexes == 'randomNoCopies'
-                  " v-on:click="regenerateHexes()" class="btn-block btn-lg my-1">
+                  " v-on:click="regenerateHexes()" class="w-100 btn-lg my-1">
                     <span>Regenerate Hexmap</span>
                   </b-button>
             </div>
             <div class="row menu-row">
               <b-button v-if="
                 customOptions.facilitatorButton == 'TRUE'
-                " :pressed="facilitatorMode" v-on:click="toggleFacilitatorMode()" class="btn-block btn-lg my-1">
+                " :pressed="facilitatorMode" v-on:click="toggleFacilitatorMode()" class="w-100 btn-lg my-1">
                 <span v-if="!facilitatorMode">Facilitator View</span>
                 <span v-if="facilitatorMode">Player View</span>
               </b-button>
@@ -202,14 +202,14 @@
                   <span>{{
                     roomInfo.playRandomizerAnimation ? "Rolling" : "Move"
                   }}</span>
-                  <b-icon class="hexmap-reroll-icon" icon="arrows-move"></b-icon>
+                  <IBiArrowsMove class="hexmap-reroll-icon" />
                 </b-button>
               </div>
             </div>
             <!-- <transition name="fade-full-content" mode="out-in"> -->
               <div :key="currentlyViewedHex">
                 <div class="row">
-                  <div class="col-sm-12 ml-3">
+                  <div class="col-sm-12 ms-3">
                     <div class="row">
                       <div class="col-sm-3">
                         <div class="row">
@@ -236,7 +236,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="col-sm-9 pl-4">
+                      <div class="col-sm-9 ps-4">
                         <h3 v-if="currentlyViewedHex == roomInfo.currentLocation">Current Hex</h3>
                         <div class="hex-title" v-dompurify-html="gSheet[roomInfo.hexArray[currentlyViewedHex]].hexTitle"></div>
                         <h3 v-if="currentlyViewedHex !== roomInfo.currentLocation"><button class="btn btn-light mb-1 font-weight-bold" v-if="(customOptions.lookBeforeMove && currentlyViewedHex !== undefined && roomInfo.currentLocation != currentlyViewedHex) && !(roomInfo.hexesVisible[currentlyViewedHex] == 0 && customOptions.moveIntoFog == 'FALSE')" v-on:click="goToHex(currentlyViewedHex, false)">MOVE HERE</button></h3>
@@ -482,8 +482,11 @@ export default {
         this.error = false
       }
     },
-    sheetData: function () {
-      this.processSheetData();
+    sheetData: {
+      handler() {
+        this.processSheetData();
+      },
+      deep: true,
     },
     firebaseReady: function () {
       if (this.firebaseReady && !this.roomInfo) {

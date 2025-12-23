@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row padding-after-navbar">
-      <div class="col text-left">
+      <div class="col text-start">
         <h2 class="mb-3">Microgrant Program</h2>
         <div class="card shadow">
           <a href="https://www.bigbadcon.com/story-synth-microgrants/">

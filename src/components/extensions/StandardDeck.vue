@@ -14,7 +14,7 @@
             <div v-if="standardDeck.drawnCards.length > 1">
               Past draws:
               <span v-for="(card, index) in standardDeck.drawnCards" v-bind:key="index">
-                <span v-if="index != standardDeck.drawnCards.length - 1" v-dompurify-html="card" class="ml-1"
+                <span v-if="index != standardDeck.drawnCards.length - 1" v-dompurify-html="card" class="ms-1"
                   v-bind:class="{ redCard: (card.includes('♡') || card.includes('♢')) }"></span>
               </span>
             </div>

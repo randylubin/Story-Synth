@@ -42,7 +42,7 @@
           <b-form inline class="justify-content-center">
             <b-button v-on:click="shuffleAll()" class="btn btn-dark mx-2 my-1">
               <span>Randomize All</span>
-              <b-icon class="generator-cell-reroll-icon" icon="arrow-clockwise"></b-icon>
+              <IBiArrowClockwise class="generator-cell-reroll-icon" />
             </b-button>
             <b-form-select v-model="generatorView" class="mx-2 my-1"
               v-if="customOptions.showSummary || customOptions.showFullLists">
@@ -55,7 +55,7 @@
           </b-form>
         </div>
 
-        <div class="pl-3 pr-3" v-if="generatorView == 'Grid View'">
+        <div class="ps-3 pe-3" v-if="generatorView == 'Grid View'">
           <div class="row generator-row">
             <button v-for="index in numberOfCategories" v-bind:key="index"
               v-bind:class="customOptions.generatorRowLayout[index - 1]" v-on:click="shuffleOne(index)" tabindex="0">
@@ -92,7 +92,7 @@
                     ] && categoryData[index - 1].length > 1
                   ">
                     <span>Reroll</span>
-                    <b-icon class="generator-cell-reroll-icon" icon="arrow-clockwise"></b-icon>
+                    <IBiArrowClockwise class="generator-cell-reroll-icon" />
                   </div>
                 </div>
               </transition>
@@ -100,8 +100,8 @@
           </div>
         </div>
 
-        <div class="pl-3 pr-3" v-if="generatorView == 'Summary View'">
-          <div class="row generator-summary text-left my-5">
+        <div class="ps-3 pe-3" v-if="generatorView == 'Summary View'">
+          <div class="row generator-summary text-start my-5">
             <div v-for="index in numberOfCategories" v-bind:key="index" class="col-12">
               <div v-on:click="shuffleOne(index)" class="" style="cursor: pointer">
                 <span v-dompurify-html="categoryLabels[index - 1] + ':'" v-if="!customOptions.hideLabels"
@@ -113,14 +113,13 @@
                     ]
                   " class="summary-category-body font-weight-normal mb-2"></span>
                 </transition-group>
-                <b-icon v-on:click="shuffleOne(index)" class="ml-2 generator-cell-reroll-icon" icon="arrow-clockwise">
-                </b-icon>
+                <IBiArrowClockwise v-on:click="shuffleOne(index)" class="ms-2 generator-cell-reroll-icon" />
               </div>
             </div>
           </div>
         </div>
 
-        <div class="pl-3 pr-3" v-if="generatorView == 'Full View'">
+        <div class="ps-3 pe-3" v-if="generatorView == 'Full View'">
           <div class="row generator-row generator-full">
             <div v-for="index in numberOfCategories" v-bind:key="index"
               v-bind:class="customOptions.generatorRowLayout[index - 1]">
@@ -144,7 +143,7 @@
                 <div v-on:click="shuffleOne(index)" class="generator-cell-reroll-button"
                   v-if="customOptions.rerollButton">
                   <span>Random</span>
-                  <b-icon class="generator-cell-reroll-icon" icon="arrow-clockwise"></b-icon>
+                  <IBiArrowClockwise class="generator-cell-reroll-icon" />
                 </div>
               </div>
             </div>
@@ -201,8 +200,11 @@ export default {
     };
   },
   watch: {
-    sheetData: function () {
-      this.processSheetData();
+    sheetData: {
+      handler() {
+        this.processSheetData();
+      },
+      deep: true,
     },
     firebaseReady: function () {
       if (this.firebaseReady && !this.roomInfo) {

@@ -5,18 +5,18 @@
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
       :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row" v-if="!customOptions.facilitatorMode || userRole == 'facilitator'">
-        <button type="button" data-bs-target="#reshuffleConfirm" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-lg btn-block btn-outline-dark control-button-restart"
+        <button type="button" data-bs-target="#reshuffleConfirm" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-lg w-100 btn-outline-dark control-button-restart"
           variant="outline-dark" :disabled="roomInfo.xCardIsActive" color="rgb(187, 138, 200)">Restart</button>
       </div>
       <div class="row menu-row" v-if="!roomInfo.xCardIsActive">
-        <button class="btn btn-outline-dark btn-lg btn-block control-button-safety-card"
-          v-on:click="xCard()" data-bs-dismiss="modal">{{ customOptions.safetyCardButton
+        <button class="btn btn-outline-dark btn-lg w-100 control-button-safety-card" data-bs-dismiss="modal" data-bs-target="#menuModal"
+          v-on:click="xCard()">{{ customOptions.safetyCardButton
               ? customOptions.safetyCardButton
               : 'X-Card'
           }}</button>
       </div>
       <div class="row menu-row">
-        <button data-bs-dismiss="modal" v-on:click="nextDeck();" class="btn btn-outline-dark control-button-next-deck btn-lg btn-block" v-if="
+        <button data-bs-dismiss="modal" data-bs-target="#menuModal" v-on:click="nextDeck();" class="btn btn-outline-dark control-button-next-deck btn-lg w-100" v-if="
             this.customOptions.showNextDeckButton &&
             (!customOptions.facilitatorMode || userRole == 'facilitator')
                   " :disabled="
@@ -29,7 +29,7 @@
       </div>
       <div v-if="customOptions.treatLastCardAsLastDeck"
         :disabled="roomInfo.currentCardIndex >= roomInfo.locationOfLastCard" class="row menu-row">
-        <button data-bs-dismiss="modal" variant="outline-dark" class="btn btn-outline-dark control-button-last-deck btn-lg btn-block" v-on:click="
+        <button data-bs-dismiss="modal" data-bs-target="#menuModal" variant="outline-dark" class="btn btn-outline-dark control-button-last-deck btn-lg w-100" v-on:click="
   lastCard();
         " :disabled="
           roomInfo.xCardIsActive ||
@@ -48,7 +48,7 @@
         <hr class="mb-4" v-if="(!customOptions.hideLastCardOptions || renderChapterNavigation)" />
         <h6 class="text-center" v-if="!customOptions.hideLastCardOptions">{{ customOptions.lastCardLabel }} Options</h6>
         <div class="row menu-row" v-if="!customOptions.hideLastCardOptions">
-          <button data-bs-dismiss="modal" class="btn btn-block btn-secondary" v-on:click="
+          <button data-bs-dismiss="modal" data-bs-target="#menuModal" class="btn w-100 btn-secondary" v-on:click="
   lastCard();
           " :disabled="
             roomInfo.xCardIsActive ||
@@ -59,7 +59,7 @@
           </button>
         </div>
         <div class="row menu-row" v-if="!customOptions.hideLastCardOptions">
-          <button data-bs-dismiss="modal" class="btn btn-block btn-secondary" v-on:click="
+          <button data-bs-dismiss="modal" data-bs-target="#menuModal" class="btn w-100 btn-secondary" v-on:click="
   shuffleLastCard('center');
           " :disabled="
             roomInfo.xCardIsActive ||
@@ -70,7 +70,7 @@
           </button>
         </div>
         <div class="row menu-row" v-if="!customOptions.hideLastCardOptions">
-          <button data-bs-dismiss="modal" class="btn btn-block btn-secondary" v-on:click="
+          <button data-bs-dismiss="modal" data-bs-target="#menuModal" class="btn w-100 btn-secondary" v-on:click="
   shuffleLastCard('end');
           " :disabled="
             roomInfo.xCardIsActive ||
@@ -90,7 +90,7 @@
         </h6>
 
         <div class="row menu-row d-grid gap-2" v-for="chapter in chapterNavLabels" :key="chapter.label">
-          <button data-bs-dismiss="modal" class="btn btn-block btn-secondary" v-on:click="
+          <button data-bs-dismiss="modal" data-bs-target="#menuModal" class="btn w-100 btn-secondary" v-on:click="
             goToCard(parseInt(deckIndex[chapter.deckNumber]));" :disabled="roomInfo.xCardIsActive">
             {{ chapter.label }}
           </button>
@@ -131,7 +131,7 @@
                 (roomInfo.extensionData && (roomInfo.extensionData.interruptsReplaceMainCards || roomInfo.extensionData.interruptsPauseNavigation) && roomInfo.extensionData.currentInterrupt)
               ">
               <IBiChevronLeft class="h1 mb-0" />
-              <IBiCardHeading class="h1 mb-0 mr-2" />
+              <IBiCardHeading class="h1 mb-0 me-2" />
             </button>
             <!-- Next Card -->
             <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" data-bs-toggle="tooltip"
@@ -145,11 +145,11 @@
                 (roomInfo.extensionData && (roomInfo.extensionData.interruptsReplaceMainCards || roomInfo.extensionData.interruptsPauseNavigation) && roomInfo.extensionData.currentInterrupt)
               ">
               <div v-if="roomInfo.currentCardIndex == 0">
-                <IBiCardHeading class="h1 mb-0 ml-2" animation="fade" />
+                <IBiCardHeading class="h1 mb-0 ms-2" animation="fade" />
                 <IBiChevronRight class="h1 mb-0" animation="fade" />
               </div>
               <div v-else>
-                <IBiCardHeading class="h1 mb-0 ml-2" />
+                <IBiCardHeading class="h1 mb-0 ms-2" />
                 <IBiChevronRight class="h1 mb-0" />
               </div>
             </button>
@@ -328,7 +328,7 @@
                     {{ customOptions.chapterNavHeader }}
                   </h2>
                   <div v-for="chapter in chapterNavLabels" :key="chapter.label">
-                    <b-button class="btn-block btn-default my-2 chapter-nav-button"
+                    <b-button class="w-100 btn-secondary my-2 chapter-nav-button"
                       @click="goToCard(parseInt(deckIndex[chapter.deckNumber]))" :disabled="roomInfo.xCardIsActive">
                       {{ chapter.label }}
                     </b-button>
@@ -374,7 +374,7 @@
                   Do you want to reshuffle all of the prompts and restart the game?
                 </p>
                 <div class="text-center mb-3">
-                  <button class="btn btn-dark" key="reshuffleConfirmModal" variant="dark" v-on:click="shuffleAndResetGame()" data-bs-dismiss="modal">Restart and Reshuffle</button>
+                  <button class="btn btn-dark" key="reshuffleConfirmModal" variant="dark" v-on:click="shuffleAndResetGame()" data-bs-dismiss="modal" data-bs-target="#reshuffleConfirm">Restart and Reshuffle</button>
                 </div>
               </div>
             </div>

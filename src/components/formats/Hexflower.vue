@@ -75,7 +75,7 @@
               <span>{{
                 roomInfo.playRandomizerAnimation ? "Rolling" : "Move"
               }}</span>
-              <b-icon class="hexflower-reroll-icon" icon="arrows-move"></b-icon>
+              <IBiArrowsMove class="hexflower-reroll-icon" />
             </b-button>
             <b-button
               v-if="
@@ -86,10 +86,9 @@
               class="btn btn-dark mx-2 my-1"
             >
               <span>Regenerate</span>
-              <b-icon
+              <IBiArrowClockwise
                 class="hexflower-reroll-icon"
-                icon="arrow-clockwise"
-              ></b-icon>
+              />
             </b-button>
           </div>
         </div>
@@ -302,8 +301,11 @@ export default {
         }, 1000);
       }
     },
-    sheetData: function () {
-      this.processSheetData();
+    sheetData: {
+      handler() {
+        this.processSheetData();
+      },
+      deep: true,
     },
     firebaseReady: function () {
       if (this.firebaseReady && !this.roomInfo) {

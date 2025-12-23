@@ -52,8 +52,11 @@ export default {
     };
   },
   watch: {
-    sheetData: function () {
-      this.processSheetData();
+    sheetData: {
+      handler() {
+        this.processSheetData();
+      },
+      deep: true,
     },
     firebaseReady: function () {
       if (this.firebaseReady && !this.roomInfo) {

@@ -9,7 +9,7 @@
         </div>
 
         <div class="row">
-          <div class="col-sm form-group">
+          <div class="col-sm mb-3">
             <label for="roomInput">Session Name</label>
 
             <svg v-b-tooltip.hover title="The shareable session code – use this random one or write in a custom one"
@@ -21,23 +21,21 @@
 
             <div class="input-group">
               <input v-model="roomID" class="form-control" placeholder="Room Code" title="Room Code" id="roomInput" />
-              <div class="input-group-append">
-                <button class="btn btn-sm btn-outline-dark" title="Assign random room name"
-                  v-on:click="assignRandomRoomName()">
-                  <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-clockwise" fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
-                    <path
-                      d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
-                  </svg>
-                </button>
-              </div>
+              <button class="btn btn-sm btn-outline-dark" title="Assign random room name"
+                v-on:click="assignRandomRoomName()">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-arrow-clockwise" fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+                  <path
+                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
 
         <div class="row" v-if="customOptions.password">
-          <div class="col-sm form-group">
+          <div class="col-sm mb-3">
             <label for="passwordInput">Password</label>
 
             <svg v-b-tooltip.hover title="The password provide by the game designer or publisher" width="1em"

@@ -96,7 +96,7 @@
           </div>
 
           <div class="row">
-            <div class="col-sm form-group">
+            <div class="col-sm mb-3">
               <label for="roomInput">Session Name</label>
               
               <svg data-bs-toggle="tooltip" data-bs-placement="top" title="The shareable session code – use this random one or write in a custom one"
@@ -122,7 +122,7 @@
           </div>
 
           <div class="row" v-if="customOptions.password">
-            <div class="col-sm form-group">
+            <div class="col-sm mb-3">
               <label for="passwordInput">Password (that came with the game)</label>
               <input type="text" class="form-control" v-model="passwordInput" />
             </div>

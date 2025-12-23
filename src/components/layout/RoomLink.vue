@@ -14,26 +14,19 @@
         </div>
       </transition>
 
-      <button class="btn btn-outline-dark ml-auto border-0"
+      <button class="btn btn-outline-dark ms-auto border-0"
         v-on:click="copyTextToClipboard()" type="button" v-bind:style="{ color: color }">
         <iBiLink45deg /> Copy URL
       </button>
 
-      <!-- <b-toast variant="success" id="copyToast" auto-hide-delay="1000" no-close-button>
-        Link copied to clipboard
-      </b-toast> -->
-
-      <div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
-        <div class="toast-container position-absolute p-3" id="copyToast">
-          <div class="toast hide">
-            <div class="toast-body">
-              Link copied to clipboard
-            </div>
+      <div class="toast-container position-fixed bottom-0 end-0 p-3" ref="roomCopyToastContainer" aria-live="polite"
+        aria-atomic="true">
+        <div class="toast text-bg-success" ref="roomCopyToast" role="status" aria-live="polite" aria-atomic="true">
+          <div class="toast-body">
+            Link copied to clipboard
           </div>
         </div>
       </div>
-
-
 
     </div>
   </div>
@@ -41,6 +34,7 @@
 
 <script>
 
+import { Toast } from 'bootstrap';
 import { notifyMyOnlineStatus, onRoomInfoUpdate, setMyOnlineData } from "../../firebase/models/players_in_room.js";
 
 let userRef = null;
@@ -62,9 +56,14 @@ export default {
       context: null,
       userID: null,
       atLeastOneMonetizedUser: false,
+      copyToast: null,
     };
   },
   mounted() {
+    if (this.$refs.roomCopyToast) {
+      this.copyToast = new Toast(this.$refs.roomCopyToast, { delay: 1200 });
+    }
+
     if (this.routeRoomID) {
       this.bindToFirebaseRTDB()
       this.checkMonetization();
@@ -136,6 +135,9 @@ export default {
       }, function () {
         console.log('copy failed')
       });
+      if (this.copyToast) {
+        this.copyToast.show();
+      }
     },
   },
 };
