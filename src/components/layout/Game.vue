@@ -4,11 +4,12 @@
     <div class="vw-100 vh-100 d-flex align-items-center justify-content-center" v-if="(!dataReady || (!firebaseReady && $route.params.roomID)) && !error" no-wrap>
       <div class="row" v-if="customOptions.debugLoading != 'TRUE'">
         <div class="col">
-          <h1>Loading
-            <span class="spinner-border m-auto p-auto" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </span>
-          </h1>
+          <h1>Loading...</h1>
+              <h1 class="text-center">
+                <span class="spinner-border m-auto p-auto text-center" style="width: 3rem; height: 3rem; border-width: 2px;"role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </span>
+              </h1>
         </div>
       </div>
       <div class="row" v-if="customOptions.debugLoading == 'TRUE'">
