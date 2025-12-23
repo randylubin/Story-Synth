@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark position-fixed" :class="{ 'shadow scrolledNavbar': scrollPosition > 100 }" v-if="!$route.params.roomID">
+  <nav class="navbar navbar-expand-md navbar-dark position-fixed bg-dark" :class="{ 'shadow scrolledNavbar': scrollPosition > 100 }" v-if="!$route.params.roomID">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Story Synth</a>  
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
