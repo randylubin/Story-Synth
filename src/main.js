@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
 
 import { createApp, configureCompat } from "vue";
 
@@ -8,6 +9,9 @@ configureCompat({ WATCH_ARRAY: false });
 
 import App from './App.vue'
 const app = createApp(App)
+
+import { bootstrapPlugin } from 'bootstrap-vue-next'
+app.use(bootstrapPlugin)
 
 import { createMetaManager } from 'vue-meta'
 app.use(createMetaManager); // TODO use throughout app 

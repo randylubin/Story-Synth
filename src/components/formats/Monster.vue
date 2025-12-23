@@ -106,15 +106,13 @@
 
                     <div v-if="index !== 0">
                       <p class="mt-4" v-dompurify-html="row.archetype"></p>
-                      <div class="text-start" v-dompurify-html="row.characterDetail">
-
-                      </div>
+                      <div class="text-start" v-if="row.characterDetail" v-dompurify-html="row.characterDetail"></div>
                     </div>
 
                   </div>
 
                   <div class="card-title" v-if="row.subtitle" v-dompurify-html="row.archetype"></div>
-                  <div class="card-subtitle mb-4 text-muted" v-dompurify-html="row.subtitle"></div>
+                  <div class="card-subtitle mb-4 text-muted" v-if="row.subtitle" v-dompurify-html="row.subtitle"></div>
 
                   <div class="card-text text-start"
                     v-if="clickedCard == index || roomInfo.currentCardIndex == gSheet[gSheet.length - 1].ordered">
@@ -123,7 +121,7 @@
                     <div v-dompurify-html="row.characterDetail">
                     </div>
                     <h5 class="mt-4">{{ row.keyQuestion }}</h5>
-                    <div v-dompurify-html="row.keyDetails">
+                    <div v-if="row.keyDetails" v-dompurify-html="row.keyDetails">
                     </div>
                   </div>
 
@@ -294,7 +292,7 @@ export default {
       })
     },
     updateClickedCard(index) {
-      if (this.gSheet[index].subtitle !== undefined) {
+      if (this.gSheet[index].subtitle) {
         if (this.clickedCard == index) {
           this.clickedCard = -1
         } else if (index !== 0 && index > this.instructionCardCount) {
