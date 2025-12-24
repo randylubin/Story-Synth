@@ -5,7 +5,7 @@
 
       <app-header class=""></app-header>
 
-      <div class="non-footer-content">
+      <div id="non-footer-content" class="non-footer-content">
 
         <div v-if="fullPath == '/'">
           <app-homepage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID"
@@ -336,7 +336,7 @@ li.nav-item {
   font-size: 1.5rem;
 }
 
-.non-footer-content {
+#non-footer-content {
   padding-bottom: 8.5rem;
 }
 

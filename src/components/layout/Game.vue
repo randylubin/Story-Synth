@@ -404,7 +404,7 @@ export default {
         // apply custom style to body
         const templateName = this.customOptions.styleTemplate || "undefined";
         let styleTemplate = "style-template-" + templateName;
-        let body = document.getElementById("app"); // document.body;
+        let body = document.getElementById("non-footer-content");
         body.classList.remove(body.classList[0]);
         body.classList.add(styleTemplate);
 
