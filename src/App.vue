@@ -49,7 +49,7 @@
             <div class="col">
               <h1>Loading...</h1>
               <h1 class="text-center">
-                <span class="spinner-border m-auto p-auto text-center" style="width: 3rem; height: 3rem; border-width: 2px;"role="status">
+                <span class="spinner-border m-auto p-auto text-center" style="width: 3rem; height: 3rem; border-width: 2px;" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </span>
               </h1>

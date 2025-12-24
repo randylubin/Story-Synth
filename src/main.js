@@ -1,21 +1,23 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 import { createApp, configureCompat } from "vue";
 
-// Use Vue 3 v-model behavior (needed by bootstrap-vue-next) and silence array watcher warning.
-configureCompat({ WATCH_ARRAY: false, COMPONENT_V_MODEL: false });
+// Use Vue 3 v-model behavior (needed by bootstrap-vue-next) and silence array watcher & render warnings.
+configureCompat({ WATCH_ARRAY: false, COMPONENT_V_MODEL: false, RENDER_FUNCTION: false });
 
 import App from './App.vue'
 const app = createApp(App)
 
-import { bootstrapPlugin, modalControllerPlugin, modalManagerPlugin } from 'bootstrap-vue-next'
-app.use(bootstrapPlugin)
-app.use(modalControllerPlugin)
-app.use(modalManagerPlugin)
+import BootstrapVueNext from 'bootstrap-vue-next'
+app.use(BootstrapVueNext)
 
-import { createMetaManager } from 'vue-meta'
-app.use(createMetaManager); // TODO use throughout app 
+import { createHead } from '@vueuse/head';
+import { metaInfoMixin } from './plugins/head-compat';
+const head = createHead();
+app.use(head);
+app.mixin(metaInfoMixin);
 
 import { marked } from "marked";
 app.config.globalProperties.$marked = marked;

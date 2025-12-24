@@ -154,7 +154,7 @@
       </div>
     </div> -->
 
-    <b-modal id="reshuffleConfirm" ref="reshuffleModal" title="Restart and Reshuffle" hide-footer no-trap-focus :auto-focus="false">
+    <b-modal id="reshuffleConfirm" ref="reshuffleModal" title="Restart and Reshuffle" hide-footer no-trap-focus :auto-focus="false" no-fade modal-class="content-modal">
       <p>Do you want to reshuffle all of the prompts and restart the game?</p>
       <div class="text-center mb-3">
         <b-button variant="dark" v-on:click="shuffle();">Restart and Reshuffle</b-button>

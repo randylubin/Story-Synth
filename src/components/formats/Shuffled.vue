@@ -341,7 +341,7 @@
         </div>
         <slot name="lower-extensions">
         </slot>
-        <b-modal id="modalNextDeckConfirm" ref="nextDeckModal" title="Advance?" hide-footer>
+        <b-modal id="modalNextDeckConfirm" ref="nextDeckModal" title="Advance?" hide-footer no-fade modal-class="content-modal">
           <div class="text-center mb-3">
             <button class="btn btn-dark" v-on:click="nextDeck(); hideNextDeckModal()">Advance to
               {{
@@ -351,7 +351,7 @@
               }}</button>
           </div>
         </b-modal>
-        <b-modal id="reshuffleConfirm" ref="reshuffleModal" title="Restart and Reshuffle" hide-footer no-trap-focus :auto-focus="false">
+        <b-modal id="reshuffleConfirm" ref="reshuffleModal" title="Restart and Reshuffle" hide-footer no-trap-focus :auto-focus="false" no-fade modal-class="content-modal">
           <p>
             Do you want to reshuffle all of the prompts and restart the game?
           </p>

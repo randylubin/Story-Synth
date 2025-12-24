@@ -10,7 +10,21 @@
       @roomMonetized="$emit('roomMonetized', true)" :routeRoomID="$route.params.roomID" :color="customOptions.menuColor"
       v-if="dataReady && firebaseReady"></app-roomLink>
 
-    <b-modal id="menuModal" ref="menuModal" :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'" hide-footer no-trap-focus :auto-focus="false">
+    <b-modal
+      v-model="showMenu"
+      id="menuModal"
+      ref="menuModal"
+      :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'"
+      hide-footer
+      no-trap-focus
+      :auto-focus="false"
+      no-fade
+      modal-class="menu-modal"
+      @show="onShow"
+      @shown="onShown"
+      @hide="onHide"
+      @hidden="onHidden"
+    >
       <div class="row menu-row">
         <button class="border-0 btn btn-lg btn-secondary w-100" v-on:click="copyLinkToClipboard();">
           <iBiLink45deg /> Copy URL
@@ -55,7 +69,7 @@
     <template v-for="modalNumber in modalNumberList" :key="'contentModal'+modalNumber">
       <b-modal v-if="customOptions['modal' + modalNumber + 'Label']"
         :title="customOptions['modal' + modalNumber + 'Label']" :id="'modal' + modalNumber" hide-footer
-        :ref="(el) => setContentModalRef(modalNumber, el)">
+        :ref="(el) => setContentModalRef(modalNumber, el)" no-fade modal-class="content-modal">
         <div class="d-block text-start" v-dompurify-html="customOptions['modal' + modalNumber + 'Text']"></div>
       </b-modal>
     </template>
@@ -79,6 +93,7 @@ export default {
   },
   data: function () {
     return {
+      showMenu: false,
       modalNumberList: [
         'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen', 'Twenty'
       ],
@@ -92,10 +107,16 @@ export default {
   },
   methods: {
     openMenu() {
-      this.$refs.menuModal?.show?.();
+      // console.log('[MenuBar] openMenu');
+      this.showMenu = true;
+      this.$nextTick(() => {
+        this.$refs.menuModal?.show?.();
+      });
     },
-    hideMenu() {
-      this.$refs.menuModal?.hide?.();
+    hideMenu(trigger) {
+      // console.log('[MenuBar] hideMenu', trigger);
+      this.showMenu = false;
+      this.$refs.menuModal?.hide?.(trigger);
     },
     copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath
@@ -104,17 +125,17 @@ export default {
       }, function () {
         console.log('copy failed')
       });
-      this.$refs.menuModal?.hide?.();
+      this.hideMenu('copy');
     },
     processExtensionUpdate(newData) {
       console.log("processing extension update", newData);
 
       this.$set(this.roomInfo.extensionData, newData[0], newData[1]);
       this.$emit("sync-extension", this.roomInfo.extensionData);
-      this.$refs.menuModal?.hide?.();
+      this.hideMenu('process-extension-update');
     },
     openContentModal(modalNumber) {
-      this.$refs.menuModal?.hide?.();
+      this.hideMenu('open-content-modal');
       this.$nextTick(() => {
         const target = this.contentModalRefs[modalNumber];
         setTimeout(() => target?.show?.(), 0);
@@ -127,10 +148,44 @@ export default {
         delete this.contentModalRefs[modalNumber];
       }
     },
+    onShow(evt) {
+      // console.log('[MenuBar] menuModal show', { trigger: evt?.trigger, showMenu: this.showMenu });
+    },
+    onShown(evt) {
+      // console.log('[MenuBar] menuModal shown', { trigger: evt?.trigger, showMenu: this.showMenu });
+    },
+    onHide(evt) {
+      // console.log('[MenuBar] menuModal hide', { trigger: evt?.trigger, showMenu: this.showMenu });
+    },
+    onHidden(evt) {
+      // console.log('[MenuBar] menuModal hidden', { trigger: evt?.trigger, showMenu: this.showMenu });
+      // Ensure flag stays in sync if modal gets closed externally
+      if (this.showMenu) {
+        this.showMenu = false;
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+:deep(.menu-modal.modal) {
+  opacity: 1 !important;
+  display: block !important;
+  z-index: 2000;
+}
 
+:deep(.content-modal.modal) {
+  opacity: 1 !important;
+  display: block !important;
+  z-index: 2000;
+}
+
+:deep(.menu-modal .modal-backdrop) {
+  opacity: 0.5 !important;
+}
+
+:deep(.content-modal .modal-backdrop) {
+  opacity: 0.5 !important;
+}
 </style>
