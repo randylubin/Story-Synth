@@ -94,7 +94,8 @@ export default {
   },
   data() {
     return {
-      firebaseAuth: false,
+      firebaseAuth: this.$isPrerender ? true : false,
+      lastPrerenderedPath: null,
     }
   },
   setup(){
@@ -169,26 +170,52 @@ export default {
     }
   },
   mounted() {
-    anonymousSignIn()
-      .then(() => {
-        // console.log('anon auth')
-        this.firebaseAuth = true;
-      })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorCode, errorMessage)
-        // TODO display error message
-      });
+    if (!this.$isPrerender) {
+      anonymousSignIn()
+        .then(() => {
+          // console.log('anon auth')
+          this.firebaseAuth = true;
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log(errorCode, errorMessage)
+          // TODO display error message
+        });
+    }
 
       // window.addEventListener('mouseup', function(){
         // document.getElementById('menu-bar-button').focus()
         // document.getElementById('menu-bar-button').blur()
       //   console.log("click!")
-      // })
+        // })
 
+      this.maybeDispatchStaticPrerender();
+  },
+  watch: {
+    fullPath() {
+      this.maybeDispatchStaticPrerender();
+    }
   },
   methods: {
+    maybeDispatchStaticPrerender() {
+      const staticPaths = [
+        '/',
+        '/Formats/',
+        '/Gallery/',
+        '/Microgrant-Gallery/',
+        '/Grants/',
+        '/CSS-Playground/',
+        '/Upload/',
+      ];
+
+      if (staticPaths.includes(this.fullPath) && this.lastPrerenderedPath !== this.fullPath) {
+        this.lastPrerenderedPath = this.fullPath;
+        this.$nextTick(() => {
+          document.dispatchEvent(new Event('render-event'));
+        });
+      }
+    },
   }
 }
 </script>

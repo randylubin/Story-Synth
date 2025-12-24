@@ -19,6 +19,9 @@ const head = createHead();
 app.use(head);
 app.mixin(metaInfoMixin);
 
+const isPrerender = typeof window !== 'undefined' && window.__PRERENDER_INJECTED?.isPrerender;
+app.config.globalProperties.$isPrerender = isPrerender;
+
 import { marked } from "marked";
 app.config.globalProperties.$marked = marked;
 
@@ -169,7 +172,9 @@ app.use(router)
 app.component('App', App)
 app.config.globalProperties.$gSheet = null;
 
-app.mount('#app')
+router.isReady().then(() => {
+  app.mount('#app');
+});
 
 // var vm = new Vue({
 //   el: "#app",

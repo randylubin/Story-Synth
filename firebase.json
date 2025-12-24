@@ -7,14 +7,10 @@
       "**/node_modules/**"
     ],
     "rewrites": [
-        {
+      {
         "source": "**",
-        "destination": "/app.html"
-        },
-        {
-          "source": "/",
-          "destination": "/index.html"
-        }
+        "destination": "/index.html"
+      }
     ]
   }
 }

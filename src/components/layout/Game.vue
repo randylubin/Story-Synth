@@ -141,7 +141,7 @@ export default {
       error: null,
       sheetData: null,
       dataReady: null,
-      firebaseReady: null,
+      firebaseReady: this.$isPrerender ? true : null,
       selectedWallet: null,
       roomMonetized: null,
       monetizedByUser: false,
@@ -160,6 +160,7 @@ export default {
         Sandbox: "app-sandbox",
       },
       unsubscribeFromFirebase: null,
+      prerenderEventSent: false,
     };
   },
   components: {
@@ -180,6 +181,11 @@ export default {
     "app-extensionManager": defineAsyncComponent(() => import("../extensions/ExtensionManager.vue")),
   },
   inject: ['mixpanel'],
+  created() {
+    if (this.$isPrerender) {
+      this.firebaseReady = true;
+    }
+  },
   computed: {
     formatInfo: function () {
       let info = {
@@ -209,8 +215,10 @@ export default {
   },
   mounted() {
     this.fetchAndCleanSheetData(this.gSheetID);
-    if (this.roomID) {
+    if (this.roomID && !this.$isPrerender) {
       this.bindFirebaseToRoomInfo();
+    } else if (!this.roomID && this.$isPrerender) {
+      this.firebaseReady = true;
     }
 
     // if (this.$route.params.gameType != "Games") {
@@ -394,8 +402,8 @@ export default {
         }
 
         // apply custom style to body
-        let styleTemplate =
-          "style-template-" + this.customOptions.styleTemplate;
+        const templateName = this.customOptions.styleTemplate || "undefined";
+        let styleTemplate = "style-template-" + templateName;
         let body = document.getElementById("app"); // document.body;
         body.classList.remove(body.classList[0]);
         body.classList.add(styleTemplate);
@@ -420,6 +428,11 @@ export default {
           document.dispatchEvent(new Event("x-app-rendered")),
           100
         );
+
+        // Signal prerender readiness for launcher views (no roomID).
+        if (!this.roomID) {
+          this.signalPrerenderReady();
+        }
 
         this.logAnalytics();
       }
@@ -452,6 +465,13 @@ export default {
       console.log("web monetization stream started");
       this.monetizedByUser = true;
       this.roomMonetized = true;
+    },
+    signalPrerenderReady() {
+      if (this.prerenderEventSent) return;
+      this.prerenderEventSent = true;
+      this.$nextTick(() => {
+        document.dispatchEvent(new Event("render-event"));
+      });
     },
   },
   metaInfo() {

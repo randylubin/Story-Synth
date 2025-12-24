@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "ENABLE_PRERENDER=0 vite build && node scripts/static-prerender.mjs",
     "serve": "vite preview"
   },
   "dependencies": {
@@ -35,9 +35,9 @@
     "@vue/compiler-sfc": "^3.3.9",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "prerender-spa-plugin": "^3.2.1",
     "unplugin-icons": "^0.17.4",
-    "unplugin-vue-components": "^0.25.2"
+    "unplugin-vue-components": "^0.25.2",
+    "vite-plugin-prerender": "^1.0.8"
   },
   "eslintConfig": {
     "root": true,
