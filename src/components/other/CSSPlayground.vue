@@ -10,16 +10,16 @@
 
         <!-- Menu Bar -->
         <div class="menu-bar mb-4 d-flex align-items-center">
-          <button class="btn btn-outline-dark mr-auto border-0" v-b-modal.menuModal>
-            <b-icon-list></b-icon-list> Menu
+          <button class="btn btn-outline-dark me-auto border-0" v-b-modal.menuModal>
+            <IBiList /> Menu
           </button>
           <div class="room-link flex-row d-flex">
             <div class="pt-2 px-2 game-meta live-player-counter">
-              3 <b-icon-people></b-icon-people>
+              3 <IBiPeople />
             </div>
 
-            <button class="btn btn-outline-dark ml-auto border-0" @click="$bvToast.show('copyToast')" type="button">
-              <b-icon-link45deg></b-icon-link45deg> Copy URL
+            <button class="btn btn-outline-dark ms-auto border-0" @click="$bvToast.show('copyToast')" type="button">
+              <IBiLink45deg /> Copy URL
             </button>
 
             <b-toast variant="success" id="copyToast" auto-hide-delay="1000" no-close-button>
@@ -30,9 +30,9 @@
           <b-modal id="menuModal" :title="customOptions.gameTitle ? customOptions.gameTitle : 'Menu'" hide-footer>
             <b-container>
               <div class="row menu-row">
-                <b-button class="border-0 btn-lg btn-block" v-on:click="copyLinkToClipboard(); closeMenu();"
+                <b-button class="border-0 btn-lg w-100" v-on:click="copyLinkToClipboard(); closeMenu();"
                   @click="$bvToast.show('copyToast')">
-                  <b-icon-link45deg></b-icon-link45deg> Copy URL
+                  <IBiLink45deg /> Copy URL
                 </b-button>
               </div>
             </b-container>
@@ -50,14 +50,14 @@
               true
             ">
             <!-- Previous Card -->
-            <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
-            <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+            <IBiChevronLeft class="h1 mb-0" />
+            <IBiCardHeading class="h1 mb-0 me-2" />
           </button>
           <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
             title="Next Card">
             <!-- Next Card -->
-            <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
-            <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>
+            <IBiCardHeading class="h1 mb-0 ms-2" />
+            <IBiChevronRight class="h1 mb-0" />
           </button>
         </div>
         <div class="card shadow mb-4">
@@ -243,6 +243,7 @@ export default {
   components: {
 
   },
+  inject: ['mixpanel'],
   metaInfo() {
     return {
       title: "CSS Playground",
@@ -301,7 +302,7 @@ export default {
 
     document.dispatchEvent(new Event("x-app-rendered"));
     if (location.hostname.toString() !== 'localhost') {
-      this.$mixpanel.track('Visited CSS Playground');
+      this.mixpanel.track('Visited CSS Playground');
     }
   },
   methods: {

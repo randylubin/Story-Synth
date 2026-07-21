@@ -1,13 +1,32 @@
-import Vue from "vue";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
-import VueMeta from "vue-meta";
-Vue.use(VueMeta);
+import { createApp, configureCompat } from "vue";
+
+// Use Vue 3 v-model behavior (needed by bootstrap-vue-next) and silence array watcher & render warnings.
+configureCompat({ WATCH_ARRAY: false, COMPONENT_V_MODEL: false, RENDER_FUNCTION: false });
+
+import App from './App.vue'
+const app = createApp(App)
+
+import BootstrapVueNext from 'bootstrap-vue-next'
+app.use(BootstrapVueNext)
+
+import { createHead } from '@vueuse/head';
+import { metaInfoMixin } from './plugins/head-compat';
+const head = createHead();
+app.use(head);
+app.mixin(metaInfoMixin);
+
+const isPrerender = typeof window !== 'undefined' && window.__PRERENDER_INJECTED?.isPrerender;
+app.config.globalProperties.$isPrerender = isPrerender;
 
 import { marked } from "marked";
-Vue.prototype.$marked = marked;
+app.config.globalProperties.$marked = marked;
 
 import VueDOMPurifyHTML from "vue-dompurify-html";
-Vue.use(VueDOMPurifyHTML, {
+app.use(VueDOMPurifyHTML, {
   default: {
     FORCE_BODY: true,
     ALLOWED_ATTR: [
@@ -40,56 +59,56 @@ Vue.use(VueDOMPurifyHTML, {
 });
 
 import markdownFriendlyOptions from "./misc/markdown-friendly-options.json";
-Vue.prototype.$markdownFriendlyOptions = markdownFriendlyOptions;
+app.config.globalProperties.$markdownFriendlyOptions = markdownFriendlyOptions;
 
-import {
-  BootstrapVue,
-  BIcon,
-  BIconSave,
-  BIconArrowsExpand,
-  BIconArrowsCollapse,
-  BIconPeople,
-  BIconCoin,
-  BIconPencil,
-  BIconTrash,
-  BIconCheck2,
-  BIconList,
-  BIconLink45deg,
-  BIconArrowClockwise,
-  BIconArrowsMove,
-  BIconChevronLeft,
-  BIconCardHeading,
-  BIconChevronRight,
-  BIconEyeSlashFill,
-  BIconZoomIn,
-  BIconZoomOut,
-} from "bootstrap-vue";
+// import {
+//   BootstrapVue,
+//   BIcon,
+//   BIconSave,
+//   BIconArrowsExpand,
+//   BIconArrowsCollapse,
+//   BIconPeople,
+//   BIconCoin,
+//   BIconPencil,
+//   BIconTrash,
+//   BIconCheck2,
+//   BIconList,
+//   BIconLink45deg,
+//   BIconArrowClockwise,
+//   BIconArrowsMove,
+//   BIconChevronLeft,
+//   BIconCardHeading,
+//   BIconChevronRight,
+//   BIconEyeSlashFill,
+//   BIconZoomIn,
+//   BIconZoomOut,
+// } from "bootstrap-vue";
 
-// Install BootstrapVue
-Vue.use(BootstrapVue);
-// Optionally install the BootstrapVue icon components plugin
-Vue.component("BIcon", BIcon);
-Vue.component("BIconArrowsExpand", BIconArrowsExpand),
-Vue.component("BIconArrowsCollapse", BIconArrowsCollapse),
-Vue.component("BIconPencil", BIconPencil);
-Vue.component("BIconTrash", BIconTrash);
-Vue.component("BIconCheck2", BIconCheck2);
-Vue.component("BIconList", BIconList);
-Vue.component("BIconLink45deg", BIconLink45deg);
-Vue.component("BIconArrowClockwise", BIconArrowClockwise);
-Vue.component("BIconArrowsMove", BIconArrowsMove);
-Vue.component("BIconChevronLeft", BIconChevronLeft);
-Vue.component("BIconChevronRight", BIconChevronRight);
-Vue.component("BIconCardHeading", BIconCardHeading);
-Vue.component("BIconCoin", BIconCoin);
-Vue.component("BIconPeople", BIconPeople);
-Vue.component("BIconSave", BIconSave);
-Vue.component("BIconEyeSlashFill", BIconEyeSlashFill);
-Vue.component("BIconZoomIn", BIconZoomIn);
-Vue.component("BIconZoomOut", BIconZoomOut)
+// // Install BootstrapVue
+// app.use(BootstrapVue);
+// // Optionally install the BootstrapVue icon components plugin
+// app.component("BIcon", BIcon);
+// app.component("BIconArrowsExpand", BIconArrowsExpand),
+// app.component("BIconArrowsCollapse", BIconArrowsCollapse),
+// app.component("BIconPencil", BIconPencil);
+// app.component("BIconTrash", BIconTrash);
+// app.component("BIconCheck2", BIconCheck2);
+// app.component("BIconList", BIconList);
+// app.component("BIconLink45deg", BIconLink45deg);
+// app.component("BIconArrowClockwise", BIconArrowClockwise);
+// app.component("BIconArrowsMove", BIconArrowsMove);
+// app.component("BIconChevronLeft", BIconChevronLeft);
+// app.component("BIconChevronRight", BIconChevronRight);
+// app.component("BIconCardHeading", BIconCardHeading);
+// app.component("BIconCoin", BIconCoin);
+// app.component("BIconPeople", BIconPeople);
+// app.component("BIconSave", BIconSave);
+// app.component("BIconEyeSlashFill", BIconEyeSlashFill);
+// app.component("BIconZoomIn", BIconZoomIn);
+// app.component("BIconZoomOut", BIconZoomOut)
 
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
+// import "bootstrap/dist/css/bootstrap.css";
+// import "bootstrap-vue/dist/bootstrap-vue.css";
 
 import "./assets/styleTemplates/homepage.scss";
 
@@ -99,20 +118,17 @@ import "./assets/styleTemplates/cyberpunk.scss";
 import "./assets/styleTemplates/vaporwave.scss";
 import "./assets/styleTemplates/fantasy.scss";
 
-import App from "./App.vue";
-
 import VueGtag from "vue-gtag";
-Vue.use(VueGtag, {
+app.use(VueGtag, {
   config: { id: "G-B8L2T2PSP7" },
 });
 
 import VueMixpanel from "vue-mixpanel";
-Vue.use(VueMixpanel, {
+app.use(VueMixpanel, {
   token: "e5df6aab318089da6c499bc6bf3123f9", //TODO replace this token with your own MixPanel tracking token
 });
 
-import VueRouter from "vue-router";
-Vue.use(VueRouter);
+import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   { path: "/", component: App },
@@ -120,11 +136,12 @@ const routes = [
   { path: "/:gameType/:gSheetID/:roomID", component: App },
   { path: "/:gameType/:gSheetID/:roomID/:userRole", component: App },
   { path: "/Games/", redirect: "/Gallery/"},
+  { path: "/Upload", component: App}
 ];
 
-const router = new VueRouter({
-  mode: "history",
-  routes, // short for `routes: routes`
+let router = createRouter({
+  history: createWebHistory(),
+  routes: routes,
 });
 
 router.beforeEach((to, from, next) => {
@@ -150,16 +167,22 @@ router.beforeEach((to, from, next) => {
 
   next();
 });
+app.use(router)
 
-var vm = new Vue({
-  el: "#app",
-  router,
-  render: (h) => h(App),
-  data() {
-    return {
-      gSheet: null,
-    };
-  },
+app.component('App', App)
+app.config.globalProperties.$gSheet = null;
+
+router.isReady().then(() => {
+  app.mount('#app');
 });
 
-global.vm = vm;
+// var vm = new Vue({
+//   el: "#app",
+//   router,
+//   render: (h) => h(App),
+//   data() {
+//     return {
+//       gSheet: null,
+//     };
+//   },
+// });

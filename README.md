@@ -1,6 +1,6 @@
 # Story Synth
 
-![Version 1.0.2](https://img.shields.io/badge/version-1.0.2-blue)
+![Version 1.1.0](https://img.shields.io/badge/version-1.0.2-blue)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](code_of_conduct.md)
 
 ## Realtime Storytelling App
@@ -41,7 +41,6 @@ Make sure you have [Node.js and npm](https://www.npmjs.com/get-npm) installed lo
 ```
 npm install
 ```
-NOTE: you need to have a version of Node,js that is earlier than 17, as the latest versions of Node have a bug. (I'm currently using v16.14.0)
 
 DO NOT run `npm audit fix --force` as it will break dependencies.
 

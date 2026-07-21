@@ -1,89 +1,110 @@
 <template>
   <div id="app">
     <!-- <router-view></router-view>-->
-    <div v-if="$route.path !== '/about'">
+    <div v-if="route && path !== '/about'">
 
       <app-header class=""></app-header>
 
-      <div class="non-footer-content">
+      <div id="non-footer-content" class="non-footer-content">
 
-        <div v-if="$route.fullPath == '/'">
+        <div v-if="fullPath == '/'">
           <app-homepage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID"
             :routeGameType="$route.params.gameType"></app-homepage>
         </div>
 
-        <div v-if="$route.fullPath == '/Formats/'">
+        <div v-if="fullPath == '/Formats/'">
           <app-formatsAndExtensions></app-formatsAndExtensions>
         </div>
 
-        <div v-if="$route.fullPath == '/Gallery/'">
+        <div v-if="fullPath == '/Gallery/'">
           <app-gallery></app-gallery>
         </div>
 
-        <div v-if="$route.fullPath == '/Microgrant-Gallery/'">
+        <div v-if="fullPath == '/Microgrant-Gallery/'">
           <app-microgrant-gallery></app-microgrant-gallery>
         </div>
 
-        <div v-if="$route.fullPath == '/Grants/'">
+        <div v-if="fullPath == '/Grants/'">
           <app-grants></app-grants>
         </div>
 
-        <div v-if="$route.fullPath == '/CSS-Playground/'">
+        <div v-if="fullPath == '/CSS-Playground/'">
           <app-CSSPlayground></app-CSSPlayground>
         </div>
 
-        <div v-if="$route.fullPath == '/Upload/'">
+        <div v-if="fullPath == '/Upload/'">
           <app-uploadPage :routeRoomID="$route.params.roomID" :routeGSheetID="$route.params.gSheetID"
             :routeGameType="$route.params.gameType"></app-uploadPage>
         </div>
 
         <app-game
-          v-if="firebaseAuth && $route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          v-if="firebaseAuth && routeParams?.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
           :roomID="$route.params.roomID" :gSheetID="$route.params.gSheetID" :gameType="gameType"></app-game>
-        <b-overlay
-          :show="!firebaseAuth && $route.params.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+
+        <div
+          v-if="!firebaseAuth && routeParams?.gameType && !['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)"
+          class="vw-100 vh-100 d-flex align-items-center justify-content-center"
           no-wrap>
-          <template #overlay>
-            <h1>Loading</h1>
-            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
-          </template>
-        </b-overlay>
+          <div class="row">
+            <div class="col">
+              <h1>Loading...</h1>
+              <h1 class="text-center">
+                <span class="spinner-border m-auto p-auto text-center" style="width: 3rem; height: 3rem; border-width: 2px;" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </span>
+              </h1>
+            </div>
+          </div>
+        </div>
       </div>
 
       <link rel="monetization" href="$ilp.uphold.com/WMbkRBiZFgbx"
         onmonetization="console.log('monetization event triggered')"
-        v-if="['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes($route.params.gameType)">
+        v-if="['CSS-Playground', 'Grants', 'Gallery', 'Formats', 'Upload'].includes(routeParams?.gameType)">
     </div>
   </div>
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { anonymousSignIn } from './firebase/auth.js';
 import customGameData from './misc/customGameData'
+import { useRoute } from 'vue-router';
+import { computed, watch } from 'vue';
 
 // import CustomGameSessionManager from './components/games/CustomGameSessionManager.vue' // TODO push this to components
 
 export default {
   name: 'app',
   components: {
-    'app-header': () => import('./components/layout/Header.vue'),
+    'app-header': defineAsyncComponent(() => import('./components/layout/Header.vue')),
 
-    'app-homepage': () => import('./components/other/Homepage.vue'),
-    'app-gallery': () => import('./components/other/Gallery.vue'),
-    'app-microgrant-gallery': () => import('./components/other/MicrograntGallery.vue'),
-    'app-formatsAndExtensions': () => import('./components/other/FormatsAndExtensionsOverview.vue'),
-    'app-grants': () => import('./components/other/Grants.vue'),
-    'app-CSSPlayground': () => import('./components/other/CSSPlayground.vue'),
+    'app-homepage': defineAsyncComponent(() => import('./components/other/Homepage.vue')),
+    'app-gallery': defineAsyncComponent(() => import('./components/other/Gallery.vue')),
+    'app-microgrant-gallery': defineAsyncComponent(() => import('./components/other/MicrograntGallery.vue')),
+    'app-formatsAndExtensions': defineAsyncComponent(() => import('./components/other/FormatsAndExtensionsOverview.vue')),
+    'app-grants': defineAsyncComponent(() => import('./components/other/Grants.vue')),
+    'app-CSSPlayground': defineAsyncComponent(() => import('./components/other/CSSPlayground.vue')),
 
-    'app-game': () => import('./components/layout/Game.vue'),
-    'app-uploadPage': () => import('./components/launchers/UploadPage.vue'),
+    'app-game': defineAsyncComponent(() => import('./components/layout/Game.vue')),
+    'app-uploadPage': defineAsyncComponent(() => import('./components/launchers/UploadPage.vue')),
     // 'app-customGameLauncher': () => import('./components/games/CustomGameLauncher.vue'),
     // 'app-customGameSessionManager': CustomGameSessionManager,
 
   },
   data() {
     return {
-      firebaseAuth: false,
+      firebaseAuth: this.$isPrerender ? true : false,
+      lastPrerenderedPath: null,
+    }
+  },
+  setup(){
+    const route=useRoute();
+    const path = computed(() => route.path)
+    const fullPath = computed(() => route.fullPath)
+    const routeParams = computed(() => route.params)
+    return {
+      route, path, fullPath, routeParams
     }
   },
   computed: {
@@ -149,26 +170,52 @@ export default {
     }
   },
   mounted() {
-    anonymousSignIn()
-      .then(() => {
-        // console.log('anon auth')
-        this.firebaseAuth = true;
-      })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorCode, errorMessage)
-        // TODO display error message
-      });
+    if (!this.$isPrerender) {
+      anonymousSignIn()
+        .then(() => {
+          // console.log('anon auth')
+          this.firebaseAuth = true;
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log(errorCode, errorMessage)
+          // TODO display error message
+        });
+    }
 
       // window.addEventListener('mouseup', function(){
         // document.getElementById('menu-bar-button').focus()
         // document.getElementById('menu-bar-button').blur()
       //   console.log("click!")
-      // })
+        // })
 
+      this.maybeDispatchStaticPrerender();
+  },
+  watch: {
+    fullPath() {
+      this.maybeDispatchStaticPrerender();
+    }
   },
   methods: {
+    maybeDispatchStaticPrerender() {
+      const staticPaths = [
+        '/',
+        '/Formats/',
+        '/Gallery/',
+        '/Microgrant-Gallery/',
+        '/Grants/',
+        '/CSS-Playground/',
+        '/Upload/',
+      ];
+
+      if (staticPaths.includes(this.fullPath) && this.lastPrerenderedPath !== this.fullPath) {
+        this.lastPrerenderedPath = this.fullPath;
+        this.$nextTick(() => {
+          document.dispatchEvent(new Event('render-event'));
+        });
+      }
+    },
   }
 }
 </script>
@@ -289,7 +336,7 @@ li.nav-item {
   font-size: 1.5rem;
 }
 
-.non-footer-content {
+#non-footer-content {
   padding-bottom: 8.5rem;
 }
 
@@ -315,6 +362,17 @@ li.nav-item {
 .card {
   border-radius: var(--ds-rounding);
   overflow: hidden;
+}
+
+// Long unbreakable strings (e.g. bare URLs) must wrap instead of blowing out
+// the card: the card-body's flex children otherwise size to the URL's full
+// width and get clipped by the card's overflow: hidden.
+.card-body {
+  overflow-wrap: anywhere;
+}
+
+.card-body>div {
+  min-width: 0;
 }
 
 .card-img {
@@ -348,6 +406,7 @@ li.nav-item {
 
 .btn-fab svg {
   transition: transform 0.2s;
+  font-size: 125%;
 }
 
 .btn-fab:hover:not([disabled="disabled"]) svg {
@@ -431,4 +490,12 @@ li.nav-item {
 .edit-button {
   border: none;
 }
+
+$dark-blue: #323c69;
+$light-blue: #d9fcfd;
+
+.navbar {
+  z-index: 9999;
+}
+
 </style>

@@ -75,7 +75,7 @@
               <span>{{
                 roomInfo.playRandomizerAnimation ? "Rolling" : "Move"
               }}</span>
-              <b-icon class="hexflower-reroll-icon" icon="arrows-move"></b-icon>
+              <IBiArrowsMove class="hexflower-reroll-icon" />
             </b-button>
             <b-button
               v-if="
@@ -86,10 +86,9 @@
               class="btn btn-dark mx-2 my-1"
             >
               <span>Regenerate</span>
-              <b-icon
+              <IBiArrowClockwise
                 class="hexflower-reroll-icon"
-                icon="arrow-clockwise"
-              ></b-icon>
+              />
             </b-button>
           </div>
         </div>
@@ -207,11 +206,13 @@
 
 <script>
 import GraphemeSplitter from "grapheme-splitter";
+import { defineAsyncComponent } from 'vue';
+import { useModalController } from 'bootstrap-vue-next';
 
 export default {
   name: "app-hexflower",
   components: {
-    "app-menuBar": () => import("../layout/MenuBar.vue"),
+    "app-menuBar": defineAsyncComponent(() => import("../layout/MenuBar.vue")),
   },
   props: {
     roomID: String,
@@ -302,8 +303,11 @@ export default {
         }, 1000);
       }
     },
-    sheetData: function () {
-      this.processSheetData();
+    sheetData: {
+      handler() {
+        this.processSheetData();
+      },
+      deep: true,
     },
     firebaseReady: function () {
       if (this.firebaseReady && !this.roomInfo) {
@@ -349,7 +353,12 @@ export default {
       }
     },
     closeMenu() {
-      this.$bvModal.hide("menuModal");
+      const modalCtrl = useModalController?.();
+      if (modalCtrl?.hide) {
+        modalCtrl.hide('menuModal');
+      } else if (this.$bvModal?.hide) {
+        this.$bvModal.hide("menuModal");
+      }
     },
     copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath;

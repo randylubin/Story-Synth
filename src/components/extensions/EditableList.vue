@@ -18,14 +18,14 @@
                     <div>
                       <button class="btn btn-sm btn-outline-dark m-1 px-1 edit-button" v-on:click="editItem(index)"
                         v-if="currentEditIndex !== index">
-                        <b-icon-pencil></b-icon-pencil>
+                        <IBiPencil />
                       </button>
                       <div v-else>
                         <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="deleteItem(index)">
-                          <b-icon-trash></b-icon-trash>
+                          <IBiTrash />
                         </button>
                         <button class="btn btn-sm btn-outline-dark m-1 px-1" v-on:click="saveEditedItem(index)">
-                          <b-icon-check2></b-icon-check2>
+                          <IBiCheck2 />
                         </button>
                       </div>
                     </div>

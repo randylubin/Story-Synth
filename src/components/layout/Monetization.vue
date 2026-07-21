@@ -2,19 +2,23 @@
   <div>
     <div v-dompurify-html="customOptions.monetizationStyle" v-if="roomMonetized"></div>
     <div v-if="customOptions.monetizationMessage && !roomMonetized" class="monetizationMessage">
-      <b-alert show variant="light" v-dompurify-html="customOptions.monetizationMessage"></b-alert>
+      <div show class="alert alert-light" v-dompurify-html="customOptions.monetizationMessage"></div>
     </div>
-    <b-overlay :show="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
-      <template #overlay>
-        <div class="text-center">
-          <div v-dompurify-html="customOptions.monetizationPaywall"></div>
-          <div class="mt-4">
-            <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
-            <b-spinner class="m-5" style="width: 4rem; height: 4rem;" label="Busy"></b-spinner>
+    <div v-if="customOptions.monetizationPaywall && !roomMonetized" no-wrap>
+      <div class="text-center">
+        <div v-dompurify-html="customOptions.monetizationPaywall"></div>
+        <div class="mt-4">
+          <div class="row">
+            <div class="col">
+              <p>Checking for a <a href="https://webmonetization.org/">web monetization</a> stream now...</p>
+              <span class="spinner-border m-auto p-auto" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </span>
+            </div>
           </div>
         </div>
-      </template>
-    </b-overlay>
+      </div>
+    </div>
   </div>
 </template>
   

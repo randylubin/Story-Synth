@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row padding-after-navbar">
-      <div class="col text-left">
+      <div class="col text-start">
         <h2 class="mb-3">Microgrant Program</h2>
         <div class="card shadow">
           <a href="https://www.bigbadcon.com/story-synth-microgrants/">
@@ -126,6 +126,7 @@ export default {
       ],
     }
   },
+  inject: ['mixpanel'],
   mounted() {
     let body = document.getElementById("app"); // document.body;
     body.classList.remove(body.classList[0]);
@@ -133,7 +134,7 @@ export default {
 
     document.dispatchEvent(new Event("x-app-rendered"));
     if (location.hostname.toString() !== 'localhost') {
-      this.$mixpanel.track('Visited Grant Overview');
+      this.mixpanel.track('Visited Grant Overview');
     }
   },
 };

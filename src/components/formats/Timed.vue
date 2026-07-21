@@ -5,7 +5,7 @@
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
       :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg w-100"
           v-on:click="stop(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
               ? customOptions.safetyCardButton
@@ -95,10 +95,12 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
+import { useModalController } from 'bootstrap-vue-next';
 export default {
   name: 'app-timed',
   components: {
-    'app-menuBar': () => import("../layout/MenuBar.vue"),
+    'app-menuBar': defineAsyncComponent(() => import("../layout/MenuBar.vue")),
   },
   props: {
     roomID: String,
@@ -134,8 +136,11 @@ export default {
     }
   },
   watch: {
-    sheetData: function () {
-      this.processSheetData();
+    sheetData: {
+      handler() {
+        this.processSheetData();
+      },
+      deep: true,
     },
     firebaseReady: function () {
       if (this.firebaseReady && !this.roomInfo) {
@@ -172,7 +177,12 @@ export default {
       )
     },
     closeMenu() {
-      this.$bvModal.hide("menuModal");
+      const modalCtrl = useModalController?.();
+      if (modalCtrl?.hide) {
+        modalCtrl.hide('menuModal');
+      } else if (this.$bvModal?.hide) {
+        this.$bvModal.hide("menuModal");
+      }
     },
     start() {
       if (this.roomInfo.running) return;

@@ -1,17 +1,17 @@
 <template>
   <div class="slot-machine game-room" v-if="roomInfo">
 
-    <app-menuBar :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
+    <app-menuBar ref="menuBar" :roomInfo="roomInfo" :tempExtensionData="tempExtensionData" :customOptions="customOptions"
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
       :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button v-b-modal.reshuffleConfirm v-on:click="closeMenu();" class="control-button-restart btn-lg btn-block"
+        <b-button v-on:click="openReshuffleModal" class="control-button-restart btn-lg w-100"
           variant="outline-dark" :disabled="roomInfo.xCardIsActive"
           v-if="!customOptions.facilitatorMode || userRole == 'facilitator'" color="rgb(187, 138, 200)">Reshuffle
         </b-button>
       </div>
       <div class="row menu-row">
-        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg w-100"
           v-on:click="xCard(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
               ? customOptions.safetyCardButton
@@ -19,7 +19,7 @@
           "></b-button>
       </div>
       <div class="row menu-row">
-        <b-button variant="outline-dark" class="btn-lg btn-block"
+        <b-button variant="outline-dark" class="btn-lg w-100"
           :disabled="roomInfo.currentCardIndex == gSheet.length - 1 || roomInfo.xCardIsActive"
           v-on:click="lastCard(); closeMenu();">
           Last Card
@@ -57,8 +57,8 @@
             roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0
           ">
           <!-- Previous Card -->
-          <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
-          <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+          <IBiChevronLeft class="h1 mb-0" />
+          <IBiCardHeading class="h1 mb-0 me-2" />
         </button>
         <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
           title="Next Card" v-on:click="nextCard()" :disabled="
@@ -66,12 +66,12 @@
           ">
           <!-- Next Card -->
           <div v-if="roomInfo.currentCardIndex == 0">
-            <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
-            <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
+            <IBiCardHeading class="h1 mb-0 ms-2" />
+            <IBiChevronRight class="h1 mb-0" />
           </div>
           <div v-else>
-            <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
-            <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>
+            <IBiCardHeading class="h1 mb-0 ms-2" />
+            <IBiChevronRight class="h1 mb-0" />
           </div>
         </button>
       </div>
@@ -154,7 +154,7 @@
       </div>
     </div> -->
 
-    <b-modal id="reshuffleConfirm" title="Restart and Reshuffle" hide-footer>
+    <b-modal id="reshuffleConfirm" ref="reshuffleModal" title="Restart and Reshuffle" hide-footer no-trap-focus :auto-focus="false" no-fade modal-class="content-modal">
       <p>Do you want to reshuffle all of the prompts and restart the game?</p>
       <div class="text-center mb-3">
         <b-button variant="dark" v-on:click="shuffle();">Restart and Reshuffle</b-button>
@@ -166,10 +166,11 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 export default {
   name: 'app-slotMachine',
   components: {
-    'app-menuBar': () => import("../layout/MenuBar.vue"),
+    'app-menuBar': defineAsyncComponent(() => import("../layout/MenuBar.vue")),
   },
   props: {
     roomID: String,
@@ -203,8 +204,11 @@ export default {
     }
   },
   watch: {
-    sheetData: function () {
-      this.processSheetData();
+    sheetData: {
+      handler() {
+        this.processSheetData();
+      },
+      deep: true,
     },
     firebaseReady: function () {
       if (this.firebaseReady && !this.roomInfo) {
@@ -236,7 +240,17 @@ export default {
       }
     },
     closeMenu() {
-      this.$bvModal.hide("menuModal");
+      if (this.$refs.menuBar?.hideMenu) {
+        this.$refs.menuBar.hideMenu();
+      } else if (this.$bvModal?.hide) {
+        this.$bvModal.hide("menuModal");
+      }
+    },
+    openReshuffleModal() {
+      this.closeMenu();
+      this.$nextTick(() => {
+        setTimeout(() => this.$refs.reshuffleModal?.show?.(), 0);
+      });
     },
     copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath
@@ -274,7 +288,7 @@ export default {
       })
     },
     shuffle() {
-      this.$bvModal.hide('reshuffleConfirm')
+      this.$refs.reshuffleModal?.hide?.();
 
       // Create a ordered array
       var newCardSequence = []
@@ -337,6 +351,7 @@ export default {
     },
     processSheetData() {
       let cleanData = [];
+      this.firstNonInstruction = 0;
 
       if (this.sheetData) {
         this.numberOfWheels = this.sheetData[0].length - 3

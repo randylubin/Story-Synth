@@ -5,7 +5,7 @@
       :monetizedByUser="monetizedByUser" :routeRoomID="$route.params.roomID" :dataReady="dataReady"
       :firebaseReady="firebaseReady" @roomMonetized="$emit('roomMonetized', true)">
       <div class="row menu-row">
-        <b-button variant="outline-dark" class="control-button-safety-card btn-lg btn-block"
+        <b-button variant="outline-dark" class="control-button-safety-card btn-lg w-100"
           v-on:click="xCard(); closeMenu();" v-dompurify-html="
             customOptions.safetyCardButton
               ? customOptions.safetyCardButton
@@ -109,20 +109,20 @@
         v-on:click="previousCard()" v-b-tooltip.hover title="Previous Card"
         :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == 0">
         <!-- Previous Card -->
-        <b-icon class="h1 mb-0" icon="chevron-left"></b-icon>
-        <b-icon class="h1 mb-0 mr-2" icon="card-heading"></b-icon>
+        <IBiChevronLeft class="h1 mb-0" />
+        <IBiCardHeading class="h1 mb-0 me-2" />
       </button>
       <button class="btn btn-outline-dark btn-fab btn-fab-right control-button-next-card shadow" v-b-tooltip.hover
         title="Next Card" v-on:click="nextCard()"
         :disabled="roomInfo.xCardIsActive || roomInfo.currentCardIndex == gSheet.length - 1 || (roomInfo.currentCardIndex == gSheet.length - 1 && roomInfo.currentPhase == numberOfPhases - 1)">
         <!-- Next Card -->
         <div v-if="roomInfo.currentCardIndex == 0">
-          <b-icon class="h1 mb-0 ml-2" animation="fade" icon="card-heading"></b-icon>
-          <b-icon class="h1 mb-0" animation="fade" icon="chevron-right"></b-icon>
+          <IBiCardHeading class="h1 mb-0 ms-2" />
+          <IBiChevronRight class="h1 mb-0" />
         </div>
         <div v-else>
-          <b-icon class="h1 mb-0 ml-2" icon="card-heading"></b-icon>
-          <b-icon class="h1 mb-0" icon="chevron-right"></b-icon>
+          <IBiCardHeading class="h1 mb-0 ms-2" />
+          <IBiChevronRight class="h1 mb-0" />
         </div>
       </button>
     </div>
@@ -158,10 +158,12 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
+import { useModalController } from 'bootstrap-vue-next';
 export default {
   name: 'app-secretCards',
   components: {
-    'app-menuBar': () => import("../layout/MenuBar.vue"),
+    'app-menuBar': defineAsyncComponent(() => import("../layout/MenuBar.vue")),
   },
   props: {
     roomID: String,
@@ -197,8 +199,11 @@ export default {
     }
   },
   watch: {
-    sheetData: function () {
-      this.processSheetData();
+    sheetData: {
+      handler() {
+        this.processSheetData();
+      },
+      deep: true,
     },
     firebaseReady: function () {
       if (this.firebaseReady && !this.roomInfo) {
@@ -227,7 +232,12 @@ export default {
       )
     },
     closeMenu() {
-      this.$bvModal.hide("menuModal");
+      const modalCtrl = useModalController?.();
+      if (modalCtrl?.hide) {
+        modalCtrl.hide('menuModal');
+      } else if (this.$bvModal?.hide) {
+        this.$bvModal.hide("menuModal");
+      }
     },
     copyLinkToClipboard() {
       let currentUrl = location.hostname.toString() + this.$route.fullPath

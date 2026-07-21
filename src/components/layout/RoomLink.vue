@@ -4,26 +4,29 @@
       <transition name="bounce" mode="out-in">
         <div v-if="roomInfo" :key="Object.keys(roomInfo).length" class="pt-2 px-2 game-meta live-player-counter"
           v-bind:style="{ color: color }">
-          {{ Object.keys(roomInfo).length }} <b-icon-people></b-icon-people>
+          {{ Object.keys(roomInfo).length }} <IBiPeople />
         </div>
       </transition>
       <transition name="bounce" mode="out-in">
         <div v-if="atLeastOneMonetizedUser" class="pt-2 px-2 game-meta live-player-counter"
           v-bind:style="{ color: color }">
-          <b-icon-coin alt="web monetization active"></b-icon-coin>
+          <iBiCoin alt="web monetization active" />
         </div>
       </transition>
 
-      <button class="btn btn-outline-dark ml-auto border-0" @click="$bvToast.show('copyToast')"
+      <button class="btn btn-outline-dark ms-auto border-0"
         v-on:click="copyTextToClipboard()" type="button" v-bind:style="{ color: color }">
-        <b-icon-link45deg></b-icon-link45deg> Copy URL
+        <iBiLink45deg /> Copy URL
       </button>
 
-      <b-toast variant="success" id="copyToast" auto-hide-delay="1000" no-close-button>
-        Link copied to clipboard
-      </b-toast>
-
-
+      <div class="toast-container position-fixed bottom-0 end-0 p-3" ref="roomCopyToastContainer" aria-live="polite"
+        aria-atomic="true">
+        <div class="toast text-bg-success" ref="roomCopyToast" role="status" aria-live="polite" aria-atomic="true">
+          <div class="toast-body">
+            Link copied to clipboard
+          </div>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -31,7 +34,10 @@
 
 <script>
 
+import { Toast } from 'bootstrap';
 import { notifyMyOnlineStatus, onRoomInfoUpdate, setMyOnlineData } from "../../firebase/models/players_in_room.js";
+
+let userRef = null;
 
 export default {
   name: "app-roomLink",
@@ -50,10 +56,14 @@ export default {
       context: null,
       userID: null,
       atLeastOneMonetizedUser: false,
-      userRef: null
+      copyToast: null,
     };
   },
   mounted() {
+    if (this.$refs.roomCopyToast) {
+      this.copyToast = new Toast(this.$refs.roomCopyToast, { delay: 1200 });
+    }
+
     if (this.routeRoomID) {
       this.bindToFirebaseRTDB()
       this.checkMonetization();
@@ -65,18 +75,24 @@ export default {
     }
   },
   watch: {
-    monetizedByUser: function () {
-      if (this.userRef) {
-        setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
-      }
+    monetizedByUser: {
+      handler() {
+        if (this.userRef) {
+          setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
+        }
+      }, deep: true,
     },
-    stringyRoomInfo: function () {
-      this.checkMonetization();
+    stringyRoomInfo: {
+      handler() {
+        this.checkMonetization();
+      }, deep: true,
     },
-    $route() {
-      if (this.routeRoomID) {
-        this.bindToFirebaseRTDB()
-      }
+    $route: {
+      handler() {
+        if (this.routeRoomID) {
+          this.bindToFirebaseRTDB()
+        }
+      }, deep: true,
     },
   },
   updated() {
@@ -84,7 +100,7 @@ export default {
   },
   methods: {
     bindToFirebaseRTDB() {
-      this.userRef = notifyMyOnlineStatus(this.routeRoomID);
+      userRef = notifyMyOnlineStatus(this.routeRoomID);
       onRoomInfoUpdate(this.routeRoomID, (roomInfo) => {
         // console.log(roomInfo)
         this.roomInfo = roomInfo
@@ -93,7 +109,7 @@ export default {
         sheetID: this.$route.gSheetID,
         gameSessionURL: this.currentUrl,
       });
-      setMyOnlineData(this.userRef, { monetized: this.monetizedByUser })
+      setMyOnlineData(userRef, { monetized: this.monetizedByUser })
       this.updateUrl();
     },
     checkMonetization() {
@@ -119,6 +135,9 @@ export default {
       }, function () {
         console.log('copy failed')
       });
+      if (this.copyToast) {
+        this.copyToast.show();
+      }
     },
   },
 };

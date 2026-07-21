@@ -263,7 +263,7 @@ export default {
     "app-game": () => import("../layout/Game.vue"),
     "app-currentPlayerHeader": () => import("./CurrentPlayerHeader.vue"),
     "app-diceRoller": () => import("./DiceRoller.vue"),
-    "app-coinflip": () => import("./Coinflip"),
+    "app-coinflip": () => import("./Coinflip.vue"),
     "app-editableList": () => import("./EditableList.vue"),
     "app-embedWebsite": () => import("./EmbedWebsite.vue"),
     "app-imageGallery": () => import("./ImageGallery.vue"),
@@ -271,7 +271,7 @@ export default {
     // 'app-hexflowerAsExtension': () => import('../formats/Hexflower.vue'),
     "app-journal": () => import("./Journal.vue"),
     "app-multiEditableLists": () => import("./MultiEditableLists.vue"),
-    "app-playerTurnOrder": () => import("./PlayerTurnOrder"),
+    "app-playerTurnOrder": () => import("./PlayerTurnOrder.vue"),
     "app-plusMinus": () => import("./PlusMinus.vue"),
     "app-standardDeck": () => import("./StandardDeck.vue"),
     "app-staticBox": () => import("./StaticBox.vue"),
@@ -348,7 +348,7 @@ export default {
         "https://sheets.googleapis.com/v4/spreadsheets/" +
         sheetID +
         "?includeGridData=true&ranges=a1:aa400&key=" +
-        process.env.VUE_APP_FIREBASE_API_KEY;
+        import.meta.env.VITE_APP_FIREBASE_API_KEY;
 
       axios
         .get(getURL)

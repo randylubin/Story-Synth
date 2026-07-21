@@ -53,7 +53,7 @@
   .card {
     background: linear-gradient(rgb(233, 173, 70), rgb(255, 232, 175));
     border: 1px solid $card-bg;
-    color: $base-color;
+    color: $base-color !important;
   }
 
   a {

@@ -1,8 +1,11 @@
 .style-template-dark {
-  $base-color: var(--light);
+  $base-color: #fff;
   $dark-color: rgb(36, 36, 36);
 
   color: $base-color !important;
+  .btn-outline-dark {
+    color: $dark-color !important;
+  }
 
   .game-meta {
     color: $base-color !important;
@@ -13,7 +16,8 @@
   }
 
   .card {
-    background: var(--dark) !important;
+    background: #343a40 !important;
+    color: $base-color !important;
   }
   .generator-cell {
     border-top: 1px solid $dark-color !important;
@@ -40,6 +44,12 @@
     color: white !important;
     &:hover {
       background-color: #343a40 !important;
+    }
+  }
+
+  .menu-row {
+    .btn{
+      color: $dark-color !important;
     }
   }
 

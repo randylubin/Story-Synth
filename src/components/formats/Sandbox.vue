@@ -21,11 +21,12 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 export default {
   name: 'app-sandbox',
   components: {
     // 'app-extensionManager': () => import('../extensions/ExtensionManager.vue'),
-    'app-menuBar': () => import("../layout/MenuBar.vue"),
+    'app-menuBar': defineAsyncComponent(() => import("../layout/MenuBar.vue")),
   },
   props: {
     gSheetID: String,
@@ -52,8 +53,11 @@ export default {
     };
   },
   watch: {
-    sheetData: function () {
-      this.processSheetData();
+    sheetData: {
+      handler() {
+        this.processSheetData();
+      },
+      deep: true,
     },
     firebaseReady: function () {
       if (this.firebaseReady && !this.roomInfo) {

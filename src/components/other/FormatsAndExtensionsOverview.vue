@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row padding-after-navbar">
-      <div class="col text-left">
+      <div class="col text-start">
         <h1 class="mb-3">Customize Your Designs</h1>
         <div class="card card-body shadow">
           <p>Story Synth offers many ways for you to customize your design:</p>
@@ -192,7 +192,7 @@
     </div>
 
     <div class="row">
-      <div class="col text-left">
+      <div class="col text-start">
         <div class="card card-body shadow">
           <h2>Extensions</h2>
           <p>Story Synth has a variety of extensions that add functionality to any of the formats. Here's a quick
@@ -216,7 +216,7 @@
     </div>
 
     <div class="row">
-      <div class="col text-left">
+      <div class="col text-start">
         <h2>Custom Options</h2>
         <div class="card card-body shadow">
           <p>There are many ways to further customize your game, including visual styles, images, metadata, and more.
@@ -237,6 +237,7 @@ export default {
 
     };
   },
+  inject: ['mixpanel'],
   metaInfo() {
     return {
       title: "Story Synth Formats and Extensions",
@@ -291,7 +292,7 @@ export default {
 
     document.dispatchEvent(new Event("x-app-rendered"));
     if (location.hostname.toString() !== 'localhost') {
-      this.$mixpanel.track('Visited Format Overview');
+      this.mixpanel.track('Visited Format Overview');
     }
   },
 };

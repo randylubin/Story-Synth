@@ -1,5 +1,6 @@
+@use "sass:color";
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 .style-template-homepage {
-  @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
   $dark-blue: #323c69;
   $light-blue: #d9fcfd;
 
@@ -38,10 +39,10 @@
     text-decoration: none;
 
     &:hover:not(.button-light) {
-      background-color: darken($dark-blue, 8%);
+      background-color: color.adjust($dark-blue, $lightness: -8%);
     }
     &:active {
-      background-color: darken($dark-blue, 20%);
+      background-color: color.adjust($dark-blue, $lightness: -20%);
     }
     &:disabled {
       cursor: default;
@@ -57,10 +58,10 @@
     text-decoration: none;
 
     &:hover:enabled {
-      background-color: darken($light-blue, 8%);
+      background-color: color.adjust($light-blue, $lightness: -8%);
     }
     &:active:enabled {
-      background-color: darken($light-blue, 20%);
+      background-color: color.adjust($light-blue, $lightness: -20%);
     }
   }
 
@@ -76,16 +77,17 @@
       text-decoration: none;
 
       &:hover {
-        background-color: darken($light-blue, 8%);
+        background-color: color.adjust($light-blue, $lightness: -8%);
       }
       &:active {
-        background-color: darken($light-blue, 20%);
+        background-color: color.adjust($light-blue, $lightness: -20%);
       }
     }
   }
 
   .navbar {
     transition: all 0.2s;
+    z-index: 9999;
   }
   .navbar:not(.scrolledNavbar) {
     background-color: transparent !important;

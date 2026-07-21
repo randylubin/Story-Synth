@@ -11,18 +11,18 @@
     </div>
     <div class="card embed-website-by-url" v-if="selectedWebsiteURL">
       <div class="row justify-content-between d-flex align-items-center">
-        <!-- <div class="col-sm text-left m-1 ml-3">Embedded Site</div> -->
-        <div class="col-sm iframe-menu text-right">
+        <!-- <div class="col-sm text-start m-1 ms-3">Embedded Site</div> -->
+        <div class="col-sm iframe-menu text-end">
           <button class="btn btn-sm btn-outline-dark m-1 px-1 border-0" size="sm" v-if="!expand"
             v-on:click="toggleExpansion()">
-            <b-icon-arrows-expand rotate="90"></b-icon-arrows-expand>
+            <IBiArrowsExpand style="transform: rotate(90deg);" />
           </button>
           <button class="btn btn-sm btn-outline-dark m-1 px-1 border-0" v-else v-on:click="toggleExpansion()">
-            <b-icon-arrows-collapse rotate="90"></b-icon-arrows-collapse>
+            <IBiArrowsCollapse style="transform: rotate(90deg);" />
           </button>
           <button class="btn btn-sm btn-outline-dark m-1 px-1 border-0" v-if="!hardcodedWebsiteURL"
             v-on:click="clearEmbed()">
-            <b-icon-trash></b-icon-trash>
+            <IBiTrash />
           </button>
         </div>
       </div>

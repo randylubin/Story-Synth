@@ -1,8 +1,8 @@
 <template>
-  <b-button class="control-button-restart btn-lg btn-block d-flex align-items-center justify-content-center"
+  <b-button class="control-button-restart btn-lg w-100 d-flex align-items-center justify-content-center"
     variant="outline-dark" v-on:click="downloadData()">
     <span class="mx-2">Download Data</span>
-    <b-icon icon="save" font-scale=".8"></b-icon>
+    <IBiSave class="fs-5" />
   </b-button>
 </template>
 

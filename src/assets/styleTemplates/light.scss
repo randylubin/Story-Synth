@@ -1,12 +1,12 @@
 .style-template-light {
-  background-color: var(--light);
+  background-color: var(--bs-light);
 
   .generator-cell-label {
-    background: var(--yellow);
+    background: var(--bs-yellow);
   }
 
   a {
-    color: var(--yellow);
+    color: var(--bs-yellow);
 
     :hover {
       text-decoration: underline;

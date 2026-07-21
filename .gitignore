@@ -6,6 +6,7 @@ npm-debug.log
 yarn-error.log
 .firebase/
 firebase-config.js
+.chrome-prerender/
 
 # Editor directories and files
 .idea
