@@ -364,6 +364,17 @@ li.nav-item {
   overflow: hidden;
 }
 
+// Long unbreakable strings (e.g. bare URLs) must wrap instead of blowing out
+// the card: the card-body's flex children otherwise size to the URL's full
+// width and get clipped by the card's overflow: hidden.
+.card-body {
+  overflow-wrap: anywhere;
+}
+
+.card-body>div {
+  min-width: 0;
+}
+
 .card-img {
   border-radius: 0;
 }
